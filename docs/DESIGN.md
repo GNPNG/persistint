@@ -83,6 +83,10 @@ Florida Keys. THIS layer gets the gardening and crafting — pure sandbox play, 
 surprise interactions, zero judgment (gardening is only gendered on the island; in Florida
 it's just fun). Pet dolphins, friendly crabs and seagulls. Mermaids are "real" —
 aquarium-show mermaids, friendly Sofia-the-First register, never explained.
+There's a stable with ponies: groomable (reuses the paper-doll/makeover tech on a pony),
+rideable (mounted click-to-move, faster), and they can have babies (simple breeding:
+coat/mane traits mix — genetics played straight and joyful here, in pointed contrast to
+the island's Covenant obsession with controlled reproduction).
 
 **Three framings of the same mechanics = the whole curriculum:**
 Florida (innocent play) → Cruise (judged performance) → Island (ritualized control).
