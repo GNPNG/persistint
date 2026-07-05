@@ -1,0 +1,57 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/map.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/placeholder/bg_temple.png" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://scenes/npc/npc.tscn" id="4"]
+[ext_resource type="PackedScene" path="res://scenes/maps/door.tscn" id="5"]
+
+[sub_resource type="NavigationPolygon" id="navpoly"]
+vertices = PackedVector2Array(60, 150, 900, 150, 900, 500, 60, 500)
+polygons = [PackedInt32Array(0, 1, 2, 3)]
+outlines = [PackedVector2Array(60, 150, 900, 150, 900, 500, 60, 500)]
+
+[node name="Temple" type="Node2D"]
+script = ExtResource("1")
+
+[node name="Background" type="Sprite2D" parent="."]
+texture = ExtResource("2")
+centered = false
+
+[node name="Nav" type="NavigationRegion2D" parent="."]
+navigation_polygon = SubResource("navpoly")
+
+[node name="spawn_default" type="Marker2D" parent="."]
+position = Vector2(480, 400)
+
+[node name="spawn_from_village" type="Marker2D" parent="."]
+position = Vector2(480, 430)
+
+[node name="spawn_from_puzzle" type="Marker2D" parent="."]
+position = Vector2(700, 330)
+
+[node name="Player" parent="." instance=ExtResource("3")]
+position = Vector2(480, 400)
+
+[node name="Ondine" parent="." instance=ExtResource("4")]
+position = Vector2(480, 250)
+npc_id = "ondine"
+display_name = "Priestess Ondine"
+caste = "priestess"
+sprite_texture = "npc_mother"
+dialogue_path = "res://dialogue/priestess.dialogue"
+voice_pitch = 0.85
+
+[node name="ExitDoor" parent="." instance=ExtResource("5")]
+position = Vector2(480, 496)
+target_scene = "res://scenes/maps/village.tscn"
+target_spawn = "spawn_from_temple"
+
+[node name="RitualTable" parent="." instance=ExtResource("5")]
+position = Vector2(700, 260)
+target_scene = "res://scenes/minigames/ritual_puzzle.tscn"
+
+[node name="RuinsDoor" parent="." instance=ExtResource("5")]
+position = Vector2(140, 220)
+locked = true
+locked_bark = "Sealed since the Before. The Covenant says there is nothing inside. The lock says otherwise."

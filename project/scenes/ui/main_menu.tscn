@@ -1,0 +1,56 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/main_menu.gd" id="1"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1")
+
+[node name="Bg" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.988235, 0.905882, 0.937255, 1)
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBox" type="VBoxContainer" parent="Center"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="Center/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.35, 0.55, 1)
+theme_override_font_sizes/font_size = 32
+text = "PERSISTINT"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="Center/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.55, 0.4, 0.5, 1)
+theme_override_font_sizes/font_size = 10
+text = "a lovely little island. everyone contributes. everyone."
+horizontal_alignment = 1
+
+[node name="BeginButton" type="Button" parent="Center/VBox"]
+layout_mode = 2
+text = "Begin"
+
+[node name="NewButton" type="Button" parent="Center/VBox"]
+layout_mode = 2
+text = "New Game"
+
+[node name="Hint" type="Label" parent="Center/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.5, 0.55, 1)
+theme_override_font_sizes/font_size = 8
+text = "click to walk · click people to talk · P for wardrobe"
+horizontal_alignment = 1

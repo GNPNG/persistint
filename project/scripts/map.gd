@@ -1,0 +1,57 @@
+extends Node2D
+## Map — common behavior for every map area: place the player at the requested
+## spawn marker, build the HUD (clock + calendar), P toggles the wardrobe.
+
+const WARDROBE_SCENE := "res://scenes/ui/wardrobe.tscn"
+
+var _hud_label: Label
+var _wardrobe: CanvasLayer
+
+
+func _ready() -> void:
+	_spawn_player()
+	_build_hud()
+	GameClock.phase_changed.connect(func(_p: String) -> void: _update_hud())
+	GameClock.day_changed.connect(func(_d: int) -> void: _update_hud())
+
+
+func _spawn_player() -> void:
+	var player := get_tree().get_first_node_in_group("player")
+	var marker := find_child(SceneRouter.next_spawn, true, false)
+	if marker == null:
+		marker = find_child("spawn_default", true, false)
+	if player and marker:
+		player.global_position = (marker as Node2D).global_position
+
+
+func _build_hud() -> void:
+	var layer := CanvasLayer.new()
+	layer.name = "HUD"
+	add_child(layer)
+	_hud_label = Label.new()
+	_hud_label.position = Vector2(8, 4)
+	_hud_label.add_theme_font_size_override("font_size", 10)
+	_hud_label.add_theme_color_override("font_color", Color(0.35, 0.22, 0.35))
+	_hud_label.add_theme_color_override("font_outline_color", Color(1, 1, 1, 0.9))
+	_hud_label.add_theme_constant_override("outline_size", 3)
+	layer.add_child(_hud_label)
+	_update_hud()
+
+
+func _update_hud() -> void:
+	if _hud_label:
+		_hud_label.text = GameClock.status_text()
+
+
+func _unhandled_key_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and event.keycode == KEY_P:
+		toggle_wardrobe()
+
+
+func toggle_wardrobe() -> void:
+	if _wardrobe and is_instance_valid(_wardrobe):
+		_wardrobe.queue_free()
+		_wardrobe = null
+		return
+	_wardrobe = load(WARDROBE_SCENE).instantiate()
+	add_child(_wardrobe)

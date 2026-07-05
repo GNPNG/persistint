@@ -1,0 +1,19 @@
+extends Control
+## Main menu — Begin (continue save) / New Game (fresh flags).
+
+const FIRST_MAP := "res://scenes/maps/village.tscn"
+
+
+func _ready() -> void:
+	$Center/VBox/BeginButton.pressed.connect(_on_begin)
+	$Center/VBox/NewButton.pressed.connect(_on_new_game)
+	Voice.speak("persistint", 1.1)
+
+
+func _on_begin() -> void:
+	SceneRouter.goto_map(FIRST_MAP, "spawn_default")
+
+
+func _on_new_game() -> void:
+	WorldState.reset()
+	SceneRouter.goto_map(FIRST_MAP, "spawn_default")
