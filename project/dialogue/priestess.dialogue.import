@@ -1,0 +1,16 @@
+[remap]
+
+importer="dialogue_manager"
+importer_version=15
+type="Resource"
+uid="uid://dd3b1jwdnqml1"
+path="res://.godot/imported/priestess.dialogue-3887457779b270259eebdf2c40d1d5cc.tres"
+
+[deps]
+
+source_file="res://dialogue/priestess.dialogue"
+dest_files=["res://.godot/imported/priestess.dialogue-3887457779b270259eebdf2c40d1d5cc.tres"]
+
+[params]
+
+defaults=true

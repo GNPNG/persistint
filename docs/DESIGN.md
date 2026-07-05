@@ -63,9 +63,31 @@ Discovered Forbidden Knowledge unlocks flashback chapters aboard the pre-wreck c
   are judged on appearance with negative framing and passive-aggressive language ("who did
   your hair?", "so brave to wear that"). Makeover/hair-salon/get-ready-for-the-fashion-show
   chains, Day of the Tentacle-style chained tasks across the ship.
+- **The Empowerment Emcee:** every celebrity mini-game is introduced by a beloved
+  first-daughter-of-politics archetype who explains how *empowering and fun* this is going
+  to be. Empowerment-washing as a running gag — the frame that blesses the judging.
+- **"Next Top Comic":** stand-up mini-game using the dialogue system in Monkey Island
+  insult-sword-fighting structure — except every punchline choice is bad, weird, and
+  nonsensically inappropriate (crude-comedian archetype). The crowd rewards cruelty-shaped
+  noise; the player feels the wrongness of every "correct" answer.
+- **The Interview (character creation):** a daytime-talk-show-host archetype interviews the
+  player about themselves — warm, probing, faux-intimate. Answers drive SPECIAL-style stat
+  allocation (Fallout G.O.A.T.-exam register). Character creation *is* a talk show segment.
 - **The same paper-doll system powers both layers**: island dress-up is kind (play, identity);
   cruise makeovers are judged (control dressed as care). The mechanical identity of the two,
   with opposite emotional framing, IS the lesson.
+
+### 3. Florida Keys idyll (the innocent sandbox)
+The pre-dystopia normal world: an idyllic Toca World / Animal Crossing setting in the
+Florida Keys. THIS layer gets the gardening and crafting — pure sandbox play, paper-doll
+surprise interactions, zero judgment (gardening is only gendered on the island; in Florida
+it's just fun). Pet dolphins, friendly crabs and seagulls. Mermaids are "real" —
+aquarium-show mermaids, friendly Sofia-the-First register, never explained.
+
+**Three framings of the same mechanics = the whole curriculum:**
+Florida (innocent play) → Cruise (judged performance) → Island (ritualized control).
+The player does the same verbs in all three; only the social framing changes. That
+contrast is what the game teaches.
 
 ### The pedagogy loop ("Name It")
 After each judged/manipulative beat (a Hottest-of-the-HOT verdict, a temple social maneuver),

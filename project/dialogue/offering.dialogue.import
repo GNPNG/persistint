@@ -1,0 +1,16 @@
+[remap]
+
+importer="dialogue_manager"
+importer_version=15
+type="Resource"
+uid="uid://do8t1pyjk426p"
+path="res://.godot/imported/offering.dialogue-4007c2b6e6789d2b97c63028115c9785.tres"
+
+[deps]
+
+source_file="res://dialogue/offering.dialogue"
+dest_files=["res://.godot/imported/offering.dialogue-4007c2b6e6789d2b97c63028115c9785.tres"]
+
+[params]
+
+defaults=true
