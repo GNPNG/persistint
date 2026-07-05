@@ -1,0 +1,28 @@
+~ start
+if WorldState.has_flag("offering_delivered")
+	Sister Maren: The Priestess smiled at the offering. I am... relieved.
+	=> END
+elif WorldState.has_flag("refused_offering")
+	Sister Maren: You really didn't take it. And nothing terrible happened.
+	Sister Maren: Yet. Probably. I mean— have a lovely cycle!
+	=> END
+elif WorldState.has_flag("quest_offering_accepted")
+	Sister Maren: The offering! Priestess Ondine is waiting in the Temple.
+	=> END
+Sister Maren: Oh! You're the new arrival. The Festival of the Fourteenth is coming.
+Sister Maren: Would you carry this offering to Priestess Ondine? Everyone contributes.
+Sister Maren: Everyone.
+- Of course.
+	Sister Maren: You're a good one. They notice that, you know.
+	do WorldState.set_flag("quest_offering_accepted", true)
+- Why does everyone have to contribute?
+	Sister Maren: Because... because that's how it's always been?
+	Sister Maren: Huh. No one's ever actually asked me that before.
+	Sister Maren: Take it anyway — but that was a good question.
+	do WorldState.set_flag("questioned_ritual", true)
+	do WorldState.set_flag("quest_offering_accepted", true)
+- No, thank you.
+	Sister Maren: You can... say that? Just like that?
+	Sister Maren: "No, thank you." Hm. It didn't even thunder.
+	do WorldState.set_flag("refused_offering", true)
+=> END

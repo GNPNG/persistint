@@ -1,0 +1,4 @@
+# Godot
+project/.godot/
+exports/
+*.tmp

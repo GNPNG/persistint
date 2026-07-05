@@ -1,0 +1,23 @@
+~ start
+if WorldState.has_flag("offering_delivered")
+	Priestess Ondine: The Seal of the O shines upon the obedient, dear.
+	=> END
+elif WorldState.has_flag("quest_offering_accepted")
+	Priestess Ondine: Ah. Maren's little offering. Set it by the icons.
+	- Place the offering
+		do WorldState.set_flag("offering_delivered", true)
+		Priestess Ondine: See how easy? The Covenant loves an easy girl.
+		Priestess Ondine: ...That was a compliment, dear.
+	- First — a question about the Fourteenth.
+		Priestess Ondine: Questions. How... modern of you.
+		Priestess Ondine: Set it down anyway, there's a love.
+		do WorldState.set_flag("questioned_ritual", true)
+		do WorldState.set_flag("offering_delivered", true)
+	=> END
+elif WorldState.has_flag("refused_offering")
+	Priestess Ondine: I heard you told Sister Maren "no thank you."
+	Priestess Ondine: What a fascinating phrase. We'll be watching your cycle with interest.
+	=> END
+Priestess Ondine: Welcome, initiate. The Queen Mothers see all who wish to be seen.
+Priestess Ondine: And all who don't, of course. That's rather the point of Them.
+=> END
