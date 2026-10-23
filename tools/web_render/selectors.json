@@ -1,0 +1,176 @@
+{
+  "_readme": "Every URL, selector and click order the web renderer uses. Edit this file (not the code) when Google changes its pages. Each selector list is tried in order until one matches a visible element. Selector syntax is Puppeteer's: plain CSS, ::-p-aria(Accessible name), ::-p-text(Visible text), ::-p-xpath(...). steps.result must be plain CSS. {aspect} is replaced with the asset's ratio. Validate with: node render.mjs --check-selectors. NONE of the Google selectors below have been tested against the live signed-in pages yet; they come from Google's help pages and community scripts.",
+  "loginUrl": "https://accounts.google.com/",
+  "kinds": {
+    "image": "gemini_image",
+    "video": "gemini_video",
+    "music": "gemini_music"
+  },
+  "surfaces": {
+    "gemini_image": {
+      "kind": "image",
+      "url": "https://gemini.google.com/app",
+      "_note": "Gemini app, Tools > Create images (Nano Banana). No aspect control in the UI, so the ratio is put in the prompt when the prompt does not already state one.",
+      "aspectInPrompt": true,
+      "promptSuffix": "{aspect} aspect ratio.",
+      "resultMinSize": 256,
+      "capture": ["download"],
+      "_capture": "download only: the on-page <img> is a downscaled preview, so it must never be saved as the final PNG. If Download full size breaks, fix its selector or use --assist / --pause-on-error.",
+      "timeouts": { "stepMs": 20000, "generateMs": 600000, "downloadMs": 180000, "textOnlyMs": 90000 },
+      "steps": {
+        "open": [
+          { "action": "click", "optional": true, "timeoutMs": 3000, "note": "close a promo dialog if one is up",
+            "selectors": ["::-p-aria(Close)", "::-p-aria(Dismiss)", "::-p-aria(No thanks)"] }
+        ],
+        "mode": [
+          { "action": "click", "note": "open the Tools menu", "afterMs": 800,
+            "selectors": ["button[data-test-id='toolbox-trigger']", "button.toolbox-drawer-button", "::-p-aria(Tools)", "::-p-aria(Upload & tools)"] },
+          { "action": "click", "note": "pick Create images", "afterMs": 800,
+            "selectors": [".cdk-overlay-container button.mat-mdc-list-item ::-p-text(Create image)", "::-p-aria(Create images)", "::-p-text(Create images)", "::-p-text(Create image)"] }
+        ],
+        "options": [],
+        "input": [".ql-editor[contenteditable='true']", "rich-textarea [contenteditable='true']", "::-p-aria(Enter a prompt here)", "div[contenteditable='true'][role='textbox']"],
+        "submit": [
+          { "action": "click", "note": "send",
+            "selectors": ["::-p-aria(Send message)", "button.send-button", "button[aria-label*='Send']", "::-p-aria(Submit)"] }
+        ],
+        "busy": ["::-p-aria(Stop response)", "button[aria-label*='Stop']"],
+        "limitNotice": ["model-response ::-p-text(reached your limit)", "model-response ::-p-text(reached the limit)", "model-response ::-p-text(usage limit)", "model-response ::-p-text(limit resets)"],
+        "response": ["model-response"],
+        "result": ["model-response generated-image img", "model-response single-image img", "model-response img", "message-content img"],
+        "download": [
+          { "action": "hover", "target": "result", "afterMs": 500 },
+          { "action": "click", "note": "Download full size",
+            "selectors": ["model-response ::-p-aria(Download full size image)", "model-response ::-p-aria(Download full size)", "model-response button:has(mat-icon[fonticon='download'])", "::-p-aria(Download full size image)"] }
+        ]
+      }
+    },
+
+    "gemini_video": {
+      "kind": "video",
+      "url": "https://gemini.google.com/app",
+      "_note": "Gemini app, Tools > Create video (Omni). Landscape (16:9) is the app default for text prompts; the options step tries to pick {aspect} if an aspect control exists. One new chat per clip, because the chat is locked while it renders.",
+      "aspectInPrompt": true,
+      "promptSuffix": "{aspect} aspect ratio.",
+      "resultMinSize": 0,
+      "capture": ["download", "src"],
+      "timeouts": { "stepMs": 20000, "generateMs": 1500000, "downloadMs": 300000, "textOnlyMs": 300000 },
+      "steps": {
+        "open": [
+          { "action": "click", "optional": true, "timeoutMs": 3000, "note": "close a promo dialog if one is up",
+            "selectors": ["::-p-aria(Close)", "::-p-aria(Dismiss)", "::-p-aria(No thanks)"] }
+        ],
+        "mode": [
+          { "action": "click", "note": "open the Tools menu", "afterMs": 800,
+            "selectors": ["button[data-test-id='toolbox-trigger']", "button.toolbox-drawer-button", "::-p-aria(Tools)", "::-p-aria(Upload & tools)"] },
+          { "action": "click", "note": "pick Create video", "afterMs": 800,
+            "selectors": [".cdk-overlay-container button.mat-mdc-list-item ::-p-text(Create video)", "::-p-aria(Create videos)", "::-p-aria(Create video)", "::-p-text(Create video)"] }
+        ],
+        "options": [
+          { "action": "click", "optional": true, "timeoutMs": 3000, "note": "open the aspect ratio control (location unknown)",
+            "selectors": ["::-p-aria(Aspect ratio)", "button[aria-label*='aspect' i]"] },
+          { "action": "click", "optional": true, "timeoutMs": 3000, "note": "pick {aspect}",
+            "selectors": [".cdk-overlay-container ::-p-text({aspect})", "::-p-aria({aspect})"] }
+        ],
+        "input": [".ql-editor[contenteditable='true']", "rich-textarea [contenteditable='true']", "::-p-aria(Enter a prompt here)", "div[contenteditable='true'][role='textbox']"],
+        "submit": [
+          { "action": "click", "note": "send",
+            "selectors": ["::-p-aria(Send message)", "button.send-button", "button[aria-label*='Send']", "::-p-aria(Submit)"] }
+        ],
+        "busy": ["::-p-aria(Stop response)", "button[aria-label*='Stop']", "model-response [role='progressbar']", "model-response mat-progress-bar", "model-response mat-progress-spinner"],
+        "limitNotice": ["model-response ::-p-text(reached your limit)", "model-response ::-p-text(reached the limit)", "model-response ::-p-text(usage limit)", "model-response ::-p-text(limit resets)"],
+        "response": ["model-response"],
+        "result": ["model-response video", "message-content video"],
+        "download": [
+          { "action": "hover", "target": "result", "afterMs": 500 },
+          { "action": "click", "note": "Share (the download lives under it)", "afterMs": 800,
+            "selectors": ["model-response ::-p-aria(Share video)", "model-response ::-p-aria(Share)", "model-response button:has(mat-icon[fonticon='share'])"] },
+          { "action": "click", "note": "Download video (in the share menu)",
+            "selectors": [".cdk-overlay-container ::-p-aria(Download video)", ".cdk-overlay-container ::-p-text(Download video)", "model-response ::-p-aria(Download video)", ".cdk-overlay-container ::-p-text(Download)"] }
+        ]
+      }
+    },
+
+    "gemini_music": {
+      "kind": "music",
+      "url": "https://gemini.google.com/app",
+      "_note": "Gemini app, Tools > Create music (Lyria). Length is steered by the prompt text (every music prompt states its length); the app has only short (~1 min) and full lengths. The download menu must choose audio only (MP3), not the MP4 with cover art.",
+      "aspectInPrompt": false,
+      "resultMinSize": 0,
+      "capture": ["download"],
+      "_capture": "download only: the page may show the track as a <video> with cover art, so an in-page src fetch could save the wrong file.",
+      "timeouts": { "stepMs": 20000, "generateMs": 900000, "downloadMs": 180000, "textOnlyMs": 120000 },
+      "steps": {
+        "open": [
+          { "action": "click", "optional": true, "timeoutMs": 3000, "note": "close a promo dialog if one is up",
+            "selectors": ["::-p-aria(Close)", "::-p-aria(Dismiss)", "::-p-aria(No thanks)"] }
+        ],
+        "mode": [
+          { "action": "click", "note": "open the Tools menu", "afterMs": 800,
+            "selectors": ["button[data-test-id='toolbox-trigger']", "button.toolbox-drawer-button", "::-p-aria(Upload & tools)", "::-p-aria(Tools)"] },
+          { "action": "click", "note": "pick Create music", "afterMs": 800,
+            "selectors": [".cdk-overlay-container button.mat-mdc-list-item ::-p-text(Create music)", "::-p-aria(Create music)", "::-p-text(Create music)"] }
+        ],
+        "options": [],
+        "input": [".ql-editor[contenteditable='true']", "rich-textarea [contenteditable='true']", "::-p-aria(Enter a prompt here)", "div[contenteditable='true'][role='textbox']"],
+        "submit": [
+          { "action": "click", "note": "send",
+            "selectors": ["::-p-aria(Send message)", "button.send-button", "button[aria-label*='Send']", "::-p-aria(Submit)"] }
+        ],
+        "busy": ["::-p-aria(Stop response)", "button[aria-label*='Stop']"],
+        "limitNotice": ["model-response ::-p-text(reached your limit)", "model-response ::-p-text(reached the limit)", "model-response ::-p-text(usage limit)", "model-response ::-p-text(limit resets)"],
+        "response": ["model-response"],
+        "result": ["model-response audio", "model-response video", "message-content audio"],
+        "download": [
+          { "action": "hover", "target": "result", "afterMs": 500 },
+          { "action": "click", "note": "Download (top right of the cover art)", "afterMs": 800,
+            "selectors": ["model-response ::-p-aria(Download track)", "model-response button:has(mat-icon[fonticon='download'])", "model-response ::-p-aria(Download)"] },
+          { "action": "click", "note": "audio only (MP3)",
+            "selectors": [".cdk-overlay-container ::-p-text(Audio only)", ".cdk-overlay-container ::-p-aria(Audio only)", ".cdk-overlay-container ::-p-text(MP3)"] }
+        ]
+      }
+    },
+
+    "flow_video": {
+      "kind": "video",
+      "url": "https://labs.google/fx/tools/flow",
+      "_note": "Alternative video surface: Google Flow (Veo 3.1 Lite 'Lower Priority' is 0 credits on Ultra). Not the default: its selectors are not documented anywhere, it needs reCAPTCHA in a real headed Chrome, and its URL is migrating (flow.google.com). To use it set kinds.video to flow_video and fix the selectors from the live page.",
+      "aspectInPrompt": false,
+      "resultMinSize": 0,
+      "capture": ["download", "src"],
+      "timeouts": { "stepMs": 30000, "generateMs": 1500000, "downloadMs": 300000 },
+      "steps": {
+        "open": [
+          { "action": "click", "note": "new project", "afterMs": 2000,
+            "selectors": ["::-p-aria(New project)", "::-p-text(New project)"] }
+        ],
+        "mode": [
+          { "action": "click", "note": "open the model / mode picker in the prompt box", "afterMs": 800,
+            "selectors": ["::-p-aria(Settings)", "::-p-aria(Model)"] },
+          { "action": "click", "note": "Video mode", "afterMs": 800,
+            "selectors": ["::-p-text(Video)"] }
+        ],
+        "options": [
+          { "action": "click", "optional": true, "timeoutMs": 5000, "note": "pick {aspect}",
+            "selectors": ["::-p-text({aspect})", "::-p-aria({aspect})"] }
+        ],
+        "input": ["textarea", "div[contenteditable='true']"],
+        "submit": [
+          { "action": "click", "note": "Generate",
+            "selectors": ["::-p-aria(Generate)", "::-p-aria(Create)", "::-p-text(Generate)"] }
+        ],
+        "busy": [],
+        "result": ["video"],
+        "download": [
+          { "action": "hover", "target": "result", "afterMs": 500 },
+          { "action": "click", "note": "More", "afterMs": 800,
+            "selectors": ["::-p-aria(More)", "::-p-aria(More options)"] },
+          { "action": "click", "note": "Download", "afterMs": 800,
+            "selectors": ["::-p-text(Download)", "::-p-aria(Download)"] },
+          { "action": "click", "optional": true, "timeoutMs": 5000, "note": "pick the video file (not GIF)",
+            "selectors": ["::-p-text(Original size)", "::-p-text(720p)", "::-p-text(MP4)"] }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Fake Gemini (web_render smoke test)</title>
+<style>
+  body { font: 15px system-ui, sans-serif; margin: 24px; background: #fafafa; color: #222; }
+  #menu { display: none; border: 1px solid #ccc; padding: 6px; background: #fff; width: 200px; }
+  #menu.open { display: block; }
+  #menu button { display: block; width: 100%; margin: 2px 0; }
+  .ql-editor { border: 1px solid #888; min-height: 60px; padding: 8px; background: #fff; margin: 12px 0; }
+  model-response { display: block; margin: 16px 0; padding: 8px; border: 1px dashed #aaa; position: relative; }
+  .actions { visibility: hidden; }
+  model-response:hover .actions { visibility: visible; }
+  #error { color: #b00; }
+</style>
+</head>
+<body>
+<!-- Mimics the parts of the Gemini app the driver touches: a Tools menu with modes, a Quill-like
+     contenteditable input whose "model" only updates from real input events, a send button,
+     a busy "Stop response" button while generating, and a <model-response> holding the media
+     with download controls (hover > Download full size; Share > Download video; Download). -->
+<button aria-label="Tools" id="tools">Tools</button>
+<div id="menu" role="menu">
+  <button data-mode="image">Create images</button>
+  <button data-mode="video">Create video</button>
+  <button data-mode="music">Create music</button>
+</div>
+<div id="mode">mode: chat</div>
+<div class="ql-editor" contenteditable="true" role="textbox" aria-label="Enter a prompt here"></div>
+<button aria-label="Send message" id="send">Send</button>
+<span id="busy"></span>
+<div id="error"></div>
+<div id="chat"></div>
+<script>
+  let mode = 'chat';
+  let model = '';           // like Quill: only what came through input events counts
+  window.__prompts = [];
+  const editor = document.querySelector('.ql-editor');
+  editor.addEventListener('input', () => { model = editor.innerText; });
+  document.getElementById('tools').onclick = () => document.getElementById('menu').classList.toggle('open');
+  for (const b of document.querySelectorAll('#menu button')) {
+    b.onclick = () => { mode = b.dataset.mode; document.getElementById('mode').textContent = 'mode: ' + mode; document.getElementById('menu').classList.remove('open'); };
+  }
+
+  function bytes(arr) { return new Uint8Array(arr); }
+  function fakeMp4() {   // an ftyp box plus padding: identifies as MP4, not a playable clip
+    const s = '\0\0\0\x18ftypisom\0\0\x02\0isomiso2' + 'x'.repeat(200);
+    return new Blob([bytes([...s].map((c) => c.charCodeAt(0)))], { type: 'video/mp4' });
+  }
+  function fakeMp3() {   // ID3v2 header plus one silent MPEG-1 Layer III frame
+    const id3 = [0x49, 0x44, 0x33, 4, 0, 0, 0, 0, 0, 0];
+    const frame = [0xff, 0xfb, 0x90, 0x64, ...new Array(413).fill(0)];
+    return new Blob([bytes([...id3, ...frame])], { type: 'audio/mpeg' });
+  }
+  function downloadBlob(blob, name) {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove();
+  }
+  function button(label, text, fn) {
+    const b = document.createElement('button'); b.setAttribute('aria-label', label); b.textContent = text; b.onclick = fn; return b;
+  }
+
+  document.getElementById('send').onclick = () => {
+    const err = document.getElementById('error');
+    if (!model.trim()) { err.textContent = 'Something went wrong (empty prompt)'; return; }
+    if (mode === 'chat') { err.textContent = 'No generation mode selected'; return; }
+    err.textContent = '';
+    window.__prompts.push({ mode, prompt: model.trim() });
+    const busy = document.getElementById('busy');
+    busy.appendChild(button('Stop response', 'Stop', () => {}));
+    setTimeout(async () => {
+      busy.innerHTML = '';
+      const resp = document.createElement('model-response');
+      // Text-only replies: a refusal, or a usage-limit notice (prompt contains REFUSE / LIMIT).
+      const textOnly = /REFUSE/.test(model) ? "I can't generate that for you." : /LIMIT/.test(model) ? "You've reached your limit for music generation. Your limit resets tomorrow." : null;
+      if (textOnly) {
+        const p = document.createElement('p'); p.textContent = textOnly; resp.appendChild(p);
+        document.getElementById('chat').appendChild(resp);
+        return;
+      }
+      const actions = document.createElement('div'); actions.className = 'actions';
+      if (mode === 'image') {
+        const c = document.createElement('canvas'); c.width = 640; c.height = 360;
+        const g = c.getContext('2d'); g.fillStyle = '#ffd1dc'; g.fillRect(0, 0, 640, 360);
+        g.fillStyle = '#6b4226'; g.font = '28px sans-serif'; g.fillText('fake render ' + window.__prompts.length, 40, 180);
+        const blob = await new Promise((r) => c.toBlob(r, 'image/png'));
+        const img = document.createElement('img'); img.src = URL.createObjectURL(blob); img.alt = 'Generated image';
+        resp.appendChild(img);
+        actions.appendChild(button('Download full size image', 'Download', () => downloadBlob(blob, 'Gemini_Generated_Image.png')));
+      } else if (mode === 'video') {
+        const blob = fakeMp4();
+        const v = document.createElement('video'); v.src = URL.createObjectURL(blob); v.width = 320; v.height = 180; v.controls = true;
+        resp.appendChild(v);
+        const share = document.createElement('div'); share.style.display = 'none';
+        share.appendChild(button('Download video', 'Download video', () => downloadBlob(blob, 'video.mp4')));
+        actions.appendChild(button('Share', 'Share', () => { share.style.display = 'block'; }));
+        actions.appendChild(share);
+      } else {
+        const blob = fakeMp3();
+        const au = document.createElement('audio'); au.src = URL.createObjectURL(blob); au.controls = true;
+        resp.appendChild(au);
+      }
+      resp.appendChild(actions);
+      document.getElementById('chat').appendChild(resp);
+    }, 1500);
+  };
+</script>
+</body>
+</html>

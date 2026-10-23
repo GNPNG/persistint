@@ -15,6 +15,8 @@ into the generator as is. Run `python3 tools/check_prompts.py` after editing any
 
 To render through the Gemini API instead of the web UI: `python3 tools/render_all_assets.py --status | --export-queue | --type image|video|music|all [--sync]` (needs GEMINI_API_KEY and `pip install google-genai`). `--export-queue` writes `prompts/QUEUE.md`, every missing prompt in one copy-paste file.
 
+To render through the Gemini web app with an AI Ultra plan (no API key), use the browser pipeline in [`tools/web_render/`](../tools/web_render/README.md): sign in once with `node tools/web_render/render.mjs --login`, then `node tools/web_render/render.mjs --render --kind image|video|music|all [--sync]`, or `--assist` to click through each generation yourself while the script fills the prompt and saves the result.
+
 Levels: island, temple, ruins, florida, cruise. Style for everything: kawaii pixel art over something unsettling;
 Florida is innocent play, the cruise is judged performance, the island is ritualized control.
 
