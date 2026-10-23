@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bmyvee563d0wa"
-path="res://.godot/imported/npc_stable_friend.png-fbefd972c29b2425e1fc100649135fd6.ctex"
+uid="uid://dnjbvyikc88u2"
+path="res://.godot/imported/shell_conch.png-6e8bf9ab7aa588bfa2ad16eef75e3273.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/placeholder/npc_stable_friend.png"
-dest_files=["res://.godot/imported/npc_stable_friend.png-fbefd972c29b2425e1fc100649135fd6.ctex"]
+source_file="res://assets/florida/shell_conch.png"
+dest_files=["res://.godot/imported/shell_conch.png-6e8bf9ab7aa588bfa2ad16eef75e3273.ctex"]
 
 [params]
 

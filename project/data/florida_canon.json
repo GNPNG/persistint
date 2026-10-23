@@ -1,0 +1,14 @@
+{
+	"_note": "Canon cuts for the tropical Florida Keys (tools/cut_island_props.py project/data/florida_canon.json). 'props' are written to 'out' as game sprites. 'bases' are full-resolution canon drawings the Florida generators build on (tools/gen_florida_cast.py): the canon paper-doll body turnaround (front, side, back) under the Father, the Daughter, Hannah and the mermaid. Names are file names only.",
+	"out": "project/assets/florida",
+	"props": {
+		"shell_spiral": {"sheet": "Gemini_Generated_Image_481b", "crop": "110x110+2100+1165", "mode": "outlined", "open": 5, "height": 11},
+		"shell_conch": {"sheet": "Gemini_Generated_Image_481b", "crop": "115x115+2222+1160", "mode": "outlined", "open": 5, "height": 12},
+		"shell_scallop": {"sheet": "Gemini_Generated_Image_481b", "crop": "115x110+2365+1170", "mode": "outlined", "open": 5, "height": 11}
+	},
+	"bases": {
+		"body_front": {"sheet": "Gemini_Generated_Image_ekiw", "crop": "215x468+114+1042", "mode": "white", "height": null},
+		"body_side": {"sheet": "Gemini_Generated_Image_ekiw", "crop": "196x467+412+1044", "mode": "white", "height": null},
+		"body_back": {"sheet": "Gemini_Generated_Image_ekiw", "crop": "219x468+669+1042", "mode": "white", "height": null}
+	}
+}

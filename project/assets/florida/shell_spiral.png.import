@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://iq1uae0j7bpn"
-path="res://.godot/imported/pony_acc_blanket.png-564eef67f972a6c5af939a2a5efbfccf.ctex"
+uid="uid://wfq76ad1je41"
+path="res://.godot/imported/shell_spiral.png-8d659a8ceda13ee4f955adc52568e5f5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/placeholder/pony_acc_blanket.png"
-dest_files=["res://.godot/imported/pony_acc_blanket.png-564eef67f972a6c5af939a2a5efbfccf.ctex"]
+source_file="res://assets/florida/shell_spiral.png"
+dest_files=["res://.godot/imported/shell_spiral.png-8d659a8ceda13ee4f955adc52568e5f5.ctex"]
 
 [params]
 
