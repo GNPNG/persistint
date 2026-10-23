@@ -48,6 +48,15 @@ func _run() -> void:
 	quit(0 if _failures == 0 else 1)
 
 
+## True when the script is map.gd or extends it (e.g. the Florida stable).
+func _runs_map(script: Script) -> bool:
+	while script != null:
+		if script.resource_path == MAP_SCRIPT:
+			return true
+		script = script.get_base_script()
+	return false
+
+
 ## Every scene in DIRS whose root runs map.gd (chapter_end is a card, not a map: no doors).
 func _map_scenes() -> Array:
 	var out := []
@@ -57,7 +66,7 @@ func _map_scenes() -> Array:
 				continue
 			var path: String = dir + "/" + f
 			var inst: Node = load(path).instantiate()
-			var is_map: bool = inst.get_script() != null and inst.get_script().resource_path == MAP_SCRIPT
+			var is_map := _runs_map(inst.get_script())
 			if not is_map:
 				_check(_doors(inst).is_empty(), "%s is not a map and has no doors" % path)
 			else:
