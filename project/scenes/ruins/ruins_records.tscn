@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://scripts/map.gd" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="3"]
 [ext_resource type="PackedScene" path="res://scenes/maps/door.tscn" id="5"]
 [ext_resource type="PackedScene" path="res://scenes/ruins/knowledge_pickup.tscn" id="6"]
 [ext_resource type="Script" path="res://scripts/ruins/ruins_decor.gd" id="7"]
+[ext_resource type="PackedScene" path="res://scenes/ruins/zombie_child.tscn" id="8"]
 
 [sub_resource type="NavigationPolygon" id="navpoly"]
 vertices = PackedVector2Array(60, 130, 900, 130, 900, 500, 60, 500)
@@ -47,3 +48,23 @@ piece_id = "fk_records_1"
 [node name="Piece2" parent="." instance=ExtResource("6")]
 position = Vector2(640, 420)
 piece_id = "fk_records_2"
+
+[node name="ZombieHillaryClinton1" parent="." instance=ExtResource("8")]
+position = Vector2(500, 300)
+original = "hillary_clinton"
+batch = 1
+wander = Rect2(380, 280, 320, 100)
+
+[node name="ZombieBillClinton4" parent="." instance=ExtResource("8")]
+position = Vector2(760, 440)
+original = "bill_clinton"
+batch = 4
+wander = Rect2(620, 400, 240, 80)
+
+[node name="Piece3" parent="." instance=ExtResource("6")]
+position = Vector2(480, 470)
+piece_id = "fk_records_3"
+
+[node name="Piece4" parent="." instance=ExtResource("6")]
+position = Vector2(820, 300)
+piece_id = "fk_records_4"

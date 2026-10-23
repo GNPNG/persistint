@@ -1,0 +1,136 @@
+extends "res://scripts/florida/clickable.gd"
+## ZombieChild — a failed clone child from the bunker's clone hall (data/ruins.json,
+## "clone_children"). Shambles around its patch of floor, groans now and then, barks when
+## clicked or bumped. The player never fights it; now and then a polar bear cub from the
+## batch that took eats one (CloneLab), and the tanks restock the batch later.
+## Every batch of an original shares one sprite; the designation reads the original's name
+## through Cast ("Epstein clone, batch 7"). The spoken part of a bark is one of the original's
+## own lines from data/quotes/<file>.json when that file exists; otherwise the groan itself.
+
+const ForbiddenKnowledge := preload("res://scripts/ruins/forbidden_knowledge.gd")
+
+@export var original := "epstein"  # cast id of the person the batch was meant to reproduce
+@export var batch := 1
+@export var wander := Rect2(0, 0, 100, 60)  # global rect it shambles inside
+
+@onready var bubble: Label = $BarkBubble
+@onready var sprite: Sprite2D = $Sprite2D
+
+var _talking := false
+
+
+func _ready() -> void:
+	super()
+	add_to_group("zombie_clones")
+	var path := "res://assets/canon/clone_%s.png" % original
+	if ResourceLoader.exists(path):
+		sprite.texture = load(path)
+	bubble.hide()
+	area_entered.connect(_on_bumped)
+	body_entered.connect(_on_bumped)
+	if DisplayServer.get_name() != "headless":
+		_shamble()
+		_groan_later()
+
+
+static func data() -> Dictionary:
+	return ForbiddenKnowledge.data().get("clone_children", {})
+
+
+## "Epstein clone, batch 7" — the batch designation, the name read through Cast.
+func designation() -> String:
+	return String(data().get("designation", "%s clone, batch %d")) % [Cast.short(original), batch]
+
+
+## One of the original's own lines (data/quotes/<file>.json), or "" if there is none.
+func quote() -> String:
+	var file: String = data().get("originals", {}).get(original, {}).get("quotes", "")
+	var path := "res://data/quotes/%s.json" % file
+	if file == "" or not FileAccess.file_exists(path):
+		return ""
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	var quotes: Array = parsed.get("quotes", []) if parsed is Dictionary else []
+	if quotes.is_empty():
+		return ""
+	var q: Variant = quotes.pick_random()
+	return String(q.get("text", "")) if q is Dictionary else String(q)
+
+
+## A random point inside the wander rect; where the next shamble goes.
+func pick_target() -> Vector2:
+	return wander.position + Vector2(randf() * wander.size.x, randf() * wander.size.y)
+
+
+func _shamble() -> void:
+	if not is_inside_tree():
+		return
+	var target := pick_target()
+	var tw := create_tween()
+	tw.tween_interval(randf_range(1.0, 4.0))
+	tw.tween_callback(func() -> void: sprite.flip_h = target.x < global_position.x)
+	tw.tween_property(self, "global_position", target, randf_range(5.0, 9.0)).set_trans(Tween.TRANS_SINE)
+	tw.tween_callback(_shamble)
+	# the lurch: a slow side-to-side sway while it goes
+	var sway := create_tween().set_loops(4)
+	sway.tween_property(sprite, "rotation", 0.18, 0.6).set_trans(Tween.TRANS_SINE)
+	sway.tween_property(sprite, "rotation", -0.18, 0.6).set_trans(Tween.TRANS_SINE)
+
+
+func _groan_later() -> void:
+	get_tree().create_timer(randf_range(8.0, 20.0)).timeout.connect(func() -> void:
+		if is_inside_tree():
+			bark("barks")
+			_groan_later())
+
+
+func interact() -> void:
+	bark("barks")
+
+
+func _on_bumped(other: Node) -> void:
+	if other == self or not (other.is_in_group("player") or other.has_method("pick_target")):
+		return
+	bark("bump_barks")
+	var tw := create_tween()
+	tw.tween_property(sprite, "position:x", -4.0 if sprite.flip_h else 4.0, 0.12)
+	tw.tween_property(sprite, "position:x", 0.0, 0.2)
+
+
+## Shows and speaks one line from the given list; returns it ("" if already talking).
+func bark(list := "barks") -> String:
+	var lines: Array = data().get(list, [])
+	if lines.is_empty() or _talking:
+		return ""
+	_talking = true
+	var text: String = lines.pick_random()
+	var spoken := quote()
+	bubble.text = "%s: %s" % [designation(), text] + ("\n\"%s\"" % spoken if spoken != "" else "")
+	bubble.show()
+	Voice.speak(spoken if spoken != "" else text, float(data().get("pitch", 1.0)), original)
+	get_tree().create_timer(3.5).timeout.connect(func() -> void:
+		bubble.hide()
+		_talking = false)
+	return text
+
+
+## Eaten by a polar bear cub (CloneLab.pounce): a kawaii puff where it stood, then gone.
+func get_eaten() -> void:
+	remove_from_group("zombie_clones")
+	set_deferred("monitoring", false)
+	var puff := CPUParticles2D.new()
+	puff.one_shot = true
+	puff.amount = 10
+	puff.lifetime = 0.6
+	puff.explosiveness = 1.0
+	puff.spread = 180.0
+	puff.initial_velocity_min = 20.0
+	puff.initial_velocity_max = 50.0
+	puff.gravity = Vector2(0, -20)
+	puff.scale_amount_min = 3.0
+	puff.scale_amount_max = 6.0
+	puff.color = Color(0.85, 0.95, 0.85, 0.8)
+	get_parent().add_child(puff)
+	puff.global_position = global_position
+	puff.emitting = true
+	puff.finished.connect(puff.queue_free)
+	queue_free()

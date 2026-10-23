@@ -38,8 +38,8 @@ func interact() -> void:
 	if not ForbiddenKnowledge.recover(piece_id):
 		return
 	var piece: Dictionary = ForbiddenKnowledge.pieces()[piece_id]
-	var title: String = piece.get("title", "")
-	var text: String = piece.get("text", "")
+	var title: String = ForbiddenKnowledge.fill(piece.get("title", ""))
+	var text: String = ForbiddenKnowledge.fill(piece.get("text", ""))
 	label.text = "Forbidden Knowledge recovered." if title == "" else "Recovered: %s" % title
 	if text != "":
 		label.text += "\n" + text
