@@ -6,6 +6,10 @@ the file. Sorted by path.
 
 | Path | Id | Generator | Frame layout | Stands in for |
 |---|---|---|---|---|
+| project/assets/florida/acc_bougainvillea_wreath.png | acc_bougainvillea_wreath | tools/gen_florida_wearables.py (on the canon paper-doll frame) | still, 91x96 canon doll frame | - |
+| project/assets/florida/acc_flower_crown.png | acc_flower_crown | tools/gen_florida_wearables.py (on the canon paper-doll frame) | still, 91x96 canon doll frame | - |
+| project/assets/florida/acc_plumeria_lei.png | acc_plumeria_lei | tools/gen_florida_wearables.py (on the canon paper-doll frame) | still, 91x96 canon doll frame | - |
+| project/assets/florida/acc_shell_garland.png | acc_shell_garland | tools/gen_florida_wearables.py (on the canon paper-doll frame) | still, 91x96 canon doll frame | - |
 | project/assets/florida/bg_florida_aquarium.png | bg_florida_aquarium | tools/gen_florida_art.py | still | - |
 | project/assets/florida/bg_florida_beach.png | bg_florida_beach | tools/gen_florida_art.py | still | - |
 | project/assets/florida/bg_florida_garden.png | bg_florida_garden | tools/gen_florida_art.py | still | - |

@@ -51,7 +51,11 @@ func _run() -> void:
 	for r: String in Florida.data()["recipes"]:
 		if not Florida.data()["recipes"][r].has("wear"):
 			continue
-		_check(ResourceLoader.exists("res://assets/placeholder/%s.png" % Florida.data()["recipes"][r]["wear"]["part"]), "art exists for %s" % r)
+		var part: String = Florida.data()["recipes"][r]["wear"]["part"]
+		_check(ResourceLoader.exists("res://assets/placeholder/%s.png" % part), "placeholder art exists for %s" % r)
+		_check(PaperDoll.art_dir_for(["body_base", "dress_white", "hair_braids", part]) == PaperDoll.ART_DIRS[0]
+			and ResourceLoader.exists(PaperDoll.part_path(PaperDoll.ART_DIRS[0], part)),
+			"%s goes on the canon doll without dropping it to placeholder art" % r)
 
 	# Critter surprises: every outfit gets one, matching outfits get theirs
 	for kind: String in ["dolphin", "crab", "gull", "mermaid"]:
