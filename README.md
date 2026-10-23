@@ -37,7 +37,7 @@ gatekeeping). Named tactics go into a journal of Forbidden Knowledge.
 
 There is **no combat** anywhere. Influence, not violence.
 
-The author's design notes and world and style bible live in `dev/` (encrypted, author's design
+World backstory and novel world-building material live in `dev/` (encrypted, author's design
 notes).
 
 ## Screenshots
@@ -122,8 +122,8 @@ There is no keyboard-only or gamepad control yet.
 
 What is left before a public release (menus, audio settings, accessibility, a credits screen,
 final art, builds, licensing and more) is tracked in
-[docs/RELEASE_CHECKLIST.md](docs/RELEASE_CHECKLIST.md). The longer-term plan, including a
-social-influence "god-game" stretch goal, is in `dev/` (encrypted, author's design notes).
+[docs/RELEASE_CHECKLIST.md](docs/RELEASE_CHECKLIST.md). Longer term, a
+social-influence "god-game" is a stretch goal.
 
 ## Getting started
 
@@ -194,7 +194,7 @@ godot --path project -s tools/screenshot_scenes.gd -- <out_dir> [prefix]
 | Path | Contents |
 |---|---|
 | `project/` | The Godot project: `scenes/`, `scripts/` (autoloads, maps, mini-games, ruins, Florida, chapters, UI), `data/` (game content as JSON), `dialogue/` (Dialogue Manager files), `assets/`, `audio/`, `themes/`, `tests/`, `tools/`, `addons/` |
-| `dev/` | `dev/` (encrypted, author's design notes): design document, style bible, novel material |
+| `dev/` | `dev/` (encrypted, author's design notes): world backstory and novel world-building material |
 | `docs/` | The release checklist, the promo site plan, the author's banner images and the screenshots above |
 | `prompts/` | One generator prompt per asset (image, video, music) |
 | `tools/` | Python, shell and GDScript tools: island map building, sprite cutting, placeholder art, prompt checks, asset rendering and syncing, voice clips, quote checks |
@@ -204,7 +204,7 @@ godot --path project -s tools/screenshot_scenes.gd -- <out_dir> [prefix]
 
 ## Asset pipeline
 
-- **Style bible.** The author's style bible, in `dev/` (encrypted, author's design notes), is the
+- **Style bible.** The author's style bible is the
   single reference for every generated asset: kawaii pixel art over something unsettling, a master
   palette, per-area identity and vocabulary rules.
 - **One prompt per asset.** Each file under `prompts/` names its asset, the generator (Gemini
@@ -256,10 +256,10 @@ dehumanization, shown in a deliberately cute style.
 `gadsby.json` (Hannah Gadsby), `hillary.json` (Hillary Clinton), `kate.json` (Captain Kate McCue),
 `oprah.json` (Oprah Winfrey), `schumer.json` (Amy Schumer), `silverman.json` (Sarah Silverman),
 `steinem.json` (Gloria Steinem) and `tyra.json` (Tyra Banks), including the
-stand-up jokes (setup and punchline) used in America's Next Top Comic. Each entry lists its source
-and was checked word for word against it (for stand-up jokes, against a transcript of the
-special). Only entries marked as verified are used in the game,
-and `tests/test_quotes_vv.gd` checks this. The exceptions are noted under
+stand-up jokes (setup and punchline) used in America's Next Top Comic. Each entry lists its source.
+Entries checked word for word against that source (for stand-up jokes, against a transcript of
+the special) are marked verified, and only those are used in the game;
+`tests/test_quotes_vv.gd` checks this. The exceptions are noted under
 [Content note](#content-note).
 
 **AI-generated assets.** Much of the art is generated. The canon reference sheets in `art/canon/`
