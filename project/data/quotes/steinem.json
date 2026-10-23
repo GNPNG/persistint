@@ -268,5 +268,12 @@
       "url": "https://nz.news.yahoo.com/gloria-steinem-15-most-powerful-172518976.html",
       "aggregator": true
     }
-  ]
+  ],
+  "_verification": {
+    "method": "WebFetch/WebSearch extraction on 2026-10-23 (tool output, not raw page text); wording not character-checked against the original page",
+    "verified": "2026-10-23",
+    "expires": "never for listed source/date; wording re-check required before use of any line",
+    "aggregator_only": 29,
+    "total": 44
+  }
 }

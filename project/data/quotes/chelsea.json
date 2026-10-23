@@ -121,5 +121,12 @@
       "source": "Chelsea Clinton, 2016 Democratic National Convention speech, July 28 2016 (TIME transcript)",
       "url": "https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/"
     }
-  ]
+  ],
+  "_verification": {
+    "method": "WebFetch/WebSearch extraction on 2026-10-23 (tool output, not raw page text); wording not character-checked against the original page",
+    "verified": "2026-10-23",
+    "expires": "never for listed source/date; wording re-check required before use of any line",
+    "aggregator_only": 0,
+    "total": 24
+  }
 }
