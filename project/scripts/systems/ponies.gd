@@ -7,7 +7,7 @@ extends RefCounted
 ## can be done wrong.
 
 const DATA_PATH := "res://data/ponies.json"
-const ART := "res://assets/placeholder/pony_%s.png"
+const ART := "res://assets/florida/pony_%s.png"  # rigged part sheets, tools/gen_pony_sprites.py
 
 static var _data: Dictionary = {}
 

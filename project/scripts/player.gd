@@ -49,11 +49,15 @@ func _physics_process(_delta: float) -> void:
 		return
 	if nav.is_navigation_finished():
 		velocity = Vector2.ZERO
+		if is_mounted():
+			mount_doll.set_moving(false)
 		return
 	var dir := global_position.direction_to(nav.get_next_path_position())
 	velocity = dir * current_speed()
-	if is_mounted() and absf(dir.x) > 0.1:
-		mount_doll.set_facing_left(dir.x < 0.0)
+	if is_mounted():
+		mount_doll.set_moving(true)
+		if absf(dir.x) > 0.1:
+			mount_doll.set_facing_left(dir.x < 0.0)
 	move_and_slide()
 
 
