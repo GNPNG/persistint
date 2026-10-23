@@ -1,0 +1,16 @@
+[remap]
+
+importer="dialogue_manager"
+importer_version=15
+type="Resource"
+uid="uid://cp1kr7mrw3ald"
+path="res://.godot/imported/florida_beach.dialogue-54f2173771cf18a4ce30449c16a21e9a.tres"
+
+[deps]
+
+source_file="res://dialogue/florida_beach.dialogue"
+dest_files=["res://.godot/imported/florida_beach.dialogue-54f2173771cf18a4ce30449c16a21e9a.tres"]
+
+[params]
+
+defaults=true
