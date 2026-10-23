@@ -1,22 +1,257 @@
-# PERSISTINT — the game
+# PERSISTINT
 
-Promotional/fundraising sandbox game for the novel **Persistint** (Per-sist-INT).
-A cute island. A lovely community. Everyone contributes. *Everyone.*
+![GNPNG x PERSISTINT: An Adventure in Paradise](docs/images/web/gnpng-persistint-banner-adventure-in-paradise.png)
 
-Not-for-profit project: helping girls and women recognize, name, and feel comfortable
-criticizing social-control behavior. The cuteness is the weapon.
+**A lovely little island. Everyone contributes. *Everyone.***
 
-- Engine: Godot 4.6 (GL Compatibility → HTML5-exportable)
-- Design: [docs/DESIGN.md](docs/DESIGN.md)
-- Dialogue: [Dialogue Manager](https://github.com/nathanhoad/godot_dialogue_manager) (`project/dialogue/*.dialogue`)
-- Placeholder art: `tools/gen_placeholder_art.sh` (ImageMagick) until the
-  NotebookLM/Stable-Diffusion canon pipeline replaces it
+PERSISTINT (Per-sist-INT, "INT like INTJ") is a small 2D game made in Godot 4 for the novel
+*Persistint*. It wraps social control in the cutest possible packaging, so
+that players, and girls and women above all, can recognize it, name it and feel comfortable
+criticizing it, at school, at work or online. The cuteness is the weapon.
 
-## Run
+![Title screen](docs/screenshots/main-menu.png)
+
+## The premise
+
+The game moves between three worlds. In each one the player does the same things: dresses up,
+makes things, talks to people, goes places. Only the social framing changes, and that contrast is
+the lesson.
+
+| World | Framing | What it is like |
+|---|---|---|
+| **The tropical Florida Keys** | Innocent play | A Toca World / Animal Crossing sandbox with gardening, crafting, dolphins, friendly crabs and seagulls, aquarium-show mermaids and a pony stable. No scoring, and nothing can be done wrong. |
+| **The Cruise** (flashbacks) | Judged performance | A feminist-themed celebrity cruise before the wreck. WarioWare-style mini-games hosted by real celebrities, where passengers are made over, judged and "empowered". |
+| **Little St. Piere Island** | Ritualized control | Long after the wreck, the ship and an old colony bunker are sacred ruins. A Covenant of Mothers and Priestesses runs daily life by the 28-day Calendar of Blood, and everyone contributes. |
+
+The same paper-doll dress-up is kind play in tropical Florida, a judged makeover on the cruise and part of
+the ritual on the island. After a manipulative moment comes **Name It**: the player picks out the
+hook hidden in a compliment and names the tactic (negging, concern-trolling, in-group
+gatekeeping). Named tactics go into a journal of Forbidden Knowledge.
+
+There is **no combat** anywhere. Influence, not violence.
+
+The author's full plan is in [docs/DESIGN.md](docs/DESIGN.md), and the world and style bible is
+[prompts/STYLE.md](prompts/STYLE.md).
+
+## Screenshots
+
+| | |
+|---|---|
+| ![Priestess Betty greets the player in the village](docs/screenshots/village-dialogue.png) | ![The paper-doll wardrobe](docs/screenshots/wardrobe.png) |
+| The village on Little St. Piere Island | The paper-doll wardrobe |
+| ![The Promenade Deck in the Ruins of Utopia](docs/screenshots/ruins-promenade-deck.png) | ![The Landing bridge mini-game](docs/screenshots/cruise-landing.png) |
+| Ruins of Utopia: the sideways Promenade Deck | The Landing: panic on the bridge (placeholder UI) |
+| ![Hottest of the HOT get-ready chain](docs/screenshots/cruise-hottest-chains.png) | ![Title screen](docs/screenshots/main-menu.png) |
+| Hottest of the HOT: the get-ready chain (placeholder UI) | The title screen |
+
+Much of the art is still placeholder (see [Asset pipeline](#asset-pipeline)).
+
+## What's playable now
+
+This is an early build under active development. Everything listed below exists in `project/`;
+the headless tests in `project/tests/` exercise most of it.
+
+### Little St. Piere Island
+
+| Feature | Status |
+|---|---|
+| Village and Temple maps, click to walk, NPC barks that react to world state | Playable |
+| Four Covenant NPCs (Initiate, Priestess, Drone, Barren) and the branching quest "The Offering" | Playable |
+| Paper-doll wardrobe (hair, dress, accessory), kept in the save | Playable |
+| Ritual puzzle in the Temple | Playable |
+| Calendar of Blood: day phases, 28-day cycles and the Festival of the Fourteenth, which change what NPCs say | Playable |
+| Ruins of Utopia: six rooms, from the wrecked ship down into the bunker and its clone lab, with 14 pieces of Forbidden Knowledge to recover | Playable |
+| Journal: recovered knowledge, named tactics, and cruise flashbacks to unlock | Playable |
+| Name It | Built; its moments are waiting on the author's answers, so none appear in the game yet |
+
+### The tropical Florida Keys
+
+Reached through the village's exit to the tropical beach.
+
+| Feature | Status |
+|---|---|
+| Beach with dolphins, crabs, seagulls and shells to collect | Playable |
+| Garden (plants grow with the days) and craft bench (some crafted pieces can be worn on the paper doll) | Playable |
+| Aquarium with mermaids | Playable |
+| Pony stable: groom, ride, and raise foals whose coat, mane and spots mix from both parents | Playable |
+| Art | Mostly placeholder |
+
+### The Cruise
+
+There are two ways aboard. Leaving the island at the end of its chapter shows a time-jump card and
+starts the cruise chapter, with a new character, at The Interview. Separately, flashbacks to The
+Landing, Hottest of the HOT and America's Next Top Comic unlock with Forbidden Knowledge found in the ruins
+and are played from the journal. There is no cruise hub map yet.
+
+| Mini-game | Status |
+|---|---|
+| **The Interview**: Oprah Winfrey interviews you and your answers set your stats (character creation as a talk show) | Playable |
+| **The Landing**: Spaceteam-style panic on the bridge as Cap'n Kate tries not to crash a dead ship, with Among Us-flavored crew tasks | Playable |
+| **Hottest of the HOT**: Tyra Banks's judging show, with Day of the Tentacle-style get-ready chains across the ship, introduced by Chelsea Clinton | Playable |
+| **America's Next Top Comic**: Sarah Silverman hosts a stand-up contest built like Monkey Island's insult sword fighting. The player picks a setup, then a punchline, from a shuffled pool of verified jokes by Amy Schumer, Sarah Silverman and Hannah Gadsby; the author's own lines in the pool get boos and docked points | Playable |
+| Chapter end and time-jump card | Playable |
+
+### Controls
+
+| Input | Action |
+|---|---|
+| Left click | Walk; click people and things to interact |
+| P | Wardrobe |
+| J | Journal |
+| H | Get off a pony while riding |
+| Click or any key | Continue past chapter and flashback cards |
+
+There is no keyboard-only or gamepad control yet.
+
+### Planned
+
+What is left before a public release (menus, audio settings, accessibility, a credits screen,
+final art, builds, licensing and more) is tracked in
+[docs/RELEASE_CHECKLIST.md](docs/RELEASE_CHECKLIST.md). The longer-term plan, including a
+social-influence "god-game" stretch goal, is in [docs/DESIGN.md](docs/DESIGN.md).
+
+## Getting started
+
+You need **Godot 4.6** (standard build, not .NET). The project targets 4.6 with the GL
+Compatibility renderer and is tested with 4.6.3.
 
 ```bash
-godot --path project            # editor/run
-tools/gen_placeholder_art.sh    # regenerate placeholder assets
+git clone <this repository's URL>
+cd <the cloned folder>
+godot --path project            # run the game
+godot --editor --path project   # or open it in the editor
 ```
 
-Controls: click to walk · click people/things to interact · **P** wardrobe
+You can also start Godot, choose **Import** and select `project/project.godot`. The game opens on
+the title menu.
+
+The game saves to `user://save.json`, in Godot's per-user data folder for "Persistint".
+
+### Exporting
+
+`project/export_presets.cfg` has one preset, **Web** (HTML5), which writes to `exports/web/`.
+Install the Godot 4.6 export templates, then run:
+
+```bash
+godot --headless --path project --export-release "Web" ../exports/web/index.html
+```
+
+There are no desktop presets yet. `tools/deploy_web.sh` and `infra/` are the author's own
+hosting scripts and are not needed to play or build.
+
+## Running the tests
+
+The tests are Godot scripts run headless, one at a time. Import the project once first, since a
+fresh clone has no `.godot/` cache:
+
+```bash
+godot --headless --path project --import
+
+godot --headless --path project -s tests/verify_slice.gd
+godot --headless --path project -s tests/test_florida.gd
+# ...and the same for each tests/test_*.gd
+```
+
+To run them all:
+
+```bash
+for t in project/tests/verify_slice.gd project/tests/test_*.gd; do
+  echo "$(basename "$t"): $(godot --headless --path project -s "tests/$(basename "$t")" 2>&1 | grep RESULT)"
+done
+```
+
+Each script prints `RESULT: PASS` or lists its failures. Most tests back up your real
+`user://save.json` and restore it afterwards; `test_landing_crew.gd` does not yet, so back up your
+save before running it. There is no single runner script or CI yet.
+
+Opening or importing the project in the editor can rewrite `project/project.godot` (sections
+reordered, some settings dropped), so check `git diff` before committing.
+
+`project/tools/screenshot_scenes.gd` saves a screenshot of each main scene. It needs a display, so
+run it without `--headless`:
+
+```bash
+godot --path project -s tools/screenshot_scenes.gd -- <out_dir> [prefix]
+```
+
+## Repository layout
+
+| Path | Contents |
+|---|---|
+| `project/` | The Godot project: `scenes/`, `scripts/` (autoloads, maps, mini-games, ruins, Florida, chapters, UI), `data/` (game content as JSON), `dialogue/` (Dialogue Manager files), `assets/`, `audio/`, `themes/`, `tests/`, `tools/`, `addons/` |
+| `docs/` | The design document, the release checklist, the promo site plan, the author's banner images and the screenshots above |
+| `prompts/` | The world and style bible (`STYLE.md`) and one generator prompt per asset (image, video, music) |
+| `tools/` | Python, shell and GDScript tools: island map building, sprite cutting, placeholder art, prompt checks, asset rendering and syncing, voice clips, quote checks |
+| `sops/` | Reusable standard operating procedures written while making this game |
+| `art/` | Canon reference art, island map reference data with its sources, and the folder for voice reference clips (clips not committed) |
+| `infra/` | Web server config for the author's hosting |
+
+## Asset pipeline
+
+- **Style bible.** [prompts/STYLE.md](prompts/STYLE.md) is the single reference for every
+  generated asset: kawaii pixel art over something unsettling, a master palette, per-area
+  identity, vocabulary rules, and where each fact comes from.
+- **One prompt per asset.** Each file under `prompts/` names its asset, the generator (Gemini
+  image, Veo video or Lyria music) and where the result goes in the game. Prompts are compiled
+  from the bible ahead of time so they can be pasted into a generator as they are.
+  `python3 tools/check_prompts.py` checks them.
+- **Rendering.** `tools/render_all_assets.py` renders prompts through the Gemini API (`--status`,
+  `--export-queue`, `--type ...`). A browser-driven renderer for the Gemini web app is in
+  progress. `tools/sync_rendered_assets.py` copies rendered files into `project/` (converting video
+  to Godot's `.ogv`) and lists what is still missing. See [prompts/README.md](prompts/README.md).
+- **Placeholders.** Until rendered art arrives, `tools/gen_placeholder_art.sh` (ImageMagick) and
+  the generator scripts in `tools/` make placeholder tiles and sprites.
+- **Voices.** Spoken lines are pre-rendered with Coqui XTTS v2 (`tools/export_voice_lines.py`, then
+  `tools/generate_voice_clips.py`). `project/data/voices.json` gives each speaker either a voice
+  cloned from a short public clip of the real person, or one of XTTS's built-in studio voices for
+  fictional characters. Speakers with neither use system text-to-speech. The reference clips are
+  not committed.
+- **Methods.** The procedures behind all this (style bible and prompts, rendering, voice cloning,
+  quote sourcing, playtest triage, parallel development) are written up in [sops/](sops/README.md)
+  so they can be reused on other projects.
+
+## Content note
+
+PERSISTINT is satire with mature themes: social control, controlled reproduction and
+dehumanization, shown in a deliberately cute style.
+
+- **Real public figures appear under their real names**, as in the author's source material:
+  the celebrities on the cruise and, in the ruins, Jeffrey Epstein, Bill Clinton, Hillary Clinton
+  and Bill Gates. The island map is traced from map data of Little Saint James.
+- **Cloned voices.** Some real people speak in AI-cloned voices. Lines given to real people are
+  taken from their own public quotes and jokes (see below), with two exceptions: Tyra Banks's
+  judging verdicts use the design document's own example wording, and the clone children in the
+  ruins speak invented groans when their original has no quote file.
+- **Cartoon gore** appears in one area only, the clone lab in the ruins: kawaii gore with pastel
+  splats and hearts, nothing realistic.
+
+## Credits and provenance
+
+| What | Source | Licence |
+|---|---|---|
+| Engine | [Godot Engine](https://godotengine.org) | MIT ([godotengine.org/license](https://godotengine.org/license)) |
+| Dialogue system | [Dialogue Manager](https://github.com/nathanhoad/godot_dialogue_manager) 3.10.4 by Nathan Hoad and contributors, in `project/addons/dialogue_manager/` | MIT (see its `LICENSE`) |
+| Island map data | OpenStreetMap via the Overpass API; see [art/reference/little_st_james/SOURCES.md](art/reference/little_st_james/SOURCES.md) | ODbL 1.0, © OpenStreetMap contributors |
+| Island reference photos | Wikimedia Commons, U.S. Virgin Islands government (visual reference only); same `SOURCES.md` | Public domain |
+| Voice model | [Coqui XTTS v2](https://huggingface.co/coqui/XTTS-v2) | Coqui Public Model License (CPML), non-commercial use ([licence text](https://huggingface.co/coqui/XTTS-v2/raw/main/LICENSE.txt); see decision 4 in [docs/RELEASE_CHECKLIST.md](docs/RELEASE_CHECKLIST.md)) |
+
+**Quotes.** Real people's lines come from `project/data/quotes/`, which holds the public words of
+Margaret Atwood, Chelsea Clinton, Ellen DeGeneres, Hannah Gadsby, Hillary Clinton, Captain Kate
+McCue, Oprah Winfrey, Amy Schumer, Sarah Silverman, Gloria Steinem and Tyra Banks, including the
+stand-up jokes (setup and punchline) used in America's Next Top Comic. Each entry lists its source
+and was checked word for word against it (for stand-up jokes, against a transcript of the
+special). Only entries marked as verified are used in the game,
+and `tests/test_quotes_vv.gd` checks this. The exceptions are noted under
+[Content note](#content-note).
+
+**AI-generated assets.** Much of the art is generated. The canon reference sheets in `art/canon/`
+were made with NotebookLM and Gemini, and the game's character and paper-doll sprites are cut from
+those sheets. The planned music, key art and video are to be generated with Gemini (Lyria, image
+and Veo) from the prompts in `prompts/`. All voice clips, cloned or built-in, are generated with
+XTTS v2.
+
+## License
+
+License: not yet chosen; all rights reserved by the author until then.
+
+Third-party components keep their own licences (see the table above).
