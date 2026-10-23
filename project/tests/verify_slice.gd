@@ -182,6 +182,26 @@ func _run() -> void:
 	_check(name_it.beat("hottest_verdict").has("lines"), "hottest: a Name It beat follows the verdict")
 	hot.queue_free()
 
+	# Next Top Comic: Monkey Island insult-sword-fighting with setups and punchlines.
+	ws.reset()
+	var comic: Control = load("res://scenes/minigames/next_top_comic.tscn").instantiate()
+	root.add_child(comic)
+	comic.data["pairs"] = [{"setup": "_s1", "punchline": "_p1"}, {"setup": "_s2", "punchline": "_p2"}]
+	comic.data["wins_needed"] = 2
+	_check(comic.host_name() == "Sarah Silverman", "comic: hosted by Sarah Silverman")
+	comic.fire_setup(0)
+	_check(not comic.known().has("_p1"), "comic: an unheard punchline is not known yet")
+	_check(not comic.answer("_wrong"), "comic: a wrong punchline gets no laugh")
+	_check(comic.known().has("_p1"), "comic: losing teaches the correct punchline (Monkey Island)")
+	comic.fire_setup(0)
+	_check(comic.answer("_p1") and comic.audience_laughing, "comic: the 'correct' punchline makes the women in the audience laugh")
+	comic.fire_setup(1)
+	comic.answer("_x")
+	comic.fire_setup(1)
+	comic.answer("_p2")
+	_check(ws.get_flag("comic_done") == true, "comic: enough laughs wins the set; result in WorldState")
+	comic.queue_free()
+
 	if had_save:
 		var f := FileAccess.open(ws.SAVE_PATH, FileAccess.WRITE)
 		f.store_string(backup)
