@@ -16,6 +16,10 @@ import { sniffExt } from '../lib/media.mjs';
 import image from '../drivers/image.mjs';
 import video from '../drivers/video.mjs';
 import music from '../drivers/music.mjs';
+import { classifyOutcome, outcomePhrases } from '../lib/tracker.mjs';
+import { loadSelectors } from '../lib/config.mjs';
+
+const phrases = outcomePhrases(loadSelectors());
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const FIXTURE = pathToFileURL(path.join(HERE, 'fixtures/fake_gemini.html')).href;
@@ -95,6 +99,7 @@ test('a broken selector fails at its step and leaves screenshot, HTML and consol
   const t = task('smoke_broken', 'music', '.mp3');
   await assert.rejects(music.render(session, broken, t), (e) => {
     assert.equal(e.step, 'ready', 'a missing prompt box is caught while waiting for the page to hydrate');
+    assert.equal(classifyOutcome(e, phrases), 'selector', 'tracker outcome');
     assert.ok(e.debugDir && e.debugDir.startsWith(DEBUG_DIR));
     for (const f of ['screenshot.png', 'page.html', 'console.log', 'error.txt']) assert.ok(fs.existsSync(path.join(e.debugDir, f)), f);
     const html = fs.readFileSync(path.join(e.debugDir, 'page.html'), 'utf8');
@@ -114,6 +119,7 @@ test('a text-only reply (refusal) fails fast at wait with the reply text, withou
     assert.equal(e.step, 'wait');
     assert.match(e.message, /finished without any media.*can't generate that/);
     assert.ok(!e.abortRun);
+    assert.equal(classifyOutcome(e, phrases), 'refused', 'tracker outcome');
     if (e.debugDir) fs.rmSync(e.debugDir, { recursive: true, force: true });
     return true;
   });
@@ -127,6 +133,7 @@ test('a usage-limit notice fails at wait and asks the run to stop', { skip: !chr
     assert.equal(e.step, 'wait');
     assert.match(e.message, /usage limit notice.*reached your limit/);
     assert.equal(e.abortRun, true);
+    assert.equal(classifyOutcome(e, phrases), 'quota', 'tracker outcome');
     if (e.debugDir) fs.rmSync(e.debugDir, { recursive: true, force: true });
     return true;
   });

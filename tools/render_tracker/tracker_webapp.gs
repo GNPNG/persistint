@@ -7,10 +7,13 @@
  * Generic: tab names, header names and outcome rules are all in CONFIG below,
  * so the same script works for another project's tracker (e.g. seedfall).
  *
- * Setup
+ * Setup: see DEPLOY.md next to this file (keyboard-only, with clasp: deploy.sh does it all).
+ *   By hand instead:
  *   1. Extensions > Apps Script in the tracker spreadsheet, paste this file.
  *   2. Project Settings > Script Properties: add TRACKER_SECRET = <long random string>.
  *      (Optional) SPREADSHEET_ID if the script is standalone rather than bound.
+ *      Or push a tracker_secret.local.gs defining TRACKER_SECRET_LOCAL (written by
+ *      deploy.mjs, gitignored); the first request copies it into the Script Property.
  *   3. Deploy > New deployment > Web app; Execute as: Me; Who has access: Anyone
  *      (the shared secret is the access control). Copy the /exec URL into the renderer.
  *
@@ -20,17 +23,21 @@
  *     "outcome": "done|failed|quota|refused|timeout|selector|skipped",   // attempt_end
  *     "error": "...", "file": "path/of/rendered/file", "debug_dir": "...",
  *     "run_id": "...", "surface": "gemini web / model name",
- *     "started": "2026-10-23T10:00:00Z"   // optional; default = Last Attempt set by attempt_start
+ *     "started": "2026-10-23T10:00:00Z",  // optional; default = Last Attempt set by attempt_start
+ *     "note": "..."                        // optional; appended to the row's Notes cell (once)
  *   }
  *   -> { ok: true, asset_id, kind, status, attempts, next_eligible }
  *
  * GET  ?secret=...&kind=image|video|music (optional)&all=1 (optional)&limit=N (optional)
  *   -> { ok: true, now, kinds: { image: {daily_cap, used_today, remaining_today, min_gap_s,
  *        cooldown_min, max_retries, retry_backoff_s, last_quota_hit, last_attempt_end,
- *        kind_next_eligible, ready}, ... },
+ *        kind_next_eligible, next_row_eligible, ready}, ... },
  *        rows: [ {asset_id, kind, step, status, attempts, failures, spec, drop, game, prompt,
  *                 next_eligible}, ... ] }
- *   rows = Pending rows, plus Failed/Quota rows whose Next Eligible has passed.
+ *   rows = Pending rows, plus Failed/Quota rows whose Next Eligible has passed, plus
+ *   Rendering rows whose Last Attempt is older than STALE_RENDERING_MIN (a renderer that died
+ *   between attempt_start and attempt_end). next_row_eligible = the earliest future Next
+ *   Eligible of a Failed/Quota row of that kind (the next retry), or null.
  *   Unless all=1, rows of a kind that is not ready (cap used up, quota cooldown,
  *   or min gap not yet elapsed) are left out.
  *
@@ -95,6 +102,10 @@ var CONFIG = {
   RETRY_OUTCOMES: ['failed', 'timeout', 'selector'],
   // Backoff = Retry Backoff (s) * BACKOFF_FACTOR^(failures - 1).
   BACKOFF_FACTOR: 2,
+  // A row left in Rendering longer than this (renderer killed mid-asset) is offered again.
+  STALE_RENDERING_MIN: 120,
+  // Used when the script is neither bound to the spreadsheet nor given SPREADSHEET_ID.
+  DEFAULT_SPREADSHEET_ID: '1WNbk19jM4_gVMklRA4rdA8Im9K_v8rb7VdvDFVc8geA',
   LOCK_WAIT_MS: 30000
 };
 
@@ -199,6 +210,11 @@ function attemptEnd_(b) {
   ctx.set('lastError', outcome === 'done' ? '' : (b.error || ''));
   ctx.set('nextEligible', next);
   if (outcome === 'done' && b.file) ctx.set('renderedFile', b.file);
+  if (b.note) {
+    var notes = String(ctx.get('notes') || '');
+    var note = String(b.note).slice(0, 500);
+    if (notes.indexOf(note) < 0) ctx.set('notes', notes ? notes + '\n' + note : note);
+  }
   ctx.save();
 
   return { ok: true, asset_id: b.asset_id, kind: ctx.kind, status: status, attempts: attempts,
@@ -215,22 +231,30 @@ function queue_(onlyKind, all, limit) {
     var q = quotaFor_(kind);
     var k = kindState_(kind, q, log, now);
     kinds[kind] = k;
-    if (!all && !k.ready) return;
+    k.next_row_eligible = null;
 
     var sh = sheet_(CONFIG.KIND_TABS[kind]);
     var data = sh.getDataRange().getValues();
     var col = headerIndex_(data[0], CONFIG.KIND_COLS, CONFIG.KIND_TABS[kind]);
     var picked = 0;
+    var staleBefore = now.getTime() - CONFIG.STALE_RENDERING_MIN * 60 * 1000;
     for (var r = 1; r < data.length; r++) {
       var row = data[r];
       var id = row[col.id];
       if (!id) continue;
       var st = row[col.status];
       var ne = asDate_(row[col.nextEligible]);
+      var la = asDate_(row[col.lastAttempt]);
+      var retryable = st === CONFIG.STATUS.failed || st === CONFIG.STATUS.quota;
+      if (retryable && ne && ne > now &&
+          (!k.next_row_eligible || ne.getTime() < new Date(k.next_row_eligible).getTime())) {
+        k.next_row_eligible = iso_(ne);
+      }
       var eligible = st === CONFIG.STATUS.pending ||
-        ((st === CONFIG.STATUS.failed || st === CONFIG.STATUS.quota) && ne && ne <= now);
+        (retryable && ne && ne <= now) ||
+        (st === CONFIG.STATUS.rendering && (!la || la.getTime() < staleBefore));
       if (!eligible) continue;
-      if (!all && picked >= k.remaining_today) break;
+      if (!all && (!k.ready || picked >= k.remaining_today)) continue;
       rows.push({
         asset_id: id, kind: kind, step: row[col.step], status: st,
         attempts: toNum_(row[col.attempts]), failures: countFailuresIn_(log, kind, id),
@@ -350,7 +374,9 @@ function headerIndex_(headerRow, names, tab) {
 
 function ss_() {
   var id = PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID');
-  return id ? SpreadsheetApp.openById(id) : SpreadsheetApp.getActiveSpreadsheet();
+  if (id) return SpreadsheetApp.openById(id);
+  var active = SpreadsheetApp.getActiveSpreadsheet();   // bound script
+  return active || SpreadsheetApp.openById(CONFIG.DEFAULT_SPREADSHEET_ID);
 }
 
 function sheet_(name) {
@@ -362,8 +388,17 @@ function sheet_(name) {
 function checkSecret_(given) {
   var props = PropertiesService.getScriptProperties();
   var want = props.getProperty('TRACKER_SECRET');
-  // First call after deployment: adopt the caller's secret (at least 32 chars) so no secret is
-  // ever written into the script source. Later calls must match it.
+  // Keyboard-only setup: deploy.mjs writes tracker_secret.local.gs (gitignored) and clasp pushes
+  // it. When present it is the secret, and it is stored as the TRACKER_SECRET Script Property
+  // (so a new secret pushed later replaces the old one).
+  if (typeof TRACKER_SECRET_LOCAL !== 'undefined' && String(TRACKER_SECRET_LOCAL).length >= 32) {
+    if (want !== String(TRACKER_SECRET_LOCAL)) {
+      want = String(TRACKER_SECRET_LOCAL);
+      props.setProperty('TRACKER_SECRET', want);
+    }
+  }
+  // Otherwise the first call after deployment adopts the caller's secret (at least 32 chars) so
+  // no secret is ever written into the script source. Later calls must match it.
   if (!want && typeof given === 'string' && given.length >= 32) {
     var lock = LockService.getScriptLock();
     lock.waitLock(10000);
@@ -372,7 +407,7 @@ function checkSecret_(given) {
       if (!want) { props.setProperty('TRACKER_SECRET', given); want = given; }
     } finally { lock.releaseLock(); }
   }
-  return !!want && given === want;
+  return !!want && typeof given === 'string' && given === want;
 }
 
 function asDate_(v) {

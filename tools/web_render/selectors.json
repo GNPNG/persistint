@@ -1,6 +1,11 @@
 {
   "_readme": "Every URL, selector and click order the web renderer uses. Edit this file (not the code) when Google changes its pages. Each selector list is tried in order until one matches a visible element. Selector syntax is Puppeteer's: plain CSS, ::-p-aria(Accessible name), ::-p-text(Visible text), ::-p-xpath(...). steps.result must be plain CSS. {aspect} is replaced with the asset's ratio. Validate with: node render.mjs --check-selectors. NONE of the Google selectors below have been tested against the live signed-in pages yet; they come from Google's help pages and community scripts.",
   "loginUrl": "https://accounts.google.com/",
+  "outcomeText": {
+    "_readme": "Used by tracker mode (lib/tracker.mjs) to classify a reply that finished without media. Lower-case substrings of the reply text. quota: also every ::-p-text(...) in steps.limitNotice. refused: the asset is parked as 'Needs prompt edit' (no retry). A reply with no media that matches neither is 'failed' and retried.",
+    "quota": ["usage limit", "reached your limit", "limit resets", "out of generations", "come back tomorrow"],
+    "refused": ["can't generate", "can't create", "cannot generate", "cannot create", "unable to generate", "unable to create", "not able to generate", "not able to create", "can't help with", "policy", "policies", "guidelines", "violate", "blocked", "not allowed"]
+  },
   "kinds": {
     "image": "gemini_image",
     "video": "gemini_video",
