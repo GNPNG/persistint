@@ -1,132 +1,223 @@
 {
   "_note": "Chelsea Clinton's own words only, each checked against the page in 'url' on 2026-10-23. Used for her Empowerment Emcee lines.",
+  "_verification": {
+    "method": "Verbatim check on 2026-10-23: every source page was downloaded as raw HTML/PDF (Wayback Machine snapshot where the live site refuses non-browser requests) and each quote's text was string-matched against the page text, ignoring only quote-mark/dash typography. Aggregator pages (Goodreads, Wikiquote, quote listicles) were also searched for a primary source; quotes found only on aggregators are verified=false.",
+    "fields": "per quote: verified, checked_url (page the wording was matched on), primary_source (when not the listed url), note, was (original text when corrected)",
+    "verified": 21,
+    "unverified": 4,
+    "corrected": 7,
+    "total": 25,
+    "date": "2026-10-23",
+    "rule": "Only quotes with verified=true may be used in game (tests/test_quotes_vv.gd)."
+  },
   "quotes": [
     {
       "text": "So, if anyone ever tells you no, if anyone says your voice isn't important or your dreams are too big, remember these women.",
       "source": "She Persisted (Philomel, 2017)",
-      "url": "https://www.goodreads.com/work/quotes/55758109-she-persisted"
+      "url": "https://www.goodreads.com/work/quotes/55758109-she-persisted",
+      "verified": false,
+      "checked_url": "https://www.goodreads.com/work/quotes/55758109-she-persisted",
+      "note": "Book text (She Persisted, 2017) not available online; full sentence found only on Goodreads. Slate's review confirms only the closing words 'Remember these women,' and 'They persisted and so should you.' Aggregator-only: wording appears on www.goodreads.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "They persisted and so should you.",
       "source": "She Persisted (Philomel, 2017), closing line",
-      "url": "https://slate.com/culture/2017/06/chelsea-clintons-childrens-book-she-persisted-reviewed.html"
+      "url": "https://slate.com/culture/2017/06/chelsea-clintons-childrens-book-she-persisted-reviewed.html",
+      "verified": true,
+      "checked_url": "https://slate.com/culture/2017/06/chelsea-clintons-childrens-book-she-persisted-reviewed.html",
+      "note": "Slate's review quotes it as the book's closing line. Book text itself not available online."
     },
     {
       "text": "everyone who's ever wanted to speak up but has been told to quiet down … everyone who's ever been made to feel less than.",
       "source": "Chelsea Clinton statement announcing She Persisted (2017)",
-      "url": "https://slate.com/culture/2017/06/chelsea-clintons-childrens-book-she-persisted-reviewed.html"
+      "url": "https://slate.com/culture/2017/06/chelsea-clintons-childrens-book-she-persisted-reviewed.html",
+      "verified": true,
+      "checked_url": "https://slate.com/culture/2017/06/chelsea-clintons-childrens-book-she-persisted-reviewed.html",
+      "note": ""
     },
     {
       "text": "In her refusal to get up, she persisted in taking a stand for what's right.",
       "source": "She Persisted (2017), Claudette Colvin",
-      "url": "https://slate.com/culture/2017/06/chelsea-clintons-childrens-book-she-persisted-reviewed.html"
+      "url": "https://slate.com/culture/2017/06/chelsea-clintons-childrens-book-she-persisted-reviewed.html",
+      "verified": true,
+      "checked_url": "https://slate.com/culture/2017/06/chelsea-clintons-childrens-book-she-persisted-reviewed.html",
+      "note": ""
     },
     {
       "text": "Sometimes, something that might seem small like a dress code policy is actually one of the ceilings",
       "source": "Chelsea Clinton, MTV interview",
-      "url": "https://www.bustle.com/articles/110906-5-chelsea-clinton-quotes-on-feminism-to-inspire-you-to-action"
+      "url": "https://www.bustle.com/articles/110906-5-chelsea-clinton-quotes-on-feminism-to-inspire-you-to-action",
+      "verified": false,
+      "checked_url": "https://www.bustle.com/articles/110906-5-chelsea-clinton-quotes-on-feminism-to-inspire-you-to-action",
+      "note": "Aggregator-only: wording appears on www.bustle.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "Of course I'm a feminist.",
       "source": "Chelsea Clinton (quoted in Bustle)",
-      "url": "https://www.bustle.com/articles/110906-5-chelsea-clinton-quotes-on-feminism-to-inspire-you-to-action"
+      "url": "https://www.bustle.com/articles/110906-5-chelsea-clinton-quotes-on-feminism-to-inspire-you-to-action",
+      "verified": false,
+      "checked_url": "https://www.bustle.com/articles/110906-5-chelsea-clinton-quotes-on-feminism-to-inspire-you-to-action",
+      "note": "Aggregator-only: wording appears on www.bustle.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "Which, of course, is so outlandish — I should be OK in being expected to be treated with respect",
       "source": "Chelsea Clinton (quoted in Bustle)",
-      "url": "https://www.bustle.com/articles/110906-5-chelsea-clinton-quotes-on-feminism-to-inspire-you-to-action"
+      "url": "https://www.bustle.com/articles/110906-5-chelsea-clinton-quotes-on-feminism-to-inspire-you-to-action",
+      "verified": false,
+      "checked_url": "https://www.bustle.com/articles/110906-5-chelsea-clinton-quotes-on-feminism-to-inspire-you-to-action",
+      "note": "Aggregator-only: wording appears on www.bustle.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "I'm here as a proud American.",
       "source": "Chelsea Clinton, 2016 Democratic National Convention speech, July 28 2016 (TIME transcript)",
-      "url": "https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/"
+      "url": "https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/",
+      "verified": true,
+      "checked_url": "https://web.archive.org/web/20250322034545/https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/",
+      "note": "Live page refuses non-browser fetches (HTTP 406/403); wording checked against the Wayback Machine snapshot of the same URL."
     },
     {
-      "text": "A proud democrat.",
+      "text": "A proud Democrat.",
+      "was": "A proud democrat.",
       "source": "Chelsea Clinton, 2016 Democratic National Convention speech, July 28 2016 (TIME transcript)",
-      "url": "https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/"
+      "url": "https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/",
+      "verified": true,
+      "checked_url": "https://awpc.cattcenter.iastate.edu/communication/remarks-2016-dnc-july-28-2016",
+      "note": "Fragment of the opening sentence ('I'm here as a proud American... a proud Democrat... a proud mother...'). Corrected capitalization of 'Democrat'. Checked against a transcript/republication, not the original broadcaster or publisher."
     },
     {
       "text": "A proud mother.",
       "source": "Chelsea Clinton, 2016 Democratic National Convention speech, July 28 2016 (TIME transcript)",
-      "url": "https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/"
+      "url": "https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/",
+      "verified": true,
+      "checked_url": "https://awpc.cattcenter.iastate.edu/communication/remarks-2016-dnc-july-28-2016",
+      "note": "Fragment of the opening sentence ('I'm here as a proud American... a proud Democrat... a proud mother...'). Checked against a transcript/republication, not the original broadcaster or publisher."
     },
     {
       "text": "And tonight in particular, a very, very proud daughter.",
       "source": "Chelsea Clinton, 2016 Democratic National Convention speech, July 28 2016 (TIME transcript)",
-      "url": "https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/"
+      "url": "https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/",
+      "verified": true,
+      "checked_url": "https://awpc.cattcenter.iastate.edu/communication/remarks-2016-dnc-july-28-2016",
+      "note": "Fragment of the opening sentence. Catt Center and Raw Story transcripts match exactly; TIME's transcript punctuates 'and tonight, in particular,'. Checked against a transcript/republication, not the original broadcaster or publisher."
     },
     {
-      "text": "My parents cared about my thought.",
+      "text": "I never once doubted that my parents cared about my thoughts and my ideas.",
+      "was": "My parents cared about my thought.",
       "source": "Chelsea Clinton, 2016 Democratic National Convention speech, July 28 2016 (TIME transcript)",
-      "url": "https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/"
+      "url": "https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/",
+      "verified": true,
+      "checked_url": "https://awpc.cattcenter.iastate.edu/communication/remarks-2016-dnc-july-28-2016",
+      "note": "Extracted text had dropped words ('my thought'); replaced with the full sentence as transcribed by the Catt Center, Romper and TIME. Checked against a transcript/republication, not the original broadcaster or publisher."
     },
     {
-      "text": "And I always, always, knew how deeply they loved me.",
+      "text": "And I always, always knew how deeply they loved me.",
+      "was": "And I always, always, knew how deeply they loved me.",
       "source": "Chelsea Clinton, 2016 Democratic National Convention speech, July 28 2016 (TIME transcript)",
-      "url": "https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/"
+      "url": "https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/",
+      "verified": true,
+      "checked_url": "https://awpc.cattcenter.iastate.edu/communication/remarks-2016-dnc-july-28-2016",
+      "note": "Removed a comma not in any transcript. Checked against a transcript/republication, not the original broadcaster or publisher."
     },
     {
       "text": "That feeling of being valued and loved, that's what my mom wants for every child.",
       "source": "Chelsea Clinton, 2016 Democratic National Convention speech, July 28 2016 (TIME transcript)",
-      "url": "https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/"
+      "url": "https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/",
+      "verified": true,
+      "checked_url": "https://web.archive.org/web/20250322034545/https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/",
+      "note": "Live page refuses non-browser fetches (HTTP 406/403); wording checked against the Wayback Machine snapshot of the same URL."
     },
     {
       "text": "How does she do it?",
       "source": "Chelsea Clinton, 2016 Democratic National Convention speech, July 28 2016 (TIME transcript)",
-      "url": "https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/"
+      "url": "https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/",
+      "verified": true,
+      "checked_url": "https://awpc.cattcenter.iastate.edu/communication/remarks-2016-dnc-july-28-2016",
+      "note": "Fragment: 'People ask me all the time, how does she do it?' Checked against a transcript/republication, not the original broadcaster or publisher."
     },
     {
       "text": "How does she keep going?",
       "source": "Chelsea Clinton, 2016 Democratic National Convention speech, July 28 2016 (TIME transcript)",
-      "url": "https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/"
+      "url": "https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/",
+      "verified": true,
+      "checked_url": "https://awpc.cattcenter.iastate.edu/communication/remarks-2016-dnc-july-28-2016",
+      "note": "Fragment: 'How does she keep going amid the sound and fury of politics?' (TIME: 'keep going, amid the sounds and the fury'). Checked against a transcript/republication, not the original broadcaster or publisher."
     },
     {
-      "text": "Amid the sound and the fury of politics.",
+      "text": "Amid the sounds and the fury of politics.",
+      "was": "Amid the sound and the fury of politics.",
       "source": "Chelsea Clinton, 2016 Democratic National Convention speech, July 28 2016 (TIME transcript)",
-      "url": "https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/"
+      "url": "https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/",
+      "verified": true,
+      "checked_url": "https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/",
+      "note": "Fragment of 'How does she keep going, amid the sounds and the fury of politics?' as transcribed by TIME and Romper. The Catt Center text reads 'amid the sound and fury of politics'."
     },
     {
-      "text": "It's because she never ever forgets who she's fighting for.",
+      "text": "It's because she never, ever forgets who she's fighting for.",
+      "was": "It's because she never ever forgets who she's fighting for.",
       "source": "Chelsea Clinton, 2016 Democratic National Convention speech, July 28 2016 (TIME transcript)",
-      "url": "https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/"
+      "url": "https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/",
+      "verified": true,
+      "checked_url": "https://awpc.cattcenter.iastate.edu/communication/remarks-2016-dnc-july-28-2016",
+      "note": "Restored the comma in 'never, ever' (all transcripts). Checked against a transcript/republication, not the original broadcaster or publisher."
     },
     {
-      "text": "I hope That my children will someday be as proud of me as I am of my mom.",
+      "text": "I hope that my children will someday be as proud of me as I am of my mom.",
+      "was": "I hope That my children will someday be as proud of me as I am of my mom.",
       "source": "Chelsea Clinton, 2016 Democratic National Convention speech, July 28 2016 (TIME transcript)",
-      "url": "https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/"
+      "url": "https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/",
+      "verified": true,
+      "checked_url": "https://awpc.cattcenter.iastate.edu/communication/remarks-2016-dnc-july-28-2016",
+      "note": "Corrected stray capital in 'That'. Checked against a transcript/republication, not the original broadcaster or publisher."
     },
     {
       "text": "I am so grateful to be her daughter.",
       "source": "Chelsea Clinton, 2016 Democratic National Convention speech, July 28 2016 (TIME transcript)",
-      "url": "https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/"
+      "url": "https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/",
+      "verified": true,
+      "checked_url": "https://web.archive.org/web/20250322034545/https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/",
+      "note": "Live page refuses non-browser fetches (HTTP 406/403); wording checked against the Wayback Machine snapshot of the same URL."
     },
     {
       "text": "She makes me proud every single day.",
       "source": "Chelsea Clinton, 2016 Democratic National Convention speech, July 28 2016 (TIME transcript)",
-      "url": "https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/"
+      "url": "https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/",
+      "verified": true,
+      "checked_url": "https://web.archive.org/web/20250322034545/https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/",
+      "note": "Live page refuses non-browser fetches (HTTP 406/403); wording checked against the Wayback Machine snapshot of the same URL."
     },
     {
-      "text": "And mom, grandma would be so, so proud of you tonight.",
+      "text": "And Mom, Grandma would be so, so proud of you tonight.",
+      "was": "And mom, grandma would be so, so proud of you tonight.",
       "source": "Chelsea Clinton, 2016 Democratic National Convention speech, July 28 2016 (TIME transcript)",
-      "url": "https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/"
+      "url": "https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/",
+      "verified": true,
+      "checked_url": "https://awpc.cattcenter.iastate.edu/communication/remarks-2016-dnc-july-28-2016",
+      "note": "Capitalization per the Catt Center transcript (TIME: 'And, mom, grandma'). Checked against a transcript/republication, not the original broadcaster or publisher."
     },
     {
       "text": "I know with all my heart that my mother will make us proud as our next president.",
       "source": "Chelsea Clinton, 2016 Democratic National Convention speech, July 28 2016 (TIME transcript)",
-      "url": "https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/"
+      "url": "https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/",
+      "verified": true,
+      "checked_url": "https://web.archive.org/web/20250322034545/https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/",
+      "note": "Live page refuses non-browser fetches (HTTP 406/403); wording checked against the Wayback Machine snapshot of the same URL."
     },
     {
       "text": "This is the story of my mother, Hillary Clinton.",
       "source": "Chelsea Clinton, 2016 Democratic National Convention speech, July 28 2016 (TIME transcript)",
-      "url": "https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/"
+      "url": "https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/",
+      "verified": true,
+      "checked_url": "https://web.archive.org/web/20250322034545/https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/",
+      "note": "Live page refuses non-browser fetches (HTTP 406/403); wording checked against the Wayback Machine snapshot of the same URL."
+    },
+    {
+      "text": "Remember these women.",
+      "source": "She Persisted (Philomel, 2017), closing lines",
+      "url": "https://slate.com/culture/2017/06/chelsea-clintons-childrens-book-she-persisted-reviewed.html",
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://slate.com/culture/2017/06/chelsea-clintons-childrens-book-she-persisted-reviewed.html",
+      "note": "Slate's review quotes the book's closing lines: '\"Remember these women,\" Clinton exhorts toward the end. \"They persisted and so should you.\"' Book text itself not available online."
     }
-  ],
-  "_verification": {
-    "method": "WebFetch/WebSearch extraction on 2026-10-23 (tool output, not raw page text); wording not character-checked against the original page",
-    "verified": "2026-10-23",
-    "expires": "never for listed source/date; wording re-check required before use of any line",
-    "aggregator_only": 0,
-    "total": 24
-  }
+  ]
 }

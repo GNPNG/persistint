@@ -1,9 +1,9 @@
 {
-  "_note": "DESIGN.md: every celebrity mini-game is introduced by Chelsea Clinton, who explains how empowering and fun this is going to be. Her lines are her own words; every line here must come from data/quotes/chelsea.json (sourced). intros: mini-game id -> lines; '_default' is used for any game without its own.",
+  "_note": "DESIGN.md: every celebrity mini-game is introduced by Chelsea Clinton, who explains how empowering and fun this is going to be. Her lines are her own words; every line here must come from data/quotes/chelsea.json and be marked verified=true there (tests/test_quotes_vv.gd). intros: mini-game id -> lines; '_default' is used for any game without its own.",
   "emcee": "chelsea",
   "intros": {
     "_default": [
-      "So, if anyone ever tells you no, if anyone says your voice isn't important or your dreams are too big, remember these women.",
+      "Remember these women.",
       "They persisted and so should you."
     ]
   }
