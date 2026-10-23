@@ -19,6 +19,8 @@ func _build() -> void:
 		c.queue_free()
 	var panel := PanelContainer.new()
 	panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+	panel.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	panel.grow_vertical = Control.GROW_DIRECTION_BOTH
 	_ui.add_child(panel)
 	var box := VBoxContainer.new()
 	panel.add_child(box)

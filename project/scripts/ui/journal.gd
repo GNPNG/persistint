@@ -7,6 +7,8 @@ func _ready() -> void:
 	layer = 15
 	var panel := PanelContainer.new()
 	panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+	panel.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	panel.grow_vertical = Control.GROW_DIRECTION_BOTH
 	add_child(panel)
 	var box := VBoxContainer.new()
 	panel.add_child(box)

@@ -19,7 +19,7 @@ var doll: Control
 
 var _box: VBoxContainer
 var _status: Label
-var _stations: HBoxContainer
+var _stations: HFlowContainer
 var _tasks: VBoxContainer
 var _go: Button
 
@@ -32,12 +32,12 @@ func _ready() -> void:
 	for id: String in WorldState.get_flag("hottest_chain_items", []):
 		items.append(id)
 	_box = VBoxContainer.new()
-	_box.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_box.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE, 6)
 	add_child(_box)
 	_status = Label.new()
 	_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_box.add_child(_status)
-	_stations = HBoxContainer.new()
+	_stations = HFlowContainer.new()
 	_box.add_child(_stations)
 	for name: String in station_names():
 		var b := Button.new()
@@ -47,7 +47,7 @@ func _ready() -> void:
 	var row := HBoxContainer.new()
 	_box.add_child(row)
 	doll = PAPER_DOLL.new()
-	doll.custom_minimum_size = Vector2(110, 150)
+	doll.custom_minimum_size = Vector2(64, 96)
 	row.add_child(doll)
 	var outfit: Dictionary = WorldState.get_flag("hottest_prep_outfit", {}).duplicate()
 	if outfit.is_empty():
@@ -56,6 +56,7 @@ func _ready() -> void:
 			outfit[slot] = options[slot][0]
 	doll.set_outfit(outfit)
 	_tasks = VBoxContainer.new()
+	_tasks.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(_tasks)
 	_go = Button.new()
 	_go.text = "Go to the show"
@@ -105,6 +106,8 @@ func go_to(name: String) -> void:
 			continue
 		var b := Button.new()
 		b.text = t.get("text", "")
+		b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		b.disabled = not available(t["id"])
 		b.pressed.connect(do_task.bind(t["id"]))
 		_tasks.add_child(b)

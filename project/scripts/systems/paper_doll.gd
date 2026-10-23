@@ -6,6 +6,8 @@ extends Control
 
 const LAYERS: Array[String] = ["body", "dress", "hair", "accessory"]
 const ART_DIRS: Array[String] = ["res://assets/canon/%s.png", "res://assets/placeholder/%s.png"]
+## What the player wears before any outfit_* flag is set (player and wardrobe agree on it).
+const DEFAULT_OUTFIT := {"body": "body_base", "dress": "dress_white", "hair": "hair_braids", "accessory": "none"}
 
 var outfit: Dictionary = {}
 var _layers: Dictionary = {}  # slot -> TextureRect

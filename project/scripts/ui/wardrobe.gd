@@ -29,7 +29,7 @@ func _cycle(slot: String, dir: int) -> void:
 	var items: Array = options.get(slot, [])
 	if items.is_empty():
 		return
-	var current: String = WorldState.get_flag("outfit_%s" % slot, items[0])
+	var current: String = WorldState.get_flag("outfit_%s" % slot, _defaults().get(slot, items[0]))
 	var idx := items.find(current)
 	idx = wrapi(idx + dir, 0, items.size())
 	WorldState.set_flag("outfit_%s" % slot, items[idx])
@@ -40,6 +40,10 @@ func _defaults() -> Dictionary:
 	var defaults := {"body": "body_base"}
 	for slot: String in options:
 		defaults[slot] = options[slot][0]
+	# Start from what the player is actually wearing, not the first option.
+	for slot: String in PaperDoll.DEFAULT_OUTFIT:
+		if slot == "body" or options.get(slot, []).has(PaperDoll.DEFAULT_OUTFIT[slot]):
+			defaults[slot] = PaperDoll.DEFAULT_OUTFIT[slot]
 	return defaults
 
 
