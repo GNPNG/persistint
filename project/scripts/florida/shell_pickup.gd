@@ -1,9 +1,13 @@
 extends "res://scripts/florida/clickable.gd"
 ## ShellPickup — a seashell on the sand; the beach has more tomorrow.
+## Its look is one of the canon shells cut from the tide scroll (assets/florida/shell_<look>.png).
+
+@export_enum("scallop", "spiral", "conch") var look := "scallop"
 
 
 func _ready() -> void:
 	super()
+	$Sprite2D.texture = load("res://assets/florida/shell_%s.png" % look)
 	GameClock.day_changed.connect(func(_d: int) -> void: show())
 	if WorldState.get_flag("fl_shell_%s" % name, 0) == GameClock.day:
 		hide()
