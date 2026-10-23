@@ -37,6 +37,20 @@ func begin_interview() -> void:
 		stats[stat["id"]] = int(data.get("base", 0))
 
 
+func intro_line(slot: int) -> String:
+	var lines: Array = data.get("intro", [])
+	return lines[slot] if slot < lines.size() else ""
+
+
+func has_intro(slot: int) -> bool:
+	return slot < data.get("intro", []).size()
+
+
+## Oprah opens the segment in her own voice.
+func say_intro(slot: int) -> void:
+	Voice.speak(intro_line(slot), 1.0, data.get("host", ""))
+
+
 func interview_done() -> bool:
 	return index >= data.get("questions", []).size()
 
