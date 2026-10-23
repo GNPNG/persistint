@@ -1,0 +1,10 @@
+{
+  "_note": "Wreck bridge mini-game (DESIGN.md §2: Spaceteam-style timed commands as the ship comes down). Commands come only from the design doc; add more here. Each command names the control that answers it.",
+  "seconds_per_command": 6.0,
+  "hull": 3,
+  "rounds": 8,
+  "return_map": "res://scenes/maps/village.tscn",
+  "commands": [
+    {"control": "Promenade Stabilizers", "text": "Align the Promenade Stabilizers!"}
+  ]
+}
