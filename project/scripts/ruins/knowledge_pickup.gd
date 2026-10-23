@@ -2,30 +2,31 @@ extends Area2D
 ## KnowledgePickup — a piece of Forbidden Knowledge lying in the ruins. Click to walk
 ## over and recover it (ForbiddenKnowledge.recover); gone from the map once recovered.
 ## Says so when the piece completes a cruise flashback (data/flashbacks.json).
+## Shows the piece's "icon" (data/ruins.json; assets/ruins/icon_*.png or a canon cut) bobbing
+## over a warm glow (AnimationPlayer "bob").
 
 const ForbiddenKnowledge := preload("res://scripts/ruins/forbidden_knowledge.gd")
 const Flashbacks := preload("res://scripts/chapters/flashbacks.gd")
+const RuinsDecor := preload("res://scripts/ruins/ruins_decor.gd")
 
 @export var piece_id := ""
 
 @onready var label: Label = $Label
+@onready var icon: Sprite2D = $Icon
 
 var _recovered := false
 
 
 func _ready() -> void:
 	label.hide()
+	var tex := RuinsDecor.texture_for(String(ForbiddenKnowledge.pieces().get(piece_id, {}).get("icon", "icon_paper")))
+	if tex:
+		icon.texture = tex
+		icon.scale = Vector2.ONE * RuinsDecor.scale_for(tex) * (20.0 / maxf(20.0, tex.get_height() * RuinsDecor.scale_for(tex)))
 	if ForbiddenKnowledge.has(piece_id):
 		queue_free()
 		return
 	input_event.connect(_on_input_event)
-
-
-func _draw() -> void:
-	if _recovered:
-		return
-	draw_circle(Vector2.ZERO, 7.0, Color(0.95, 0.85, 0.5, 0.9))
-	draw_arc(Vector2.ZERO, 11.0, 0.0, TAU, 24, Color(1, 1, 1, 0.6), 1.5)
 
 
 func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
@@ -49,7 +50,8 @@ func interact() -> void:
 		label.text += "\nA memory of the cruise opens: %s (J: Journal)" % Flashbacks.flashback(id).get("title", id)
 	label.show()
 	_recovered = true
-	queue_redraw()
+	$Glow.hide()
+	icon.hide()
 	$CollisionShape2D.set_deferred("disabled", true)
 	await get_tree().create_timer(4.0).timeout
 	queue_free()

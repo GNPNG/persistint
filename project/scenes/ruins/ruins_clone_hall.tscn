@@ -10,19 +10,14 @@
 [ext_resource type="Script" path="res://scripts/ruins/clone_lab.gd" id="10"]
 
 [sub_resource type="NavigationPolygon" id="navpoly"]
-vertices = PackedVector2Array(60, 130, 900, 130, 900, 500, 60, 500)
+vertices = PackedVector2Array(60, 240, 900, 240, 900, 500, 60, 500)
 polygons = [PackedInt32Array(0, 1, 2, 3)]
-outlines = [PackedVector2Array(60, 130, 900, 130, 900, 500, 60, 500)]
+outlines = [PackedVector2Array(60, 240, 900, 240, 900, 500, 60, 500)]
 
 [node name="RuinsCloneHall" type="Node2D"]
+y_sort_enabled = true
 script = ExtResource("1")
 map_size = Vector2(960, 540)
-
-[node name="Background" type="ColorRect" parent="."]
-offset_right = 960.0
-offset_bottom = 540.0
-color = Color(0.09, 0.12, 0.16, 1)
-mouse_filter = 2
 
 [node name="Nav" type="NavigationRegion2D" parent="."]
 navigation_polygon = SubResource("navpoly")
@@ -41,6 +36,7 @@ position = Vector2(120, 300)
 position = Vector2(840, 300)
 
 [node name="Player" parent="." instance=ExtResource("3")]
+z_index = 0
 position = Vector2(120, 300)
 
 [node name="LiftDoor" parent="." instance=ExtResource("5")]
@@ -82,13 +78,13 @@ wander = Rect2(300, 350, 400, 130)
 position = Vector2(600, 300)
 original = "bill_clinton"
 batch = 2
-wander = Rect2(480, 240, 300, 200)
+wander = Rect2(480, 255, 300, 185)
 
 [node name="ZombieHillaryClinton3" parent="." instance=ExtResource("8")]
 position = Vector2(350, 280)
 original = "hillary_clinton"
 batch = 3
-wander = Rect2(200, 220, 400, 120)
+wander = Rect2(200, 260, 400, 100)
 
 [node name="ZombieBillGates5" parent="." instance=ExtResource("8")]
 position = Vector2(700, 430)
@@ -109,7 +105,7 @@ wander = Rect2(400, 300, 300, 180)
 [node name="Cub3" parent="." instance=ExtResource("9")]
 position = Vector2(760, 320)
 batch = 1
-wander = Rect2(600, 250, 250, 200)
+wander = Rect2(600, 260, 250, 190)
 
 [node name="Piece3" parent="." instance=ExtResource("6")]
 position = Vector2(820, 460)

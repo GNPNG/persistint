@@ -8,19 +8,14 @@
 [ext_resource type="Script" path="res://scripts/ruins/ruins_decor.gd" id="7"]
 
 [sub_resource type="NavigationPolygon" id="navpoly"]
-vertices = PackedVector2Array(60, 130, 900, 130, 900, 500, 60, 500)
+vertices = PackedVector2Array(60, 240, 900, 240, 900, 500, 60, 500)
 polygons = [PackedInt32Array(0, 1, 2, 3)]
-outlines = [PackedVector2Array(60, 130, 900, 130, 900, 500, 60, 500)]
+outlines = [PackedVector2Array(60, 240, 900, 240, 900, 500, 60, 500)]
 
 [node name="RuinsWreck" type="Node2D"]
+y_sort_enabled = true
 script = ExtResource("1")
 map_size = Vector2(960, 540)
-
-[node name="Background" type="ColorRect" parent="."]
-offset_right = 960.0
-offset_bottom = 540.0
-color = Color(0.16, 0.2, 0.26, 1)
-mouse_filter = 2
 
 [node name="Nav" type="NavigationRegion2D" parent="."]
 navigation_polygon = SubResource("navpoly")
@@ -36,6 +31,7 @@ position = Vector2(480, 420)
 position = Vector2(840, 300)
 
 [node name="Player" parent="." instance=ExtResource("3")]
+z_index = 0
 position = Vector2(480, 420)
 
 [node name="ExitDoor" parent="." instance=ExtResource("5")]
@@ -51,9 +47,9 @@ target_spawn = "spawn_from_wreck"
 exit_label = "To the Service Spine"
 
 [node name="Piece1" parent="." instance=ExtResource("6")]
-position = Vector2(200, 250)
+position = Vector2(200, 275)
 piece_id = "fk_wreck_1"
 
 [node name="Piece2" parent="." instance=ExtResource("6")]
-position = Vector2(560, 200)
+position = Vector2(560, 290)
 piece_id = "fk_wreck_2"
