@@ -4,7 +4,7 @@
   "surfaces": {
     "fake_image": {
       "kind": "image", "url": "{fixture}", "aspectInPrompt": true, "promptSuffix": "{aspect} aspect ratio.",
-      "promptPrefix": "Generate an image:", "resultMinSize": 256, "capture": ["download", "src"],
+      "promptPrefix": "Generate an image:", "resultMinSize": 256, "verify": { "minBytes": 100, "minSide": 64 }, "capture": ["download", "src"],
       "timeouts": { "stepMs": 5000, "generateMs": 30000, "downloadMs": 15000 },
       "steps": {
         "open": [{ "action": "click", "optional": true, "timeoutMs": 1000, "selectors": ["::-p-aria(No thanks)"] }],

@@ -31,6 +31,50 @@ export function sniffExt(buf) {
   return null;
 }
 
+/** Pixel size of a PNG, JPEG, WebP or GIF from its header, or null. */
+export function imageSize(buf) {
+  const ext = sniffExt(buf);
+  if (ext === '.png' && buf.length >= 24) return { w: buf.readUInt32BE(16), h: buf.readUInt32BE(20), ext };
+  if (ext === '.gif' && buf.length >= 10) return { w: buf.readUInt16LE(6), h: buf.readUInt16LE(8), ext };
+  if (ext === '.jpg') {
+    let i = 2;
+    while (i + 9 < buf.length) {
+      if (buf[i] !== 0xff) { i++; continue; }
+      const m = buf[i + 1];
+      if (m === 0xd8 || m === 0x01 || (m >= 0xd0 && m <= 0xd7) || m === 0xff) { i += m === 0xff ? 1 : 2; continue; }
+      if (m >= 0xc0 && m <= 0xcf && ![0xc4, 0xc8, 0xcc].includes(m)) return { w: buf.readUInt16BE(i + 7), h: buf.readUInt16BE(i + 5), ext };
+      i += 2 + buf.readUInt16BE(i + 2);
+    }
+    return null;
+  }
+  if (ext === '.webp' && buf.length >= 30) {
+    const chunk = buf.toString('latin1', 12, 16);
+    if (chunk === 'VP8X') return { w: 1 + buf.readUIntLE(24, 3), h: 1 + buf.readUIntLE(27, 3), ext };
+    if (chunk === 'VP8L') { const b = buf.readUInt32LE(21); return { w: (b & 0x3fff) + 1, h: ((b >> 14) & 0x3fff) + 1, ext }; }
+    if (chunk === 'VP8 ') return { w: buf.readUInt16LE(26) & 0x3fff, h: buf.readUInt16LE(28) & 0x3fff, ext };
+  }
+  return null;
+}
+
+/**
+ * Check that captured bytes are a real, full-size image for an asset of ratio `aspect` ("16:9").
+ * Returns a list of problems (empty = fine). The on-page preview or an icon fails minSide.
+ */
+export function checkImage(buf, aspect, { minBytes = 20_000, minSide = 512, tolerance = 0.12 } = {}) {
+  const size = imageSize(buf);
+  if (!size) return [`not a PNG/JPEG/WebP/GIF image (${buf.length} bytes)`];
+  const errs = [];
+  if (buf.length < minBytes) errs.push(`only ${buf.length} bytes`);
+  if (Math.min(size.w, size.h) < minSide) errs.push(`${size.w}x${size.h} is smaller than ${minSide} px on its short side (a preview?)`);
+  const m = /^(\d+(?:\.\d+)?)\s*[:x]\s*(\d+(?:\.\d+)?)$/.exec(String(aspect || ''));
+  if (m) {
+    const want = Number(m[1]) / Number(m[2]);
+    const got = size.w / size.h;
+    if (Math.abs(got - want) / want > tolerance) errs.push(`${size.w}x${size.h} is not ${aspect}`);
+  }
+  return errs;
+}
+
 /** Map an extension or MIME type to a canonical extension. */
 export function extFromMime(mime) {
   const m = (mime || '').split(';')[0].trim().toLowerCase();

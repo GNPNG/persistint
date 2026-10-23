@@ -172,6 +172,7 @@ function checkSteps(steps, where, errors, opts) {
     if (st.action === 'sleep' && !(st.ms > 0)) errors.push(`${w}: sleep needs "ms" > 0`);
     if (['click', 'hover', 'waitFor'].includes(st.action) && st.target !== 'result') checkSelectorList(st.selectors, `${w}.selectors`, errors);
     if ('optional' in st && typeof st.optional !== 'boolean') errors.push(`${w}.optional: must be true/false`);
+    if ('orPress' in st && (typeof st.orPress !== 'string' || !st.orPress)) errors.push(`${w}.orPress: must be a key name such as "Enter" or "Escape"`);
   });
 }
 
@@ -210,6 +211,7 @@ export function validateSelectors(cfg, opts = {}) {
       });
     }
     if (st.limitNotice !== undefined) checkSelectorList(st.limitNotice, `${w}.steps.limitNotice`, errors);
+    if (st.blocked !== undefined) checkSelectorList(st.blocked, `${w}.steps.blocked`, errors);
     if (st.download !== undefined) checkSteps(st.download, `${w}.steps.download`, errors, opts);
     const cap = s.capture ?? ['download', 'src'];
     if (!Array.isArray(cap) || !cap.length || cap.some((c) => !CAPTURE_ROUTES.has(c))) {
