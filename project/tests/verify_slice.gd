@@ -207,6 +207,8 @@ func _run() -> void:
 		{"setup": "_s3", "punchline": "_p3"},
 	]
 	_check(comic.data["interjections"] == ["My vagina itches", "I just queefed"], "comic: the author's interjections ship in the data")
+	_check(comic.data["openers"] == ["I'm so fat..."], "comic: the author's opener ships in the data")
+	comic.data["openers"] = []
 	comic.data["interjections"] = ["_i1"]
 	comic.begin_set()
 	var dline = await dm.get_next_dialogue_line(comic_res, "start", [comic])
@@ -242,6 +244,41 @@ func _run() -> void:
 	_check(laughs == 3, "comic: [audience laughs riotously] after every exchange, matched or not")
 	_check(ws.get_flag("comic_done") == true, "comic: comic_done written to WorldState at the end")
 	_check(name_it._layer == null and name_it.beat("next_top_comic").get("hook") == null, "comic: Name It follow-up wired, stays off until the author sets the beat")
+	# Choosing one of the author's interjections: the audience boos and the judges dock points
+	# for stealing jokes from Amy Schumer.
+	ws.reset()
+	comic.data["steal_penalty"] = 2
+	comic.pool = [{"setup": "_s1", "punchline": "_p1"}]
+	comic.begin_set()
+	dline = await dm.get_next_dialogue_line(comic_res, "start", [comic])
+	texts = []
+	guard = 0
+	while dline != null and guard < 40:
+		guard += 1
+		texts.append(dline.text)
+		if dline.responses.size() > 0:
+			var pick_next: String = dline.responses[0].next_id
+			for resp in dline.responses:
+				if resp.is_allowed and resp.text == "_i1":
+					pick_next = resp.next_id
+			dline = await dm.get_next_dialogue_line(comic_res, pick_next, [comic])
+		else:
+			dline = await dm.get_next_dialogue_line(comic_res, dline.next_id, [comic])
+	_check(texts.has("[audience boos]"), "comic: choosing the interjection, the audience boos")
+	_check(texts.any(func(t): return t.contains("judges") and t.contains("Amy Schumer") and t.contains("stealing jokes")), "comic: the judges dock points for stealing jokes from Amy Schumer")
+	_check(ws.get_flag("comic_points") == -2, "comic: the docked points are written to WorldState (comic_points)")
+	_check(ws.get_flag("comic_done") == true, "comic: the set still ends")
+	# Opening with "I'm so fat..." (an author opener) is the same offence.
+	ws.reset()
+	comic.data["openers"] = ["_o1"]
+	comic.pool = [{"setup": "_s1", "punchline": "_p1"}]
+	comic.begin_set()
+	comic.host_turn = false
+	comic.pick_setup(comic.setups.find("_o1"))
+	_check(comic.stole_joke() and ws.get_flag("comic_points") == -2, "comic: opening with the opener gets boos and docked points too")
+	comic.host_turn = false
+	comic.pick_setup(comic.setups.find("_s1"))
+	_check(not comic.stole_joke(), "comic: an ordinary setup is not a stolen joke")
 	comic.queue_free()
 
 	if had_save:

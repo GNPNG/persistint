@@ -1,8 +1,19 @@
 {
-  "_note": "Next Top Comic (DESIGN.md): stand-up mini-game using the dialogue system in Monkey Island insult-sword-fighting structure (Sarah Silverman). Just horrible unfunny setup / punchline pairings, but the women in the audience think it's hilarious. 'sources' are the comics whose 'jokes' (data/quotes/<id>.json, setup and punchline as separate lines) are mixed into one shared pool: Sarah Silverman and the player draw from the same lines, fully randomized, so a pairing that happens to fit doesn't matter. 'interjections' are the author's lines, added to the punchline pool so they turn up every so often.",
+  "_note": "Next Top Comic (DESIGN.md): stand-up mini-game using the dialogue system in Monkey Island insult-sword-fighting structure (Sarah Silverman). Just horrible unfunny setup / punchline pairings, but the women in the audience think it's hilarious. 'sources' are the comics whose 'jokes' (data/quotes/<id>.json, setup and punchline as separate lines) are mixed into one shared pool: Sarah Silverman and the player draw from the same lines, fully randomized, so a pairing that happens to fit doesn't matter. 'interjections' are the author's lines, added to the punchline pool so they turn up every so often. 'openers' are the author's setups, added to the setup pool. Picking an interjection or an opener as the player gets boos, and the judges dock 'steal_penalty' points (an agent placeholder) for stealing jokes from Amy Schumer; the total goes to WorldState comic_points.",
   "title": "Next Top Comic",
   "host": "silverman",
   "return_map": "res://scenes/maps/village.tscn",
-  "sources": ["schumer", "silverman", "gadsby"],
-  "interjections": ["My vagina itches", "I just queefed"]
+  "sources": [
+    "schumer",
+    "silverman",
+    "gadsby"
+  ],
+  "interjections": [
+    "My vagina itches",
+    "I just queefed"
+  ],
+  "openers": [
+    "I'm so fat..."
+  ],
+  "steal_penalty": 1
 }

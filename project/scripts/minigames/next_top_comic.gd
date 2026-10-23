@@ -6,9 +6,9 @@ extends Control
 ## lines, fully randomized, so a pairing that happens to fit doesn't matter. Silverman throws a
 ## setup and the player picks a punchline; then the player throws a setup and Silverman answers.
 ## The women in the audience laugh after every exchange. Lines are used up as they are thrown;
-## when the setups run out the set ends. Also in the punchline pool: data "interjections".
+## Choosing an interjection or opener instead gets boos and docked points. When the setups run out the set ends. Also in the punchline pool: data "interjections".
 ## The conversation is dialogue/next_top_comic.dialogue; this node is its game state.
-## After the set, the Name It beat follows. Result goes to WorldState: comic_done.
+## After the set, the Name It beat follows. Results go to WorldState: comic_done, comic_points.
 
 const DATA_PATH := "res://data/next_top_comic.json"
 const EMCEE_PATH := "res://data/emcee.json"
@@ -27,6 +27,7 @@ var host_turn := true
 var current := ""
 var answer := ""
 var picks: Array = []
+var stole := false
 
 
 func _ready() -> void:
@@ -62,6 +63,7 @@ func begin_set() -> void:
 	setups = pool.map(func(j: Dictionary) -> String: return j["setup"])
 	punchlines = pool.map(func(j: Dictionary) -> String: return j["punchline"])
 	punchlines.append_array(data.get("interjections", []))
+	setups.append_array(data.get("openers", []))
 	host_turn = true
 	picks = []
 
@@ -101,14 +103,37 @@ func has_setup(slot: int) -> bool:
 
 
 func pick(slot: int) -> void:
-	picks.append(punchlines.pop_at(slot))
+	var line: String = punchlines.pop_at(slot)
+	picks.append(line)
+	_judge(line, data.get("interjections", []))
 
 
 ## The player throws a setup; Silverman answers with a random punchline.
 func pick_setup(slot: int) -> void:
 	current = setups.pop_at(slot)
+	_judge(current, data.get("openers", []))
 	answer = punchlines.pop_at(randi() % punchlines.size())
 	Voice.speak(answer, 1.2)
+
+
+## The player's own choice of an interjection or opener is stealing from Amy Schumer.
+func _judge(line: String, stolen: Array) -> void:
+	stole = stolen.has(line)
+	if stole:
+		WorldState.set_flag("comic_points", int(WorldState.get_flag("comic_points", 0)) - int(data.get("steal_penalty", 1)))
+
+
+func stole_joke() -> bool:
+	return stole
+
+
+func audience_boo() -> String:
+	Voice.speak("boo", 0.8)
+	return "[audience boos]"
+
+
+func judges_dock() -> String:
+	return "[judges dock you points for stealing jokes from %s]" % Cast.full("schumer")
 
 
 func host_punchline() -> String:

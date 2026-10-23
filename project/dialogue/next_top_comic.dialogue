@@ -261,6 +261,11 @@ do deliver_setup()
 => laugh
 
 ~ laugh
+if stole_joke()
+	{{audience_boo()}}
+	{{judges_dock()}}
+	do next_turn()
+	=> beat
 {{audience_laugh()}}
 do next_turn()
 => beat
