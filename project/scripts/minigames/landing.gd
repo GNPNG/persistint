@@ -5,7 +5,7 @@ extends Control
 ## the island; Cap'n Kate is trying not to crash a dead ship; systems failing, chaos on deck,
 ## the first mate yelling for the captain. A command missed in time is a system failing.
 ## Data: data/landing.json. Result goes to WorldState: landing_done, landing_score,
-## landing_failed (stations whose systems failed).
+## landing_failed (stations whose systems failed), landing_tasks_done (crew task ids done).
 
 const DATA_PATH := "res://data/landing.json"
 
@@ -14,13 +14,15 @@ var queue: Array = []
 var current: Dictionary = {}
 var station := ""
 var failed: Array[String] = []
+var tasks_done: Array[String] = []
 var score := 0
 var time_left := 0.0
 var running := false
 
 var _shout: Label
 var _timer_bar: ProgressBar
-var _stations: HBoxContainer
+var _ship: Control
+var _tasks: VBoxContainer
 var _controls: GridContainer
 var _status: Label
 
@@ -43,10 +45,28 @@ func captain_name() -> String:
 
 func station_names() -> Array[String]:
 	var names: Array[String] = []
+	for st: Dictionary in data.get("stations", []):
+		if not names.has(st["name"]):
+			names.append(st["name"])
 	for c: Dictionary in data.get("commands", []):
 		if not names.has(c["station"]):
 			names.append(c["station"])
 	return names
+
+
+## Crew tasks (data-defined) at a station: [{id, text}].
+func tasks_at(name: String) -> Array:
+	for st: Dictionary in data.get("stations", []):
+		if st["name"] == name:
+			return st.get("tasks", [])
+	return []
+
+
+func _station_pos(name: String) -> Vector2:
+	for st: Dictionary in data.get("stations", []):
+		if st["name"] == name and st.has("pos"):
+			return Vector2(st["pos"][0], st["pos"][1])
+	return Vector2(0.5, 0.5)
 
 
 func _build_ui() -> void:
@@ -69,13 +89,24 @@ func _build_ui() -> void:
 	_timer_bar.show_percentage = false
 	_timer_bar.custom_minimum_size = Vector2(0, 10)
 	box.add_child(_timer_bar)
-	_stations = HBoxContainer.new()
-	box.add_child(_stations)
+	_ship = Control.new()
+	_ship.custom_minimum_size = Vector2(0, 160)
+	_ship.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	box.add_child(_ship)
 	for name: String in station_names():
 		var b := Button.new()
 		b.text = name
 		b.pressed.connect(go_to.bind(name))
-		_stations.add_child(b)
+		_ship.add_child(b)
+		var p := _station_pos(name)
+		b.anchor_left = p.x
+		b.anchor_right = p.x
+		b.anchor_top = p.y
+		b.anchor_bottom = p.y
+		b.grow_horizontal = Control.GROW_DIRECTION_BOTH
+		b.grow_vertical = Control.GROW_DIRECTION_BOTH
+	_tasks = VBoxContainer.new()
+	box.add_child(_tasks)
 	_controls = GridContainer.new()
 	_controls.columns = 3
 	box.add_child(_controls)
@@ -97,7 +128,24 @@ func go_to(name: String) -> void:
 		b.disabled = failed.has(name)
 		b.pressed.connect(press.bind(c["control"]))
 		_controls.add_child(b)
+	for child in _tasks.get_children():
+		child.queue_free()
+	for t: Dictionary in tasks_at(name):
+		var tb := Button.new()
+		tb.text = t["text"]
+		tb.disabled = tasks_done.has(t["id"])
+		tb.pressed.connect(do_task.bind(t["id"]))
+		_tasks.add_child(tb)
 	_update_status()
+
+
+## Do a crew task at the current station.
+func do_task(id: String) -> void:
+	for t: Dictionary in tasks_at(station):
+		if t["id"] == id and not tasks_done.has(id):
+			tasks_done.append(id)
+			go_to(station)
+			return
 
 
 func _next_command() -> void:
@@ -149,6 +197,7 @@ func _finish() -> void:
 	WorldState.set_flag("landing_done", true)
 	WorldState.set_flag("landing_score", score)
 	WorldState.set_flag("landing_failed", failed.duplicate())
+	WorldState.set_flag("landing_tasks_done", tasks_done.duplicate())
 	var back := Button.new()
 	back.text = "OK"
 	back.pressed.connect(func() -> void:
