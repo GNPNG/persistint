@@ -25,7 +25,27 @@ func _load(path: String) -> Node:
 	root.add_child(m)
 	for i in 4:
 		await physics_frame
+	await nav_ready(m.get_node("Nav"))
 	return m
+
+
+## Navigation regions and maps sync on worker threads (async iterations are on by
+## default), so map_force_update() alone can query a map that has not picked up the
+## new region yet. Wait until the map answers with this region's own polygons.
+func nav_ready(region: NavigationRegion2D) -> void:
+	var map := region.get_navigation_map()
+	var poly := region.navigation_polygon
+	var first := poly.get_polygon(0)
+	var probe := Vector2.ZERO
+	for i in first:
+		probe += poly.vertices[i] / first.size()
+	probe = region.global_transform * probe
+	for i in 600:
+		if NavigationServer2D.region_get_iteration_id(region.get_rid()) > 0 \
+				and NavigationServer2D.map_get_iteration_id(map) > 0 \
+				and NavigationServer2D.map_get_closest_point(map, probe).distance_to(probe) < 1.0:
+			return
+		await physics_frame
 
 
 func _village() -> void:

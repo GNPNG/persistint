@@ -14,11 +14,13 @@ outlines = [PackedVector2Array(60, 130, 900, 130, 900, 500, 60, 500)]
 
 [node name="RuinsRecords" type="Node2D"]
 script = ExtResource("1")
+map_size = Vector2(960, 540)
 
 [node name="Background" type="ColorRect" parent="."]
 offset_right = 960.0
 offset_bottom = 540.0
 color = Color(0.11, 0.11, 0.15, 1)
+mouse_filter = 2
 
 [node name="Nav" type="NavigationRegion2D" parent="."]
 navigation_polygon = SubResource("navpoly")
@@ -37,9 +39,10 @@ position = Vector2(120, 300)
 position = Vector2(120, 300)
 
 [node name="HallDoor" parent="." instance=ExtResource("5")]
-position = Vector2(60, 300)
+position = Vector2(80, 300)
 target_scene = "res://scenes/ruins/ruins_clone_hall.tscn"
 target_spawn = "spawn_from_records"
+exit_label = "Back to the Hall of Tanks"
 
 [node name="Piece1" parent="." instance=ExtResource("6")]
 position = Vector2(300, 420)

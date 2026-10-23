@@ -116,6 +116,9 @@ position = Vector2(480, 480)
 [node name="spawn_from_village" type="Marker2D" parent="." unique_id=1638029083]
 position = Vector2(480, 552)
 
+[node name="spawn_from_ruins" type="Marker2D" parent="."]
+position = Vector2(72, 256)
+
 [node name="spawn_from_puzzle" type="Marker2D" parent="." unique_id=217733914]
 position = Vector2(800, 384)
 
@@ -137,11 +140,14 @@ position = Vector2(480, 624)
 script = ExtResource("12_4dtri")
 target_scene = "res://scenes/maps/village.tscn"
 target_spawn = "spawn_from_temple"
+exit_label = "Back to the Village"
 
 [node name="RitualTable" type="Area2D" parent="." unique_id=1711451162 instance=ExtResource("11_1os3m")]
 position = Vector2(800, 304)
 script = ExtResource("12_4dtri")
 target_scene = "res://scenes/minigames/ritual_puzzle.tscn"
+exit_label = "The Ritual Table"
+show_marker = false
 
 [node name="RitualAltar" type="Sprite2D" parent="." unique_id=1455349447]
 position = Vector2(800, 312)
@@ -153,6 +159,7 @@ position = Vector2(24, 256)
 script = ExtResource("12_4dtri")
 target_scene = "res://scenes/ruins/ruins_wreck.tscn"
 target_spawn = "spawn_default"
+exit_label = "Into the Ruins of Utopia"
 
 [node name="Ground" type="TileMapLayer" parent="." unique_id=743914838]
 z_index = -10

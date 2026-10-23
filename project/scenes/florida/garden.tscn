@@ -37,6 +37,7 @@ position = Vector2(480, 470)
 position = Vector2(120, 500)
 target_scene = "res://scenes/florida/beach.tscn"
 target_spawn = "spawn_from_garden"
+exit_label = "Back to the Beach"
 
 [node name="Plot1" parent="." instance=ExtResource("5")]
 position = Vector2(400, 240)

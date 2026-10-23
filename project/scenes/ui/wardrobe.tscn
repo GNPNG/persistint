@@ -40,7 +40,6 @@ theme_override_constants/separation = 8
 
 [node name="WardrobeTitle" type="Label" parent="Panel/HBox/VBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
 text = "Wardrobe ✿"
 
 [node name="Hair" type="HBoxContainer" parent="Panel/HBox/VBox"]
@@ -53,7 +52,6 @@ text = "<"
 [node name="Value" type="Label" parent="Panel/HBox/VBox/Hair"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 10
 text = "Hair"
 horizontal_alignment = 1
 
@@ -71,7 +69,6 @@ text = "<"
 [node name="Value" type="Label" parent="Panel/HBox/VBox/Dress"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 10
 text = "Dress"
 horizontal_alignment = 1
 
@@ -89,7 +86,6 @@ text = "<"
 [node name="Value" type="Label" parent="Panel/HBox/VBox/Accessory"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 10
 text = "Accessory"
 horizontal_alignment = 1
 
