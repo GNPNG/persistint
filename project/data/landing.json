@@ -1,11 +1,12 @@
 {
-  "_note": "The Landing (DESIGN.md: Spaceteam-style coordinated-panic bridge game as the ship comes down; prologue-capable). Commands come only from the design doc; add more here. seconds_per_command, hull and rounds are agent placeholders, not from the design.",
+  "_note": "The Landing (DESIGN.md: Spaceteam-style coordinated-panic bridge game as the ship comes down, Among Us-flavored crew tasks around the ship; prologue-capable). Story Structure, Camera 1 / opening scene: the dead cruise ship (EMP) drifts through fog toward the island; Cap'n Kate is trying not to crash a dead ship; systems failing, chaos on deck, the first mate yelling for the captain. Each command names the station around the ship and the control there. Commands come only from the design doc; add more here. seconds_per_command is an agent placeholder.",
+  "captain": "kate",
+  "first_mate": "First Mate",
   "seconds_per_command": 6.0,
-  "hull": 3,
-  "rounds": 8,
   "return_map": "res://scenes/maps/village.tscn",
   "commands": [
     {
+      "station": "Promenade",
       "control": "Promenade Stabilizers",
       "text": "Align the Promenade Stabilizers!"
     }
