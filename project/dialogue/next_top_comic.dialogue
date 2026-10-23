@@ -1,0 +1,41 @@
+~ start
+{{emcee_name()}}: {{emcee_intro()}}
+do begin_set()
+=> beat
+
+~ beat
+if set_done()
+	do finish()
+	=> END
+do deliver_setup()
+{{host_name()}}: {{current_setup()}}
+- {{punchline(0)}} [if has_punchline(0)]
+	do pick(0)
+	=> laugh
+- {{punchline(1)}} [if has_punchline(1)]
+	do pick(1)
+	=> laugh
+- {{punchline(2)}} [if has_punchline(2)]
+	do pick(2)
+	=> laugh
+- {{punchline(3)}} [if has_punchline(3)]
+	do pick(3)
+	=> laugh
+- {{punchline(4)}} [if has_punchline(4)]
+	do pick(4)
+	=> laugh
+- {{punchline(5)}} [if has_punchline(5)]
+	do pick(5)
+	=> laugh
+- {{punchline(6)}} [if has_punchline(6)]
+	do pick(6)
+	=> laugh
+- {{punchline(7)}} [if has_punchline(7)]
+	do pick(7)
+	=> laugh
+=> laugh
+
+~ laugh
+{{audience_laugh()}}
+do next_setup()
+=> beat

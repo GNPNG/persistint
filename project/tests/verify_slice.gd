@@ -182,24 +182,48 @@ func _run() -> void:
 	_check(name_it.beat("hottest_verdict").has("lines"), "hottest: a Name It beat follows the verdict")
 	hot.queue_free()
 
-	# Next Top Comic: Monkey Island insult-sword-fighting with setups and punchlines.
+	# Next Top Comic: Silverman's set on the dialogue system. Test data injected at runtime only.
+	var comic_res: DialogueResource = load("res://dialogue/next_top_comic.dialogue")
+	_check(comic_res != null, "comic: dialogue file exists")
 	ws.reset()
 	var comic: Control = load("res://scenes/minigames/next_top_comic.tscn").instantiate()
+	comic.autostart = false
 	root.add_child(comic)
-	comic.data["pairs"] = [{"setup": "_s1", "punchline": "_p1"}, {"setup": "_s2", "punchline": "_p2"}]
-	comic.data["wins_needed"] = 2
-	_check(comic.host_name() == "Sarah Silverman", "comic: hosted by Sarah Silverman")
-	comic.fire_setup(0)
-	_check(not comic.known().has("_p1"), "comic: an unheard punchline is not known yet")
-	_check(not comic.answer("_wrong"), "comic: a wrong punchline gets no laugh")
-	_check(comic.known().has("_p1"), "comic: losing teaches the correct punchline (Monkey Island)")
-	comic.fire_setup(0)
-	_check(comic.answer("_p1") and comic.audience_laughing, "comic: the 'correct' punchline makes the women in the audience laugh")
-	comic.fire_setup(1)
-	comic.answer("_x")
-	comic.fire_setup(1)
-	comic.answer("_p2")
-	_check(ws.get_flag("comic_done") == true, "comic: enough laughs wins the set; result in WorldState")
+	_check(comic.data.get("setups", ["x"]).is_empty(), "comic: shipped content is empty (the author's)")
+	comic.data["setups"] = [
+		{"setup": "_s1", "punchlines": ["_p1a", "_p1b"]},
+		{"setup": "_s2", "punchlines": ["_p2a"]},
+	]
+	_check(comic.host_name() == "Sarah Silverman", "comic: Sarah Silverman's set")
+	comic.begin_set()
+	var dline = await dm.get_next_dialogue_line(comic_res, "start", [comic])
+	_check(dline != null and dline.character == "Chelsea Clinton" and dline.text == comic.emcee_intro() and dline.text != "",
+		"comic: Chelsea Clinton introduces it with her emcee.json lines")
+	var texts: Array = []
+	var laughs := 0
+	var offered: Array = []
+	var guard := 0
+	while dline != null and guard < 60:
+		guard += 1
+		texts.append(dline.text)
+		if dline.text.contains("♥"):
+			laughs += 1
+		if dline.responses.size() > 0:
+			var names: Array = []
+			var allowed: Array = dline.responses.filter(func(x): return x.is_allowed)
+			for resp in allowed:
+				names.append(resp.text)
+			offered.append(names)
+			dline = await dm.get_next_dialogue_line(comic_res, allowed[allowed.size() - 1].next_id, [comic])
+		else:
+			dline = await dm.get_next_dialogue_line(comic_res, dline.next_id, [comic])
+	_check(guard < 60 and dline == null, "comic: the set plays out and then it ends")
+	_check(texts.has("_s1") and texts.has("_s2") and texts.find("_s1") < texts.find("_s2"), "comic: Silverman delivers each setup in order")
+	_check(offered == [["_p1a", "_p1b"], ["_p2a"]], "comic: each setup offers its punchlines as responses (filled from the JSON)")
+	_check(laughs == 2, "comic: the women in the audience laugh at whatever was picked")
+	_check(comic.picks == ["_p1b", "_p2a"], "comic: the player's picks are recorded")
+	_check(ws.get_flag("comic_done") == true, "comic: comic_done written to WorldState at the end")
+	_check(name_it._layer == null and name_it.beat("next_top_comic").get("hook") == null, "comic: Name It follow-up wired, stays off until the author sets the beat")
 	comic.queue_free()
 
 	if had_save:

@@ -30,6 +30,12 @@
       ],
       "hook": null,
       "answer": null
+    },
+    "next_top_comic": {
+      "speaker": "silverman",
+      "lines": [],
+      "hook": null,
+      "answer": null
     }
   }
 }
