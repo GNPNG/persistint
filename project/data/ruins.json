@@ -1,5 +1,5 @@
 {
-	"_note": "Room titles, ambient lines, props and Forbidden Knowledge text are adapted from Story Structure: the repurposed bunker and clone lab (L88-95), the Great Biological Misreading (L70-78), banned counting and measuring (L126, L428). The bunker/clone-lab rooms, props and cat stickers are author-directed additions written in the sources' voice.",
+	"_note": "Room titles, ambient lines, props and Forbidden Knowledge text are adapted from Story Structure: the repurposed bunker and clone lab (L88-95), the Great Biological Misreading (L70-78), banned counting and measuring (L126, L428). The bunker/clone-lab rooms, props and cat stickers are author-directed additions written in the sources' voice. The failed clone batches (and the polar bear batch that took) are author-directed additions: names are cast ids written as {cast_id} in text and filled from data/cast.json; spoken clone lines come from data/quotes/*.json.",
 	"rooms": {
 		"wreck": {
 			"scene": "res://scenes/ruins/ruins_wreck.tscn",
@@ -260,7 +260,8 @@
 				"The lift cage is held open by a mop bucket. Pastel hazard stripes climb the shaft wall: pink, mint, pink, mint.",
 				"A voice recording tried to speak once, in the wall. The wall now only clicks, politely.",
 				"The air smells of cold metal and very old strawberry cleaning fluid.",
-				"A sign says AUTHORISED STAFF ONLY. A smaller sign beneath says PLEASE KNOCK. Nobody knocked."
+				"A sign says AUTHORISED STAFF ONLY. A smaller sign beneath says PLEASE KNOCK. Nobody knocked.",
+				"Little footprints in pink fluid lead from the lift to the tanks, and back, and back again."
 			],
 			"props": [
 				{
@@ -344,7 +345,9 @@
 				"Rows of glass tanks stand in the dim, filled with pink fluid and a few bubbles that rise as if on cue. They are empty. It is still a holy sight.",
 				"A rubber duck floats in the third tank. The Covenant has a rite for it.",
 				"The incubators hold their temperature out of habit. Something in the wall keeps count, and nobody has told it to stop.",
-				"Every machine has a sticker of a cat with a lab coat. The stickers outlasted the funding."
+				"Every machine has a sticker of a cat with a lab coat. The stickers outlasted the funding.",
+				"Small figures shamble between the tanks, arms out, groaning politely. Each batch shares one face. None of them took. All of them stayed.",
+				"A polar bear cub naps on the prep bench, muzzle pink, belly round. The tanks refill themselves with patience."
 			],
 			"props": [
 				{
@@ -454,6 +457,18 @@
 						0.4
 					],
 					"text": "freezer, humming"
+				},
+				{
+					"x": 120,
+					"y": 460,
+					"w": 160,
+					"h": 30,
+					"color": [
+						0.95,
+						0.75,
+						0.82
+					],
+					"text": "cub basket, fluffy"
 				}
 			]
 		},
@@ -464,7 +479,8 @@
 				"Shelves of binders line the walls. Each spine has a label in careful, tiny print. Nobody has opened one in a generation.",
 				"A desk lamp is switched on. It has been on for decades. Somebody must have meant to come back.",
 				"A filing cabinet drawer is labelled MISC. It contains more than miscellany.",
-				"The carpet is cream and untouched. The archivist in you wants to take your shoes off."
+				"The carpet is cream and untouched. The archivist in you wants to take your shoes off.",
+				"A drawer labelled FAILED BATCHES is too full to close. A drawer labelled BEARS has a heart drawn on it."
 			],
 			"props": [
 				{
@@ -538,6 +554,18 @@
 						0.74
 					],
 					"text": "stationery, labelled"
+				},
+				{
+					"x": 260,
+					"y": 440,
+					"w": 140,
+					"h": 40,
+					"color": [
+						0.55,
+						0.82,
+						0.7
+					],
+					"text": "FAILED BATCHES (overfull)"
 				}
 			]
 		}
@@ -602,6 +630,134 @@
 			"room": "records",
 			"title": "The Bunker's Mission Statement",
 			"text": "Built to make more people, in comfort, for the future. The island learned instead to make fewer, with ceremony, for the past. A tidy summary, in 12-point font."
+		},
+		{
+			"id": "fk_bunker_2",
+			"room": "bunker_lift",
+			"title": "A Head Count Sheet",
+			"text": "Clipped to the lift cage: one column per batch. Counting is banned upstairs, so the last tally is from before. Under every clone column someone has written: some. Under the polar bears: fewer of the others."
+		},
+		{
+			"id": "fk_lab_3",
+			"room": "clone_hall",
+			"title": "The Batch Board",
+			"text": "A whiteboard in dry-wipe marker, one column per original. {epstein}: batches 1 to 9. {bill_clinton}: batches 1 to 4. {hillary_clinton}: batches 1 to 4. {bill_gates}: batches 1 to 6. Beside every number, the same note: did not take. In the last column: polar bear, batch 1. Beside it: took. Very well. Please stop feeding them the others."
+		},
+		{
+			"id": "fk_records_3",
+			"room": "records",
+			"title": "The Reproduction Proposal",
+			"text": "A bound proposal to reproduce four prominent people of the old world from cells, in comfort, for the future: {epstein}, {bill_clinton}, {hillary_clinton}, {bill_gates}. Budget approved. Appendix C, results: every batch walks, groans and will not grow up. None of them remembers anyone. Recommendation: discontinue. Nobody discontinued anything. The incubators kept them warm out of habit."
+		},
+		{
+			"id": "fk_records_4",
+			"room": "records",
+			"title": "The Polar Bear Appendix",
+			"text": "A thinner file with a heart on the tab. One polar bear batch, grown as a control in case the cold storage failed. It came out fine: fluffy, healthy, identical, hungry. The last line, in a different pen: the control group is eating the experimental group. Results inconclusive."
 		}
-	]
+	],
+	"clone_children": {
+		"_note": "Failed clone children wandering the bunker (scripts/ruins/zombie_child.gd) and the polar bear cub batch that took (scripts/ruins/polar_cub.gd), run by the clone hall's CloneLab (scripts/ruins/clone_lab.gd). 'originals' keys are cast ids; 'quotes' names the data/quotes/<file>.json a clone's spoken line is picked from when that file exists (otherwise it speaks its groan). Designations read names through Cast. Nobody fights: the player only watches. 'pounce': seconds between cub pounces, how near a zombie must be, nap length, how long the puddle stays, how soon an eaten clone's batch restocks from the tanks, which tanks a restocked clone climbs out of, and which sfx (audio/sfx/<name>.wav) play in order.",
+		"designation": "%s clone, batch %d",
+		"pitch": 1.5,
+		"originals": {
+			"epstein": {
+				"quotes": "epstein"
+			},
+			"bill_clinton": {
+				"quotes": "bill_clinton"
+			},
+			"hillary_clinton": {
+				"quotes": "hillary"
+			},
+			"bill_gates": {
+				"quotes": "bill_gates"
+			}
+		},
+		"barks": [
+			"Uuuurrgh. Is it snack time. It is always nearly snack time.",
+			"Mmmrrrh. Warm jar. Miss warm jar.",
+			"We were made to be more people. We are some people. Uuurgh.",
+			"Braaaains? No. Braaaids. Can you do braids.",
+			"Grrrr. That was a growl. Was it scary. Please say it was a bit scary.",
+			"Counting is banned upstairs. Down here we count to four and then fall over.",
+			"The rubber duck is our friend. Do not tell the Covenant.",
+			"Uuunnngh. Shamble. Shamble. Shamble. Rest.",
+			"The label says do not heat. We are cold. We are fine.",
+			"Failed is a strong word. We prefer: early.",
+			"Hhhrrrnn. My arm is a bit loose. My arm is fine.",
+			"The cat sticker calls us sweetie. Mmmrrh."
+		],
+		"bump_barks": [
+			"Oof. Sorry. Sorry. Uuurgh.",
+			"Bonk.",
+			"You are in my shamble. That is okay.",
+			"Mrrh. Bump buddies.",
+			"Hhhnn. Same face. Excuse me, same face."
+		],
+		"cubs": {
+			"cast": "polar_bear_clone",
+			"designation": "%s, batch %d",
+			"pitch": 1.9,
+			"barks": [
+				"Mrrf!",
+				"Hrrm?",
+				"Bwuh.",
+				"*snuffle snuffle*",
+				"Rrrawr. (small)",
+				"Mew-rrr.",
+				"*happy wiggle*",
+				"Hff hff hff."
+			],
+			"bump_barks": [
+				"Mrp!",
+				"*boop*",
+				"Hrrf?"
+			],
+			"nom": [
+				"nom",
+				"nom nom nom",
+				"*crunch* nom",
+				"*burp* mrrf."
+			],
+			"nap": [
+				"zzz",
+				"*tiny snore*",
+				"mrrr... zzz"
+			]
+		},
+		"pounce": {
+			"interval_min": 14.0,
+			"interval_max": 32.0,
+			"radius": 160.0,
+			"nap_seconds": 6.0,
+			"puddle_seconds": 8.0,
+			"restock_seconds": 25.0,
+			"sfx": [
+				"boing",
+				"chomp",
+				"splat",
+				"burp"
+			],
+			"nap_sfx": "snore",
+			"tanks": [
+				[
+					135,
+					320
+				],
+				[
+					235,
+					320
+				],
+				[
+					335,
+					320
+				],
+				[
+					435,
+					320
+				]
+			]
+		}
+	}
 }
