@@ -79,11 +79,7 @@ magick -size 24x32 xc:none \
   -fill '#3a2e2e' -draw 'circle 10,10 10,9.3' -draw 'circle 14,10 14,9.3' \
   PNG32:"$OUT/npc_barren.png"
 
-# mirror (20x30): gold frame, pale glass
-magick -size 20x30 xc:none \
-  -fill '#e8c76a' -draw 'roundrectangle 1,1 19,29 6,6' \
-  -fill '#cfe8f5' -draw 'roundrectangle 4,4 16,26 5,5' \
-  PNG32:"$OUT/mirror.png"
+# (The village mirror is drawn by tools/gen_village_props.py: project/assets/island/mirror.png.)
 
 # ---------- backgrounds (960x540) ----------
 # Village: pastel green, temple plaza strip up top, paths, houses, garden, well, pond
