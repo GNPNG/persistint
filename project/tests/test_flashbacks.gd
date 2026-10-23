@@ -88,6 +88,8 @@ func _run() -> void:
 	ws.set_flag("outfit_hair", "hair_rose")
 	ws.set_flag("player_name", "island self")
 	ws.set_flag("questioned_ritual", true)
+	var marker := {"outfit_hair": "marker"}
+	ws.set_flag("chapter_archive_island", marker.duplicate())
 	var entry: Dictionary = fb.enter("landing", WRECK)
 	_check(entry.get("scene") == LANDING, "Landing enters its mini-game")
 	_check(chapters.current() == "cruise", "flashback plays in the cruise chapter")
@@ -95,7 +97,7 @@ func _run() -> void:
 	_check(ws.get_flag("flashback_archive", {}).get("outfit_hair") == "hair_rose", "island character archived")
 	_check(ws.has_flag("questioned_ritual"), "story flags stay")
 	_check(ws.get_flag("_location", {}).get("scene") == LANDING, "Continue resumes inside the flashback")
-	_check(ws.get_flag("chapter_archive_island") == null, "the island chapter-end archive is untouched")
+	_check(ws.get_flag("chapter_archive_island") == marker, "the island chapter-end archive is untouched by entering")
 	_check(fb.enter("landing", WRECK).is_empty(), "no flashback inside a flashback")
 
 	var card: Control = load(fb.CARD_SCENE).instantiate()
@@ -126,6 +128,7 @@ func _run() -> void:
 	_check(ws.get_flag("outfit_hair") == "hair_rose" and ws.get_flag("player_name") == "island self", "island character restored")
 	_check(fb.active().is_empty() and not ws.flags.has("flashback_archive"), "flashback cleared")
 	_check(fb.seen("landing"), "flashback marked remembered")
+	_check(ws.get_flag("chapter_archive_island") == marker, "the island chapter-end archive is untouched by leaving")
 	_check(ws.get_flag("_location", {}).get("scene") == WRECK, "Continue resumes at the origin")
 
 	# Outside a flashback the mini-games keep their own return maps.

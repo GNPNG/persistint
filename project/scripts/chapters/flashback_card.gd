@@ -24,7 +24,7 @@ func _ready() -> void:
 
 func _build_ui() -> void:
 	var bg := ColorRect.new()
-	bg.color = Color(0.04, 0.05, 0.1)
+	bg.color = Color(0.02, 0.03, 0.06)  # the chapter cards' near-black (STYLE.md 4.10)
 	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(bg)
 	var box := VBoxContainer.new()
