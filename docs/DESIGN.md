@@ -58,19 +58,19 @@ Discovered Forbidden Knowledge unlocks flashback chapters aboard the pre-wreck c
   absurd timed commands ("Align the Promenade Stabilizers!"), button-pushing chaos as the
   ship comes down. Among Us-flavored social layout (crew tasks around the ship) without the
   killing — the "impostor" energy is social, not violent.
-- **WarioWare celebrity mini-games:** each hosted by a Celebrity archetype (parody, never a
-  real name). Flagship: **"Hottest of the HOT"** — a top-model judging show where passengers
+- **WarioWare celebrity mini-games:** each hosted by one of the real celebrities on the cruise
+  (Story Structure: Sarah Silverman, Tyra Banks, Ellen, Chelsea Clinton, Margaret Atwood, Oprah;
+  Cap'n Kate captains). Flagship: **"Hottest of the HOT"** — Tyra Banks's top-model judging show where passengers
   are judged on appearance with negative framing and passive-aggressive language ("who did
   your hair?", "so brave to wear that"). Makeover/hair-salon/get-ready-for-the-fashion-show
   chains, Day of the Tentacle-style chained tasks across the ship.
-- **The Empowerment Emcee:** every celebrity mini-game is introduced by a beloved
-  first-daughter-of-politics archetype who explains how *empowering and fun* this is going
+- **The Empowerment Emcee:** every celebrity mini-game is introduced by Chelsea Clinton, who explains how *empowering and fun* this is going
   to be. Empowerment-washing as a running gag — the frame that blesses the judging.
 - **"Next Top Comic":** stand-up mini-game using the dialogue system in Monkey Island
   insult-sword-fighting structure — except every punchline choice is bad, weird, and
-  nonsensically inappropriate (crude-comedian archetype). The crowd rewards cruelty-shaped
+  nonsensically inappropriate (Sarah Silverman). The crowd rewards cruelty-shaped
   noise; the player feels the wrongness of every "correct" answer.
-- **The Interview (character creation):** a daytime-talk-show-host archetype interviews the
+- **The Interview (character creation):** Oprah interviews the
   player about themselves — warm, probing, faux-intimate. Answers drive SPECIAL-style stat
   allocation (Fallout G.O.A.T.-exam register). Character creation *is* a talk show segment.
 - **The same paper-doll system powers both layers**: island dress-up is kind (play, identity);
@@ -125,8 +125,8 @@ journal — the player's own growing Forbidden Knowledge.
 
 ## Legal/brand guardrails
 
-- No real celebrity names or likenesses; parody archetypes only ("Hottest of the HOT", never
-  the trademarked show it winks at).
+- Celebrities appear under their real names, exactly as in the source material (Story
+  Structure); never renamed or swapped for archetypes.
 - All assets original or generated; no ripped game assets.
 
 ## Vertical slice scope (current milestone)
