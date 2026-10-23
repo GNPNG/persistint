@@ -184,8 +184,8 @@ Exact colours used by the generators and the game code:
 | Path / path pebbles | `#fff0cf` / `#ffe2b0` |
 | Sand / sand pebbles | `#ffe9b8` / `#ffd3c2` |
 | Soil rows / sprouts | `#e0b48f` `#c99468` / `#9be07c` `#b4ee95` |
-| Plaza (paving) | `#f6e9f2`, slabs `#fbf2f8`, edge `#e1c6d8`, hearts `#ffd0e0` `#d9e9ff` |
-| Floor / alt floor (temple checkerboard) | `#fff6e2` / `#ffe6ee` |
+| Plaza (paving) | rounded cobbles `#f7eaf1` `#f4e4ee` `#f9eff5` `#f2e1eb` in `#ead6e1` joints |
+| Floor / alt floor (temple checkerboard of 16 px marble slabs) | `#fff6e2` / `#ffe6ee`, grout `#efd9c4` |
 | Rug runner | `#ffb3c8` with `#ffe3a8` borders and pale hearts |
 | Water / foam | `#a9ddf2` / `#c6eefb`, white wave arcs |
 | Wall / wall cap | `#f1e2cd` brick with `#d9c3a5` mortar / `#f8efe0` |
