@@ -2,8 +2,10 @@
 
 This file is the single reference for generating PERSISTINT assets: music (Gemini Lyria), images
 (Gemini image) and video (Gemini Veo). It is written to be used with no other context. Every
-prompt in `prompts/` follows it. Paste the **preamble** for the asset type and world (section 11)
-before the asset's own prompt.
+prompt in `prompts/` follows it. Every leaf prompt file is **pre-compiled** from this bible: its
+`## Prompt` section already contains the asset-type preamble, the world line, the asset's own
+subject and the negative prompt or loop spec (section 11), so it is pasted into the generator as is.
+`python3 tools/check_prompts.py` checks the files mechanically.
 
 Everything here comes from the author's sources: `docs/DESIGN.md` (the plan, binding), the novel's
 Story Structure, the canon art in `art/canon/`, the game data in `project/data/`, the dialogue in
@@ -181,7 +183,7 @@ it as the shipped look, which is:
 | Clone children | 20×30 px; polar bear cubs 24×22 px |
 | Props | ship 150 px tall, bunker 120, Queen Mother icon 72, pillar-orb 64, sign 48, skull altar 48, calendar 40, Seal of the O 36, fence 34 |
 | Key art / illustrations | 1920×1080 (16:9), read at 640×360: keep shapes big, silhouettes clear, detail sparse |
-| App icon | must read at 64 px |
+| App icon | 1:1, 1024×1024, must read at 64×64 |
 
 ### 4.3 Outline and shading rules
 
@@ -311,9 +313,11 @@ night-deck navy. The ruins drop to blue-green and machine grey with pink/mint ac
 ### 4.10 Title screen and chapter cards
 
 - **Title screen:** the tiny tropical island from above at golden hour, pastel pink and
-  turquoise, the white temple with its dome, palm trees, the cruise-ship wreck on the south reef,
-  sparkles and little hearts in the air, soft clouds, gentle glow. Cute but faintly eerie. One
-  version with the logo at the top, one plain.
+  turquoise, the blue-and-white striped temple with its gold dome, bunker-shaped pastel homes with
+  smiling faces, bubbly mint, pink and lavender trees with faces, the pastel blue-and-pink
+  cruise-ship wreck on the south beach (vines, bunting, a smiling bow face), sparkles and little
+  hearts in the air, soft clouds, gentle glow. Cute but faintly eerie. One version with the logo at
+  the top, one plain.
 - **Chapter-end card ("Before the Wreck"):** full-screen time-jump card. In-engine it is a
   near-black ground (`#05080f`) with the heading (30 px) and three lines at 85% white and the
   prompt "Board" at 50%. **No year count.** The heading and lines, verbatim:
@@ -324,9 +328,10 @@ night-deck navy. The ruins drop to blue-green and machine grey with pink/mint ac
   The card art and transition show the ship *before*: glamorous, white, lit up at sunset,
   streamers and balloons, nostalgic film grain and faint VHS lines; the transition video rewinds
   the wreck (rust peels away, lights flicker on, the ship rights itself and sails off).
-- **Loading screens:** one centred vignette on a pastel gradient, lots of empty space at the bottom
-  (a seashell on sand; an offering basket on a temple step; a cruise life ring; a polar bear cub
-  napping on a lab bench).
+- **Loading screens:** one centred vignette on a pastel gradient, lots of empty space at the bottom,
+  one prompt file each: `loading_seashell` (a seashell on sand), `loading_basket` (an offering
+  basket on a temple step), `loading_lifering` (a cruise life ring), `loading_cub` (a polar bear
+  cub napping on a lab bench).
 
 ### 4.11 Do / don't
 
@@ -512,8 +517,9 @@ beside at least one machine (pipes, racks, screens), with ribbons and candles on
 **Never:** danger, traps, monsters (the only creatures are the bunker's clones and cubs).
 
 **Audio:** wreck — 72 BPM, B minor, lounge piano playing a half-remembered cruise melody through
-tape warble, rusty creaks, ocean swell, distant foghorn. Colony infrastructure — 80 BPM, F# minor,
-analog synth arpeggio slowly filtering, sub pulse, data blips, airy choir.
+tape warble, rusty creaks, ocean swell, distant foghorn. Bunker machinery (the Service Spine and the
+Reliquary Core; file `ruins_colony`) — 80 BPM, F# minor, analog synth arpeggio slowly filtering,
+sub pulse, data blips, airy choir.
 
 ### 6.4 The secret bunker (Epstein's clone lab)
 
@@ -812,7 +818,7 @@ Also speaking: **Father** and **Daughter** (Florida), the **First Mate** (Landin
 | Festival of the Fourteenth | 112 | F major | hand drums, tambourine, steel drum, kazoo-like reed, claps on 2 and 4, call-and-response hook | parade joy, mechanical uniformity |
 | Temple | 60 | D dorian | harp, glass harmonica, toy-soft pipe organ, bells on downbeats, wordless choir | reverent, faintly oppressive |
 | Ruins wreck | 72 | B minor | tape-warbled lounge piano, metal creaks, ocean swell, distant foghorn | lonely decayed glamour |
-| Ruins colony | 80 | F# minor | filtering analog arpeggio, sub pulse, data blips, airy choir | discovery with dread, 1990s adventure game |
+| Ruins bunker machinery (`ruins_colony`) | 80 | F# minor | filtering analog arpeggio, sub pulse, data blips, airy choir | discovery with dread, 1990s adventure game |
 | Bunker clone lab | 100 | C minor | theremin, squelchy bass, music box, bubbling-tank foley, toy percussion, cute stabs | Halloween cartoon, splatter comedy |
 | Florida beach | 104 | D major | steel drum, ukulele, bongos, flute, wave wash | pure carefree summer |
 | Florida garden | 88 | G major | fingerpicked guitar, marimba, brushed snare, flute trills | warm slow afternoon |
@@ -875,30 +881,48 @@ fragment of the title melody on music box or celesta.
   `project/` (converting `.mp4` to Godot's `.ogv`) and lists prompts with nothing rendered.
 - Groups: `audio/music/<area>/` (Lyria, MP3), `audio/stingers/`, `image/ui/<element>/` (title,
   chapter_cards, loading, icon), `image/levels/<area>/`, `video/ui/`, `video/levels/<area>/` (Veo).
-  Areas: island, temple, ruins, florida, cruise (plus ui).
+  Areas: island, temple, ruins, florida, cruise (plus ui). Key art is
+  `project/assets/key_art/<area>/<id>.png`; video is `project/assets/video/<id>.ogv`.
+- Before committing, run `python3 tools/check_prompts.py` (front matter, `assets/` folders,
+  preamble and negative markers, no hex, no banned words, no real names in image/video prompts).
 
 ---
 
-## 11. Paste-in preambles
+## 11. Preambles (compiled into every prompt)
 
-Paste the **asset-type preamble**, then the **world line**, then the asset's prompt, then (for
-images and video) the negative prompt from 4.12.
+Each leaf prompt's `## Prompt` is compiled in this order: the **asset-type preamble**, then the
+**world line**, then the asset's own subject, framing, light and mood (with every must-appear item
+of its world), then for images and video the **negative prompt** from 4.12 (with "(unless
+requested)" resolved: "no logo" everywhere except `title_screen`), and for music the **loop and
+loudness spec**. The result is pasted into the generator as is; nothing else is added at render
+time. Blockquote markers below are not part of the text.
 
 ### 11.1 Image (Gemini image)
 
 > Kawaii pixel-art game art in a clean sticker-illustration style: even warm-brown outlines (never
 > black), flat pastel fills with one soft highlight, round pink cheek blush, dot eyes and small
-> smiles, cute faces on buildings and objects, big round readable shapes for a 640×360 game,
-> overhead three-quarter view for places, hearts and four-point sparkles as motifs, soft
-> antialiased edges with no harsh pixel stair-steps. Cute on the surface with something faintly
-> wrong underneath. 16:9. No photorealism, no 3D, no text.
+> smiles, cute faces (two dot eyes, pink blush, a small smile) on buildings, trees, props, the
+> ship and the bunker, big round readable shapes for a 640×360 game, overhead three-quarter view
+> for places, hearts and four-point sparkles as motifs, soft antialiased edges with no harsh pixel
+> stair-steps. Cute on the surface with something faintly wrong underneath. 16:9. No
+> photorealism, no 3D, no text.
 
 ### 11.2 Video (Gemini Veo)
 
-> Kawaii pixel-art style animation in a clean sticker-illustration look: warm-brown outlines, flat
-> pastel colours, soft blush, dot eyes, faces on objects, bouncy squash-and-stretch motion, slow
-> smooth camera, sparkles drifting, big readable shapes for a 640×360 game. Cute with something
-> faintly wrong underneath. 16:9, 5–8 seconds, no dialogue, no text.
+> Kawaii pixel-art style animation in a clean sticker-illustration look: even warm-brown outlines
+> (never black), flat pastel fills with one soft highlight, round pink cheek blush, dot eyes and
+> small smiles, cute faces (two dot eyes, pink blush, a small smile) on buildings, trees, props,
+> the ship and the bunker, soft antialiased edges with no harsh pixel stair-steps, bouncy
+> squash-and-stretch motion, slow smooth camera, sparkles drifting, big readable shapes for a
+> 640×360 game. Cute with something faintly wrong underneath. 16:9, 5–8 seconds, no dialogue, no
+> text.
+
+Image and video variants: for **Florida**, replace "Cute on the surface with something faintly
+wrong underneath." (or "Cute with something faintly wrong underneath.") with "Pure carefree joy,
+nothing wrong anywhere." For video, replace "5–8 seconds" with the asset's length. For the **app
+icon**, drop the overhead-view clause and replace "16:9" with "1:1 square, 1024×1024, must read at
+64×64". For the **title screen with logo**, replace "no text" with "no text other than the
+requested logo".
 
 ### 11.3 Music (Gemini Lyria)
 
@@ -907,8 +931,13 @@ images and video) the negative prompt from 4.12.
 > and melodic on the surface with a subtle sense that something is slightly wrong.
 
 For **stingers**, replace the loop clause with: "a short non-looping cue of N seconds with a clean
-ending". For **Florida**, drop the last sentence and use: "Pure carefree joy, nothing wrong
-anywhere."
+ending". For **Florida** and the **Name It** sting (the one honestly happy cue), drop the last
+sentence and use: "Pure carefree joy, nothing wrong anywhere."
+
+Music spec line (appended last, from 9.1): "Spec: instrumental only, no vocals or lyrics; seamless
+loop of 2:00 to 3:00 with no hard transient in the first or last 50 ms; about -16 LUFS integrated;
+MP3 320 kbps." For stingers: "Spec: instrumental only, no vocals or lyrics; N seconds, not looped,
+clean ending, no hard transient in the first 50 ms; about -14 LUFS integrated; MP3 320 kbps."
 
 ### 11.4 World lines (add after the type preamble)
 
@@ -922,6 +951,8 @@ anywhere."
 | Florida | Sunny tropical Florida Keys: turquoise shallows, white foam, sand and shells, hibiscus, bougainvillea, key lime and mango trees, leaping dolphins, sideways crabs, hopping gulls, friendly mermaids; warm saturated colours, pure joy. | Bright tropical acoustic music, steel drum, ukulele, acoustic guitar, flute, harp or banjo and fiddle, bright major, nothing unresolved. |
 | Cruise | Glamorous white cruise ship at sunset or under spotlights: gold trim, champagne, streamers and balloons, runway, talk-show couch, comedy-club mic, salon mirrors with bulb lights; glossy, celebratory and quietly judging. | Showbiz music for a celebrity cruise: bossa lounge, runway house, talk-show horns, comedy-club jazz; glossy and confident. |
 | Landing | The same cruise ship dead in thick pale fog, deck lights failing, crew rushing between absurd control panels, deck chairs sliding, comedic chaos, no one hurt. | Frantic comedic panic loop, galloping synth bass, alarm-like lead, snare rolls, brass stabs, rising tension, funny not scary. |
+| Title (UI) | as Island village (the title art is the island from above) | The game's theme: a gentle C-major music-box and celesta lullaby over felt piano and a warm pad, with a faint detuned toy-organ drone underneath. |
+| Name It (UI) | — | A bright, clear revelation: celesta and glockenspiel, sparkle shimmer, a clear major chord; the one cue in the game that is fully, honestly happy. |
 | Before the Wreck | The cruise ship before the wreck at sunset, lit up and glamorous, streamers and balloons, seen slightly from below, nostalgic film grain and faint VHS lines. | Rewinding-tape transition into a warm lounge chord, music box restating the gentle C-major title lullaby, ending unresolved. |
 
 ---
@@ -929,8 +960,12 @@ anywhere."
 ## 12. Template for a new prompt file
 
 Match the existing files exactly: front matter, a heading, one line of purpose, `## Prompt`,
-`## Notes`. The prompt body is one paragraph: subject, setting, palette and light, mood words,
-"No text." (images/video) or "Instrumental, loopable." (music).
+`## Notes`, and an `assets/` folder (with `.gitkeep`) beside the file. The prompt body is
+**pre-compiled and self-contained** (section 11): one paragraph made of four parts in order —
+(1) the asset-type preamble with its variants applied, (2) the world line, (3) the asset's
+subject, framing, light and mood including every must-appear item of its world, described in
+natural-language colours (no hex codes) and by role, hair and costume (no real names), (4) the
+negative prompt (image/video) or the spec line (music).
 
 ```markdown
 ---
@@ -946,8 +981,8 @@ game: project/<audio|assets>/<...>/<asset_id>.<mp3|png|ogv>
 
 ## Prompt
 
-<one paragraph following this bible: world line content, subject, palette, light, mood, and
-"No text." or "Instrumental, loopable.">
+<preamble> <world line> <asset: subject, framing, palette in words, light, mood, must-appear
+items> <negative prompt (image/video) or spec line (music)>, all in one paragraph
 
 ## Notes
 
@@ -956,9 +991,12 @@ music instrumental, seamless loop 2:00–3:00, MP3 320 kbps; stinger N s, not lo
 video 16:9, converted to .ogv by tools/sync_rendered_assets.py>
 ```
 
-Checklist before saving a prompt: the world's must-appear items are present; none of its
-must-never items are; no real person is named in an image/video prompt; vocabulary rules (1.1)
-hold; tempo and key fit the table in 9.2.
+Checklist before saving a prompt: the prompt is self-contained (all four parts); the look is
+defined (warm-brown outlines never black, flat pastel fills, soft antialiased edges, no pixel
+stair-steps); faces are on everything; the world's must-appear items are present; none of its
+must-never items are; no real person is named in an image/video prompt; no text in visual assets
+except the title logo; no hex codes in visual prompts; vocabulary rules (1.1) hold; tempo and key
+fit the table in 9.2. Then run `python3 tools/check_prompts.py`.
 
 ---
 

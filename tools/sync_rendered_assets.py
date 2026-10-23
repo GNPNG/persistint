@@ -12,6 +12,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 missing = []
 for prompt in sorted((ROOT / "prompts").rglob("*.md")):
+    if prompt.parent == ROOT / "prompts":  # STYLE.md and README.md are not asset prompts
+        continue
     text = prompt.read_text()
     drop = re.search(r"^drop: (.*)$", text, re.M)
     game = re.search(r"^game: (.*)$", text, re.M)
