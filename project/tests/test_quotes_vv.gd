@@ -123,7 +123,7 @@ func _run() -> void:
 
 	# Hottest of the HOT: Tyra Banks's verdicts are her verified quotes or DESIGN.md's own example wording.
 	var hot: Dictionary = _json("res://data/hottest_of_the_hot.json")
-	var design := FileAccess.get_file_as_string(ProjectSettings.globalize_path("res://").path_join("../dev/DESIGN.md"))
+	var design := FileAccess.get_file_as_string(ProjectSettings.globalize_path("res://").path_join("../docs/DESIGN.md"))
 	design = RegEx.create_from_string("\\s+").sub(design, " ", true)  # DESIGN.md wraps lines mid-sentence
 	var verdicts_ok: bool = design != "" and hot.get("verdicts", []).size() > 0
 	for v: String in hot.get("verdicts", []):

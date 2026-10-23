@@ -7,7 +7,7 @@ Daughter's friend who brushes the ponies).
 
 Every pony part shares one 64x52 frame (pony faces right, three-quarter side view) so the parts
 stack: body (coat colour; legs, head, face), spots, mane (mane + tail, per style and colour),
-accessory, sparkle. Kawaii sticker look from dev/STYLE.md 4.3: warm-brown outline #8a5a5a,
+accessory, sparkle. Kawaii sticker look from prompts/STYLE.md 4.3: warm-brown outline #8a5a5a,
 flat pastel fills with one highlight, dot eyes with a catch-light, pink blush, small smile.
 """
 import json
