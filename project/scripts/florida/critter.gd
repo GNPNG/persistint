@@ -6,19 +6,22 @@ extends "res://scripts/florida/clickable.gd"
 @export var kind := "crab"
 @export var wander := Rect2(0, 0, 100, 60)  # global rect it drifts inside
 @export var nickname := ""  # cast id, one of the kind's "names" in florida.json
-@export var sprite_texture := ""
+## Rigged sheet: res://assets/florida/<sprite_frames or kind>.tres (idle, walk; faces right).
+@export var sprite_frames := ""
 
 @onready var bubble: Label = $BarkBubble
-@onready var sprite: Sprite2D = $Sprite2D
+@onready var sprite: AnimatedSprite2D = $Sprite
 
 var _busy := false
 
 
 func _ready() -> void:
 	super()
-	var path := "res://assets/placeholder/%s.png" % (sprite_texture if sprite_texture != "" else kind)
+	var path := "res://assets/florida/%s.tres" % (sprite_frames if sprite_frames != "" else kind)
 	if ResourceLoader.exists(path):
-		sprite.texture = load(path)
+		sprite.sprite_frames = load(path)
+		sprite.play("idle")
+		sprite.frame = randi() % sprite.sprite_frames.get_frame_count("idle")
 	bubble.hide()
 	if DisplayServer.get_name() != "headless":
 		_drift()
@@ -30,9 +33,17 @@ func _drift() -> void:
 	var target := wander.position + Vector2(randf() * wander.size.x, randf() * wander.size.y)
 	var tw := create_tween()
 	tw.tween_interval(randf_range(0.5, 3.0))
-	tw.tween_callback(func() -> void: sprite.flip_h = target.x > global_position.x)
+	tw.tween_callback(func() -> void:
+		sprite.flip_h = target.x < global_position.x
+		_anim("walk"))
 	tw.tween_property(self, "global_position", target, randf_range(2.0, 5.0)).set_trans(Tween.TRANS_SINE)
+	tw.tween_callback(func() -> void: _anim("idle"))
 	tw.tween_callback(_drift)
+
+
+func _anim(name: String) -> void:
+	if sprite.sprite_frames and sprite.sprite_frames.has_animation(name):
+		sprite.play(name)
 
 
 func interact() -> void:
