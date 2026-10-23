@@ -103,7 +103,7 @@ journal — the player's own growing Forbidden Knowledge.
 
 - `WorldState` autoload — flags/vars, JSON save; single source of truth.
 - `GameClock` autoload — day phases, Calendar of Blood, festivals.
-- `Voice` autoload — procedural Animalese gibberish per character (pitch per caste/host).
+- `Voice` autoload — speech: LLM-based impersonated narration, each character voiced in speech.
 - `SceneRouter` autoload — map transitions with named spawns.
 - Dialogue Manager addon — `.dialogue` files with conditions/mutations on WorldState.
 - NPC scene — bark table (data/barks.json) + dialogue tree entry.
@@ -119,8 +119,7 @@ journal — the player's own growing Forbidden Knowledge.
 - Local SD (ComfyUI headless on production server): IP-Adapter style-ref from sheets, later a
   style LoRA; Gemma-generated prompt manifests; batch generation with tiling validation and
   human-in-the-loop style scoring.
-- Audio: Animalese synth is the default voice; local TTS (Piper/XTTS) cute-voice experiments
-  for short barks evaluated against it.
+- Audio: speech with LLM-based impersonated narration (author preference, 2026-10-23).
 
 ## Legal/brand rules
 
@@ -131,5 +130,5 @@ journal — the player's own growing Forbidden Knowledge.
 ## Vertical slice scope (current milestone)
 
 Village + Temple maps, 4 caste NPCs with reactive barks, one branching quest ("The Offering"),
-paper-doll wardrobe, one ritual puzzle, Animalese voices, HTML5 export. Cruise world and
+paper-doll wardrobe, one ritual puzzle, voices, HTML5 export. Cruise world and
 dungeon crawl are stubbed doors with barks.
