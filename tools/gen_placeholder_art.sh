@@ -44,7 +44,7 @@ magick -size 24x32 xc:none \
   PNG32:"$OUT/acc_bow.png"
 
 # ---------- NPC composites (24x32) ----------
-# Devout Initiate (Maren): powder-blue dress, cocoa hair, white collar
+# Devout Initiate: powder-blue dress, cocoa hair, white collar
 magick -size 24x32 xc:none \
   -fill "$SKIN" -draw 'circle 12,10 12,3.5' \
   -fill '#9db8e8' -draw 'polygon 7,16 17,16 20,29 4,29' \
@@ -54,7 +54,7 @@ magick -size 24x32 xc:none \
   -fill '#ffb3c1' -draw 'circle 8,12 8,11.4' -draw 'circle 16,12 16,11.4' \
   PNG32:"$OUT/npc_initiate.png"
 
-# Priestess/Mother (Ondine): violet robe, ink hair, gold hat
+# Priestess/Mother: violet robe, ink hair, gold hat
 magick -size 24x32 xc:none \
   -fill "$SKIN" -draw 'circle 12,11 12,4.5' \
   -fill '#b89ae0' -draw 'polygon 6,16 18,16 21,30 3,30' \
@@ -63,7 +63,7 @@ magick -size 24x32 xc:none \
   -fill '#3a2e2e' -draw 'circle 10,11 10,10.3' -draw 'circle 14,11 14,10.3' \
   PNG32:"$OUT/npc_mother.png"
 
-# Drone (Pip): green overalls + cap
+# Drone: green overalls + cap
 magick -size 24x32 xc:none \
   -fill "$SKIN" -draw 'circle 12,10 12,3.5' -draw 'roundrectangle 9,15 15,29 3,3' \
   -fill '#9ccf8f' -draw 'polygon 8,18 16,18 17,29 7,29' -draw 'rectangle 9,15 10,19' -draw 'rectangle 14,15 15,19' \
@@ -71,7 +71,7 @@ magick -size 24x32 xc:none \
   -fill '#3a2e2e' -draw 'circle 10,10 10,9.3' -draw 'circle 14,10 14,9.3' \
   PNG32:"$OUT/npc_drone.png"
 
-# Barren (Vess): grey wrap + kerchief
+# Barren: grey wrap + kerchief
 magick -size 24x32 xc:none \
   -fill "$SKIN" -draw 'circle 12,10 12,3.5' \
   -fill '#b8b3ad' -draw 'polygon 7,16 17,16 19,29 5,29' \
