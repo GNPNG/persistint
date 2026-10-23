@@ -240,7 +240,10 @@ func _run() -> void:
 				names.append(resp.text)
 			names.sort()
 			offers.append(names)
-			dline = await dm.get_next_dialogue_line(comic_res, allowed[0].next_id, [comic])
+			# The pool is shuffled; pick an ordinary line so every exchange gets the laugh.
+			var ordinary: Array = allowed.filter(func(x): return not x.text in ["_i1", "_o1"])
+			var choice = ordinary[0] if not ordinary.is_empty() else allowed[0]
+			dline = await dm.get_next_dialogue_line(comic_res, choice.next_id, [comic])
 		else:
 			dline = await dm.get_next_dialogue_line(comic_res, dline.next_id, [comic])
 	_check(guard < 80 and dline == null, "comic: the set plays out and then it ends")
