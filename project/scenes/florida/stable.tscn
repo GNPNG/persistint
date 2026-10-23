@@ -39,10 +39,19 @@ target_scene = "res://scenes/florida/beach.tscn"
 target_spawn = "spawn_from_stable"
 
 [node name="Daughter" parent="." instance=ExtResource("5")]
-position = Vector2(560, 240)
+position = Vector2(216, 294)
 npc_id = "daughter"
 display_name = "Daughter"
 sprite_texture = "npc_daughter"
 dialogue_path = "res://dialogue/florida_stable.dialogue"
 dialogue_title = "daughter"
 voice_pitch = 1.25
+show_if_flag = "fl_invited_to_horses"
+
+[node name="Hannah" parent="." instance=ExtResource("5")]
+position = Vector2(222, 248)
+npc_id = "stable_friend"
+sprite_texture = "npc_stable_friend"
+dialogue_path = "res://dialogue/florida_stable.dialogue"
+dialogue_title = "hannah"
+voice_pitch = 1.3

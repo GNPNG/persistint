@@ -29,3 +29,16 @@ Daughter: What do you want to do?
 	Daughter: That's allowed. Nobody's in a hurry out here.
 	Daughter: {{Cast.short("pony_waffles")}} likes being watched. She does a little hop when she thinks you're looking.
 => END
+
+~ hannah
+{{Cast.short("stable_friend")}}: Hi! I'm {{Cast.short("stable_friend")}}. I live down the road. I'm here basically every day.
+{{Cast.short("stable_friend")}}: We're doing {{Cast.short("pony_butterscotch")}}'s mane. Top first, then the tangly bit underneath.
+- Can I help?
+	{{Cast.short("stable_friend")}}: Yes! Little strokes, like you're brushing a cloud.
+	{{Cast.short("stable_friend")}}: See? Her eyes are closing. That means you're doing it right.
+- What's your favorite pony?
+	{{Cast.short("stable_friend")}}: All of them. But today it's {{Cast.short("pony_butterscotch")}}, because she let me do two braids.
+	{{Cast.short("stable_friend")}}: Tomorrow it'll be somebody else. They take turns.
+- I'll let you two brush.
+	{{Cast.short("stable_friend")}}: Okay! Come back and see how it turns out. It's going to be so shiny.
+=> END

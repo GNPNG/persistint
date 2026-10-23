@@ -15,6 +15,10 @@ static var _barks: Dictionary = {}
 @export var dialogue_path := ""  # e.g. res://dialogue/offering.dialogue
 @export var dialogue_title := "start"
 @export var voice_pitch := 1.0
+## Presence by flag: shown only once show_if_flag is set; gone once hide_if_flag is set
+## (e.g. the Daughter leaves the beach for the stable after inviting you to the horses).
+@export var show_if_flag := ""
+@export var hide_if_flag := ""
 
 @onready var bubble: Label = $BarkBubble
 
@@ -39,6 +43,32 @@ func _ready() -> void:
 	input_event.connect(_on_input_event)
 	$Proximity.body_entered.connect(_on_proximity_entered)
 	$Proximity.body_exited.connect(_on_proximity_exited)
+	_apply_presence()
+	if show_if_flag != "" or hide_if_flag != "":
+		WorldState.flag_changed.connect(_on_flag_changed)
+
+
+## True when the flags say this NPC is here right now.
+func is_present() -> bool:
+	if show_if_flag != "" and not WorldState.has_flag(show_if_flag):
+		return false
+	return hide_if_flag == "" or not WorldState.has_flag(hide_if_flag)
+
+
+func _on_flag_changed(key: String, _value: Variant) -> void:
+	if key == show_if_flag or key == hide_if_flag:
+		_apply_presence.call_deferred()
+
+
+## Absent NPCs are hidden and can't be clicked or bark at the player walking past.
+func _apply_presence() -> void:
+	var here := is_present()
+	visible = here
+	input_pickable = here
+	$CollisionShape2D.set_deferred("disabled", not here)
+	$Proximity.set_deferred("monitoring", here)
+	if not here:
+		bubble.hide()
 
 
 func current_bark() -> String:

@@ -2,9 +2,14 @@ extends SceneTree
 ## Headless check of the Florida pony stable: grooming writes the pony's paper-doll parts,
 ## riding makes click-to-move faster with the pony drawn under the doll, foals inherit one
 ## allele per gene from each parent (seeded, deterministic, Mendelian), the herd and the ride
-## survive save/load, and the beach <-> stable doors land on real spawn markers.
+## survive save/load, the panel's buttons (Foal, Hop down) and the H key work, the Daughter moves
+## from the beach to the stable once she invites you, Hannah brushes a pony, every branch of the
+## stable dialogue plays, and the beach <-> stable doors sit on the walkable area, land on real
+## spawn markers and go through SceneRouter.
 ## Run: godot --headless --path project -s tests/test_pony_stable.gd
-## The player's real save (user://save.json) is backed up and restored.
+## WorldState saves to a temp file for the run; the player's real save is never touched.
+
+const TEMP_SAVE := "user://test_pony_stable_save.json"
 
 var _failures := 0
 
@@ -17,10 +22,8 @@ func _run() -> void:
 	await process_frame
 	var ws: Node = root.get_node("/root/WorldState")
 	var cast: Node = root.get_node("/root/Cast")
-	var backup := ""
-	var had_save := FileAccess.file_exists(ws.SAVE_PATH)
-	if had_save:
-		backup = FileAccess.get_file_as_string(ws.SAVE_PATH)
+	var real_save: String = ws.SAVE_PATH
+	ws.SAVE_PATH = TEMP_SAVE
 	ws.reset()
 
 	# The herd: starters arrive, every name comes from cast.json, every part has art
@@ -128,6 +131,7 @@ func _run() -> void:
 	_check(player.is_mounted() and player.mount_doll.layer("body").texture != null, "the pony is drawn under the player")
 	_check(player.get_children().find(player.mount_doll) < player.get_children().find(player.get_node("Body")), "the pony draws beneath the doll")
 	_check(not stable.pony_node(a).visible, "the ridden pony is out of its stall")
+	_check(not stable.pony_node(a).input_pickable, "the ridden pony can't be clicked in its empty stall")
 	_check(player.get_node_or_null("RideUI/HopDown") != null, "a hop-down button while riding")
 
 	# Save/load: herd, grooming, foal and the ride
@@ -139,19 +143,105 @@ func _run() -> void:
 	_check(Ponies.riding() == a, "the ride survives save/load")
 	_check(Ponies.phenotype(foal, "coat") == Ponies.phenotype(saved_herd[foal], "coat"), "foal genes survive save/load")
 
-	Ponies.dismount()
+	var key := InputEventKey.new()
+	key.keycode = KEY_H
+	key.pressed = true
+	root.push_input(key)
 	await process_frame
-	_check(not player.is_mounted() and is_equal_approx(player.current_speed(), player.SPEED), "hop down: back to walking speed")
-	_check(stable.pony_node(a).visible, "the pony is back in its stall")
+	_check(not player.is_mounted() and Ponies.riding() == "", "the H key hops down")
+	_check(is_equal_approx(player.current_speed(), player.SPEED), "hop down: back to walking speed")
+	_check(stable.pony_node(a).visible and stable.pony_node(a).input_pickable, "the pony is back in its stall, clickable")
+	Ponies.mount(a, today)
+	await process_frame
+	var hop: Button = player.get_node_or_null("RideUI/HopDown")
+	_check(hop != null, "riding again shows the hop-down button")
+	if hop:
+		hop.pressed.emit()
+	await process_frame
+	_check(not player.is_mounted() and Ponies.riding() == "", "the Hop down button hops down")
+
+	# The grooming panel: a big herd's Foal buttons scroll inside the 360 px view; Foal works
+	var clock: Node = root.get_node("/root/GameClock")
+	clock.day = today + int(Ponies.data()["foal_grow_days"])  # every foal grown: the longest list
 	var panel_pony: Node = stable.pony_node(b)
 	panel_pony.interact()
+	await process_frame
 	await process_frame
 	var panel: Node = panel_pony.get_child(panel_pony.get_child_count() - 1)
 	_check(panel is CanvasLayer and panel.get_node("Panel/HBox/Buttons") != null, "clicking a pony opens the grooming panel")
 	_check(panel.find_children("*", "Button", true, false).size() >= 4, "the panel has brush, groom and ride buttons")
-	panel.queue_free()
+	var foal_list: Node = panel.get_node_or_null("Panel/HBox/Buttons/Foals/List")
+	var friends := Ponies.ids().size() - 1
+	_check(foal_list != null and foal_list.get_child_count() == friends and friends > panel.FOAL_ROWS,
+		"one Foal button per grown-up friend, in a scrolling list (%d)" % friends)
+	var view_h := float(ProjectSettings.get_setting("display/window/size/viewport_height"))
+	var panel_h: float = panel.get_node("Panel").get_combined_minimum_size().y
+	_check(panel_h <= view_h, "the panel fits the view (%d <= %d px)" % [panel_h, view_h])
+	var herd_before := Ponies.ids().size()
+	var foal_button: Button = foal_list.get_child(0) if foal_list else null
+	_check(foal_button != null and foal_button.text.begins_with("Foal with"), "the Foal button")
+	if foal_button:
+		foal_button.pressed.emit()
+	await process_frame
+	await process_frame
+	_check(Ponies.ids().size() == herd_before + 1, "pressing Foal brings a foal to the stable")
+	_check(not is_instance_valid(panel) or panel.is_queued_for_deletion(), "the panel closes for the new foal")
+	_check(stable.pony_node(Ponies.ids()[-1]) != null, "the new foal trots into a stall")
+	clock.day = today
+
+	# The Daughter moves: beach until she invites you, then the stable (STYLE.md 6.5)
+	var st_daughter: Node = stable.get_node("Daughter")
+	_check(not st_daughter.visible and not st_daughter.input_pickable, "no Daughter at the stable before she invites you")
+	var hannah: Node = stable.get_node("Hannah")
+	_check(hannah.visible and hannah.display_name == cast.full("stable_friend") and cast.full("stable_friend") != "stable_friend",
+		"Hannah brushes a pony at the stable, named from cast.json")
+	_check(hannah.current_bark() != "..." and hannah.sprite_texture != "" and hannah.get_node("Sprite2D").texture != null,
+		"Hannah has barks and a sprite")
 	stable.queue_free()
 	await process_frame
+	var beach_map: Node = load("res://scenes/florida/beach.tscn").instantiate()
+	root.add_child(beach_map)
+	await process_frame
+	var beach_daughter: Node = beach_map.get_node("Daughter")
+	_check(beach_daughter.visible and beach_daughter.input_pickable, "the Daughter is on the beach at first")
+	ws.set_flag("fl_invited_to_horses", true)
+	await process_frame
+	await process_frame
+	_check(not beach_daughter.visible and not beach_daughter.input_pickable and not beach_daughter.get_node("Proximity").monitoring,
+		"after the invitation she leaves the beach")
+	beach_map.queue_free()
+	await process_frame
+	stable = load("res://scenes/florida/stable.tscn").instantiate()
+	root.add_child(stable)
+	await process_frame
+	_check(stable.get_node("Daughter").visible and stable.get_node("Daughter").input_pickable, "...and is at the stable with her hat and brush")
+	stable.queue_free()
+	await process_frame
+
+	# The stable dialogue: every opener and every branch plays, names come from cast.json
+	var dm: Node = root.get_node("/root/DialogueManager")
+	var res: Resource = load("res://dialogue/florida_stable.dialogue")
+	var all_text := []
+	for opener in [{"fl_invited_to_horses": false, "fl_met_ponies": false}, {"fl_invited_to_horses": true, "fl_met_ponies": false},
+			{"fl_invited_to_horses": true, "fl_met_ponies": true}]:
+		for flag: String in opener:
+			ws.set_flag(flag, opener[flag])
+		var walked: Array = []
+		await _walk(dm, res, "daughter", walked)
+		all_text.append_array(walked)
+	_check(all_text.any(func(t: String) -> bool: return t.contains("found the horses")), "dialogue: the uninvited opener")
+	_check(all_text.any(func(t: String) -> bool: return t.contains("Hat's on")), "dialogue: the invited opener")
+	_check(all_text.any(func(t: String) -> bool: return t.contains("You're back")), "dialogue: the welcome-back opener")
+	for want: String in ["Long strokes", "hop on", "Two ponies", "neither of them", "wait and see", "Nobody's in a hurry"]:
+		_check(all_text.any(func(t: String) -> bool: return t.contains(want)), "dialogue branch: %s" % want)
+	_check(ws.has_flag("fl_met_ponies"), "meeting the ponies is remembered")
+	var hannah_text: Array = []
+	await _walk(dm, res, "hannah", hannah_text)
+	for want: String in ["I'm Hannah", "brushing a cloud", "two braids", "so shiny"]:
+		_check(hannah_text.any(func(t: String) -> bool: return t.contains(want)), "Hannah's branch: %s" % want)
+	all_text.append_array(hannah_text)
+	_check(all_text.any(func(t: String) -> bool: return t.contains("Butterscotch")), "pony names come from cast.json")
+	_check(not all_text.any(func(t: String) -> bool: return t.contains("{{")), "every {{...}} resolves")
 
 	# Riding outside Florida: the pony stays home
 	Ponies.mount(a, today)
@@ -162,12 +252,14 @@ func _run() -> void:
 	village.queue_free()
 	await process_frame
 
-	# Door wiring: beach <-> stable, each door lands on a real spawn marker
+	# Door wiring: beach <-> stable, each door on the walkable area and landing on a real spawn marker
 	for pair in [["beach", "StableDoor"], ["stable", "BeachDoor"]]:
 		var scene: Node = load("res://scenes/florida/%s.tscn" % pair[0]).instantiate()
 		var door: Node = scene.get_node_or_null(pair[1])
 		_check(door != null, "%s has %s" % [pair[0], pair[1]])
 		if door:
+			var nav: NavigationPolygon = scene.get_node("Nav").navigation_polygon
+			_check(Geometry2D.is_point_in_polygon(door.position, nav.get_outline(0)), "%s sits inside the walkable area" % pair[1])
 			_check(ResourceLoader.exists(door.target_scene), "%s leads to a real map" % pair[1])
 			var dest: Node = load(door.target_scene).instantiate()
 			_check(dest.find_child(door.target_spawn, true, false) is Marker2D, "%s lands on %s" % [pair[1], door.target_spawn])
@@ -181,13 +273,40 @@ func _run() -> void:
 		and ResourceLoader.exists(st.get_node("Daughter").dialogue_path), "the Daughter is at the stable with her conversation")
 	st.free()
 
-	if had_save:
-		var f := FileAccess.open(ws.SAVE_PATH, FileAccess.WRITE)
-		f.store_string(backup)
-	else:
-		DirAccess.remove_absolute(ProjectSettings.globalize_path(ws.SAVE_PATH))
+	# Last (it changes the scene): walking onto the stable's BeachDoor goes through SceneRouter
+	var router: Node = root.get_node("/root/SceneRouter")
+	var leaving: Node = load("res://scenes/florida/stable.tscn").instantiate()
+	root.add_child(leaving)
+	await process_frame
+	leaving.get_node("BeachDoor").interact()
+	_check(router.next_spawn == "spawn_from_stable", "the BeachDoor asks SceneRouter for spawn_from_stable")
+	await process_frame
+	await process_frame
+	_check(current_scene != null and current_scene.scene_file_path == "res://scenes/florida/beach.tscn", "...and the beach loads")
+	leaving.queue_free()
+	await process_frame
+
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(TEMP_SAVE))
+	ws.SAVE_PATH = real_save
 	print("RESULT: %s (%d failures)" % ["PASS" if _failures == 0 else "FAIL", _failures])
 	quit(0 if _failures == 0 else 1)
+
+
+## Plays the dialogue from title, following every response into its own branch (nested ones
+## too); appends each line's speaker and text to out.
+func _walk(dm: Node, res: Resource, title: String, out: Array, depth := 0) -> void:
+	var line = await dm.get_next_dialogue_line(res, title)
+	var steps := 0
+	while line != null and steps < 60:
+		steps += 1
+		out.append("%s: %s" % [line.character, line.text])
+		if line.responses.size() > 0:
+			for r in line.responses:
+				out.append("> " + r.text)
+				if depth < 4:
+					await _walk(dm, res, r.next_id, out, depth + 1)
+			return
+		line = await dm.get_next_dialogue_line(res, line.next_id)
 
 
 func _check(ok: bool, what: String) -> void:
