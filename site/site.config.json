@@ -6,7 +6,9 @@
   "zone": "dataglut.org",
   "worker_name": "persistint-site",
   "build_bucket": "persistint-builds",
-  "oversized_files": ["index.wasm"],
+  "oversized_files": [
+    "index.wasm"
+  ],
   "repo_url": "",
   "itch_url": "",
   "contact": "",
@@ -14,5 +16,7 @@
   "icon_master": "prompts/image/ui/icon/app_icon.md",
   "hero_image": "prompts/image/ui/title/title_screen_plain.md",
   "analytics_token": "",
-  "thread_support": false
+  "thread_support": false,
+  "oversized_mode": "gzip",
+  "custom_domain": false
 }
