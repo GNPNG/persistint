@@ -2,7 +2,8 @@
 
 Usage: python3 -I tools/verify_quotes.py [--list-unverified]
 Reads only the json fields written by the verbatim V&V pass (verified, checked_url, primary_source,
-was, note); no network. Prints a per-file table and exits 1 if any quote lacks a verified flag or a
+was, note, excluded_from_game); no network. "usable" = verified and not excluded_from_game (only
+those may be used in game). Prints a per-file table and exits 1 if any quote lacks a verified flag or a
 checked_url, or if a url is not https.
 """
 import json
@@ -21,6 +22,8 @@ def main() -> int:
         ok = sum(1 for q in quotes if q.get("verified") is True)
         corrected = sum(1 for q in quotes if "was" in q)
         primary = sum(1 for q in quotes if q.get("primary_source"))
+        excluded = sum(1 for q in quotes if q.get("excluded_from_game") is True)
+        usable = sum(1 for q in quotes if q.get("verified") is True and q.get("excluded_from_game") is not True)
         for i, q in enumerate(quotes):
             if not isinstance(q.get("verified"), bool):
                 problems.append(f"{path.name}[{i}]: no verified flag")
@@ -31,9 +34,9 @@ def main() -> int:
                     problems.append(f"{path.name}[{i}]: {key} is not https")
             if q.get("verified") is not True:
                 unverified.append(f"{path.name}[{i}]: {q['text']}")
-        rows.append((path.name, n, ok, n - ok, corrected, primary))
+        rows.append((path.name, n, ok, n - ok, corrected, primary, excluded, usable))
 
-    head = ("file", "total", "verified", "unverified", "corrected", "other primary")
+    head = ("file", "total", "verified", "unverified", "corrected", "other primary", "excluded", "usable")
     widths = [max(len(str(r[c])) for r in rows + [head]) for c in range(len(head))]
     line = lambda r: "  ".join(str(v).ljust(w) if c == 0 else str(v).rjust(w) for c, (v, w) in enumerate(zip(r, widths)))
     print(line(head))

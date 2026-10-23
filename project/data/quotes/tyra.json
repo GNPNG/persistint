@@ -1,5 +1,5 @@
 {
-  "_note": "Tyra Banks's own words only, each checked against the page in 'url' on 2026-10-23.",
+  "_note": "Tyra Banks's own words only, each checked verbatim against the page in 'checked_url' (the page the wording was matched on; 'primary_source' when that differs from the listed 'url') on 2026-10-23.",
   "_verification": {
     "method": "Verbatim check on 2026-10-23: every source page was downloaded as raw HTML/PDF (Wayback Machine snapshot where the live site refuses non-browser requests) and each quote's text was string-matched against the page text, ignoring only quote-mark/dash typography. Aggregator pages (Goodreads, Wikiquote, quote listicles) were also searched for a primary source; quotes found only on aggregators are verified=false.",
     "fields": "per quote: verified, checked_url (page the wording was matched on), primary_source (when not the listed url), note, was (original text when corrected)",

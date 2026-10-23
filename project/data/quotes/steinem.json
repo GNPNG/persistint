@@ -1,5 +1,5 @@
 {
-  "_note": "Gloria Steinem's own words only, each checked against the page in 'url' on 2026-10-23.",
+  "_note": "Gloria Steinem's own words only, each checked verbatim against the page in 'checked_url' (the page the wording was matched on; 'primary_source' when that differs from the listed 'url') on 2026-10-23.",
   "_status": {
     "claim": "Gloria Steinem died in September 2026 (unverified search claim noted in issue 84u).",
     "finding": "Confirmed. She died on 2026-09-02 at her home in New York City, aged 92; her foundation announced it on 2026-09-03.",

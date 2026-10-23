@@ -1,5 +1,5 @@
 {
-  "_note": "Chelsea Clinton's own words only, each checked against the page in 'url' on 2026-10-23. Used for her Empowerment Emcee lines.",
+  "_note": "Chelsea Clinton's own words only, each checked verbatim against the page in 'checked_url' (the page the wording was matched on; 'primary_source' when that differs from the listed 'url') on 2026-10-23. Used for her Empowerment Emcee lines.",
   "_verification": {
     "method": "Verbatim check on 2026-10-23: every source page was downloaded as raw HTML/PDF (Wayback Machine snapshot where the live site refuses non-browser requests) and each quote's text was string-matched against the page text, ignoring only quote-mark/dash typography. Aggregator pages (Goodreads, Wikiquote, quote listicles) were also searched for a primary source; quotes found only on aggregators are verified=false.",
     "fields": "per quote: verified, checked_url (page the wording was matched on), primary_source (when not the listed url), note, was (original text when corrected)",
@@ -150,13 +150,14 @@
       "note": "Fragment: 'How does she keep going amid the sound and fury of politics?' (TIME: 'keep going, amid the sounds and the fury'). Checked against a transcript/republication, not the original broadcaster or publisher."
     },
     {
-      "text": "Amid the sounds and the fury of politics.",
+      "text": "Amid the sound and fury of politics.",
       "was": "Amid the sound and the fury of politics.",
       "source": "Chelsea Clinton, 2016 Democratic National Convention speech, July 28 2016 (TIME transcript)",
       "url": "https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/",
       "verified": true,
-      "checked_url": "https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/",
-      "note": "Fragment of 'How does she keep going, amid the sounds and the fury of politics?' as transcribed by TIME and Romper. The Catt Center text reads 'amid the sound and fury of politics'."
+      "checked_url": "https://awpc.cattcenter.iastate.edu/communication/remarks-2016-dnc-july-28-2016",
+      "note": "Fragment of 'How does she keep going amid the sound and fury of politics?'. Like the other corrected DNC lines, the wording follows the Catt Center (Iowa State, Archives of Women's Political Communication) transcript; the hillaryclinton.com text republished by Raw Story reads the same. TIME's transcript (Wayback snapshot https://web.archive.org/web/20250322034545/https://time.com/4428940/dnc-chelsea-clinton-speech-transcript-video/) and Romper read 'amid the sounds and the fury of politics'. Neither matches the original text.",
+      "primary_source": "https://awpc.cattcenter.iastate.edu/communication/remarks-2016-dnc-july-28-2016"
     },
     {
       "text": "It's because she never, ever forgets who she's fighting for.",
