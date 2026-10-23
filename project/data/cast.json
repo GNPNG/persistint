@@ -1,20 +1,20 @@
 {
-	"_note": "Placeholder names, not from the source material. Edit freely; the game, dialogue and barks read names only from here.",
+	"_note": "Names chosen by the author (2026-10-23): Prudence, Betty, Susan, Bruce. The game, dialogue and barks read names only from here.",
 	"maren": {
 		"name": "Prudence",
 		"short": "Prudence"
 	},
 	"ondine": {
-		"name": "Priestess Ondine",
-		"short": "Ondine"
+		"name": "Priestess Betty",
+		"short": "Betty"
 	},
 	"pip": {
-		"name": "Pip",
-		"short": "Pip"
+		"name": "Bruce",
+		"short": "Bruce"
 	},
 	"vess": {
-		"name": "Vess",
-		"short": "Vess"
+		"name": "Susan",
+		"short": "Susan"
 	},
 	"chelsea": {
 		"name": "Chelsea Clinton",

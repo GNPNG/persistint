@@ -49,9 +49,9 @@
   },
   {
     "speaker": "Prudence",
-    "text": "The offering! Priestess Ondine is waiting in the Temple.",
-    "key": "0ef0c11922aa8c53998efcaa5b8c04cb",
-    "clip": "res://audio/voice/0ef0c11922aa8c53998efcaa5b8c04cb.ogg"
+    "text": "The offering! Priestess Betty is waiting in the Temple.",
+    "key": "b3b52298ab2574f227c29007f331f0fd",
+    "clip": "res://audio/voice/b3b52298ab2574f227c29007f331f0fd.ogg"
   },
   {
     "speaker": "Prudence",
@@ -61,9 +61,9 @@
   },
   {
     "speaker": "Prudence",
-    "text": "Would you carry this offering to Priestess Ondine? Everyone contributes.",
-    "key": "3ac623b2a9a5a139ebdebcd50a8bde24",
-    "clip": "res://audio/voice/3ac623b2a9a5a139ebdebcd50a8bde24.ogg"
+    "text": "Would you carry this offering to Priestess Betty? Everyone contributes.",
+    "key": "98cd25e5106713370a58cdefa609f1c2",
+    "clip": "res://audio/voice/98cd25e5106713370a58cdefa609f1c2.ogg"
   },
   {
     "speaker": "Prudence",
@@ -108,63 +108,63 @@
     "clip": "res://audio/voice/9feb0aa18e26325781206834bafbfbc2.ogg"
   },
   {
-    "speaker": "Priestess Ondine",
+    "speaker": "Priestess Betty",
     "text": "The Seal of the O shines upon the obedient, dear.",
-    "key": "293b49f871e1bda6e3c88fe01ce713bc",
-    "clip": "res://audio/voice/293b49f871e1bda6e3c88fe01ce713bc.ogg"
+    "key": "9f97d4c61bae2a316a81d34728360e67",
+    "clip": "res://audio/voice/9f97d4c61bae2a316a81d34728360e67.ogg"
   },
   {
-    "speaker": "Priestess Ondine",
+    "speaker": "Priestess Betty",
     "text": "Ah. {{Cast.short(\"maren\")}}'s little offering. Set it by the icons.",
-    "key": "2fee63df591f21d0fb5f152147ec578d",
-    "clip": "res://audio/voice/2fee63df591f21d0fb5f152147ec578d.ogg"
+    "key": "873013ab0012ed9a948d15e5a72851d2",
+    "clip": "res://audio/voice/873013ab0012ed9a948d15e5a72851d2.ogg"
   },
   {
-    "speaker": "Priestess Ondine",
+    "speaker": "Priestess Betty",
     "text": "See how easy? The Covenant loves an easy girl.",
-    "key": "c7c23efd8fcc2e609d7e8175d60757b7",
-    "clip": "res://audio/voice/c7c23efd8fcc2e609d7e8175d60757b7.ogg"
+    "key": "99a953be85d6b11691d6a75604476765",
+    "clip": "res://audio/voice/99a953be85d6b11691d6a75604476765.ogg"
   },
   {
-    "speaker": "Priestess Ondine",
+    "speaker": "Priestess Betty",
     "text": "...That was a compliment, dear.",
-    "key": "848f9cbfa246f9cc08af54faf7969242",
-    "clip": "res://audio/voice/848f9cbfa246f9cc08af54faf7969242.ogg"
+    "key": "3916036e7309ffc739318f748226996a",
+    "clip": "res://audio/voice/3916036e7309ffc739318f748226996a.ogg"
   },
   {
-    "speaker": "Priestess Ondine",
+    "speaker": "Priestess Betty",
     "text": "Questions. How... modern of you.",
-    "key": "d53a04b27e8faeeb68b69e5b8c75d8d7",
-    "clip": "res://audio/voice/d53a04b27e8faeeb68b69e5b8c75d8d7.ogg"
+    "key": "cd8d9cf1cc57e61f8734dd8eed56672c",
+    "clip": "res://audio/voice/cd8d9cf1cc57e61f8734dd8eed56672c.ogg"
   },
   {
-    "speaker": "Priestess Ondine",
+    "speaker": "Priestess Betty",
     "text": "Set it down anyway, there's a love.",
-    "key": "0893e4b93ff855dfaeffed636114c327",
-    "clip": "res://audio/voice/0893e4b93ff855dfaeffed636114c327.ogg"
+    "key": "fcd62e73725005c314209b30702c5f26",
+    "clip": "res://audio/voice/fcd62e73725005c314209b30702c5f26.ogg"
   },
   {
-    "speaker": "Priestess Ondine",
+    "speaker": "Priestess Betty",
     "text": "I heard you told Prudence \"no thank you.\"",
-    "key": "08c5db0812bdd2efbef6a61560fc5f96",
-    "clip": "res://audio/voice/08c5db0812bdd2efbef6a61560fc5f96.ogg"
+    "key": "c7bd259ae293fadacb77b2edc6be0efd",
+    "clip": "res://audio/voice/c7bd259ae293fadacb77b2edc6be0efd.ogg"
   },
   {
-    "speaker": "Priestess Ondine",
+    "speaker": "Priestess Betty",
     "text": "What a fascinating phrase. We'll be watching your cycle with interest.",
-    "key": "f6e61cc41104654875bba661946d0047",
-    "clip": "res://audio/voice/f6e61cc41104654875bba661946d0047.ogg"
+    "key": "c9b7457afa18ae7db3143bd79b17dceb",
+    "clip": "res://audio/voice/c9b7457afa18ae7db3143bd79b17dceb.ogg"
   },
   {
-    "speaker": "Priestess Ondine",
+    "speaker": "Priestess Betty",
     "text": "Welcome, initiate. The Queen Mothers see all who wish to be seen.",
-    "key": "0859ca07296a7fa0dbca106a680639c5",
-    "clip": "res://audio/voice/0859ca07296a7fa0dbca106a680639c5.ogg"
+    "key": "54aa3c6592680fff9443c2a0f659d55b",
+    "clip": "res://audio/voice/54aa3c6592680fff9443c2a0f659d55b.ogg"
   },
   {
-    "speaker": "Priestess Ondine",
+    "speaker": "Priestess Betty",
     "text": "And all who don't, of course. That's rather the point of Them.",
-    "key": "1ff7b544a717413585c66f635b5b2b27",
-    "clip": "res://audio/voice/1ff7b544a717413585c66f635b5b2b27.ogg"
+    "key": "dbd4ee9a3a35930c7ae39671440cd14a",
+    "clip": "res://audio/voice/dbd4ee9a3a35930c7ae39671440cd14a.ogg"
   }
 ]
