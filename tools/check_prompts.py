@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Mechanical pre-flight check for the asset prompts in prompts/ (see prompts/STYLE.md, sections 11-12).
+"""Mechanical pre-flight check for the asset prompts in prompts/ (see dev/STYLE.md, sections 11-12).
 
 Checks every leaf prompt file (all prompts/**/*.md except STYLE.md and README.md):
   - front matter: id (= file name), tool (matches the type folder), drop (= <prompt dir>/assets/<id>.<ext>),

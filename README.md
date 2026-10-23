@@ -7,7 +7,7 @@ Not-for-profit project: helping girls and women recognize, name, and feel comfor
 criticizing social-control behavior. The cuteness is the weapon.
 
 - Engine: Godot 4.6 (GL Compatibility → HTML5-exportable)
-- Design: [docs/DESIGN.md](docs/DESIGN.md)
+- Design: [dev/DESIGN.md](dev/DESIGN.md)
 - Dialogue: [Dialogue Manager](https://github.com/nathanhoad/godot_dialogue_manager) (`project/dialogue/*.dialogue`)
 - Placeholder art: `tools/gen_placeholder_art.sh` (ImageMagick) until the
   NotebookLM/Stable-Diffusion canon pipeline replaces it
