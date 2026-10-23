@@ -174,7 +174,7 @@ func _build_screen(r: Dictionary) -> void:
 	# The vignette: its own CanvasLayer, added before the map's HUD so the HUD draws over it.
 	var shade := CanvasLayer.new()
 	shade.name = "Gloom"
-	shade.layer = 0  # over the room (canvas 0 draws first), under the HUD and room text (layer 1)
+	shade.layer = 0  # over the room, under the HUD and the room text, which sit at 1
 	add_child(shade)
 	var vignette := TextureRect.new()
 	vignette.name = "Vignette"
