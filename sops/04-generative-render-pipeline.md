@@ -10,6 +10,8 @@ Related SOPs: SOP-03 (03-asset-style-bible-and-prompts.md: its compiled leaf pro
 
 Turn a directory of finished prompt files into rendered asset files, through a generator's API or, where the paid plan only works in the browser, by driving the generator's web app. Every attempt is tracked, failures are retried by error class, and daily quotas are respected without manual bookkeeping.
 
+Runs are unattended by design: after the one-time sign-in of the automation profile, the pipeline renders, retries, throttles and records results with no repeated manual clicking. `--assist` exists only to recover from a state automation cannot clear (expired sign-in, captcha), never as the normal way to render.
+
 ## 2. When to use / when not to
 
 Use when:
