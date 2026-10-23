@@ -1,5 +1,7 @@
 extends CharacterBody2D
-## Player — click-to-walk via NavigationAgent2D, click-on-things to approach & interact.
+## Player — click-to-walk via NavigationAgent2D, click-on-things to approach & interact;
+## arrow keys (and WASD) walk directly and cancel a click-walk. Keys do nothing while a
+## dialogue is open, so the arrows stay free for choosing responses.
 ## Paper-doll: layered sprites (Body/Hair/Dress/Accessory) driven by WorldState outfit flags.
 ## Florida pony stable: while riding (WorldState fl_riding) a PonyDoll (Mount) is drawn under the
 ## doll and click-to-move is faster (Ponies.speed_multiplier); H or the button hops down.
@@ -13,10 +15,23 @@ const INTERACT_DISTANCE := 34.0
 var _interact_target: Node2D = null
 var _speed := SPEED
 var _ride_ui: CanvasLayer
+var _in_dialogue := false
+
+const MOVE_KEYS := {
+	"move_left": [KEY_LEFT, KEY_A],
+	"move_right": [KEY_RIGHT, KEY_D],
+	"move_up": [KEY_UP, KEY_W],
+	"move_down": [KEY_DOWN, KEY_S],
+}
 
 
 func _ready() -> void:
 	add_to_group("player")
+	_ensure_move_actions()
+	var dm := get_node_or_null("/root/DialogueManager")
+	if dm:
+		dm.dialogue_started.connect(func(_r) -> void: _in_dialogue = true)
+		dm.dialogue_ended.connect(func(_r) -> void: _in_dialogue = false)
 	WorldState.flag_changed.connect(_on_flag_changed)
 	refresh_outfit()
 	refresh_mount()
@@ -38,7 +53,34 @@ func approach(target: Node2D) -> void:
 	nav.target_position = target.global_position
 
 
+## Keyboard movement actions (arrows + WASD), added to the InputMap once if missing.
+static func _ensure_move_actions() -> void:
+	for action: String in MOVE_KEYS:
+		if InputMap.has_action(action):
+			continue
+		InputMap.add_action(action)
+		for key: Key in MOVE_KEYS[action]:
+			var ev := InputEventKey.new()
+			ev.physical_keycode = key
+			InputMap.action_add_event(action, ev)
+
+
+func _key_direction() -> Vector2:
+	if _in_dialogue:
+		return Vector2.ZERO
+	return Input.get_vector("move_left", "move_right", "move_up", "move_down")
+
+
 func _physics_process(_delta: float) -> void:
+	var key_dir := _key_direction()
+	if key_dir != Vector2.ZERO:
+		_interact_target = null
+		nav.target_position = global_position
+		velocity = key_dir * current_speed()
+		if is_mounted() and absf(key_dir.x) > 0.1:
+			mount_doll.set_facing_left(key_dir.x < 0.0)
+		move_and_slide()
+		return
 	if _interact_target and global_position.distance_to(_interact_target.global_position) <= INTERACT_DISTANCE:
 		var t := _interact_target
 		_interact_target = null
