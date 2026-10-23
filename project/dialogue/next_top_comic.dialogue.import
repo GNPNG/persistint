@@ -1,0 +1,16 @@
+[remap]
+
+importer="dialogue_manager"
+importer_version=15
+type="Resource"
+uid="uid://ck5dbch5o128w"
+path="res://.godot/imported/next_top_comic.dialogue-c9fa2fb78557276b011945b18fe41b56.tres"
+
+[deps]
+
+source_file="res://dialogue/next_top_comic.dialogue"
+dest_files=["res://.godot/imported/next_top_comic.dialogue-c9fa2fb78557276b011945b18fe41b56.tres"]
+
+[params]
+
+defaults=true
