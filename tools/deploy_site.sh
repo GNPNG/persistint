@@ -80,6 +80,12 @@ mapfile -t OVERSIZED < <(jq -r '.oversized_files // [] | .[]' "$CONFIG")
 # served on the account's workers.dev subdomain.
 OVERSIZED_MODE="$(jq -r '.oversized_mode // "r2"' "$CONFIG")"
 CUSTOM_DOMAIN="$(jq -r 'if has("custom_domain") then .custom_domain else true end' "$CONFIG")"
+# host_type: "workers" (wrangler deploy; custom domain needs the zone on Cloudflare) or "pages"
+# (Cloudflare Pages project named worker_name, the worker shipped as _worker.js; site_host is
+# attached as a Pages custom domain, which works for a zone whose DNS is elsewhere: point a
+# CNAME for site_host at <worker_name>.pages.dev).
+HOST_TYPE="$(jq -r '.host_type // "workers"' "$CONFIG")"
+[[ "$HOST_TYPE" == workers || "$HOST_TYPE" == pages ]] || die "host_type must be workers or pages"
 [[ "$OVERSIZED_MODE" == r2 || "$OVERSIZED_MODE" == gzip ]] || die "oversized_mode must be r2 or gzip"
 use_r2() { [[ "$OVERSIZED_MODE" == r2 ]] && ((${#OVERSIZED[@]})); }
 [[ "$SITE_HOST" =~ ^[a-z0-9.-]+$ ]] || die "site_host is not a hostname: $SITE_HOST"
@@ -520,6 +526,43 @@ if ((!SITE_ONLY)) && use_r2; then
       --file "$TMP/export/$f" --content-type "$ct" \
       --cache-control "public, max-age=31536000, immutable"
   done
+fi
+
+if [[ "$HOST_TYPE" == pages ]]; then
+  log "Cloudflare Pages: project $WORKER_NAME"
+  STAGE="$TMP/pages"
+  rm -rf "$STAGE"
+  cp -a "$PUBLIC" "$STAGE"
+  cp "$SITE/src/worker.js" "$STAGE/_worker.js"
+  if ! "${WRANGLER[@]}" pages project list 2>/dev/null | grep -q "│ $WORKER_NAME "; then
+    "${WRANGLER[@]}" pages project create "$WORKER_NAME" --production-branch main
+  fi
+  "${WRANGLER[@]}" pages deploy "$STAGE" --project-name "$WORKER_NAME" --branch main \
+    --commit-hash "$(git -C "$ROOT" rev-parse HEAD)" --commit-message "build $BUILD_ID" --commit-dirty=true
+  if [[ "$CUSTOM_DOMAIN" == true ]]; then
+    log "Pages custom domain $SITE_HOST"
+    python3 -I - "$WORKER_NAME" "$SITE_HOST" <<'PY'
+import json, os, sys, urllib.error, urllib.request
+project, host = sys.argv[1], sys.argv[2]
+acct, tok = os.environ["CLOUDFLARE_ACCOUNT_ID"], os.environ["CLOUDFLARE_API_TOKEN"]
+base = f"https://api.cloudflare.com/client/v4/accounts/{acct}/pages/projects/{project}/domains"
+def call(url, data=None):
+    req = urllib.request.Request(url, data=json.dumps(data).encode() if data else None,
+                                 method="POST" if data else "GET",
+                                 headers={"Authorization": f"Bearer {tok}", "Content-Type": "application/json"})
+    try:
+        return json.load(urllib.request.urlopen(req, timeout=60))
+    except urllib.error.HTTPError as e:
+        return json.load(e)
+have = {d["name"]: d for d in call(base).get("result") or []}
+d = have.get(host) or call(base, {"name": host}).get("result")
+if not d:
+    sys.exit(f"could not add custom domain {host}")
+print(f"{host}: status {d.get('status')}; DNS: CNAME {host} -> {project}.pages.dev")
+PY
+  fi
+  log "Deployed build ${BUILD_ID:-none} to https://$WORKER_NAME.pages.dev/ and https://$SITE_HOST/ (play: /play/)"
+  exit 0
 fi
 
 log "wrangler deploy"
