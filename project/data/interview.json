@@ -1,0 +1,12 @@
+{
+  "_note": "The Interview (DESIGN.md §2): character creation as a talk show segment. Oprah interviews the player about themselves; answers drive SPECIAL-style stat allocation (Fallout G.O.A.T.-exam register). 'stats' lists the stat ids/labels; 'base' and 'min'/'max' bound each stat; 'questions' is the interview, in order: each is {\"prompt\": text, \"answers\": [{\"text\": text, \"stats\": {stat_id: delta}}]} (up to 8 answers per question). Content is the author's and ships empty. Oprah's own lines must come from data/quotes/oprah.json. When the questions run out the stats are written to WorldState (stats, interview_done).",
+  "title": "The Interview",
+  "host": "oprah",
+  "return_map": "res://scenes/maps/village.tscn",
+  "base": 5,
+  "min": 1,
+  "max": 10,
+  "intro": [],
+  "stats": [],
+  "questions": []
+}

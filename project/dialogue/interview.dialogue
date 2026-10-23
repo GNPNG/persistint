@@ -1,0 +1,35 @@
+~ start
+do begin_interview()
+=> beat
+
+~ beat
+if interview_done()
+	do finish()
+	=> END
+do ask()
+{{host_name()}}: {{current_prompt()}}
+- {{answer(0)}} [if has_answer(0)]
+	do pick(0)
+	=> beat
+- {{answer(1)}} [if has_answer(1)]
+	do pick(1)
+	=> beat
+- {{answer(2)}} [if has_answer(2)]
+	do pick(2)
+	=> beat
+- {{answer(3)}} [if has_answer(3)]
+	do pick(3)
+	=> beat
+- {{answer(4)}} [if has_answer(4)]
+	do pick(4)
+	=> beat
+- {{answer(5)}} [if has_answer(5)]
+	do pick(5)
+	=> beat
+- {{answer(6)}} [if has_answer(6)]
+	do pick(6)
+	=> beat
+- {{answer(7)}} [if has_answer(7)]
+	do pick(7)
+	=> beat
+=> beat

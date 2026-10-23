@@ -31,5 +31,9 @@
 	"silverman": {
 		"name": "Sarah Silverman",
 		"short": "Sarah"
+	},
+	"oprah": {
+		"name": "Oprah Winfrey",
+		"short": "Oprah"
 	}
 }
