@@ -150,7 +150,11 @@ func start_show() -> void:
 
 
 func _update() -> void:
-	_status.text = ", ".join(items)
+	var names: Dictionary = data.get("items", {})
+	var held: Array[String] = []
+	for id: String in items:
+		held.append(names.get(id, id))
+	_status.text = ", ".join(held)
 	_go.disabled = not chain_complete()
 
 

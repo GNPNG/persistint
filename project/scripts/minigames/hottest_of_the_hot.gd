@@ -48,6 +48,7 @@ func _ready() -> void:
 		b.text = slot.capitalize()
 		b.pressed.connect(_cycle.bind(slot))
 		pickers.add_child(b)
+	outfit.merge(WorldState.get_flag("hottest_prep_outfit", {}), true)
 	doll.set_outfit(outfit)
 	var walk_button := Button.new()
 	walk_button.text = "Walk"
