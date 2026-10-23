@@ -1,252 +1,407 @@
 {
-  "_note": "Margaret Atwood's own words only, each checked against the page in 'url' on 2026-10-23.",
+  "_note": "Margaret Atwood's own words only, each checked verbatim against the page in 'checked_url' (the page the wording was matched on; 'primary_source' when that differs from the listed 'url') on 2026-10-23.",
+  "_verification": {
+    "method": "Verbatim check on 2026-10-23: every source page was downloaded as raw HTML/PDF (Wayback Machine snapshot where the live site refuses non-browser requests) and each quote's text was string-matched against the page text, ignoring only quote-mark/dash typography. Aggregator pages (Goodreads, Wikiquote, quote listicles) were also searched for a primary source; quotes found only on aggregators are verified=false.",
+    "fields": "per quote: verified, checked_url (page the wording was matched on), primary_source (when not the listed url), note, was (original text when corrected)",
+    "verified": 33,
+    "unverified": 7,
+    "corrected": 0,
+    "total": 40,
+    "date": "2026-10-23",
+    "rule": "Only quotes with verified=true and without excluded_from_game may be used in game (tests/test_quotes_vv.gd).",
+    "excluded_from_game": 15
+  },
   "quotes": [
     {
       "text": "What would a Good Feminist look like, in the eyes of my accusers?",
       "source": "Margaret Atwood, 'Am I a bad feminist?', The Globe and Mail, 2018-01-13",
       "url": "https://www.theglobeandmail.com/opinion/am-i-a-bad-feminist/article37591823/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.theglobeandmail.com/opinion/am-i-a-bad-feminist/article37591823/",
+      "note": ""
     },
     {
       "text": "They're not angels, incapable of wrongdoing.",
       "source": "Margaret Atwood, 'Am I a bad feminist?', The Globe and Mail, 2018-01-13",
       "url": "https://www.theglobeandmail.com/opinion/am-i-a-bad-feminist/article37591823/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.theglobeandmail.com/opinion/am-i-a-bad-feminist/article37591823/",
+      "note": ""
     },
     {
       "text": "Nor do I believe that women are children, incapable of agency or of making moral decisions.",
       "source": "Margaret Atwood, 'Am I a bad feminist?', The Globe and Mail, 2018-01-13",
       "url": "https://www.theglobeandmail.com/opinion/am-i-a-bad-feminist/article37591823/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.theglobeandmail.com/opinion/am-i-a-bad-feminist/article37591823/",
+      "note": ""
     },
     {
       "text": "We are grownups: We can make up our own minds, one way or the other.",
       "source": "Margaret Atwood, 'Am I a bad feminist?', The Globe and Mail, 2018-01-13",
       "url": "https://www.theglobeandmail.com/opinion/am-i-a-bad-feminist/article37591823/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.theglobeandmail.com/opinion/am-i-a-bad-feminist/article37591823/",
+      "note": ""
     },
     {
       "text": "The aim of ideology is to eliminate ambiguity.",
       "source": "Margaret Atwood, 'Am I a bad feminist?', The Globe and Mail, 2018-01-13",
       "url": "https://www.theglobeandmail.com/opinion/am-i-a-bad-feminist/article37591823/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.theglobeandmail.com/opinion/am-i-a-bad-feminist/article37591823/",
+      "note": ""
     },
     {
       "text": "Fiction writers are particularly suspect because they write about human beings, and people are morally ambiguous.",
       "source": "Margaret Atwood, 'Am I a bad feminist?', The Globe and Mail, 2018-01-13",
       "url": "https://www.theglobeandmail.com/opinion/am-i-a-bad-feminist/article37591823/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.theglobeandmail.com/opinion/am-i-a-bad-feminist/article37591823/",
+      "note": ""
     },
     {
       "text": "In times of extremes, extremists win.",
       "source": "Margaret Atwood, 'Am I a bad feminist?', The Globe and Mail, 2018-01-13",
       "url": "https://www.theglobeandmail.com/opinion/am-i-a-bad-feminist/article37591823/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.theglobeandmail.com/opinion/am-i-a-bad-feminist/article37591823/",
+      "note": ""
     },
     {
       "text": "The #MeToo moment is a symptom of a broken legal system.",
       "source": "Margaret Atwood, 'Am I a bad feminist?', The Globe and Mail, 2018-01-13",
       "url": "https://www.theglobeandmail.com/opinion/am-i-a-bad-feminist/article37591823/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.theglobeandmail.com/opinion/am-i-a-bad-feminist/article37591823/",
+      "note": ""
     },
     {
       "text": "We are acceptable neither to Right nor to Left.",
       "source": "Margaret Atwood, 'Am I a bad feminist?', The Globe and Mail, 2018-01-13",
       "url": "https://www.theglobeandmail.com/opinion/am-i-a-bad-feminist/article37591823/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.theglobeandmail.com/opinion/am-i-a-bad-feminist/article37591823/",
+      "note": ""
     },
     {
       "text": "A war among women, as opposed to a war on women, is always pleasing to those who do not wish women well.",
       "source": "Margaret Atwood, 'Am I a bad feminist?', The Globe and Mail, 2018-01-13",
       "url": "https://www.theglobeandmail.com/opinion/am-i-a-bad-feminist/article37591823/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.theglobeandmail.com/opinion/am-i-a-bad-feminist/article37591823/",
+      "note": ""
     },
     {
       "text": "There are powerful groups in North America pushing this agenda, but they are not usually considered feminists.",
       "source": "Margaret Atwood, 'Am I a bad feminist?', The Globe and Mail, 2018-01-13",
       "url": "https://www.theglobeandmail.com/opinion/am-i-a-bad-feminist/article37591823/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.theglobeandmail.com/opinion/am-i-a-bad-feminist/article37591823/",
+      "note": ""
     },
     {
       "text": "Are these Good Feminists fair-minded people?",
       "source": "Margaret Atwood, 'Am I a bad feminist?', The Globe and Mail, 2018-01-13",
       "url": "https://www.theglobeandmail.com/opinion/am-i-a-bad-feminist/article37591823/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.theglobeandmail.com/opinion/am-i-a-bad-feminist/article37591823/",
+      "note": ""
     },
     {
       "text": "Why have accountability and transparency been framed as antithetical to women's rights?",
       "source": "Margaret Atwood, 'Am I a bad feminist?', The Globe and Mail, 2018-01-13",
       "url": "https://www.theglobeandmail.com/opinion/am-i-a-bad-feminist/article37591823/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.theglobeandmail.com/opinion/am-i-a-bad-feminist/article37591823/",
+      "note": ""
     },
     {
       "text": "Endorsing basic human rights for everyone is not warring against women.",
       "source": "Margaret Atwood, 'Margaret Atwood is a blood-drinking monster', The Globe and Mail, Jan 2018",
       "url": "https://www.theglobeandmail.com/opinion/margaret-atwood-is-a-blood-drinking-monster/article37609895/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.theglobeandmail.com/opinion/margaret-atwood-is-a-blood-drinking-monster/article37609895/",
+      "note": ""
     },
     {
       "text": "In order to have rights for women you have to have rights period.",
       "source": "Margaret Atwood, 'Margaret Atwood is a blood-drinking monster', The Globe and Mail, Jan 2018",
       "url": "https://www.theglobeandmail.com/opinion/margaret-atwood-is-a-blood-drinking-monster/article37609895/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.theglobeandmail.com/opinion/margaret-atwood-is-a-blood-drinking-monster/article37609895/",
+      "note": ""
     },
     {
       "text": "The control of women and babies has been a part of every repressive regime in history.",
       "source": "Time interview with Atwood and Elisabeth Moss on The Handmaid's Tale, 2017",
       "url": "https://time.com/4734904/margaret-atwood-elisabeth-moss-handmaids-tale/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://web.archive.org/web/20241227145445/https://time.com/4734904/margaret-atwood-elisabeth-moss-handmaids-tale/",
+      "note": "Live page refuses non-browser fetches (HTTP 406/403); wording checked against the Wayback Machine snapshot of the same URL.",
+      "excluded_from_game": true,
+      "exclusion_reason": "Handmaid's Tale: from the novel or from an interview about it. Author rule: no Handmaid's Tale/Gilead references in game."
     },
     {
       "text": "Well, women’s rights are human rights unless you have decided that women aren’t human.",
       "source": "Time interview with Atwood and Elisabeth Moss on The Handmaid's Tale, 2017",
       "url": "https://time.com/4734904/margaret-atwood-elisabeth-moss-handmaids-tale/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://web.archive.org/web/20241227145445/https://time.com/4734904/margaret-atwood-elisabeth-moss-handmaids-tale/",
+      "note": "Live page refuses non-browser fetches (HTTP 406/403); wording checked against the Wayback Machine snapshot of the same URL.",
+      "excluded_from_game": true,
+      "exclusion_reason": "Handmaid's Tale: from the novel or from an interview about it. Author rule: no Handmaid's Tale/Gilead references in game."
     },
     {
       "text": "If women are human, then women’s rights are part of human rights.",
       "source": "Time interview with Atwood and Elisabeth Moss on The Handmaid's Tale, 2017",
       "url": "https://time.com/4734904/margaret-atwood-elisabeth-moss-handmaids-tale/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://web.archive.org/web/20241227145445/https://time.com/4734904/margaret-atwood-elisabeth-moss-handmaids-tale/",
+      "note": "Live page refuses non-browser fetches (HTTP 406/403); wording checked against the Wayback Machine snapshot of the same URL.",
+      "excluded_from_game": true,
+      "exclusion_reason": "Handmaid's Tale: from the novel or from an interview about it. Author rule: no Handmaid's Tale/Gilead references in game."
     },
     {
       "text": "I am on Twitter, but I’m too old to attract slut-shaming.",
       "source": "Time interview with Atwood and Elisabeth Moss on The Handmaid's Tale, 2017",
       "url": "https://time.com/4734904/margaret-atwood-elisabeth-moss-handmaids-tale/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://web.archive.org/web/20241227145445/https://time.com/4734904/margaret-atwood-elisabeth-moss-handmaids-tale/",
+      "note": "Live page refuses non-browser fetches (HTTP 406/403); wording checked against the Wayback Machine snapshot of the same URL.",
+      "excluded_from_game": true,
+      "exclusion_reason": "Handmaid's Tale: from the novel or from an interview about it. Author rule: no Handmaid's Tale/Gilead references in game."
     },
     {
       "text": "It's historically situated, and the history of the past 3,000 years has not been very feminist, to put it mildly.",
       "source": "Newsweek interview on The Handmaid's Tale season 2, 2018",
       "url": "https://www.newsweek.com/margaret-atwood-handmaids-tale-season-2-interview-899655",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://web.archive.org/web/20230605042353/https://www.newsweek.com/margaret-atwood-handmaids-tale-season-2-interview-899655",
+      "note": "Live page refuses non-browser fetches (HTTP 406/403); wording checked against the Wayback Machine snapshot of the same URL.",
+      "excluded_from_game": true,
+      "exclusion_reason": "Handmaid's Tale: from the novel or from an interview about it. Author rule: no Handmaid's Tale/Gilead references in game."
     },
     {
       "text": "Women are human beings, radical though it may seem.",
       "source": "Firing Line with Margaret Brennan, PBS, 2022-05-27",
       "url": "https://www.pbs.org/video/margaret-atwood-ijbwra/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.pbs.org/video/margaret-atwood-ijbwra/",
+      "note": ""
     },
     {
       "text": "If the state owns your body, they should pay.",
       "source": "Firing Line with Margaret Brennan, PBS, 2022-05-27",
       "url": "https://www.pbs.org/video/margaret-atwood-ijbwra/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.pbs.org/video/margaret-atwood-ijbwra/",
+      "note": ""
     },
     {
       "text": "There's a great big hole in the road up ahead. Don't fall into it.",
       "source": "Firing Line with Margaret Brennan, PBS, 2022-05-27",
       "url": "https://www.pbs.org/video/margaret-atwood-ijbwra/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.pbs.org/video/margaret-atwood-ijbwra/",
+      "note": ""
     },
     {
       "text": "The 1980s was a decade of pushback against the uprising of the many kinds of feminism in the 1970s.",
       "source": "Penguin interview, 'The Handmaid's Tale is being read very differently now'",
       "url": "https://www.penguin.co.uk/discover/articles/margaret-atwood-interview",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.penguin.co.uk/discover/articles/margaret-atwood-interview",
+      "note": "",
+      "excluded_from_game": true,
+      "exclusion_reason": "Handmaid's Tale: from the novel or from an interview about it. Author rule: no Handmaid's Tale/Gilead references in game."
     },
     {
       "text": "It meant that because you could, you had to.",
       "source": "Penguin interview, 'The Handmaid's Tale is being read very differently now'",
       "url": "https://www.penguin.co.uk/discover/articles/margaret-atwood-interview",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.penguin.co.uk/discover/articles/margaret-atwood-interview",
+      "note": "",
+      "excluded_from_game": true,
+      "exclusion_reason": "Handmaid's Tale: from the novel or from an interview about it. Author rule: no Handmaid's Tale/Gilead references in game."
     },
     {
       "text": "We need fairer laws and better processes for criminal charges.",
       "source": "Penguin interview, 'The Handmaid's Tale is being read very differently now'",
       "url": "https://www.penguin.co.uk/discover/articles/margaret-atwood-interview",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.penguin.co.uk/discover/articles/margaret-atwood-interview",
+      "note": "",
+      "excluded_from_game": true,
+      "exclusion_reason": "Handmaid's Tale: from the novel or from an interview about it. Author rule: no Handmaid's Tale/Gilead references in game."
     },
     {
       "text": "Why should anybody be expected to have such a rotten time?",
       "source": "Penguin interview, 'The Handmaid's Tale is being read very differently now'",
       "url": "https://www.penguin.co.uk/discover/articles/margaret-atwood-interview",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.penguin.co.uk/discover/articles/margaret-atwood-interview",
+      "note": "",
+      "excluded_from_game": true,
+      "exclusion_reason": "Handmaid's Tale: from the novel or from an interview about it. Author rule: no Handmaid's Tale/Gilead references in game."
     },
     {
       "text": "So, I had to be able to say, “I did not make this up. People do this. People have done this.”",
       "source": "UC Berkeley News podcast, 2018-08-28",
-      "url": "http://news.berkeley.edu/2018/08/28/podcast-transcript-margaret-atwood-the-handmaids-tale/",
-      "aggregator": false
+      "url": "https://news.berkeley.edu/2018/08/28/podcast-transcript-margaret-atwood-the-handmaids-tale/",
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://news.berkeley.edu/2018/08/28/podcast-transcript-margaret-atwood-the-handmaids-tale/",
+      "note": "",
+      "excluded_from_game": true,
+      "exclusion_reason": "Handmaid's Tale: Atwood is describing how she wrote the novel ('I did not make this up'). Author rule: no Handmaid's Tale/Gilead references in game."
     },
     {
       "text": "I didn’t put anything into the book that has not happened sometime, somewhere.",
       "source": "Gulf News interview on The Handmaid's Tale, 2017",
       "url": "https://gulfnews.com/entertainment/tv/margaret-atwood-on-feminism-in-handmaids-tale-1.2021623",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://gulfnews.com/entertainment/tv/margaret-atwood-on-feminism-in-handmaids-tale-1.2021623",
+      "note": "",
+      "excluded_from_game": true,
+      "exclusion_reason": "Handmaid's Tale: from the novel or from an interview about it. Author rule: no Handmaid's Tale/Gilead references in game."
     },
     {
       "text": "It’s SF on this planet here, now, shortly.",
       "source": "Gulf News interview on The Handmaid's Tale, 2017",
       "url": "https://gulfnews.com/entertainment/tv/margaret-atwood-on-feminism-in-handmaids-tale-1.2021623",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://gulfnews.com/entertainment/tv/margaret-atwood-on-feminism-in-handmaids-tale-1.2021623",
+      "note": "",
+      "excluded_from_game": true,
+      "exclusion_reason": "Handmaid's Tale: from the novel or from an interview about it. Author rule: no Handmaid's Tale/Gilead references in game."
     },
     {
       "text": "“Why do men feel threatened by women?” I asked a male friend of mine.",
       "source": "Margaret Atwood, 'Writing the Male Character', This Magazine, Sept 1982 (from the Hagey Lecture, Waterloo, Feb 1982)",
       "url": "https://quoteinvestigator.com/2025/04/06/fear-laugh/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://quoteinvestigator.com/2025/04/06/fear-laugh/",
+      "note": "Atwood's 1982 essay 'Writing the Male Character', as quoted verbatim by Quote Investigator; only quote-mark typography differs. Checked against a transcript/republication, not the original broadcaster or publisher."
     },
     {
       "text": "“They’re afraid women will laugh at them,” he said. “Undercut their world view.”",
       "source": "Margaret Atwood, 'Writing the Male Character', This Magazine, Sept 1982 (from the Hagey Lecture, Waterloo, Feb 1982)",
       "url": "https://quoteinvestigator.com/2025/04/06/fear-laugh/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://quoteinvestigator.com/2025/04/06/fear-laugh/",
+      "note": "Atwood's 1982 essay 'Writing the Male Character', as quoted verbatim by Quote Investigator; only quote-mark typography differs. Checked against a transcript/republication, not the original broadcaster or publisher."
     },
     {
       "text": "“They’re afraid of being killed,” they said.",
       "source": "Margaret Atwood, 'Writing the Male Character', This Magazine, Sept 1982 (from the Hagey Lecture, Waterloo, Feb 1982)",
       "url": "https://quoteinvestigator.com/2025/04/06/fear-laugh/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://quoteinvestigator.com/2025/04/06/fear-laugh/",
+      "note": "Atwood's 1982 essay 'Writing the Male Character', as quoted verbatim by Quote Investigator; only quote-mark typography differs. Checked against a transcript/republication, not the original broadcaster or publisher."
     },
     {
       "text": "Nolite te bastardes carborundorum. Don't let the bastards grind you down.",
       "source": "The Handmaid's Tale (1985)",
       "url": "https://www.goodreads.com/author/quotes/3472.Margaret_Atwood",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.goodreads.com/author/quotes/3472.Margaret_Atwood",
+      "primary_source": "https://time.com/4734904/margaret-atwood-elisabeth-moss-handmaids-tale/",
+      "note": "Line from the novel; no online primary text. TIME (2017) prints only the Latin as a protest-sign line, with its own gloss \"Don't let the bastards grind you down\", not Atwood's wording. Aggregator-only.",
+      "excluded_from_game": true,
+      "exclusion_reason": "Handmaid's Tale: from the novel or from an interview about it. Author rule: no Handmaid's Tale/Gilead references in game."
     },
     {
       "text": "Better never means better for everyone... It always means worse, for some.",
       "source": "The Handmaid's Tale (1985)",
       "url": "https://www.goodreads.com/author/quotes/3472.Margaret_Atwood",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.goodreads.com/author/quotes/3472.Margaret_Atwood",
+      "note": "Aggregator-only: wording appears on www.goodreads.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified.",
+      "excluded_from_game": true,
+      "exclusion_reason": "Handmaid's Tale: from the novel or from an interview about it. Author rule: no Handmaid's Tale/Gilead references in game."
     },
     {
       "text": "Ignoring isn’t the same as ignorance, you have to work at it.",
       "source": "The Handmaid's Tale (1985)",
       "url": "https://www.goodreads.com/author/quotes/3472.Margaret_Atwood",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.goodreads.com/author/quotes/3472.Margaret_Atwood",
+      "note": "Aggregator-only: wording appears on www.goodreads.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified.",
+      "excluded_from_game": true,
+      "exclusion_reason": "Handmaid's Tale: from the novel or from an interview about it. Author rule: no Handmaid's Tale/Gilead references in game."
     },
     {
       "text": "Another belief of mine: that everyone else my age is an adult, whereas I am merely in disguise.",
       "source": "Cat's Eye (1988)",
       "url": "https://www.goodreads.com/author/quotes/3472.Margaret_Atwood",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.goodreads.com/author/quotes/3472.Margaret_Atwood",
+      "note": "Aggregator-only: wording appears on www.goodreads.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "I did not know that the rules about these things were different if you were female.",
       "source": "Poetry lecture, Hay-on-Wye, 1995 (per Wikiquote)",
       "url": "https://en.wikiquote.org/wiki/Margaret_Atwood",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://en.wikiquote.org/wiki/Margaret_Atwood",
+      "note": "Aggregator-only: wording appears on en.wikiquote.org (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "I did not know that 'poetess' was an insult, and that I myself would some day be called one.",
       "source": "Poetry lecture, Hay-on-Wye, 1995 (per Wikiquote)",
       "url": "https://en.wikiquote.org/wiki/Margaret_Atwood",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://en.wikiquote.org/wiki/Margaret_Atwood",
+      "note": "Aggregator-only: wording appears on en.wikiquote.org (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "I did not know that to be told I had transcended my gender would be considered a compliment.",
       "source": "Poetry lecture, Hay-on-Wye, 1995 (per Wikiquote)",
       "url": "https://en.wikiquote.org/wiki/Margaret_Atwood",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://en.wikiquote.org/wiki/Margaret_Atwood",
+      "note": "Aggregator-only: wording appears on en.wikiquote.org (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     }
-  ],
-  "_verification": {
-    "method": "WebFetch/WebSearch extraction on 2026-10-23 (tool output, not raw page text); wording not character-checked against the original page",
-    "verified": "2026-10-23",
-    "expires": "never for listed source/date; wording re-check required before use of any line",
-    "aggregator_only": 7,
-    "total": 40
-  }
+  ]
 }

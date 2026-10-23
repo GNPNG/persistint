@@ -189,7 +189,12 @@ func _run() -> void:
 	var comic: Control = load("res://scenes/minigames/next_top_comic.tscn").instantiate()
 	comic.autostart = false
 	root.add_child(comic)
-	_check(not comic.data.get("setups", []).is_empty(), "comic: ships a set (no empty content slots)")
+	var shipped: Array = comic.data.get("setups", [])
+	var shipped_ok := shipped.size() > 0
+	for st: Dictionary in shipped:
+		var n: int = st.get("punchlines", []).size()
+		shipped_ok = shipped_ok and String(st.get("setup", "")) != "" and n >= 2 and n <= 8
+	_check(shipped_ok, "comic: shipped set has setups, each with 2-8 punchlines (verbatim quotes: test_quotes_vv)")
 	comic.data["setups"] = [
 		{"setup": "_s1", "punchlines": ["_p1a", "_p1b"]},
 		{"setup": "_s2", "punchlines": ["_p2a"]},

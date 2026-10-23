@@ -657,7 +657,7 @@
 		}
 	],
 	"clone_children": {
-		"_note": "Failed clone children wandering the bunker (scripts/ruins/zombie_child.gd) and the polar bear cub batch that took (scripts/ruins/polar_cub.gd), run by the clone hall's CloneLab (scripts/ruins/clone_lab.gd). 'originals' keys are cast ids; 'quotes' names the data/quotes/<file>.json a clone's spoken line is picked from when that file exists (otherwise it speaks its groan). Designations read names through Cast. Nobody fights: the player only watches. 'pounce': seconds between cub pounces, how near a zombie must be, nap length, how long the puddle stays, how soon an eaten clone's batch restocks from the tanks, which tanks a restocked clone climbs out of, and which sfx (audio/sfx/<name>.wav) play in order.",
+		"_note": "Failed clone children wandering the bunker (scripts/ruins/zombie_child.gd) and the polar bear cub batch that took (scripts/ruins/polar_cub.gd), run by the clone hall's CloneLab (scripts/ruins/clone_lab.gd). 'originals' keys are cast ids; 'quotes' names the data/quotes/<file>.json a clone's spoken line is picked from (only quotes marked verified=true) when that file exists (otherwise it speaks its groan). Designations read names through Cast. Nobody fights: the player only watches. 'pounce': seconds between cub pounces, how near a zombie must be, nap length, how long the puddle stays, how soon an eaten clone's batch restocks from the tanks, which tanks a restocked clone climbs out of, and which sfx (audio/sfx/<name>.wav) play in order.",
 		"designation": "%s clone, batch %d",
 		"pitch": 1.5,
 		"originals": {
