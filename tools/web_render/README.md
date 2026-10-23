@@ -133,7 +133,9 @@ node tools/web_render/render.mjs --convert                        # ffmpeg-conve
   `.ogv` as well.
 - If the captured bytes are not a media file at all (for example a sign-in or error page in
   HTML), nothing is written at the drop. The bytes are kept as `<drop>.unknown` for a look, the
-  asset fails and stays `MISSING`.
+  asset fails and stays `MISSING`. Such a file can hold account data like the debug folders;
+  `*.unknown` (and the ffmpeg temp `*.src.*`) under `prompts/` are gitignored. Delete it once
+  you have looked.
 - A reply that finishes without media (a refusal, "I can't generate that", a signed-out page)
   fails after `timeouts.textOnlyMs` (90 s for images, 2 min for music, 5 min for video) with the
   reply text in the error, instead of waiting out the whole `generateMs`. A usage-limit notice
