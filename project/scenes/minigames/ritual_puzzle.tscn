@@ -44,7 +44,6 @@ theme_override_constants/separation = 8
 
 [node name="TargetTitle" type="Label" parent="Panel/HBox/TargetSide"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 10
 text = "The Prescribed
 Arrangement"
 
@@ -54,7 +53,6 @@ columns = 3
 
 [node name="StatusLabel" type="Label" parent="Panel/HBox/TargetSide"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 10
 text = "Match the icons."
 
 [node name="BackButton" type="Button" parent="Panel/HBox/TargetSide"]
@@ -68,7 +66,6 @@ theme_override_constants/separation = 8
 
 [node name="AltarTitle" type="Label" parent="Panel/HBox/PlaySide"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 10
 text = "The Altar (click two to swap)"
 
 [node name="PlayGrid" type="GridContainer" parent="Panel/HBox/PlaySide"]
