@@ -1,0 +1,30 @@
+{
+  "_note": "Chapters. The game is told in chapters, and the characters aren't shared between them: each chapter has its own player character and its own cast. A chapter ends at its exit door (the island ends on the village's Exit_Cruise), which leads to scenes/chapters/chapter_end.tscn: a full-screen time-jump card ('end_card' of the chapter being left, no year count), then the next chapter's entry scene. On the jump WorldState 'chapter' becomes the next chapter id, the player flags (keys starting with a 'player_flags' prefix: outfit, identity) are archived under 'chapter_archive_<id>' and cleared, so the next chapter starts with a fresh character. The Cruise is the flashback era (DESIGN.md World: the ship before the wreck), so the jump goes back. Its entry is The Interview, the talk-show character creation; 'return_scene' is where the cruise's own scenes go back to (no cruise hub map yet).",
+  "first": "island",
+  "player_flags": ["outfit_", "player_"],
+  "chapters": {
+    "island": {
+      "title": "Little St. Piere Island",
+      "entry_scene": "res://scenes/maps/village.tscn",
+      "entry_spawn": "spawn_default",
+      "return_scene": "res://scenes/maps/village.tscn",
+      "next": "cruise",
+      "end_card": {
+        "heading": "Before the Wreck",
+        "lines": [
+          "The ship on the rocks was a cruise once. Lit up, playing music, going somewhere.",
+          "A feminist-themed celebrity cruise. The manifest that became a pantheon.",
+          "Nobody on board knows how it ends. Different passengers. A different you."
+        ],
+        "prompt": "Board"
+      }
+    },
+    "cruise": {
+      "title": "The Cruise",
+      "entry_scene": "res://scenes/minigames/interview.tscn",
+      "entry_spawn": "spawn_default",
+      "return_scene": "res://scenes/minigames/hottest_chains.tscn",
+      "next": ""
+    }
+  }
+}

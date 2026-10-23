@@ -7,6 +7,7 @@ extends Control
 
 const DATA_PATH := "res://data/interview.json"
 const DIALOGUE_PATH := "res://dialogue/interview.dialogue"
+const Chapters := preload("res://scripts/chapters/chapters.gd")
 
 var data: Dictionary = {}
 var autostart := true
@@ -97,7 +98,16 @@ func _answers() -> Array:
 
 
 func _on_dialogue_ended(_resource: Resource) -> void:
-	SceneRouter.goto_map(data.get("return_map", "res://scenes/maps/village.tscn"))
+	SceneRouter.goto_map(return_scene())
+
+
+## Inside the cruise chapter the Interview returns to the cruise (data/chapters.json);
+## otherwise to its own return_map.
+func return_scene() -> String:
+	var fallback: String = data.get("return_map", "res://scenes/maps/village.tscn")
+	if Chapters.current() == "cruise":
+		return Chapters.return_scene("cruise", fallback)
+	return fallback
 
 
 func _load(path: String) -> Dictionary:
