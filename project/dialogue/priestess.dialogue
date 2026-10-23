@@ -1,24 +1,24 @@
 ~ start
 if WorldState.has_flag("offering_delivered")
-	{{Cast.full("ondine")}}: The Seal of the O shines upon the obedient, dear.
+	{{Cast.full("priestess")}}: The Seal of the O shines upon the obedient, dear.
 	=> END
 elif WorldState.has_flag("quest_offering_accepted")
-	{{Cast.full("ondine")}}: Ah. {{Cast.short("maren")}}'s little offering. Set it by the icons.
+	{{Cast.full("priestess")}}: Ah. {{Cast.short("initiate")}}'s little offering. Set it by the icons.
 	- Place the offering
 		do WorldState.set_flag("offering_delivered", true)
-		{{Cast.full("ondine")}}: See how easy? The Covenant loves an easy girl.
-		{{Cast.full("ondine")}}: ...That was a compliment, dear.
+		{{Cast.full("priestess")}}: See how easy? The Covenant loves an easy girl.
+		{{Cast.full("priestess")}}: ...That was a compliment, dear.
 		do NameIt.start("priestess_easy_girl")
 	- First — a question about the Fourteenth.
-		{{Cast.full("ondine")}}: Questions. How... modern of you.
-		{{Cast.full("ondine")}}: Set it down anyway, there's a love.
+		{{Cast.full("priestess")}}: Questions. How... modern of you.
+		{{Cast.full("priestess")}}: Set it down anyway, there's a love.
 		do WorldState.set_flag("questioned_ritual", true)
 		do WorldState.set_flag("offering_delivered", true)
 	=> END
 elif WorldState.has_flag("refused_offering")
-	{{Cast.full("ondine")}}: I heard you told {{Cast.full("maren")}} "no thank you."
-	{{Cast.full("ondine")}}: What a fascinating phrase. We'll be watching your cycle with interest.
+	{{Cast.full("priestess")}}: I heard you told {{Cast.full("initiate")}} "no thank you."
+	{{Cast.full("priestess")}}: What a fascinating phrase. We'll be watching your cycle with interest.
 	=> END
-{{Cast.full("ondine")}}: Welcome, initiate. The Queen Mothers see all who wish to be seen.
-{{Cast.full("ondine")}}: And all who don't, of course. That's rather the point of Them.
+{{Cast.full("priestess")}}: Welcome, initiate. The Queen Mothers see all who wish to be seen.
+{{Cast.full("priestess")}}: And all who don't, of course. That's rather the point of Them.
 => END

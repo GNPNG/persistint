@@ -115,9 +115,9 @@
   },
   {
     "speaker": "Priestess Betty",
-    "text": "Ah. {{Cast.short(\"maren\")}}'s little offering. Set it by the icons.",
-    "key": "873013ab0012ed9a948d15e5a72851d2",
-    "clip": "res://audio/voice/873013ab0012ed9a948d15e5a72851d2.ogg"
+    "text": "Ah. {{Cast.short(\"initiate\")}}'s little offering. Set it by the icons.",
+    "key": "00e2cd7284894f99bf8d4aeb3a0d4d54",
+    "clip": "res://audio/voice/00e2cd7284894f99bf8d4aeb3a0d4d54.ogg"
   },
   {
     "speaker": "Priestess Betty",

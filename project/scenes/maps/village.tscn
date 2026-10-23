@@ -35,24 +35,24 @@ position = Vector2(480, 200)
 [node name="Player" parent="." instance=ExtResource("3")]
 position = Vector2(480, 330)
 
-[node name="Maren" parent="." instance=ExtResource("4")]
+[node name="Initiate" parent="." instance=ExtResource("4")]
 position = Vector2(570, 300)
-npc_id = "maren"
+npc_id = "initiate"
 caste = "initiate"
 sprite_texture = "npc_initiate"
 dialogue_path = "res://dialogue/offering.dialogue"
 voice_pitch = 1.25
 
-[node name="Pip" parent="." instance=ExtResource("4")]
+[node name="Drone" parent="." instance=ExtResource("4")]
 position = Vector2(160, 230)
-npc_id = "pip"
+npc_id = "drone"
 caste = "drone"
 sprite_texture = "npc_drone"
 voice_pitch = 0.7
 
-[node name="Vess" parent="." instance=ExtResource("4")]
+[node name="Barren" parent="." instance=ExtResource("4")]
 position = Vector2(760, 430)
-npc_id = "vess"
+npc_id = "barren"
 caste = "barren"
 sprite_texture = "npc_barren"
 voice_pitch = 0.9
