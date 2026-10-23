@@ -164,6 +164,14 @@ func _run() -> void:
 	root.add_child(hot)
 	_check(hot.emcee_name() == "Chelsea Clinton", "hottest: introduced by Chelsea Clinton")
 	_check(hot._say.text.contains("They persisted and so should you."), "hottest: Chelsea Clinton's intro uses her She Persisted lines")
+	var cc_texts: Array = []
+	for q: Dictionary in JSON.parse_string(FileAccess.get_file_as_string("res://data/chelsea_clinton_quotes.json"))["quotes"]:
+		cc_texts.append(q["text"])
+	var cc_ok := true
+	for lines: Array in hot.emcee.get("intros", {}).values():
+		for line: String in lines:
+			cc_ok = cc_ok and cc_texts.has(line)
+	_check(cc_ok, "emcee: every Chelsea Clinton line is a sourced quote of hers")
 	_check(hot.host_name() == "Tyra Banks", "hottest: judged by Tyra Banks")
 	hot.choose("hair", "hair_crown")
 	_check(hot.doll.outfit["hair"] == "hair_crown", "hottest: makeover dresses the shared paper doll")
