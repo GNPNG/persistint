@@ -36,7 +36,6 @@ position = Vector2(480, 400)
 [node name="Ondine" parent="." instance=ExtResource("4")]
 position = Vector2(480, 250)
 npc_id = "ondine"
-display_name = "Priestess Ondine"
 caste = "priestess"
 sprite_texture = "npc_mother"
 dialogue_path = "res://dialogue/priestess.dialogue"

@@ -19,6 +19,8 @@ static var _barks: Dictionary = {}
 
 
 func _ready() -> void:
+	if display_name == "":
+		display_name = Cast.full(npc_id)
 	if _barks.is_empty():
 		var f := FileAccess.open(BARKS_PATH, FileAccess.READ)
 		if f:

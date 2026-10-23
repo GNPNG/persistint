@@ -77,6 +77,20 @@ func _run() -> void:
 	clock.restore()
 	_check(clock.day == 1 and clock.phase() == "morning", "New Game resets clock to Day 1 morning")
 
+	# Names come only from data/cast.json, including dialogue speaker names.
+	var cast: Node = root.get_node("/root/Cast")
+	var cast_data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/cast.json"))
+	_check(cast.full("ondine") == cast_data["ondine"]["name"], "Cast.full reads cast.json")
+	var dm: Node = root.get_node("/root/DialogueManager")
+	ws.reset()
+	var line = await dm.get_next_dialogue_line(load("res://dialogue/priestess.dialogue"), "start")
+	_check(line != null and line.character == cast_data["ondine"]["name"],
+		"dialogue speaker resolves from cast.json (got %s)" % (line.character if line else "null"))
+	ws.reset()
+	line = await dm.get_next_dialogue_line(load("res://dialogue/offering.dialogue"), "start")
+	_check(line != null and line.character == cast_data["maren"]["name"],
+		"offering speaker resolves from cast.json (got %s)" % (line.character if line else "null"))
+
 	if had_save:
 		var f := FileAccess.open(ws.SAVE_PATH, FileAccess.WRITE)
 		f.store_string(backup)

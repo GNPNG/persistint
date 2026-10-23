@@ -1,7 +1,7 @@
 extends Control
 ## Ritual Puzzle — "Arrange the Sacred Icons": swap tiles on a 3x3 altar grid to
 ## match the pattern the Covenant prescribes. Completion writes puzzle_ritual_done;
-## Ondine's dialogue and barks react to it.
+## The priestess's dialogue and barks react to it.
 
 const RETURN_MAP := "res://scenes/maps/temple.tscn"
 const COLORS: Array[Color] = [
