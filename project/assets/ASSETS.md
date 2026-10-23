@@ -77,5 +77,4 @@ stand-in there with no code change.
 | `project/assets/ruins/ruins_tileset.tres` | ruins_tileset | `tools/gen_ruins_art.py` | TileSet: one atlas source over ruins_tiles.png, every cell a tile | - |
 | `project/assets/ruins/ruins_towel_trolley.png` | ruins_towel_trolley | `tools/gen_ruins_art.py` | 104x88 still, scale 0.5, feet at bottom centre | - |
 | `project/assets/ruins/ruins_vending.png` | ruins_vending | `tools/gen_ruins_art.py` | 96x148 still, scale 0.5, feet at bottom centre | - |
-| `project/assets/ruins/shadow.png` | shadow | `tools/gen_ruins_art.py` | 48x16 contact shadow | - |
 | `project/assets/ruins/vignette.png` | vignette | `tools/gen_ruins_art.py` | 640x360 screen overlay, linear filter | - |

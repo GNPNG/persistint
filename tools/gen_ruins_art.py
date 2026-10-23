@@ -1,6 +1,6 @@
 """Draw the Ruins of Utopia and the bunker: floor and wall tiles for each room, the props the
 rooms' data names by "kind" (data/ruins.json, rooms -> props), the Forbidden Knowledge pickup
-icons, a soft glow and a contact shadow.
+icons, a soft glow and a screen vignette.
 
 Usage: python3 -I tools/gen_ruins_art.py
 Inputs: none (palette hexes below come from prompts/STYLE.md; every random draw is seeded).
@@ -11,7 +11,7 @@ Outputs, all under project/assets/ruins/:
                                         two texels per world pixel, shown at scale 0.5
   ruins_tank.png, ruins_tank_duck.png   animated sheets: 1 row x 4 frames of 88x172 (tank())
   icon_<id>.png                         Forbidden Knowledge pickups, 40x40 (data "icon")
-  glow.png, shadow.png, vignette.png    pickup glow, contact shadow, 640x360 screen vignette
+  glow.png, vignette.png                pickup glow, 640x360 screen vignette
 Each piece is drawn on a canvas SS times larger and downscaled (LANCZOS). Style: STYLE.md
 4.1-4.5 - soft outline (plum #5a4a5e in the bunker, warm brown #8a5a5a on the ship), flat
 pastel fills with one highlight, faces on the big machines, cat-in-a-lab-coat stickers on
@@ -303,13 +303,6 @@ def glow():
             a = max(0.0, 1.0 - dist) ** 2
             px[x, y] = (255, 255, 255, int(255 * a))
     im.save(OUT / "glow.png")
-
-
-def shadow():
-    a = Art(24, 8)
-    a.ell(0.5, 0.5, 23.5, 7.5, (40, 30, 50, 110), None)
-    a.im = a.im.filter(ImageFilter.GaussianBlur(SS * 0.8))
-    a.save("shadow")
 
 
 def vignette():
@@ -1170,7 +1163,6 @@ def ship():
 if __name__ == "__main__":
     OUT.mkdir(parents=True, exist_ok=True)
     glow()
-    shadow()
     vignette()
     INK = PLUM  # the bunker: the clone lab's cool plum (STYLE.md 4.1)
     bunker()
