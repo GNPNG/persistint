@@ -1,9 +1,15 @@
 [
   {
     "speaker": "Chelsea Clinton",
-    "text": "So, if anyone ever tells you no, if anyone says your voice isn't important or your dreams are too big, remember these women.",
-    "key": "8f645b977c11153364846f78bba60ca5",
-    "clip": "res://audio/voice/8f645b977c11153364846f78bba60ca5.wav"
+    "text": "In her refusal to get up, she persisted in taking a stand for what's right.",
+    "key": "7616ccaba4c9bc56bc3f4077cc1960aa",
+    "clip": "res://audio/voice/7616ccaba4c9bc56bc3f4077cc1960aa.wav"
+  },
+  {
+    "speaker": "Chelsea Clinton",
+    "text": "Remember these women.",
+    "key": "b79fc40fe66c8fe8c05affc0c223794e",
+    "clip": "res://audio/voice/b79fc40fe66c8fe8c05affc0c223794e.wav"
   },
   {
     "speaker": "Chelsea Clinton",

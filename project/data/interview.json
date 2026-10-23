@@ -1,5 +1,5 @@
 {
-	"_note": "The Interview (DESIGN.md §2): character creation as a talk show segment. Oprah's every spoken line (intro and each prompt) is a quote from data/quotes/oprah.json, verbatim; the player's answers are the Fallout-style replies, each shifting stats. 'stats' lists the stat ids/labels; 'base' and 'min'/'max' bound each stat; 'questions' is the interview, in order: each is {\"prompt\": text, \"answers\": [{\"text\": text, \"stats\": {stat_id: delta}}]} (up to 8 answers per question). When the questions run out the stats are written to WorldState (stats, interview_done).",
+	"_note": "The Interview (DESIGN.md §2): character creation as a talk show segment. Oprah's every spoken line (intro and each prompt) is a quote from data/quotes/oprah.json, verbatim, and only quotes marked verified=true there (tests/test_quotes_vv.gd); the player's answers are the Fallout-style replies, each shifting stats. 'stats' lists the stat ids/labels; 'base' and 'min'/'max' bound each stat; 'questions' is the interview, in order: each is {\"prompt\": text, \"answers\": [{\"text\": text, \"stats\": {stat_id: delta}}]} (up to 8 answers per question). When the questions run out the stats are written to WorldState (stats, interview_done).",
 	"title": "The Interview",
 	"host": "oprah",
 	"return_map": "res://scenes/maps/village.tscn",
@@ -8,8 +8,7 @@
 	"max": 10,
 	"intro": [
 		"So I want all the girls watching here, now, to know that a new day is on the horizon!",
-		"Each of us in this room are celebrated because of the stories that we tell, and this year we became the story.",
-		"The more you praise and celebrate your life, the more there is in life to celebrate."
+		"Each of us in this room are celebrated because of the stories that we tell, and this year we became the story."
 	],
 	"stats": [
 		{
@@ -203,24 +202,24 @@
 			]
 		},
 		{
-			"prompt": "Surround yourself only with people who are going to take you higher.",
+			"prompt": "You wanna max out your humanity by using your energy to lift yourself up, your family, and the people around you.",
 			"answers": [
 				{
-					"text": "My friends will be so thrilled to hear they are being reviewed.",
+					"text": "My family will be so thrilled to hear they are being lifted. Nobody has told them.",
 					"stats": {
 						"charisma": 1,
 						"perception": -1
 					}
 				},
 				{
-					"text": "Who decides who is going higher? Is there a rubric? Is it a committee?",
+					"text": "Who decides how high is up? Is there a rubric? Is it a committee?",
 					"stats": {
 						"intelligence": 2,
 						"charisma": -1
 					}
 				},
 				{
-					"text": "Done. I have already muted everyone who owns a lease.",
+					"text": "Done. I have lifted myself up and away from everyone who owns a lease.",
 					"stats": {
 						"agility": 1,
 						"endurance": -1
@@ -234,7 +233,7 @@
 					}
 				},
 				{
-					"text": "Higher than what, exactly? I have a fear of heights and of accountability.",
+					"text": "Lift them up to what, exactly? I have a fear of heights and of accountability.",
 					"stats": {
 						"luck": 1,
 						"strength": -1
@@ -243,38 +242,38 @@
 			]
 		},
 		{
-			"prompt": "You get in life what you have the courage to ask for.",
+			"prompt": "One of my favorite questions to ask on Super Soul is what is the lesson that took you the longest to learn?",
 			"answers": [
 				{
-					"text": "A raise. A window. An apology from the man who parked in my spot.",
+					"text": "That 'reply all' is not a love language. It took me nine years and one meeting with HR.",
 					"stats": {
 						"strength": 1,
 						"charisma": 1
 					}
 				},
 				{
-					"text": "I have the courage to ask for the check. Is that the same?",
+					"text": "That the free sample lady is not my friend. She is paid to smile. So am I, now.",
 					"stats": {
 						"luck": 1,
 						"intelligence": 1
 					}
 				},
 				{
-					"text": "I asked once, at a church, and I am still not sure what I agreed to.",
+					"text": "I am still learning it. Is this it? Is this the lesson? Should I be writing this down?",
 					"stats": {
 						"perception": 1,
 						"luck": -2
 					}
 				},
 				{
-					"text": "I never ask. I just stand near what I want until it becomes awkward.",
+					"text": "That you can leave a party without saying goodbye. That one I learned in about four seconds.",
 					"stats": {
 						"agility": 2,
 						"charisma": -1
 					}
 				},
 				{
-					"text": "Everything. In order of alphabet.",
+					"text": "All of them. In order of alphabet.",
 					"stats": {
 						"endurance": 2,
 						"intelligence": -1
@@ -283,7 +282,7 @@
 			]
 		},
 		{
-			"prompt": "Challenges are gifts that force us to search for a new center of gravity.",
+			"prompt": "Challenges provide opportunities that force us to search for a new center of gravity.",
 			"answers": [
 				{
 					"text": "My center of gravity is a bowl of cereal. It has been very reliable.",
@@ -300,7 +299,7 @@
 					}
 				},
 				{
-					"text": "This is a gift? I would like to return it for store credit.",
+					"text": "This is an opportunity? I would like to return it for store credit.",
 					"stats": {
 						"charisma": 1,
 						"luck": -1
@@ -324,31 +323,31 @@
 			]
 		},
 		{
-			"prompt": "When you pay attention to what feeds your energy, you move in the direction of the life for which you were intended.",
+			"prompt": "Learn from every mistake.",
 			"answers": [
 				{
-					"text": "My energy is fed by sleep, and I am told that is a character flaw.",
+					"text": "I have learned that sleep is not a mistake, and I am told that is a character flaw.",
 					"stats": {
 						"endurance": 2,
 						"charisma": -1
 					}
 				},
 				{
-					"text": "Snacks, mostly. And the feeling that someone else is in charge.",
+					"text": "Every snack a mistake, every mistake a lesson, every lesson a snack. I am extremely well educated.",
 					"stats": {
 						"luck": 1,
 						"intelligence": -1
 					}
 				},
 				{
-					"text": "Standing at the back of a crowd and nodding. It feeds everyone.",
+					"text": "I learn from other people's mistakes, standing at the back of the crowd, nodding.",
 					"stats": {
 						"charisma": 1,
 						"perception": 1
 					}
 				},
 				{
-					"text": "Arguing, in the comments, with strangers, for eight hours at a time.",
+					"text": "I have learned from every mistake in the comments, with strangers, for eight hours at a time.",
 					"stats": {
 						"strength": 1,
 						"endurance": 1,
@@ -356,7 +355,7 @@
 					}
 				},
 				{
-					"text": "I could not tell you. I have an appointment, and I do not know what for.",
+					"text": "I could not tell you which ones. I have an appointment, and I do not know what for.",
 					"stats": {
 						"perception": -2,
 						"luck": 1
@@ -365,24 +364,24 @@
 			]
 		},
 		{
-			"prompt": "If you have faith, even if it's as little as a mustard seed, you can move mountains.",
+			"prompt": "You have to pay attention to your life, because it is speaking to you all the time.",
 			"answers": [
 				{
-					"text": "A mustard seed. Is it organic? I have a rash.",
+					"text": "Mine mostly asks whether the snacks are organic. I have a rash.",
 					"stats": {
 						"perception": 1,
 						"agility": -1
 					}
 				},
 				{
-					"text": "I have faith in a very small number of mountains and an enormous number of seeds.",
+					"text": "My life speaks to me constantly. Mostly it says I left the stove on.",
 					"stats": {
 						"strength": 1,
 						"luck": 1
 					}
 				},
 				{
-					"text": "I would need to see the mountain move first, and then I would tell everybody I always believed.",
+					"text": "I let somebody else listen first, and then I tell everybody I always knew what it said.",
 					"stats": {
 						"intelligence": 1,
 						"charisma": 1,
@@ -390,14 +389,14 @@
 					}
 				},
 				{
-					"text": "I used to have faith. Now I have a spreadsheet with a column for it.",
+					"text": "I keep a spreadsheet of everything it says. There is a column for tone.",
 					"stats": {
 						"intelligence": 2,
 						"luck": -1
 					}
 				},
 				{
-					"text": "Faith moves mountains and I move furniture. We each have our department.",
+					"text": "It speaks. I lift. We each have our department.",
 					"stats": {
 						"strength": 2
 					}
@@ -405,24 +404,24 @@
 			]
 		},
 		{
-			"prompt": "What I know for sure is you become what you believe.",
+			"prompt": "Small steps lead to big accomplishments.",
 			"answers": [
 				{
-					"text": "I would like to become the person who leaves this show with a free car.",
+					"text": "My small step is leaving this show with a free car.",
 					"stats": {
 						"luck": 2,
 						"intelligence": -1
 					}
 				},
 				{
-					"text": "Then I believe a great deal of nonsense and have become an enormous amount of it.",
+					"text": "Then I have taken a great many small steps and accomplished an enormous amount of nonsense.",
 					"stats": {
 						"perception": -1,
 						"charisma": 1
 					}
 				},
 				{
-					"text": "I believe in my lunch break. I have become it.",
+					"text": "My small step is my lunch break. It is my biggest accomplishment.",
 					"stats": {
 						"endurance": 1,
 						"strength": -1
@@ -436,7 +435,7 @@
 					}
 				},
 				{
-					"text": "What I believe is that it is nearly the end of the segment.",
+					"text": "My next small step is toward the end of the segment.",
 					"stats": {
 						"agility": 1,
 						"perception": 1
@@ -485,31 +484,31 @@
 			]
 		},
 		{
-			"prompt": "Think like a queen.",
+			"prompt": "You need to make your bed every day.",
 			"answers": [
 				{
-					"text": "Done. I have already ordered the crown, in gold and in a size I will grow into.",
+					"text": "Done. I make it every morning, and then I stand next to it so people can see.",
 					"stats": {
 						"charisma": 2,
 						"intelligence": -1
 					}
 				},
 				{
-					"text": "Queens get killed in the third act. I would like to be a minor duchess.",
+					"text": "Every day is a lot of pressure. I would like to make it on Sundays, like a duchess.",
 					"stats": {
 						"intelligence": 1,
 						"luck": 1
 					}
 				},
 				{
-					"text": "I think like a person who thinks on a ship with no exit. It is going fine.",
+					"text": "My bed is a bunk on a ship with no exit. It is made. It is going fine.",
 					"stats": {
 						"perception": 1,
 						"endurance": 1
 					}
 				},
 				{
-					"text": "A queen. In what kingdom? Whose census? Who is the dronish one holding the train?",
+					"text": "Made by whose measure? Is there an inspection? Who is holding the ruler?",
 					"stats": {
 						"intelligence": 2,
 						"charisma": -1

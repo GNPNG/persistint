@@ -1,276 +1,411 @@
 {
-  "_note": "Hillary Clinton's own words only, each checked against the page in 'url' on 2026-10-23.",
+  "_note": "Hillary Clinton's own words only, each checked verbatim against the page in 'checked_url' (the page the wording was matched on; 'primary_source' when that differs from the listed 'url') on 2026-10-23.",
+  "_verification": {
+    "method": "Verbatim check on 2026-10-23: every source page was downloaded as raw HTML/PDF (Wayback Machine snapshot where the live site refuses non-browser requests) and each quote's text was string-matched against the page text, ignoring only quote-mark/dash typography. Aggregator pages (Goodreads, Wikiquote, quote listicles) were also searched for a primary source; quotes found only on aggregators are verified=false.",
+    "fields": "per quote: verified, checked_url (page the wording was matched on), primary_source (when not the listed url), note, was (original text when corrected)",
+    "verified": 43,
+    "unverified": 1,
+    "corrected": 0,
+    "total": 44,
+    "date": "2026-10-23",
+    "rule": "Only quotes with verified=true may be used in game (tests/test_quotes_vv.gd)."
+  },
   "quotes": [
     {
       "text": "human rights are women's rights and women's rights are human rights, once and for all.",
       "source": "Remarks to the UN Fourth World Conference on Women, Beijing, 5 Sep 1995",
       "url": "https://www.clintonlibrary.gov/museum/first-ladys-international-rallying-cry-beijing-womens-rights-are-human-rights",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.clintonlibrary.gov/museum/first-ladys-international-rallying-cry-beijing-womens-rights-are-human-rights",
+      "note": ""
     },
     {
       "text": "If there is one message that echoes forth from this conference, let it be that human rights are women's rights . . . . And women's rights are human rights, once and for all.",
       "source": "Remarks to the UN Fourth World Conference on Women, Beijing, 5 Sep 1995",
       "url": "https://www.archives.gov/files/women/clinton-beijing-speech.pdf",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.archives.gov/files/women/clinton-beijing-speech.pdf",
+      "note": "Archives.gov PDF is a typed original with OCR letter-spacing; words match."
     },
     {
       "text": "It is time for us to say here in Beijing, and the world to hear, that it is no longer acceptable to discuss women's rights as separate from human rights.",
       "source": "Remarks to the UN Fourth World Conference on Women, Beijing, 5 Sep 1995",
       "url": "https://www.archives.gov/files/women/clinton-beijing-speech.pdf",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.archives.gov/files/women/clinton-beijing-speech.pdf",
+      "note": "Archives.gov PDF is a typed original with OCR letter-spacing; words match."
     },
     {
       "text": "The great challenge of this conference is to give voice to women everywhere whose experiences go unnoticed, whose words go unheard.",
       "source": "Remarks to the UN Fourth World Conference on Women, Beijing, 5 Sep 1995",
       "url": "https://www.archives.gov/files/women/clinton-beijing-speech.pdf",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.archives.gov/files/women/clinton-beijing-speech.pdf",
+      "note": "Archives.gov PDF is a typed original with OCR letter-spacing; words match."
     },
     {
       "text": "Those of us who have the opportunity to be here have the responsibility to speak for those who could not.",
       "source": "Remarks to the UN Fourth World Conference on Women, Beijing, 5 Sep 1995",
       "url": "https://www.archives.gov/files/women/clinton-beijing-speech.pdf",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.archives.gov/files/women/clinton-beijing-speech.pdf",
+      "note": "Archives.gov PDF is a typed original with OCR letter-spacing; words match."
     },
     {
       "text": "These abuses have continued because, for too long, the history of women has been a history of silence.",
       "source": "Remarks to the UN Fourth World Conference on Women, Beijing, 5 Sep 1995",
       "url": "https://www.archives.gov/files/women/clinton-beijing-speech.pdf",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.archives.gov/files/women/clinton-beijing-speech.pdf",
+      "note": "Archives.gov PDF is a typed original with OCR letter-spacing; words match."
     },
     {
       "text": "Let us not forget that among those rights are the right to speak freely. And the right to be heard.",
       "source": "Remarks to the UN Fourth World Conference on Women, Beijing, 5 Sep 1995",
       "url": "https://www.archives.gov/files/women/clinton-beijing-speech.pdf",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.archives.gov/files/women/clinton-beijing-speech.pdf",
+      "note": "Archives.gov PDF is a typed original with OCR letter-spacing; words match."
     },
     {
       "text": "Every woman deserves the chance to realize her God-given potential.",
       "source": "Remarks to the UN Fourth World Conference on Women, Beijing, 5 Sep 1995",
       "url": "https://www.archives.gov/files/women/clinton-beijing-speech.pdf",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.archives.gov/files/women/clinton-beijing-speech.pdf",
+      "note": "Archives.gov PDF is a typed original with OCR letter-spacing; words match."
     },
     {
       "text": "What we are learning around the world is that, if women are healthy and educated, their families will flourish.",
       "source": "Remarks to the UN Fourth World Conference on Women, Beijing, 5 Sep 1995",
       "url": "https://www.archives.gov/files/women/clinton-beijing-speech.pdf",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.archives.gov/files/women/clinton-beijing-speech.pdf",
+      "note": "Archives.gov PDF is a typed original with OCR letter-spacing; words match."
     },
     {
       "text": "We need to understand that there is no one formula for how women should lead their lives.",
       "source": "Remarks to the UN Fourth World Conference on Women, Beijing, 5 Sep 1995",
       "url": "https://www.archives.gov/files/women/clinton-beijing-speech.pdf",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.archives.gov/files/women/clinton-beijing-speech.pdf",
+      "note": "Archives.gov PDF is a typed original with OCR letter-spacing; words match."
     },
     {
       "text": "That is why we must respect the choices that each woman makes for herself and her family.",
       "source": "Remarks to the UN Fourth World Conference on Women, Beijing, 5 Sep 1995",
       "url": "https://www.archives.gov/files/women/clinton-beijing-speech.pdf",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.archives.gov/files/women/clinton-beijing-speech.pdf",
+      "note": "Archives.gov PDF is a typed original with OCR letter-spacing; words match."
     },
     {
       "text": "Let this conference be our — and the world's — call to action.",
       "source": "Remarks to the UN Fourth World Conference on Women, Beijing, 5 Sep 1995",
       "url": "https://www.archives.gov/files/women/clinton-beijing-speech.pdf",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.archives.gov/files/women/clinton-beijing-speech.pdf",
+      "note": "Archives.gov PDF is a typed original with OCR letter-spacing; words match."
     },
     {
       "text": "And to all the little girls who are watching this, never doubt that you are valuable and powerful and deserving of every chance and opportunity in the world to pursue and achieve your own dreams.",
       "source": "Concession speech, New York, 9 Nov 2016",
       "url": "https://www.eastidahonews.com/2016/11/full-text-hillary-clintons-concession-speech/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://web.archive.org/web/20161110161655/https://www.eastidahonews.com/2016/11/full-text-hillary-clintons-concession-speech/",
+      "note": "Live page refuses non-browser fetches (HTTP 406/403); wording checked against the Wayback Machine snapshot of the same URL."
     },
     {
       "text": "please never stop believing that fighting for what’s right is worth it.",
       "source": "Concession speech, New York, 9 Nov 2016",
       "url": "https://www.eastidahonews.com/2016/11/full-text-hillary-clintons-concession-speech/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://web.archive.org/web/20161110161655/https://www.eastidahonews.com/2016/11/full-text-hillary-clintons-concession-speech/",
+      "note": "Live page refuses non-browser fetches (HTTP 406/403); wording checked against the Wayback Machine snapshot of the same URL."
     },
     {
       "text": "We owe him an open mind and the chance to lead.",
       "source": "Concession speech, New York, 9 Nov 2016",
       "url": "https://www.eastidahonews.com/2016/11/full-text-hillary-clintons-concession-speech/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://web.archive.org/web/20161110161655/https://www.eastidahonews.com/2016/11/full-text-hillary-clintons-concession-speech/",
+      "note": "Live page refuses non-browser fetches (HTTP 406/403); wording checked against the Wayback Machine snapshot of the same URL."
     },
     {
       "text": "Our constitutional democracy enshrines the peaceful transfer of power and we don’t just respect that, we cherish it.",
       "source": "Concession speech, New York, 9 Nov 2016",
       "url": "https://www.eastidahonews.com/2016/11/full-text-hillary-clintons-concession-speech/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://web.archive.org/web/20161110161655/https://www.eastidahonews.com/2016/11/full-text-hillary-clintons-concession-speech/",
+      "note": "Live page refuses non-browser fetches (HTTP 406/403); wording checked against the Wayback Machine snapshot of the same URL."
     },
     {
       "text": "Our campaign was never about one person or even one election, it was about the country we love",
       "source": "Concession speech, New York, 9 Nov 2016",
       "url": "https://www.eastidahonews.com/2016/11/full-text-hillary-clintons-concession-speech/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://web.archive.org/web/20161110161655/https://www.eastidahonews.com/2016/11/full-text-hillary-clintons-concession-speech/",
+      "note": "Live page refuses non-browser fetches (HTTP 406/403); wording checked against the Wayback Machine snapshot of the same URL."
     },
     {
       "text": "I know how disappointed you feel, because I feel it, too.",
       "source": "Concession speech, New York, 9 Nov 2016",
       "url": "https://abcnews.com/Politics/full-text-hillary-clintons-2016-election-concession-speech/story?id=43388311",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://abcnews.com/Politics/full-text-hillary-clintons-2016-election-concession-speech/story?id=43388311",
+      "note": ""
     },
     {
       "text": "the art of making what appears to be impossible possible",
       "source": "Wellesley College student commencement speech, 1969",
       "url": "https://www1.wellesley.edu/events/commencement/archives/1969commencement/studentspeech",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www1.wellesley.edu/events/commencement/archives/1969commencement/studentspeech",
+      "note": ""
     },
     {
       "text": "We're not interested in social reconstruction; it's human reconstruction.",
       "source": "Wellesley College student commencement speech, 1969",
       "url": "https://www1.wellesley.edu/events/commencement/archives/1969commencement/studentspeech",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www1.wellesley.edu/events/commencement/archives/1969commencement/studentspeech",
+      "note": ""
     },
     {
       "text": "Fear is always with us but we just don't have time for it.",
       "source": "Wellesley College student commencement speech, 1969",
       "url": "https://www1.wellesley.edu/events/commencement/archives/1969commencement/studentspeech",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www1.wellesley.edu/events/commencement/archives/1969commencement/studentspeech",
+      "note": ""
     },
     {
       "text": "it's got about 18 million cracks in it.",
       "source": "Concession speech, Washington DC, 7 Jun 2008",
       "url": "https://www.huffpost.com/entry/clinton-concession-speech_n_105842",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.huffpost.com/entry/clinton-concession-speech_n_105842",
+      "note": ""
     },
     {
       "text": "Although we weren't able to shatter that highest, hardest glass ceiling this time",
       "source": "Concession speech, Washington DC, 7 Jun 2008",
       "url": "https://www.huffpost.com/entry/clinton-concession-speech_n_105842",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.huffpost.com/entry/clinton-concession-speech_n_105842",
+      "note": ""
     },
     {
       "text": "Our founders embraced the enduring truth that we are stronger together.",
       "source": "Democratic National Convention acceptance speech, 28 Jul 2016",
       "url": "https://scribie.com/blog/2016/07/hillary-clinton-full-acceptance-speech-transcript/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://scribie.com/blog/2016/07/hillary-clinton-full-acceptance-speech-transcript/",
+      "note": "Checked against a transcript/republication, not the original broadcaster or publisher."
     },
     {
       "text": "So let's be stronger together my fellow Americans.",
       "source": "Democratic National Convention acceptance speech, 28 Jul 2016",
       "url": "https://scribie.com/blog/2016/07/hillary-clinton-full-acceptance-speech-transcript/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://scribie.com/blog/2016/07/hillary-clinton-full-acceptance-speech-transcript/",
+      "note": "Checked against a transcript/republication, not the original broadcaster or publisher."
     },
     {
       "text": "Where families are strong, communities are safe, and yes—love trumps hate.",
       "source": "Democratic National Convention acceptance speech, 28 Jul 2016 (prepared text)",
       "url": "https://www.newsweek.com/hillary-clinton-dnc-acceptance-speech-485246",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://web.archive.org/web/20241115155210/https://www.newsweek.com/hillary-clinton-dnc-acceptance-speech-485246",
+      "note": "Live page refuses non-browser fetches (HTTP 406/403); wording checked against the Wayback Machine snapshot of the same URL."
     },
     {
       "text": "A man you can bait with a tweet is not a man we can trust with nuclear weapons.",
       "source": "Democratic National Convention acceptance speech, 28 Jul 2016 (prepared text)",
       "url": "https://www.newsweek.com/hillary-clinton-dnc-acceptance-speech-485246",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://web.archive.org/web/20241115155210/https://www.newsweek.com/hillary-clinton-dnc-acceptance-speech-485246",
+      "note": "Live page refuses non-browser fetches (HTTP 406/403); wording checked against the Wayback Machine snapshot of the same URL."
     },
     {
       "text": "When there are no ceilings, the sky's the limit.",
       "source": "Democratic National Convention acceptance speech, 28 Jul 2016 (prepared text)",
       "url": "https://www.newsweek.com/hillary-clinton-dnc-acceptance-speech-485246",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://web.archive.org/web/20241115155210/https://www.newsweek.com/hillary-clinton-dnc-acceptance-speech-485246",
+      "note": "Live page refuses non-browser fetches (HTTP 406/403); wording checked against the Wayback Machine snapshot of the same URL."
     },
     {
       "text": "I will be a President for Democrats, Republicans, and Independents.",
       "source": "Democratic National Convention acceptance speech, 28 Jul 2016 (prepared text)",
       "url": "https://www.newsweek.com/hillary-clinton-dnc-acceptance-speech-485246",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://web.archive.org/web/20241115155210/https://www.newsweek.com/hillary-clinton-dnc-acceptance-speech-485246",
+      "note": "Live page refuses non-browser fetches (HTTP 406/403); wording checked against the Wayback Machine snapshot of the same URL."
     },
     {
       "text": "Our country's motto is e pluribus unum: out of many, we are one.",
       "source": "Democratic National Convention acceptance speech, 28 Jul 2016 (prepared text)",
       "url": "https://www.newsweek.com/hillary-clinton-dnc-acceptance-speech-485246",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://web.archive.org/web/20241115155210/https://www.newsweek.com/hillary-clinton-dnc-acceptance-speech-485246",
+      "note": "Live page refuses non-browser fetches (HTTP 406/403); wording checked against the Wayback Machine snapshot of the same URL."
     },
     {
       "text": "So don't let anyone tell you that our country is weak.",
       "source": "Democratic National Convention acceptance speech, 28 Jul 2016 (prepared text)",
       "url": "https://www.newsweek.com/hillary-clinton-dnc-acceptance-speech-485246",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://web.archive.org/web/20241115155210/https://www.newsweek.com/hillary-clinton-dnc-acceptance-speech-485246",
+      "note": "Live page refuses non-browser fetches (HTTP 406/403); wording checked against the Wayback Machine snapshot of the same URL."
     },
     {
       "text": "Your cause is our cause.",
       "source": "Democratic National Convention acceptance speech, 28 Jul 2016 (prepared text)",
       "url": "https://www.newsweek.com/hillary-clinton-dnc-acceptance-speech-485246",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://web.archive.org/web/20241115155210/https://www.newsweek.com/hillary-clinton-dnc-acceptance-speech-485246",
+      "note": "Live page refuses non-browser fetches (HTTP 406/403); wording checked against the Wayback Machine snapshot of the same URL."
     },
     {
       "text": "I'm running to make our economy work for you and for every American.",
       "source": "Campaign launch speech, Roosevelt Island, 13 Jun 2015",
       "url": "https://www.p2016.org/clinton/clinton061315spt.html",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.p2016.org/clinton/clinton061315spt.html",
+      "note": ""
     },
     {
       "text": "America can't succeed unless you succeed.",
       "source": "Campaign launch speech, Roosevelt Island, 13 Jun 2015",
       "url": "https://www.bustle.com/articles/90068-transcript-of-hillary-clintons-campaign-kick-off-speech-yes-its-amazing",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.bustle.com/articles/90068-transcript-of-hillary-clintons-campaign-kick-off-speech-yes-its-amazing",
+      "note": ""
     },
     {
       "text": "I'm not running for some Americans, but for all Americans.",
       "source": "Campaign launch speech, Roosevelt Island, 13 Jun 2015",
       "url": "https://www.bustle.com/articles/90068-transcript-of-hillary-clintons-campaign-kick-off-speech-yes-its-amazing",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.bustle.com/articles/90068-transcript-of-hillary-clintons-campaign-kick-off-speech-yes-its-amazing",
+      "note": ""
     },
     {
       "text": "I want to be her champion and your champion.",
       "source": "Campaign launch speech, Roosevelt Island, 13 Jun 2015",
       "url": "https://www.bustle.com/articles/90068-transcript-of-hillary-clintons-campaign-kick-off-speech-yes-its-amazing",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.bustle.com/articles/90068-transcript-of-hillary-clintons-campaign-kick-off-speech-yes-its-amazing",
+      "note": ""
     },
     {
       "text": "For everyone who's ever been knocked down, but refused to be knocked out.",
       "source": "Campaign launch speech, Roosevelt Island, 13 Jun 2015",
       "url": "https://www.bustle.com/articles/90068-transcript-of-hillary-clintons-campaign-kick-off-speech-yes-its-amazing",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.bustle.com/articles/90068-transcript-of-hillary-clintons-campaign-kick-off-speech-yes-its-amazing",
+      "note": ""
     },
     {
       "text": "Prosperity can't be just for CEOs and hedge fund managers.",
       "source": "Campaign launch speech, Roosevelt Island, 13 Jun 2015",
       "url": "https://www.bustle.com/articles/90068-transcript-of-hillary-clintons-campaign-kick-off-speech-yes-its-amazing",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.bustle.com/articles/90068-transcript-of-hillary-clintons-campaign-kick-off-speech-yes-its-amazing",
+      "note": ""
     },
     {
       "text": "But remember, it's not whether you get knocked down, it's whether you get back up.",
       "source": "New York primary victory speech, April 2016",
       "url": "https://www.newsweek.com/hillary-clinton-full-transcript-new-york-victory-speech-450349",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://web.archive.org/web/20241221182244/https://www.newsweek.com/hillary-clinton-full-transcript-new-york-victory-speech-450349",
+      "note": "Live page refuses non-browser fetches (HTTP 406/403); wording checked against the Wayback Machine snapshot of the same URL."
     },
     {
       "text": "It's about lifting each other up, not tearing each other down.",
       "source": "New York primary victory speech, April 2016",
       "url": "https://www.newsweek.com/hillary-clinton-full-transcript-new-york-victory-speech-450349",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://web.archive.org/web/20241221182244/https://www.newsweek.com/hillary-clinton-full-transcript-new-york-victory-speech-450349",
+      "note": "Live page refuses non-browser fetches (HTTP 406/403); wording checked against the Wayback Machine snapshot of the same URL."
     },
     {
       "text": "So instead of building walls, we're going to break down barriers.",
       "source": "New York primary victory speech, April 2016",
       "url": "https://www.newsweek.com/hillary-clinton-full-transcript-new-york-victory-speech-450349",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://web.archive.org/web/20241221182244/https://www.newsweek.com/hillary-clinton-full-transcript-new-york-victory-speech-450349",
+      "note": "Live page refuses non-browser fetches (HTTP 406/403); wording checked against the Wayback Machine snapshot of the same URL."
     },
     {
       "text": "America is great, and we can do great things if we do them together.",
       "source": "New York primary victory speech, April 2016",
       "url": "https://www.newsweek.com/hillary-clinton-full-transcript-new-york-victory-speech-450349",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://web.archive.org/web/20241221182244/https://www.newsweek.com/hillary-clinton-full-transcript-new-york-victory-speech-450349",
+      "note": "Live page refuses non-browser fetches (HTTP 406/403); wording checked against the Wayback Machine snapshot of the same URL."
     },
     {
       "text": "I suppose I could have stayed home and baked cookies and had teas, but what I decided to do was to fulfill my profession which I entered before my husband was in public life.",
       "source": "Nightline, ABC, 26 Mar 1992",
       "url": "https://www.pbs.org/wgbh/pages/frontline/shows/clinton/etc/03261992.html",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.pbs.org/wgbh/pages/frontline/shows/clinton/etc/03261992.html",
+      "note": ""
     },
     {
       "text": "Home is a child's first and most important classroom.",
       "source": "It Takes a Village (1996)",
       "url": "https://www.goodreads.com/author/quotes/2778471.Hillary_Rodham_Clinton",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.goodreads.com/author/quotes/2778471.Hillary_Rodham_Clinton",
+      "note": "Aggregator-only: wording appears on www.goodreads.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     }
-  ],
-  "_verification": {
-    "method": "WebFetch/WebSearch extraction on 2026-10-23 (tool output, not raw page text); wording not character-checked against the original page",
-    "verified": "2026-10-23",
-    "expires": "never for listed source/date; wording re-check required before use of any line",
-    "aggregator_only": 1,
-    "total": 44
-  }
+  ]
 }

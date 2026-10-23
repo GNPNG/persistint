@@ -1,228 +1,370 @@
 {
-  "_note": "Oprah Winfrey's own words only, each checked against the page in 'url' on 2026-10-23.",
+  "_note": "Oprah Winfrey's own words only, each checked verbatim against the page in 'checked_url' (the page the wording was matched on; 'primary_source' when that differs from the listed 'url') on 2026-10-23.",
+  "_verification": {
+    "method": "Verbatim check on 2026-10-23: every source page was downloaded as raw HTML/PDF (Wayback Machine snapshot where the live site refuses non-browser requests) and each quote's text was string-matched against the page text, ignoring only quote-mark/dash typography. Aggregator pages (Goodreads, Wikiquote, quote listicles) were also searched for a primary source; quotes found only on aggregators are verified=false.",
+    "fields": "per quote: verified, checked_url (page the wording was matched on), primary_source (when not the listed url), note, was (original text when corrected)",
+    "verified": 23,
+    "unverified": 16,
+    "corrected": 1,
+    "total": 39,
+    "date": "2026-10-23",
+    "rule": "Only quotes with verified=true may be used in game (tests/test_quotes_vv.gd)."
+  },
   "quotes": [
     {
       "text": "So I want all the girls watching here, now, to know that a new day is on the horizon!",
       "source": "Golden Globes Cecil B. DeMille Award acceptance speech, 2018-01-07",
       "url": "https://www.nbcnews.com/pop-culture/tv/read-oprah-winfrey-s-full-golden-globes-speech-n835626",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.nbcnews.com/pop-culture/tv/read-oprah-winfrey-s-full-golden-globes-speech-n835626",
+      "note": ""
     },
     {
       "text": "Their time is up.",
       "source": "Golden Globes Cecil B. DeMille Award acceptance speech, 2018-01-07",
       "url": "https://www.nbcnews.com/pop-culture/tv/read-oprah-winfrey-s-full-golden-globes-speech-n835626",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.nbcnews.com/pop-culture/tv/read-oprah-winfrey-s-full-golden-globes-speech-n835626",
+      "note": ""
     },
     {
       "text": "what I know for sure is that speaking your truth is the most powerful tool we all have.",
       "source": "Golden Globes Cecil B. DeMille Award acceptance speech, 2018-01-07",
       "url": "https://www.nbcnews.com/pop-culture/tv/read-oprah-winfrey-s-full-golden-globes-speech-n835626",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.nbcnews.com/pop-culture/tv/read-oprah-winfrey-s-full-golden-globes-speech-n835626",
+      "note": ""
     },
     {
       "text": "Each of us in this room are celebrated because of the stories that we tell, and this year we became the story.",
       "source": "Golden Globes Cecil B. DeMille Award acceptance speech, 2018-01-07",
       "url": "https://www.nbcnews.com/pop-culture/tv/read-oprah-winfrey-s-full-golden-globes-speech-n835626",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.nbcnews.com/pop-culture/tv/read-oprah-winfrey-s-full-golden-globes-speech-n835626",
+      "note": ""
     },
     {
       "text": "an ability to maintain hope for a brighter morning, even during our darkest nights.",
       "source": "Golden Globes Cecil B. DeMille Award acceptance speech, 2018-01-07",
       "url": "https://www.nbcnews.com/pop-culture/tv/read-oprah-winfrey-s-full-golden-globes-speech-n835626",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.nbcnews.com/pop-culture/tv/read-oprah-winfrey-s-full-golden-globes-speech-n835626",
+      "note": ""
     },
     {
       "text": "I'm especially proud and inspired by all the women who have felt strong enough and empowered enough to speak up",
       "source": "Golden Globes Cecil B. DeMille Award acceptance speech, 2018-01-07",
       "url": "https://www.nbcnews.com/pop-culture/tv/read-oprah-winfrey-s-full-golden-globes-speech-n835626",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.nbcnews.com/pop-culture/tv/read-oprah-winfrey-s-full-golden-globes-speech-n835626",
+      "note": ""
     },
     {
       "text": "And when that new day finally dawns, it will be because of a lot of magnificent women,",
       "source": "Golden Globes Cecil B. DeMille Award acceptance speech, 2018-01-07",
       "url": "https://www.nbcnews.com/pop-culture/tv/read-oprah-winfrey-s-full-golden-globes-speech-n835626",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.nbcnews.com/pop-culture/tv/read-oprah-winfrey-s-full-golden-globes-speech-n835626",
+      "note": ""
     },
     {
       "text": "There is no such thing as failure — failure is just life trying to move us in another direction.",
       "source": "Harvard commencement address, 2013-05-30",
       "url": "https://www.themarginalian.org/2013/06/04/oprah-winfrey-harvard-2013-commencement/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.themarginalian.org/2013/06/04/oprah-winfrey-harvard-2013-commencement/",
+      "note": "Checked against a transcript/republication, not the original broadcaster or publisher."
     },
     {
       "text": "Learn from every mistake.",
       "source": "Harvard commencement address, 2013-05-30",
       "url": "https://www.themarginalian.org/2013/06/04/oprah-winfrey-harvard-2013-commencement/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.themarginalian.org/2013/06/04/oprah-winfrey-harvard-2013-commencement/",
+      "note": "Fragment: '...here's the key: Learn from every mistake.' Checked against a transcript/republication, not the original broadcaster or publisher."
     },
     {
       "text": "And then, figure out what is the next right move.",
       "source": "Harvard commencement address, 2013-05-30",
       "url": "https://www.themarginalian.org/2013/06/04/oprah-winfrey-harvard-2013-commencement/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.themarginalian.org/2013/06/04/oprah-winfrey-harvard-2013-commencement/",
+      "note": "Checked against a transcript/republication, not the original broadcaster or publisher."
     },
     {
       "text": "The key to life is to develop an internal moral, emotional GPS that can tell you which way to go.",
       "source": "Harvard commencement address, 2013-05-30",
       "url": "https://www.themarginalian.org/2013/06/04/oprah-winfrey-harvard-2013-commencement/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.themarginalian.org/2013/06/04/oprah-winfrey-harvard-2013-commencement/",
+      "note": "Checked against a transcript/republication, not the original broadcaster or publisher."
     },
     {
       "text": "To fulfill the highest, most truthful expression of yourself as a human being.",
       "source": "Harvard commencement address, 2013-05-30",
       "url": "https://www.themarginalian.org/2013/06/04/oprah-winfrey-harvard-2013-commencement/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.themarginalian.org/2013/06/04/oprah-winfrey-harvard-2013-commencement/",
+      "note": "Checked against a transcript/republication, not the original broadcaster or publisher."
     },
     {
       "text": "You wanna max out your humanity by using your energy to lift yourself up, your family, and the people around you.",
       "source": "Harvard commencement address, 2013-05-30",
       "url": "https://www.themarginalian.org/2013/06/04/oprah-winfrey-harvard-2013-commencement/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.themarginalian.org/2013/06/04/oprah-winfrey-harvard-2013-commencement/",
+      "note": "Checked against a transcript/republication, not the original broadcaster or publisher."
     },
     {
       "text": "When you do that, let me tell you what I know for sure: that's when your story gets really good.",
       "source": "Harvard commencement address, 2013-05-30",
       "url": "https://www.thecrimson.com/article/2013/5/31/oprah-commencement-2013-speech/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.thecrimson.com/article/2013/5/31/oprah-commencement-2013-speech/",
+      "note": ""
     },
     {
       "text": "Trust your heart, and success will come to you.",
-      "source": "Interview with Piers Morgan, 2011-01-17",
+      "source": "OWN / The Oprah Winfrey Show (per Wikiquote, no episode given)",
       "url": "https://en.wikiquote.org/wiki/Oprah_Winfrey",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://en.wikiquote.org/wiki/Oprah_Winfrey",
+      "note": "Wikiquote lists this under 'OWN Network on Oprah Winfrey Show', not the Piers Morgan interview; no transcript found. Aggregator-only. Aggregator-only: wording appears on en.wikiquote.org (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "Turn your wounds into wisdom.",
-      "source": "Interview with Piers Morgan, 2011-01-17",
+      "source": "Oprah's SuperSoul Conversations podcast, 'Oprah Winfrey: Broken Open'",
       "url": "https://en.wikiquote.org/wiki/Oprah_Winfrey",
-      "aggregator": true
+      "aggregator": true,
+      "verified": true,
+      "checked_url": "https://podcasts.happyscribe.com/oprah-s-supersoul-conversations/oprah-winfrey-broken-open",
+      "primary_source": "https://podcasts.happyscribe.com/oprah-s-supersoul-conversations/oprah-winfrey-broken-open",
+      "note": "Wikiquote files this under 'OWN Network on Oprah Winfrey Show', not Piers Morgan. Found in her own words in the SuperSoul episode transcript: 'This is what I mean when I say turn your wounds into wisdom'. Checked against a transcript/republication, not the original broadcaster or publisher."
     },
     {
       "text": "I know where my lane is, and I know how to stay in my lane.",
       "source": "Interview with Piers Morgan, 2011-01-17",
       "url": "https://en.wikiquote.org/wiki/Oprah_Winfrey",
-      "aggregator": true
+      "aggregator": true,
+      "verified": true,
+      "checked_url": "https://transcripts.cnn.com/show/pmt/date/2011-01-17/segment/01",
+      "primary_source": "https://transcripts.cnn.com/show/pmt/date/2011-01-17/segment/01",
+      "note": "Checked against a transcript/republication, not the original broadcaster or publisher."
     },
     {
       "text": "You are your possibilities.",
       "source": "O Magazine, January 2007",
       "url": "https://en.wikiquote.org/wiki/Oprah_Winfrey",
-      "aggregator": true
+      "aggregator": true,
+      "verified": true,
+      "checked_url": "https://www.oprah.com/entertainment/building-a-dream/8",
+      "primary_source": "https://www.oprah.com/entertainment/building-a-dream/8",
+      "note": "From her 'Building a Dream' article (O Magazine, January 2007) on oprah.com: '...you are not your circumstances. You are your possibilities.'"
     },
     {
       "text": "Trust that the Universe has a bigger, wider, deeper dream for you than you could ever imagine for yourself.",
       "source": "The Path Made Clear (2019)",
       "url": "https://en.wikiquote.org/wiki/Oprah_Winfrey",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://en.wikiquote.org/wiki/Oprah_Winfrey",
+      "note": "Aggregator-only: wording appears on en.wikiquote.org (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "When you pay attention to what feeds your energy, you move in the direction of the life for which you were intended.",
       "source": "The Path Made Clear (2019)",
       "url": "https://en.wikiquote.org/wiki/Oprah_Winfrey",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://en.wikiquote.org/wiki/Oprah_Winfrey",
+      "note": "Aggregator-only: wording appears on en.wikiquote.org (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "If you have faith, even if it's as little as a mustard seed, you can move mountains.",
       "source": "The Path Made Clear (2019)",
       "url": "https://en.wikiquote.org/wiki/Oprah_Winfrey",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://en.wikiquote.org/wiki/Oprah_Winfrey",
+      "note": "Aggregator-only: wording appears on en.wikiquote.org (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "What I know for sure is you become what you believe.",
       "source": "The Path Made Clear (2019)",
       "url": "https://en.wikiquote.org/wiki/Oprah_Winfrey",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://en.wikiquote.org/wiki/Oprah_Winfrey",
+      "note": "Aggregator-only: wording appears on en.wikiquote.org (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "Nourish what makes you feel confident, connected, contented.",
       "source": "The Path Made Clear (2019)",
       "url": "https://en.wikiquote.org/wiki/Oprah_Winfrey",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://en.wikiquote.org/wiki/Oprah_Winfrey",
+      "note": "Aggregator-only: wording appears on en.wikiquote.org (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "Opportunity will rise to meet you.",
       "source": "The Path Made Clear (2019)",
       "url": "https://en.wikiquote.org/wiki/Oprah_Winfrey",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://en.wikiquote.org/wiki/Oprah_Winfrey",
+      "note": "Aggregator-only: wording appears on en.wikiquote.org (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "Small steps lead to big accomplishments.",
-      "source": "Colorado College commencement speech, 2019-05-20",
+      "source": "Colorado College commencement address, 2019-05-19",
       "url": "https://en.wikiquote.org/wiki/Oprah_Winfrey",
-      "aggregator": true
+      "aggregator": true,
+      "verified": true,
+      "checked_url": "https://singjupost.com/oprah-winfreys-commencement-address-at-colorado-college-full-transcript/",
+      "primary_source": "https://singjupost.com/oprah-winfreys-commencement-address-at-colorado-college-full-transcript/",
+      "note": "Checked against a transcript/republication, not the original broadcaster or publisher."
     },
     {
       "text": "Everything is always working out for you.",
-      "source": "Colorado College commencement speech, 2019-05-20",
+      "source": "Colorado College commencement address, 2019-05-19",
       "url": "https://en.wikiquote.org/wiki/Oprah_Winfrey",
-      "aggregator": true
+      "aggregator": true,
+      "verified": true,
+      "checked_url": "https://singjupost.com/oprah-winfreys-commencement-address-at-colorado-college-full-transcript/",
+      "primary_source": "https://singjupost.com/oprah-winfreys-commencement-address-at-colorado-college-full-transcript/",
+      "note": "Fragment: 'Why? Because everything is always working out for you.' She credits the saying to LinkedIn's Jeff Weiner (per Wikiquote/Fast Company). Checked against a transcript/republication, not the original broadcaster or publisher."
     },
     {
       "text": "I won't say goodbye, I'll just say until we meet again.",
       "source": "The Oprah Winfrey Show finale, 2011-05-25",
       "url": "https://en.wikiquote.org/wiki/Oprah_Winfrey",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://en.wikiquote.org/wiki/Oprah_Winfrey",
+      "note": "Aggregator-only: wording appears on en.wikiquote.org (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "Let us choose truth, let us choose honor, and let us choose joy!",
       "source": "Democratic National Convention speech, 2024-08-21",
       "url": "https://en.wikiquote.org/wiki/Oprah_Winfrey",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://en.wikiquote.org/wiki/Oprah_Winfrey",
+      "note": "Aggregator-only: wording appears on en.wikiquote.org (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "Surround yourself only with people who are going to take you higher.",
       "source": "attributed, no original source given",
       "url": "https://www.goodreads.com/author/quotes/3518.Oprah_Winfrey",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.goodreads.com/author/quotes/3518.Oprah_Winfrey",
+      "note": "Aggregator-only: wording appears on www.goodreads.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "You get in life what you have the courage to ask for.",
       "source": "attributed, no original source given",
       "url": "https://www.goodreads.com/author/quotes/3518.Oprah_Winfrey",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.goodreads.com/author/quotes/3518.Oprah_Winfrey",
+      "note": "Aggregator-only: wording appears on www.goodreads.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
-      "text": "Challenges are gifts that force us to search for a new center of gravity.",
-      "source": "attributed, no original source given",
+      "text": "Challenges provide opportunities that force us to search for a new center of gravity.",
+      "was": "Challenges are gifts that force us to search for a new center of gravity.",
+      "source": "Oprah's SuperSoul Conversations podcast, 'Oprah Winfrey: Grace and Gratitude'",
       "url": "https://www.goodreads.com/author/quotes/3518.Oprah_Winfrey",
-      "aggregator": true
+      "aggregator": true,
+      "verified": true,
+      "checked_url": "https://podcasts.happyscribe.com/oprah-s-supersoul-conversations/oprah-winfrey-grace-and-gratitude",
+      "primary_source": "https://podcasts.happyscribe.com/oprah-s-supersoul-conversations/oprah-winfrey-grace-and-gratitude",
+      "note": "Goodreads wording ('Challenges are gifts that...') not found in any primary source; her own spoken wording in the SuperSoul episode transcript is 'Challenges provide opportunities that force us to search for a new center of gravity'. Checked against a transcript/republication, not the original broadcaster or publisher."
     },
     {
       "text": "Breathe. Let go. And remind yourself that this very moment is the only one you know you have for sure.",
       "source": "attributed, no original source given",
       "url": "https://www.goodreads.com/author/quotes/3518.Oprah_Winfrey",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.goodreads.com/author/quotes/3518.Oprah_Winfrey",
+      "note": "Aggregator-only: wording appears on www.goodreads.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "The more you praise and celebrate your life, the more there is in life to celebrate.",
       "source": "attributed, no original source given",
       "url": "https://www.goodreads.com/author/quotes/3518.Oprah_Winfrey",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.goodreads.com/author/quotes/3518.Oprah_Winfrey",
+      "note": "Aggregator-only: wording appears on www.goodreads.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "Cheers to a new year and another chance for us to get it right.",
       "source": "attributed, no original source given",
       "url": "https://www.goodreads.com/author/quotes/3518.Oprah_Winfrey",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.goodreads.com/author/quotes/3518.Oprah_Winfrey",
+      "note": "Aggregator-only: wording appears on www.goodreads.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "The biggest adventure you can ever take is to live the life of your dreams.",
       "source": "attributed, no original source given",
       "url": "https://www.goodreads.com/author/quotes/3518.Oprah_Winfrey",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.goodreads.com/author/quotes/3518.Oprah_Winfrey",
+      "note": "Aggregator-only: wording appears on www.goodreads.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "Think like a queen.",
       "source": "attributed, no original source given",
       "url": "https://www.goodreads.com/author/quotes/3518.Oprah_Winfrey",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.goodreads.com/author/quotes/3518.Oprah_Winfrey",
+      "note": "Aggregator-only: wording appears on www.goodreads.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
+    },
+    {
+      "text": "One of my favorite questions to ask on Super Soul is what is the lesson that took you the longest to learn?",
+      "source": "Oprah's SuperSoul Conversations podcast, 'Oprah Winfrey: Broken Open' (host introduction, 00:00:25)",
+      "url": "https://podcasts.happyscribe.com/oprah-s-supersoul-conversations/oprah-winfrey-broken-open",
+      "verified": true,
+      "checked_url": "https://podcasts.happyscribe.com/oprah-s-supersoul-conversations/oprah-winfrey-broken-open",
+      "note": "Matched verbatim in the episode transcript (live WebFetch and cached raw HTML, 2026-10-23). The transcript is unlabelled machine transcription; this is Oprah's solo host introduction (she names herself at 00:00:01 and speaks alone until the first clip)."
+    },
+    {
+      "text": "You have to pay attention to your life, because it is speaking to you all the time.",
+      "source": "Oprah Winfrey, Colorado College commencement address, 2019 (Singju Post transcript)",
+      "url": "https://singjupost.com/oprah-winfreys-commencement-address-at-colorado-college-full-transcript/",
+      "verified": true,
+      "checked_url": "https://singjupost.com/oprah-winfreys-commencement-address-at-colorado-college-full-transcript/",
+      "note": "Matched verbatim in the transcript (live WebFetch and cached raw HTML, 2026-10-23). Transcript site, not the college's own publication."
+    },
+    {
+      "text": "You need to make your bed every day.",
+      "source": "Oprah Winfrey, Colorado College commencement address, 2019 (Singju Post transcript)",
+      "url": "https://singjupost.com/oprah-winfreys-commencement-address-at-colorado-college-full-transcript/",
+      "verified": true,
+      "checked_url": "https://singjupost.com/oprah-winfreys-commencement-address-at-colorado-college-full-transcript/",
+      "note": "Matched verbatim in the transcript (live WebFetch and cached raw HTML, 2026-10-23), between 'You need to keep your commitments.' and 'Because when you do that it makes the whole house look better.' Transcript site, not the college's own publication."
     }
-  ],
-  "_verification": {
-    "method": "WebFetch/WebSearch extraction on 2026-10-23 (tool output, not raw page text); wording not character-checked against the original page",
-    "verified": "2026-10-23",
-    "expires": "never for listed source/date; wording re-check required before use of any line",
-    "aggregator_only": 22,
-    "total": 36
-  }
+  ]
 }

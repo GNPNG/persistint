@@ -5,7 +5,7 @@ extends "res://scripts/florida/clickable.gd"
 ## batch that took eats one (CloneLab), and the tanks restock the batch later.
 ## Every batch of an original shares one sprite; the designation reads the original's name
 ## through Cast ("Epstein clone, batch 7"). The spoken part of a bark is one of the original's
-## own lines from data/quotes/<file>.json when that file exists; otherwise the groan itself.
+## own verified lines from data/quotes/<file>.json when that file exists; otherwise the groan itself.
 
 const ForbiddenKnowledge := preload("res://scripts/ruins/forbidden_knowledge.gd")
 
@@ -44,16 +44,25 @@ func designation() -> String:
 
 ## One of the original's own lines (data/quotes/<file>.json), or "" if there is none.
 func quote() -> String:
-	var file: String = data().get("originals", {}).get(original, {}).get("quotes", "")
+	var pool := quote_pool(original)
+	return "" if pool.is_empty() else String(pool.pick_random())
+
+
+## Every line a clone of `orig` may speak: the quotes in its data/quotes/<file>.json marked
+## verified=true (checked verbatim against a primary source; tests/test_quotes_vv.gd) and not
+## marked excluded_from_game.
+static func quote_pool(orig: String) -> Array:
+	var file: String = data().get("originals", {}).get(orig, {}).get("quotes", "")
 	var path := "res://data/quotes/%s.json" % file
 	if file == "" or not FileAccess.file_exists(path):
-		return ""
+		return []
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
-	var quotes: Array = parsed.get("quotes", []) if parsed is Dictionary else []
-	if quotes.is_empty():
-		return ""
-	var q: Variant = quotes.pick_random()
-	return String(q.get("text", "")) if q is Dictionary else String(q)
+	var pool: Array = []
+	for q: Variant in (parsed.get("quotes", []) if parsed is Dictionary else []):
+		if q is Dictionary and q.get("verified", false) == true and not q.get("excluded_from_game", false) \
+				and String(q.get("text", "")) != "":
+			pool.append(String(q["text"]))
+	return pool
 
 
 ## A random point inside the wander rect; where the next shamble goes.
