@@ -40,7 +40,7 @@ func _build() -> void:
 		make.disabled = not Florida.can_craft(id)
 		make.pressed.connect(func() -> void: Florida.craft(id); _build())
 		row.add_child(make)
-		if Florida.count(id) > 0:
+		if Florida.count(id) > 0 and recipe.has("wear"):
 			var wear := Button.new()
 			wear.text = "Wear (%d)" % Florida.count(id)
 			wear.pressed.connect(func() -> void: Florida.wear(id))

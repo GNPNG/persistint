@@ -5,6 +5,7 @@ extends "res://scripts/florida/clickable.gd"
 
 @export var kind := "crab"
 @export var wander := Rect2(0, 0, 100, 60)  # global rect it drifts inside
+@export var nickname := ""  # one of the kind's "names" in florida.json
 @export var sprite_texture := ""
 
 @onready var bubble: Label = $BarkBubble
@@ -48,7 +49,7 @@ func surprise() -> Dictionary:
 	var lines: Array = s.get("lines", [])
 	if not lines.is_empty():
 		var text: String = lines.pick_random()
-		bubble.text = text
+		bubble.text = "%s: %s" % [nickname, text] if nickname != "" else text
 		bubble.show()
 		Voice.speak(text, float(Florida.data()["critters"][kind].get("pitch", 1.0)), kind)
 		get_tree().create_timer(3.0).timeout.connect(bubble.hide)
