@@ -46,10 +46,10 @@ func _build_hud() -> void:
 	add_child(layer)
 	_hud_label = Label.new()
 	_hud_label.position = Vector2(8, 4)
-	_hud_label.add_theme_font_size_override("font_size", 10)
+	_hud_label.add_theme_font_size_override("font_size", 9)
 	_hud_label.add_theme_color_override("font_color", Color(0.35, 0.22, 0.35))
 	_hud_label.add_theme_color_override("font_outline_color", Color(1, 1, 1, 0.9))
-	_hud_label.add_theme_constant_override("outline_size", 3)
+	_hud_label.add_theme_constant_override("outline_size", 2)
 	layer.add_child(_hud_label)
 	_update_hud()
 
