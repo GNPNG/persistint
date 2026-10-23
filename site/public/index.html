@@ -7,13 +7,14 @@
 <meta name="description" content="PERSISTINT is a free companion game to Persistint, a novel by Brett Whitty, coming soon from GNPNG, an independent Canadian press. A small 2D game made in Godot 4 that moves between three worlds: the tropical Florida Keys, the Cruise and Little St. Piere Island.">
 <meta name="theme-color" content="#fdf6e3">
 <meta name="color-scheme" content="light">
-<!-- Host-relative URLs on purpose: the public host is not confirmed yet and lives only in
-     ../site.config.json (site_host). The deploy step makes og:image, twitter:image, og:url and
-     the canonical link absolute from that value (sops/templates/promo-site-plan.md, section 6). -->
+<!-- Social-card URLs (og:image, twitter:image, og:url, canonical) are absolute and are
+     rewritten from ../site.config.json (site_host) by tools/deploy_site.sh on every deploy;
+     edit the host there, not here. -->
 <meta property="og:title" content="PERSISTINT">
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://persistint.gnpng.org/">
 <meta property="og:site_name" content="PERSISTINT">
-<meta property="og:image" content="/og.jpg">
+<meta property="og:image" content="https://persistint.gnpng.org/og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="GNPNG x PERSISTINT: An Adventure in Paradise. Five illustrated panels: a beach with dolphins and a mermaid, a striped temple with a gold dome, a smiling wrecked cruise ship, a candlelit bunker, and a lab with pink tanks and polar bear cubs.">
@@ -21,8 +22,9 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="PERSISTINT">
 <meta name="twitter:description" content="a lovely little island. everyone contributes. everyone. A free companion game to the novel Persistint by Brett Whitty, coming soon from GNPNG.">
-<meta name="twitter:image" content="/twitter.jpg">
+<meta name="twitter:image" content="https://persistint.gnpng.org/twitter.jpg">
 <meta name="twitter:image:alt" content="GNPNG x PERSISTINT: An Adventure in Paradise, five illustrated panels from the game's worlds.">
+<link rel="canonical" href="https://persistint.gnpng.org/">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
