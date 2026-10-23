@@ -1,0 +1,61 @@
+{
+  "_readme": "Surfaces for tests/fixtures/fake_gemini.html. {fixture} is replaced with its file:// URL by the smoke test. The first submit candidate is deliberately wrong so the fallback list is exercised.",
+  "kinds": { "image": "fake_image", "video": "fake_video", "music": "fake_music" },
+  "surfaces": {
+    "fake_image": {
+      "kind": "image", "url": "{fixture}", "aspectInPrompt": true, "promptSuffix": "{aspect} aspect ratio.",
+      "promptPrefix": "Generate an image:", "resultMinSize": 256, "capture": ["download", "src"],
+      "timeouts": { "stepMs": 5000, "generateMs": 30000, "downloadMs": 15000 },
+      "steps": {
+        "open": [{ "action": "click", "optional": true, "timeoutMs": 1000, "selectors": ["::-p-aria(No thanks)"] }],
+        "mode": [
+          { "action": "click", "selectors": ["button[data-test-id='toolbox-trigger']", "::-p-aria(Tools)"] },
+          { "action": "click", "selectors": ["::-p-text(Create images)"] }
+        ],
+        "input": [".ql-editor[contenteditable='true']"],
+        "submit": [{ "action": "click", "selectors": ["::-p-aria(Launch rocket)", "::-p-aria(Send message)"] }],
+        "busy": ["::-p-aria(Stop response)"],
+        "result": ["model-response img"],
+        "download": [
+          { "action": "hover", "target": "result", "afterMs": 200 },
+          { "action": "click", "selectors": ["::-p-aria(Download full size image)"] }
+        ]
+      }
+    },
+    "fake_video": {
+      "kind": "video", "url": "{fixture}", "aspectInPrompt": true, "promptSuffix": "{aspect} aspect ratio.",
+      "capture": ["download"],
+      "timeouts": { "stepMs": 5000, "generateMs": 30000, "downloadMs": 15000 },
+      "steps": {
+        "mode": [
+          { "action": "click", "selectors": ["::-p-aria(Tools)"] },
+          { "action": "click", "selectors": ["::-p-text(Create video)"] }
+        ],
+        "options": [{ "action": "click", "optional": true, "timeoutMs": 1000, "selectors": ["::-p-aria(Aspect ratio)"] }],
+        "input": ["rich-textarea [contenteditable='true']", "::-p-aria(Enter a prompt here)"],
+        "submit": [{ "action": "click", "selectors": ["::-p-aria(Send message)"] }],
+        "busy": ["::-p-aria(Stop response)"],
+        "result": ["model-response video"],
+        "download": [
+          { "action": "hover", "target": "result", "afterMs": 200 },
+          { "action": "click", "selectors": ["::-p-aria(Share)"], "afterMs": 200 },
+          { "action": "click", "selectors": ["::-p-aria(Download video)"] }
+        ]
+      }
+    },
+    "fake_music": {
+      "kind": "music", "url": "{fixture}", "capture": ["src"],
+      "timeouts": { "stepMs": 5000, "generateMs": 30000 },
+      "steps": {
+        "mode": [
+          { "action": "click", "selectors": ["::-p-aria(Tools)"] },
+          { "action": "click", "selectors": ["::-p-text(Create music)"] }
+        ],
+        "input": [".ql-editor"],
+        "submit": [{ "action": "click", "selectors": ["::-p-aria(Send message)"] }],
+        "busy": ["::-p-aria(Stop response)"],
+        "result": ["model-response audio"]
+      }
+    }
+  }
+}
