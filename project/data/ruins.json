@@ -1,0 +1,14 @@
+{
+	"rooms": {
+		"wreck": { "scene": "res://scenes/ruins/ruins_wreck.tscn", "title": "" },
+		"corridor": { "scene": "res://scenes/ruins/ruins_corridor.tscn", "title": "" },
+		"core": { "scene": "res://scenes/ruins/ruins_core.tscn", "title": "" }
+	},
+	"knowledge": [
+		{ "id": "fk_wreck_1", "room": "wreck", "title": "", "text": "" },
+		{ "id": "fk_wreck_2", "room": "wreck", "title": "", "text": "" },
+		{ "id": "fk_corridor_1", "room": "corridor", "title": "", "text": "" },
+		{ "id": "fk_corridor_2", "room": "corridor", "title": "", "text": "" },
+		{ "id": "fk_core_1", "room": "core", "title": "", "text": "" }
+	]
+}
