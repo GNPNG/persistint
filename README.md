@@ -27,7 +27,7 @@ the lesson.
 | World | Framing | What it is like |
 |---|---|---|
 | **The tropical Florida Keys** | Innocent play | A Toca World / Animal Crossing sandbox with gardening, crafting, dolphins, friendly crabs and seagulls, aquarium-show mermaids and a pony stable. No scoring, and nothing can be done wrong. |
-| **The Cruise** (flashbacks) | Judged performance | A feminist-themed celebrity cruise before the wreck. WarioWare-style mini-games hosted by real celebrities, where passengers are made over, judged and "empowered". |
+| **The Cruise** (flashbacks and a later chapter) | Judged performance | A feminist-themed celebrity cruise before the wreck. WarioWare-style mini-games hosted by real celebrities, where passengers are made over, judged and "empowered". |
 | **Little St. Piere Island** | Ritualized control | Long after the wreck, the ship and an old colony bunker are sacred ruins. A Covenant of Mothers and Priestesses runs daily life by the 28-day Calendar of Blood, and everyone contributes. |
 
 The same paper-doll dress-up is kind play in tropical Florida, a judged makeover on the cruise and part of
@@ -71,6 +71,10 @@ the headless tests in `project/tests/` exercise most of it.
 | Journal of Forbidden Knowledge (J): recovered pieces, named tactics, and the cruise flashbacks they unlock, each played from the journal | Playable |
 | Name It | Built; its moments are waiting on the author's answers, so none appear in the game yet |
 
+![GNPNG x PERSISTINT: underground lab](docs/images/web/gnpng-persistint-banner-underground-lab.png)
+
+*Under the ruins: the old colony bunker and its clone lab.*
+
 ### The tropical Florida Keys
 
 Reached through the village's exit to the tropical beach.
@@ -82,10 +86,6 @@ Reached through the village's exit to the tropical beach.
 | Aquarium with mermaids | Playable |
 | Pony stable: groom (a makeover for ponies), ride (faster click-to-walk, H to get off), and raise foals whose coat, mane and spots mix from both parents | Playable |
 | Art | Mostly placeholder |
-
-![GNPNG x PERSISTINT: underground lab](docs/images/web/gnpng-persistint-banner-underground-lab.png)
-
-*Under the ruins: the old colony bunker and its clone lab.*
 
 ### The Cruise
 
@@ -123,8 +123,7 @@ There is no keyboard-only or gamepad control yet.
 What is left before a public release (menus, audio settings, accessibility, a credits screen,
 final art, builds, licensing and more) is tracked in
 [docs/RELEASE_CHECKLIST.md](docs/RELEASE_CHECKLIST.md). The longer-term plan, including a
-social-influence "god-game" stretch goal, is in the author's design notes in `dev/` (encrypted,
-author's design notes).
+social-influence "god-game" stretch goal, is in `dev/` (encrypted, author's design notes).
 
 ## Getting started
 
@@ -195,7 +194,7 @@ godot --path project -s tools/screenshot_scenes.gd -- <out_dir> [prefix]
 | Path | Contents |
 |---|---|
 | `project/` | The Godot project: `scenes/`, `scripts/` (autoloads, maps, mini-games, ruins, Florida, chapters, UI), `data/` (game content as JSON), `dialogue/` (Dialogue Manager files), `assets/`, `audio/`, `themes/`, `tests/`, `tools/`, `addons/` |
-| `dev/` | Encrypted, author's design notes (design document, style bible, novel material); not readable in a public clone |
+| `dev/` | `dev/` (encrypted, author's design notes): design document, style bible, novel material |
 | `docs/` | The release checklist, the promo site plan, the author's banner images and the screenshots above |
 | `prompts/` | One generator prompt per asset (image, video, music) |
 | `tools/` | Python, shell and GDScript tools: island map building, sprite cutting, placeholder art, prompt checks, asset rendering and syncing, voice clips, quote checks |
