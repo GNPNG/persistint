@@ -1043,6 +1043,20 @@ def lab_cart():
     a.save("ruins_lab_cart")
 
 
+def runner():
+    """The pilgrims' rug runner (STYLE.md: #ffb3c8 with #ffe3a8 borders and pale hearts), worn."""
+    a = Art(200, 22)
+    a.rect(1, 1, 199, 21, "#ffe3a8", 2)
+    a.rect(3.5, 3.5, 196.5, 18.5, "#ffb3c8", 1, None)
+    for x in range(14, 196, 22):
+        a.heart(x, 10.4, 2.6, "#ffd0e0", None)
+    for x in range(4, 198, 4):  # fringe
+        a.line([(x, 0), (x, 1.2)], "#e0b24a", 0.4)
+        a.line([(x, 20.8), (x, 22)], "#e0b24a", 0.4)
+    a.ell(120, 5.5, 150, 16.5, "#ffc4d6", None)  # worn where everyone kneels
+    a.save("ruins_runner")
+
+
 def poster():
     """A wall poster: the cat in the lab coat with a thumbs-up, steps as pictures, no words."""
     a = Art(34, 44)
@@ -1149,7 +1163,7 @@ def ship():
         draw()
     pipes("ruins_pipes")
     pipes("ruins_pipes_striped", "#ff9a9a", 260)
-    for draw in (crates, barrel, papers, cables, plant, offering, bunting, porthole, life_ring, chair_tipped):
+    for draw in (crates, barrel, papers, cables, plant, offering, bunting, porthole, life_ring, chair_tipped, runner):
         draw()
 
 

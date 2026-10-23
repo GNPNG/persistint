@@ -15,6 +15,12 @@
 			"wall": "hull",
 			"props": [
 				{
+					"kind": "ruins_runner",
+					"x": 480,
+					"y": 440,
+					"place": "floor"
+				},
+				{
 					"kind": "ruins_gift_shop",
 					"x": 160,
 					"y": 268,
@@ -264,6 +270,12 @@
 			"wall": "core",
 			"props": [
 				{
+					"kind": "ruins_runner",
+					"x": 330,
+					"y": 372,
+					"place": "floor"
+				},
+				{
 					"kind": "ruins_server_rack",
 					"x": 190,
 					"y": 268,
@@ -364,6 +376,11 @@
 					"x": 840,
 					"y": 422,
 					"place": "floor"
+				},
+				{
+					"kind": "ruins_offering",
+					"x": 200,
+					"y": 330
 				}
 			]
 		},
