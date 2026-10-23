@@ -48,30 +48,22 @@ func _run() -> void:
 	_check(not list.any(func(f: Dictionary) -> bool: return f["entry_scene"].ends_with("interview.tscn")),
 		"the Interview stays the cruise chapter's own entry")
 
-	# Next Top Comic has a set: Silverman's setups are her own lines, the punchlines are signs.
-	var comic_data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/next_top_comic.json"))
-	var said: Array = JSON.parse_string(FileAccess.get_file_as_string("res://data/quotes/silverman.json"))["quotes"].map(func(q: Dictionary) -> String: return q["text"])
-	var signs: Array = JSON.parse_string(FileAccess.get_file_as_string("res://data/empowerment_lines.json"))["lines"].map(func(q: Dictionary) -> String: return q["text"])
-	var setups: Array = comic_data.get("setups", [])
-	_check(setups.size() >= 3, "Next Top Comic ships a set (%d setups)" % setups.size())
-	_check(setups.all(func(x: Dictionary) -> bool: return said.has(x["setup"])), "every setup is one of Silverman's own lines")
-	var signs_ok := true
-	for x: Dictionary in setups:
-		var pls: Array = x["punchlines"]
-		signs_ok = signs_ok and pls.size() >= 2 and pls.size() <= 8 and pls.all(func(pl: String) -> bool: return signs.has(pl))
-	_check(signs_ok, "every punchline is a verbatim sign, 2-8 per setup")
+	# Next Top Comic: the player picks a setup, then a punchline, from the shared pool until the setups run out.
 	var set_game: Control = load(COMIC).instantiate()
 	set_game.autostart = false
 	root.add_child(set_game)
 	await process_frame
+	_check(set_game.pool.size() > 0, "Next Top Comic loads a pool of jokes (%d)" % set_game.pool.size())
 	set_game.begin_set()
+	var n_setups: int = set_game.setups.size()
 	var beats := 0
 	while not set_game.set_done() and beats < 100:
-		_check(set_game.current_setup() != "" and set_game.has_punchline(0), "setup %d has a line and a punchline" % beats)
+		_check(set_game.has_setup(0) and set_game.has_punchline(0), "turn %d offers a setup and a punchline" % beats)
+		set_game.pick_setup(0)
 		set_game.pick(0)
-		set_game.next_setup()
+		set_game.next_turn()
 		beats += 1
-	_check(beats == setups.size() and set_game.picks.size() == beats, "the set plays every setup through")
+	_check(beats == n_setups and set_game.picks.size() == beats, "the set plays every setup through")
 	set_game.free()
 
 	# Locked until the pieces are found.

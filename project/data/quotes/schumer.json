@@ -1,0 +1,72 @@
+{
+  "_note": "Amy Schumer's own stand-up jokes from Growing (2019), setup and punchline kept as separate lines. Used by Next Top Comic's shared pool (data/next_top_comic.json 'sources').",
+  "_verification": {
+    "verified": 0,
+    "total": 0,
+    "note": "no 'quotes' in this file; see _jokes_verification"
+  },
+  "quotes": [],
+  "jokes": [
+    {
+      "setup": "Yeah, I did it.",
+      "punchline": "I'm amazing. I laid there, and… that's it.",
+      "source": "Growing (Netflix, 2019)",
+      "url": "https://www.fatherly.com/play/12-funniest-jokes-from-amy-schumers-new-netflix-special-growing",
+      "verified": true,
+      "checked_url": "https://scrapsfromtheloft.com/comedy/amy-schumer-growing-transcript/",
+      "primary_source": "https://scrapsfromtheloft.com/comedy/amy-schumer-growing-transcript/",
+      "note": "Listed on the Fatherly listicle in 'url'; corrected to the transcript's wording.",
+      "was": "Yeah, I did it. / I'm amazing. I laid there and… that's it."
+    },
+    {
+      "setup": "What are you having? Do you know what you're having?",
+      "punchline": "Hemorrhoids.",
+      "source": "Growing (Netflix, 2019)",
+      "url": "https://www.fatherly.com/play/12-funniest-jokes-from-amy-schumers-new-netflix-special-growing",
+      "verified": true,
+      "checked_url": "https://scrapsfromtheloft.com/comedy/amy-schumer-growing-transcript/",
+      "primary_source": "https://scrapsfromtheloft.com/comedy/amy-schumer-growing-transcript/",
+      "note": "Listed on the Fatherly listicle in 'url'; verbatim in the transcript (the listicle spells it 'Hemroids')."
+    },
+    {
+      "setup": "No, I haven't even wanted… wine. That's how I know this baby is not mine.",
+      "punchline": "This baby is a lie.",
+      "source": "Growing (Netflix, 2019)",
+      "url": "https://www.fatherly.com/play/12-funniest-jokes-from-amy-schumers-new-netflix-special-growing",
+      "verified": true,
+      "checked_url": "https://scrapsfromtheloft.com/comedy/amy-schumer-growing-transcript/",
+      "primary_source": "https://scrapsfromtheloft.com/comedy/amy-schumer-growing-transcript/",
+      "note": "Listed on the Fatherly listicle in 'url'; corrected to the transcript's wording.",
+      "was": "I haven't even wanted wine, that's how I know this baby's not mine. / This baby's a lie!"
+    },
+    {
+      "setup": "Marrying a chef, it's like a little on-the-nose for me.",
+      "punchline": "It's kind of like Snoop marrying weed.",
+      "source": "Growing (Netflix, 2019)",
+      "url": "https://www.fatherly.com/play/12-funniest-jokes-from-amy-schumers-new-netflix-special-growing",
+      "verified": true,
+      "checked_url": "https://scrapsfromtheloft.com/comedy/amy-schumer-growing-transcript/",
+      "primary_source": "https://scrapsfromtheloft.com/comedy/amy-schumer-growing-transcript/",
+      "note": "Listed on the Fatherly listicle in 'url'; corrected to the transcript's wording.",
+      "was": "Marrying a chef is a little on-the-nose for me. / It's like Snoop marrying weed."
+    },
+    {
+      "setup": "At that age, for men, the most embarrassing thing is unwanted erections, right?",
+      "punchline": "But then they grow up and show them to everyone.",
+      "source": "Growing (Netflix, 2019)",
+      "url": "https://www.fatherly.com/play/12-funniest-jokes-from-amy-schumers-new-netflix-special-growing",
+      "verified": true,
+      "checked_url": "https://scrapsfromtheloft.com/comedy/amy-schumer-growing-transcript/",
+      "primary_source": "https://scrapsfromtheloft.com/comedy/amy-schumer-growing-transcript/",
+      "note": "Listed on the Fatherly listicle in 'url'; corrected to the transcript's wording.",
+      "was": "At that age, for men, the most embarrassing thing is unwanted erections. / but then they grow up and show them to everyone."
+    }
+  ],
+  "_jokes_verification": {
+    "method": "Jokes from a stand-up special: the special is the primary source and a full transcript of it is the text checked. On 2026-10-23 each transcript page was downloaded as raw HTML and each joke's setup and punchline were string-matched against the page text, ignoring only quote-mark/dash/ellipsis typography and sentence-initial capitals; the setup/punchline split is ours. Wording was not checked against the special's audio. Lines found only on aggregators (quote wikis, listicles) or that the transcript does not carry verbatim are verified=false and stay out of the comic's pool.",
+    "verified": 5,
+    "total": 5,
+    "date": "2026-10-23",
+    "rule": "Only jokes with verified=true are in Next Top Comic's pool (tests/test_quotes_vv.gd)."
+  }
+}

@@ -3,7 +3,8 @@ extends SceneTree
 ## the verification fields, and every quote the game can speak is verified=true (checked verbatim
 ## against a primary source) and not excluded_from_game (Handmaid's Tale content: author rule).
 ## In-game uses: The Interview (Oprah's intro and prompts), the emcee's mini-game intros (Chelsea
-## Clinton), Next Top Comic's setups (Sarah Silverman), Hottest of the HOT's verdicts (Tyra Banks;
+## Clinton), Next Top Comic's joke pool (the "jokes" setup/punchline lines of each source comic in
+## next_top_comic.json "sources"; the author's own interjections/openers are not quotes), Hottest of the HOT's verdicts (Tyra Banks;
 ## a verdict may also be DESIGN.md's own wording), the clone children's spoken lines
 ## (ZombieChild.quote_pool), and any quote text appearing in dialogue/*.dialogue, data/*.json,
 ## scripts/**/*.gd or scenes/**/*.tscn.
@@ -73,13 +74,52 @@ func _run() -> void:
 	_check(emcee_lines.size() > 0 and _all_in(emcee_lines, usable.get(emcee.get("emcee", ""), {}), "emcee"),
 		"emcee: every intro line is a verified quote")
 
-	# Next Top Comic: Sarah Silverman speaks every setup.
+	# Next Top Comic: every joke line (setup and punchline) of each source comic carries the V&V
+	# fields, and the comic's pool holds only the verified ones.
 	var comic: Dictionary = _json("res://data/next_top_comic.json")
-	var setups: Array = []
-	for st: Dictionary in comic.get("setups", []):
-		setups.append(st.get("setup", ""))
-	_check(setups.size() > 0 and _all_in(setups, usable.get(comic.get("host", ""), {}), "comic"),
-		"comic: every Silverman setup is a verified quote")
+	var jokes_ok := true
+	var shown := 0
+	for id: String in comic.get("sources", []):
+		var jf: Dictionary = files.get(id, {})
+		var jokes: Array = jf.get("jokes", [])
+		var n_verified := 0
+		for j: Dictionary in jokes:
+			var ok: bool = j.get("verified") is bool and String(j.get("checked_url", "")).begins_with("https://") \
+				and String(j.get("url", "")).begins_with("https://") and j.has("note") \
+				and String(j.get("setup", "")) != "" and String(j.get("punchline", "")) != ""
+			if j.has("primary_source"):
+				ok = ok and String(j["primary_source"]).begins_with("https://")
+			if j.has("was"):
+				ok = ok and j.get("verified") == true
+				unverified.append([id, String(j["was"])])
+			if not ok:
+				print("  missing/invalid joke V&V fields: %s: %s" % [id, j.get("setup", "")])
+			jokes_ok = jokes_ok and ok
+			if j.get("verified") == true:
+				n_verified += 1
+			else:
+				unverified.append([id, String(j.get("setup", ""))])
+				unverified.append([id, String(j.get("punchline", ""))])
+		var jmeta: Dictionary = jf.get("_jokes_verification", {})
+		_check(jokes.size() > 0 and int(jmeta.get("total", -1)) == jokes.size() and int(jmeta.get("verified", -1)) == n_verified,
+			"comic: %s: _jokes_verification counts match the jokes" % id)
+		shown += n_verified
+	_check(jokes_ok, "comic: every source joke has verified, https checked_url/url, note; corrected jokes are verified")
+	var ComicGame: GDScript = load("res://scripts/minigames/next_top_comic.gd")
+	var game: Control = ComicGame.new()
+	game.autostart = false
+	root.add_child(game)
+	var pool_ok: bool = game.pool.size() == shown and shown > 0
+	for j: Dictionary in game.pool:
+		var src: Dictionary = files.get(j.get("by", ""), {})
+		var found := false
+		for k: Dictionary in src.get("jokes", []):
+			found = found or (k.get("verified") == true and k.get("setup") == j.get("setup") and k.get("punchline") == j.get("punchline"))
+		if not found:
+			print("  comic: pool line is not a verified joke: %s / %s" % [j.get("setup", ""), j.get("punchline", "")])
+		pool_ok = pool_ok and found
+	game.free()
+	_check(pool_ok, "comic: the pool is exactly the verified jokes of its source comics (%d)" % shown)
 
 	# Hottest of the HOT: Tyra Banks's verdicts are her verified quotes or DESIGN.md's own example wording.
 	var hot: Dictionary = _json("res://data/hottest_of_the_hot.json")
