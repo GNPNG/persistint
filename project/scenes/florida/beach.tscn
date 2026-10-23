@@ -33,6 +33,9 @@ position = Vector2(160, 300)
 [node name="spawn_from_aquarium" type="Marker2D" parent="."]
 position = Vector2(800, 300)
 
+[node name="spawn_from_stable" type="Marker2D" parent="."]
+position = Vector2(300, 300)
+
 [node name="Player" parent="." instance=ExtResource("3")]
 position = Vector2(480, 330)
 
@@ -47,6 +50,11 @@ position = Vector2(840, 250)
 target_scene = "res://scenes/florida/aquarium.tscn"
 target_spawn = "spawn_from_beach"
 exit_label = "To the Aquarium"
+
+[node name="StableDoor" parent="." instance=ExtResource("4")]
+position = Vector2(300, 250)
+target_scene = "res://scenes/florida/stable.tscn"
+target_spawn = "spawn_from_beach"
 
 [node name="VillageDoor" parent="." instance=ExtResource("4")]
 position = Vector2(480, 380)

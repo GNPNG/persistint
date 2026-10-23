@@ -16,6 +16,9 @@ const JOURNAL_SCRIPT := preload("res://scripts/ui/journal.gd")
 func _ready() -> void:
 	# Doors and NPCs are Area2Ds clicked through input_event, which needs picking on.
 	get_viewport().physics_object_picking = true
+	# Ponies stay in Florida: arriving anywhere else, the rider has already hopped down.
+	if not scene_file_path.contains("/florida/") and WorldState.get_flag("fl_riding", "") != "":
+		WorldState.set_flag("fl_riding", "")
 	_spawn_player()
 	_limit_camera()
 	_build_hud()

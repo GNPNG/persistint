@@ -95,5 +95,65 @@
 	"polar_bear_clone": {
 		"name": "Polar bear clone",
 		"short": "Cub"
+	},
+	"pony_butterscotch": {
+		"name": "Butterscotch",
+		"short": "Butterscotch"
+	},
+	"pony_waffles": {
+		"name": "Waffles",
+		"short": "Waffles"
+	},
+	"pony_daisy": {
+		"name": "Daisy",
+		"short": "Daisy"
+	},
+	"pony_pudding": {
+		"name": "Pudding",
+		"short": "Pudding"
+	},
+	"pony_noodle": {
+		"name": "Noodle",
+		"short": "Noodle"
+	},
+	"pony_sprinkles": {
+		"name": "Sprinkles",
+		"short": "Sprinkles"
+	},
+	"pony_toffee": {
+		"name": "Toffee",
+		"short": "Toffee"
+	},
+	"pony_jellybean": {
+		"name": "Jellybean",
+		"short": "Jellybean"
+	},
+	"pony_marigold": {
+		"name": "Marigold",
+		"short": "Marigold"
+	},
+	"pony_muffin": {
+		"name": "Muffin",
+		"short": "Muffin"
+	},
+	"pony_peaches": {
+		"name": "Peaches",
+		"short": "Peaches"
+	},
+	"pony_buttons": {
+		"name": "Buttons",
+		"short": "Buttons"
+	},
+	"pony_cricket": {
+		"name": "Cricket",
+		"short": "Cricket"
+	},
+	"pony_bean": {
+		"name": "Bean",
+		"short": "Bean"
+	},
+	"pony_dumpling": {
+		"name": "Dumpling",
+		"short": "Dumpling"
 	}
 }
