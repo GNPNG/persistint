@@ -201,7 +201,7 @@ Exact colours used by the generators and the game code:
 | Clone gowns | pink `#ffb3c8`, sky `#a8d8f0`, lilac `#c9b3f0`, butter `#ffe08a` |
 | Polar bear cub fur / muzzle / inner ear | `#fbfbff` / `#f0eef6` / `#ffc4d4` |
 | Kawaii gore | splat ramp `#ff9ebf` → `#e64061`, puddle `#e8547a` with a `#ffd0dc` heart outline, chunk `#ff8fa8`, sweat drop `#9fd8ff`, bone `#fff8ec` |
-| Ruins room slabs | pink `#ed9ebd`, cream `#e6d9b3`, sky `#8cbde6`, violet `#9e8cd1`, rust `#9e665c`, mint `#8cd1b3`, machine grey `#4d5466`, cub-basket pink `#f2bfd1` |
+| Ruins walls (tools/gen_ruins_art.py) | hull `#5f6e86`, service `#4d5868`, core `#43465c`, bunker `#55636b`, lab `#5e7f86`, archive `#6b6274`; ceiling void `#1b1f2b` |
 | Florida plants | hibiscus `#ff9ad0`, sea grape `#b89ae0`, key lime `#d8f07a`, bougainvillea `#e0408a`, plumeria `#fff1b8`, guava `#f4a6a0`, mango `#ffb347`, coconut `#b08a5a` |
 | HUD text / outline | plum `#593859` / white |
 | Ruins captions / outline | `#f2e6f2` / `#331f40` |

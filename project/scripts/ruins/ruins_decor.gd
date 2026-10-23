@@ -103,7 +103,7 @@ func _paint_tiles(r: Dictionary) -> void:
 			elif y == rows - 1:
 				cell = Vector2i(6, 1)  # the floor's front lip
 			else:
-				cell = Vector2i(floor_col, 1 if rng.randf() < 0.12 else 0)
+				cell = Vector2i(floor_col, 1 if rng.randf() < 0.08 else 0)
 			tiles.set_cell(Vector2i(x, y), 0, cell)
 	# the skirting's soft shadow along the first floor row
 	var shade := TileMapLayer.new()
@@ -171,12 +171,10 @@ static func sheet_frames(tex: Texture2D, frames: int, fps: float) -> SpriteFrame
 
 
 func _build_screen(r: Dictionary) -> void:
-	var screen := CanvasLayer.new()
-	screen.name = "RoomText"
-	add_child(screen)
 	# The vignette: its own CanvasLayer, added before the map's HUD so the HUD draws over it.
 	var shade := CanvasLayer.new()
 	shade.name = "Gloom"
+	shade.layer = 0  # over the room (canvas 0 draws first), under the HUD and room text (layer 1)
 	add_child(shade)
 	var vignette := TextureRect.new()
 	vignette.name = "Vignette"
@@ -186,6 +184,9 @@ func _build_screen(r: Dictionary) -> void:
 	vignette.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	vignette.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	shade.add_child(vignette)
+	var screen := CanvasLayer.new()
+	screen.name = "RoomText"
+	add_child(screen)
 	# Title card: shown on entering, then fades. Text sits on screen, not in the room: the
 	# camera shows only a slice of the room.
 	var title := Label.new()

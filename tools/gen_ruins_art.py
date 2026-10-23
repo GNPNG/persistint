@@ -154,9 +154,9 @@ def floor_plate(a, r, alt):
     for x, y in ((3, 3), (29, 3), (3, 29), (29, 29)):
         a.circ(x, y, 0.8, "#6a6d88", "#3d3f55", 0.3)
     a.line([(8, 16), (24, 16)], "#5d6079", 0.8)
-    if alt:  # a scuff, and one drip of candle wax
+    if alt:  # scuffs where the faithful kneel
         a.arc(6, 18, 18, 26, 200, 300, "#5d6079", 0.6)
-        a.ell(21, 9, 23.4, 10.4, "#d9cdbb", None)
+        a.arc(15, 6, 26, 13, 210, 320, "#5d6079", 0.5)
 
 
 def floor_concrete(a, r, alt):
@@ -191,9 +191,9 @@ def floor_carpet(a, r, alt):
         a.poly([(x, y - 2.4), (x + 2.4, y), (x, y + 2.4), (x - 2.4, y)], "#d6c9b2", None)
     for x, y in ((24, 8), (8, 24)):
         a.circ(x, y, 0.8, "#bcae97", None)
-    if alt:  # a stray index card
-        a.poly([(17, 14), (25, 13), (26, 18), (18, 19)], "#fff8ec", "#a8977e", 0.4)
-        a.line([(19, 15.6), (24, 15)], "#ff9ebf", 0.4)
+    if alt:  # a worn patch where a chair stood for decades
+        a.ell(10, 12, 22, 20, "#c2b39b", None)
+        a.ell(12, 13.5, 20, 18.5, "#c9bba4", None)
 
 
 def wall_tile(a, wid, part):

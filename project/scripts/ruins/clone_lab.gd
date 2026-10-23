@@ -11,6 +11,7 @@ const ForbiddenKnowledge := preload("res://scripts/ruins/forbidden_knowledge.gd"
 const ZombieScene := preload("res://scenes/ruins/zombie_child.tscn")
 const FLAG := "clones_eaten"
 const SFX_GAP := 0.35  # seconds between the pounce's sound effects
+const GORE_SCALE := 0.75  # gore_*.png are drawn at two texels per world pixel (gen_clone_children.py)
 
 var gore: Node2D
 
@@ -18,7 +19,7 @@ var gore: Node2D
 func _ready() -> void:
 	gore = Node2D.new()
 	gore.name = "Gore"
-	gore.z_index = 1
+	gore.z_index = 2  # flying bits over everyone; the puddle goes under (below)
 	add_child(gore)
 	if DisplayServer.get_name() != "headless":
 		_schedule()
@@ -87,14 +88,20 @@ func pounce(cub: Node2D, zombie: Node2D) -> String:
 	cub.stop_walking()
 	var hop := cub.create_tween()
 	hop.tween_property(cub, "global_position", spot, 0.3).set_trans(Tween.TRANS_QUAD)
-	hop.parallel().tween_property(cub.sprite, "position:y", -18.0, 0.15).set_ease(Tween.EASE_OUT)
-	hop.tween_property(cub.sprite, "position:y", 0.0, 0.15).set_ease(Tween.EASE_IN)
-	for i in 2:
-		hop.tween_property(cub.sprite, "scale", Vector2(1.7, 1.3), 0.1)
-		hop.tween_property(cub.sprite, "scale", Vector2(1.5, 1.5), 0.1)
+	var ground: float = cub.sprite.position.y
+	var size: Vector2 = cub.sprite.scale
+	hop.parallel().tween_property(cub.sprite, "position:y", ground - 18.0, 0.15).set_ease(Tween.EASE_OUT)
+	hop.tween_property(cub.sprite, "position:y", ground, 0.15).set_ease(Tween.EASE_IN)
+	for i in 2:  # chomp, chomp: a squash and the chomp frames
+		hop.tween_property(cub.sprite, "scale", size * Vector2(1.13, 0.87), 0.1)
+		hop.tween_property(cub.sprite, "scale", size, 0.1)
+	hop.tween_callback(func() -> void:
+		if cub.napping == false:
+			cub.set_frame("_smeared"))
 	zombie.get_eaten()
 	splatter(spot)
 	cub.set_frame("_smeared")
+	cub.sprite.play("chomp")
 	var noms: Array = cub.data().get("nom", [])
 	cub.say(noms.pick_random() if not noms.is_empty() else "")
 
@@ -134,10 +141,11 @@ func restock(info: Dictionary) -> Node2D:
 func splatter(spot: Vector2) -> void:
 	var puddle := Sprite2D.new()
 	puddle.texture = _tex("gore_puddle")
-	puddle.scale = Vector2(1.5, 1.5)
+	puddle.scale = Vector2(GORE_SCALE, GORE_SCALE)
 	puddle.name = "Puddle"
+	puddle.z_index = -8  # on the floor, under the characters
 	gore.add_child(puddle)
-	puddle.global_position = spot + Vector2(0, 10)
+	puddle.global_position = spot + Vector2(0, 14)
 	var fade := puddle.create_tween()
 	fade.tween_interval(float(settings().get("puddle_seconds", 8.0)))
 	fade.tween_property(puddle, "modulate:a", 0.0, 1.5)
@@ -153,7 +161,7 @@ func splatter(spot: Vector2) -> void:
 	for bit: String in ["gore_bone", "gore_chunk"]:
 		var b := Sprite2D.new()
 		b.texture = _tex(bit)
-		b.scale = Vector2(1.5, 1.5)
+		b.scale = Vector2(GORE_SCALE, GORE_SCALE)
 		gore.add_child(b)
 		b.global_position = spot
 		var dx := randf_range(-40.0, 40.0)
