@@ -18,7 +18,7 @@ propagates. You never command anyone.
 
 ## World (from the novel / canon poster)
 
-- **Little St. Piere Island** — the island world ("Isle of Galgrla" in-faith), built on the
+- **Little St. Piere Island** — the island world, built on the
   Ruins of "Utopia": a luxury cruise ship wreck + repurposed sci-fi colony infrastructure,
   treated as sacred architecture by a civilization that has repurposed but not understood it.
 - **The Temple** — Queen Mother icons (celebrity portraits as sacred icons), the Seal of the O
