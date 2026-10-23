@@ -33,6 +33,9 @@ const SHOTS := [
 	["florida_aquarium", "res://scenes/florida/aquarium.tscn", ""],
 	["beach_talk", "res://scenes/florida/beach.tscn", "near_npc"],
 	["chapter_end", "res://scenes/chapters/chapter_end.tscn", ""],
+	["next_top_comic", "res://scenes/minigames/next_top_comic.tscn", ""],
+	["hottest_of_the_hot", "res://scenes/minigames/hottest_of_the_hot.tscn", ""],
+	["flashback_card", "res://scenes/chapters/flashback_card.tscn", ""],
 ]
 
 
