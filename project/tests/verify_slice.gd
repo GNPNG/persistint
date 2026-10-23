@@ -109,6 +109,21 @@ func _run() -> void:
 	name_it.start("priestess_easy_girl")
 	_check(name_it._layer == null, "a beat with no author-set answer stays off")
 
+	# Wreck bridge: right control scores, wrong control costs hull, result lands in WorldState.
+	ws.reset()
+	var bridge: Control = load("res://scenes/minigames/wreck_bridge.tscn").instantiate()
+	root.add_child(bridge)
+	var hull_start: int = bridge.hull
+	bridge._on_control(bridge.current["control"])
+	_check(bridge.score == 1, "wreck bridge: matching control scores")
+	bridge._on_control("__wrong__")
+	_check(bridge.hull == hull_start - 1, "wreck bridge: wrong control costs hull")
+	while bridge.running:
+		bridge._on_control(bridge.current["control"])
+	_check(ws.get_flag("wreck_bridge_done") == true and ws.get_flag("wreck_bridge_score") == bridge.score,
+		"wreck bridge result written to WorldState")
+	bridge.queue_free()
+
 	if had_save:
 		var f := FileAccess.open(ws.SAVE_PATH, FileAccess.WRITE)
 		f.store_string(backup)
