@@ -194,7 +194,7 @@ Also check by reading:
 
 ## 9. Reference implementation in persistint
 
-Repo: `/home/brett/persistint-game` (state at `93870ee`). Godot project under `project/`.
+Repo: `{repo_root}` (state at `93870ee`). Godot project under `project/`.
 
 - **Design doc:** `docs/DESIGN.md`. Names the source "Story Structure" for the celebrity cast (`docs/DESIGN.md:62`, `:126-127`). "Next Top Comic" (`docs/DESIGN.md:69-71`) states no win condition; the author's ruling is that it has none.
 - **Sources:** source index: a scratchpad `sources.md` kept outside the repo (private sources); only Story Structure is cited in the repo (`docs/DESIGN.md:62`, `:127`).
