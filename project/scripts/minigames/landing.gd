@@ -108,7 +108,7 @@ func _next_command() -> void:
 	time_left = float(data.get("seconds_per_command", 6.0))
 	_timer_bar.max_value = time_left
 	_shout.text = "%s: %s" % [data.get("first_mate", ""), current["text"]]
-	Voice.speak(current["text"], randf_range(1.1, 1.4))
+	Voice.speak(current["text"], 1.0, data.get("first_mate", ""))
 	running = true
 	_update_status()
 
@@ -128,7 +128,6 @@ func press(control: String) -> void:
 		return
 	if station == current.get("station", "") and control == current.get("control", ""):
 		score += 1
-		Voice.speak("ok", 1.3)
 		_next_command()
 
 
@@ -136,7 +135,6 @@ func _system_fails() -> void:
 	var where: String = current.get("station", "")
 	if not failed.has(where):
 		failed.append(where)
-	Voice.speak("no", 0.7)
 	go_to(station)
 	_next_command()
 

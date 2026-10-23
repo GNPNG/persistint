@@ -70,7 +70,7 @@ func _introduce() -> void:
 	var lines: Array = intros.get(GAME_ID, intros.get("_default", []))
 	_say.text = "%s: %s" % [emcee_name(), " ".join(lines)] if not lines.is_empty() else emcee_name()
 	for line: String in lines:
-		Voice.speak(line, 1.1)
+		Voice.speak(line, 1.0, emcee_name())
 
 
 func choose(slot: String, part_id: String) -> void:
@@ -81,7 +81,6 @@ func _cycle(slot: String) -> void:
 	var items: Array = options.get(slot, [])
 	var idx := wrapi(items.find(doll.outfit.get(slot, "")) + 1, 0, items.size())
 	choose(slot, items[idx])
-	Voice.speak("ooh", randf_range(1.1, 1.5))
 
 
 ## The passenger walks; Tyra Banks judges. Returns the verdict.
@@ -89,7 +88,7 @@ func walk() -> String:
 	var verdicts: Array = data.get("verdicts", [])
 	var verdict: String = verdicts.pick_random() if not verdicts.is_empty() else ""
 	_say.text = "%s: %s" % [host_name(), verdict]
-	Voice.speak(verdict, 1.0)
+	Voice.speak(verdict, 1.0, host_name())
 	WorldState.set_flag("hottest_done", true)
 	WorldState.set_flag("hottest_outfit", doll.outfit.duplicate())
 	NameIt.start("hottest_verdict")

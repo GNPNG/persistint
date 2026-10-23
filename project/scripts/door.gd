@@ -22,7 +22,6 @@ func _on_body_entered(body: Node2D) -> void:
 	if locked:
 		label.text = locked_bark
 		label.show()
-		Voice.speak("sealed", 0.6)
 		return
 	SceneRouter.goto_map(target_scene, target_spawn)
 

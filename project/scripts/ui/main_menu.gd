@@ -7,7 +7,6 @@ const FIRST_MAP := "res://scenes/maps/village.tscn"
 func _ready() -> void:
 	$Center/VBox/BeginButton.pressed.connect(_on_begin)
 	$Center/VBox/NewButton.pressed.connect(_on_new_game)
-	Voice.speak("persistint", 1.1)
 
 
 func _on_begin() -> void:

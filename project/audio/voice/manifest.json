@@ -1,0 +1,170 @@
+[
+  {
+    "speaker": "Chelsea Clinton",
+    "text": "So, if anyone ever tells you no, if anyone says your voice isn't important or your dreams are too big, remember these women.",
+    "key": "8f645b977c11153364846f78bba60ca5",
+    "clip": "res://audio/voice/8f645b977c11153364846f78bba60ca5.ogg"
+  },
+  {
+    "speaker": "Chelsea Clinton",
+    "text": "They persisted and so should you.",
+    "key": "b12e7de7521eb39480f1ef16b0c32b6e",
+    "clip": "res://audio/voice/b12e7de7521eb39480f1ef16b0c32b6e.ogg"
+  },
+  {
+    "speaker": "Tyra Banks",
+    "text": "who did your hair?",
+    "key": "133b41f53fb2452ab39e6018113a91fd",
+    "clip": "res://audio/voice/133b41f53fb2452ab39e6018113a91fd.ogg"
+  },
+  {
+    "speaker": "Tyra Banks",
+    "text": "so brave to wear that",
+    "key": "2a54b99f3630f096b98c021d5ed2e6ff",
+    "clip": "res://audio/voice/2a54b99f3630f096b98c021d5ed2e6ff.ogg"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Align the Promenade Stabilizers!",
+    "key": "f192a3821259c3f8840751ec05d82d2e",
+    "clip": "res://audio/voice/f192a3821259c3f8840751ec05d82d2e.ogg"
+  },
+  {
+    "speaker": "Sister Maren",
+    "text": "The Priestess smiled at the offering. I am... relieved.",
+    "key": "5245abd7acacea824293b7208df3a18d",
+    "clip": "res://audio/voice/5245abd7acacea824293b7208df3a18d.ogg"
+  },
+  {
+    "speaker": "Sister Maren",
+    "text": "You really didn't take it. And nothing terrible happened.",
+    "key": "6727599fb5c58f1570cdf1a7fe1ac7ce",
+    "clip": "res://audio/voice/6727599fb5c58f1570cdf1a7fe1ac7ce.ogg"
+  },
+  {
+    "speaker": "Sister Maren",
+    "text": "Yet. Probably. I mean— have a lovely cycle!",
+    "key": "1ba140dee723f5e63d75ab20e5904e44",
+    "clip": "res://audio/voice/1ba140dee723f5e63d75ab20e5904e44.ogg"
+  },
+  {
+    "speaker": "Sister Maren",
+    "text": "The offering! Priestess Ondine is waiting in the Temple.",
+    "key": "c1848b3c7fa4081f32cee5547e543897",
+    "clip": "res://audio/voice/c1848b3c7fa4081f32cee5547e543897.ogg"
+  },
+  {
+    "speaker": "Sister Maren",
+    "text": "Oh! You're the new arrival. The Festival of the Fourteenth is coming.",
+    "key": "79397b640ecd5b5e1276219e28e28dd2",
+    "clip": "res://audio/voice/79397b640ecd5b5e1276219e28e28dd2.ogg"
+  },
+  {
+    "speaker": "Sister Maren",
+    "text": "Would you carry this offering to Priestess Ondine? Everyone contributes.",
+    "key": "bec303cc76cee4a6a6f7874daa69d45b",
+    "clip": "res://audio/voice/bec303cc76cee4a6a6f7874daa69d45b.ogg"
+  },
+  {
+    "speaker": "Sister Maren",
+    "text": "Everyone.",
+    "key": "fd464c137db2fcd8480ebab77af47a95",
+    "clip": "res://audio/voice/fd464c137db2fcd8480ebab77af47a95.ogg"
+  },
+  {
+    "speaker": "Sister Maren",
+    "text": "You're a good one. They notice that, you know.",
+    "key": "bc9cd25cc04a7b7770ed5aaa3663ca7e",
+    "clip": "res://audio/voice/bc9cd25cc04a7b7770ed5aaa3663ca7e.ogg"
+  },
+  {
+    "speaker": "Sister Maren",
+    "text": "Because... because that's how it's always been?",
+    "key": "e04b09d2db5a7e10f0f6130fb2cbac0e",
+    "clip": "res://audio/voice/e04b09d2db5a7e10f0f6130fb2cbac0e.ogg"
+  },
+  {
+    "speaker": "Sister Maren",
+    "text": "Huh. No one's ever actually asked me that before.",
+    "key": "ab4fc3d9b4090a2b654d184c59ee2d46",
+    "clip": "res://audio/voice/ab4fc3d9b4090a2b654d184c59ee2d46.ogg"
+  },
+  {
+    "speaker": "Sister Maren",
+    "text": "Take it anyway — but that was a good question.",
+    "key": "9dd708560f485e9ba7dd113692a5845d",
+    "clip": "res://audio/voice/9dd708560f485e9ba7dd113692a5845d.ogg"
+  },
+  {
+    "speaker": "Sister Maren",
+    "text": "You can... say that? Just like that?",
+    "key": "81ca00d324881e714c2f73a05dc159dc",
+    "clip": "res://audio/voice/81ca00d324881e714c2f73a05dc159dc.ogg"
+  },
+  {
+    "speaker": "Sister Maren",
+    "text": "\"No, thank you.\" Hm. It didn't even thunder.",
+    "key": "2160dca39f8232959e1bd360e038d371",
+    "clip": "res://audio/voice/2160dca39f8232959e1bd360e038d371.ogg"
+  },
+  {
+    "speaker": "Priestess Ondine",
+    "text": "The Seal of the O shines upon the obedient, dear.",
+    "key": "293b49f871e1bda6e3c88fe01ce713bc",
+    "clip": "res://audio/voice/293b49f871e1bda6e3c88fe01ce713bc.ogg"
+  },
+  {
+    "speaker": "Priestess Ondine",
+    "text": "Ah. {{Cast.short(\"maren\")}}'s little offering. Set it by the icons.",
+    "key": "2fee63df591f21d0fb5f152147ec578d",
+    "clip": "res://audio/voice/2fee63df591f21d0fb5f152147ec578d.ogg"
+  },
+  {
+    "speaker": "Priestess Ondine",
+    "text": "See how easy? The Covenant loves an easy girl.",
+    "key": "c7c23efd8fcc2e609d7e8175d60757b7",
+    "clip": "res://audio/voice/c7c23efd8fcc2e609d7e8175d60757b7.ogg"
+  },
+  {
+    "speaker": "Priestess Ondine",
+    "text": "...That was a compliment, dear.",
+    "key": "848f9cbfa246f9cc08af54faf7969242",
+    "clip": "res://audio/voice/848f9cbfa246f9cc08af54faf7969242.ogg"
+  },
+  {
+    "speaker": "Priestess Ondine",
+    "text": "Questions. How... modern of you.",
+    "key": "d53a04b27e8faeeb68b69e5b8c75d8d7",
+    "clip": "res://audio/voice/d53a04b27e8faeeb68b69e5b8c75d8d7.ogg"
+  },
+  {
+    "speaker": "Priestess Ondine",
+    "text": "Set it down anyway, there's a love.",
+    "key": "0893e4b93ff855dfaeffed636114c327",
+    "clip": "res://audio/voice/0893e4b93ff855dfaeffed636114c327.ogg"
+  },
+  {
+    "speaker": "Priestess Ondine",
+    "text": "I heard you told Sister Maren \"no thank you.\"",
+    "key": "cd5895fc2205858ab292d50e828ab658",
+    "clip": "res://audio/voice/cd5895fc2205858ab292d50e828ab658.ogg"
+  },
+  {
+    "speaker": "Priestess Ondine",
+    "text": "What a fascinating phrase. We'll be watching your cycle with interest.",
+    "key": "f6e61cc41104654875bba661946d0047",
+    "clip": "res://audio/voice/f6e61cc41104654875bba661946d0047.ogg"
+  },
+  {
+    "speaker": "Priestess Ondine",
+    "text": "Welcome, initiate. The Queen Mothers see all who wish to be seen.",
+    "key": "0859ca07296a7fa0dbca106a680639c5",
+    "clip": "res://audio/voice/0859ca07296a7fa0dbca106a680639c5.ogg"
+  },
+  {
+    "speaker": "Priestess Ondine",
+    "text": "And all who don't, of course. That's rather the point of Them.",
+    "key": "1ff7b544a717413585c66f635b5b2b27",
+    "clip": "res://audio/voice/1ff7b544a717413585c66f635b5b2b27.ogg"
+  }
+]

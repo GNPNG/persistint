@@ -64,7 +64,6 @@ func _on_tile_pressed(i: int) -> void:
 		grid[selected] = grid[i]
 		grid[i] = tmp
 		selected = -1
-		Voice.speak("tick", randf_range(0.9, 1.3))
 		if grid == target:
 			_win()
 	_paint()

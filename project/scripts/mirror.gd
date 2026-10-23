@@ -15,7 +15,6 @@ func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> voi
 
 
 func interact() -> void:
-	Voice.speak("mirror mirror", 1.3)
 	var map := get_tree().current_scene
 	if map.has_method("toggle_wardrobe"):
 		map.toggle_wardrobe()
