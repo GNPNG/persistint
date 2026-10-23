@@ -422,6 +422,9 @@ position = Vector2(192, 947.2)
 [node name="spawn_from_ruins" type="Marker2D" parent="." unique_id=946855541]
 position = Vector2(656, 787.2)
 
+[node name="spawn_from_tropical" type="Marker2D" parent="."]
+position = Vector2(1088, 752)
+
 [node name="Player" type="CharacterBody2D" parent="." unique_id=85095650 instance=ExtResource("17_x6yrp")]
 position = Vector2(624, 400)
 script = ExtResource("18_r2uvv")
@@ -469,8 +472,8 @@ shape = SubResource("CircleShape2D_53m50")
 [node name="Exit_Ruins" type="Area2D" parent="." unique_id=2100761107 instance=ExtResource("21_fo683")]
 position = Vector2(656, 777.6)
 script = ExtResource("22_a3xfr")
-locked = true
-metadata/wire_to = "Ruins of Utopia entry scene, spawn from_island"
+target_scene = "res://scenes/ruins/ruins_wreck.tscn"
+target_spawn = "spawn_default"
 
 [node name="Exit_Cruise" type="Area2D" parent="." unique_id=673605257 instance=ExtResource("21_fo683")]
 position = Vector2(542.72, 319.36)
@@ -481,8 +484,8 @@ metadata/wire_to = "Cruise flashback world (unlocked by Forbidden Knowledge)"
 [node name="Exit_Tropical" type="Area2D" parent="." unique_id=955344869 instance=ExtResource("21_fo683")]
 position = Vector2(1139.2, 752)
 script = ExtResource("22_a3xfr")
-locked = true
-metadata/wire_to = "Tropical Florida Keys entry scene"
+target_scene = "res://scenes/florida/beach.tscn"
+target_spawn = "spawn_default"
 
 [node name="Ground" type="TileMapLayer" parent="." unique_id=652126285]
 z_index = -10

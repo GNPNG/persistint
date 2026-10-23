@@ -46,40 +46,45 @@ position = Vector2(840, 250)
 target_scene = "res://scenes/florida/aquarium.tscn"
 target_spawn = "spawn_from_beach"
 
+[node name="VillageDoor" parent="." instance=ExtResource("4")]
+position = Vector2(480, 380)
+target_scene = "res://scenes/maps/village.tscn"
+target_spawn = "spawn_from_tropical"
+
 [node name="Dolphin1" parent="." instance=ExtResource("5")]
 position = Vector2(300, 120)
 kind = "dolphin"
-nickname = "Sunny"
+nickname = "dolphin_sunny"
 wander = Rect2(150, 70, 300, 100)
 
 [node name="Dolphin2" parent="." instance=ExtResource("5")]
 position = Vector2(650, 140)
 kind = "dolphin"
-nickname = "Pearl"
+nickname = "dolphin_pearl"
 wander = Rect2(500, 80, 300, 100)
 
 [node name="Crab1" parent="." instance=ExtResource("5")]
 position = Vector2(400, 420)
 kind = "crab"
-nickname = "Sidestep"
+nickname = "crab_sidestep"
 wander = Rect2(330, 380, 140, 80)
 
 [node name="Crab2" parent="." instance=ExtResource("5")]
 position = Vector2(640, 460)
 kind = "crab"
-nickname = "Clementine"
+nickname = "crab_clementine"
 wander = Rect2(580, 420, 140, 70)
 
 [node name="Gull1" parent="." instance=ExtResource("5")]
 position = Vector2(220, 380)
 kind = "gull"
-nickname = "Biscuit"
+nickname = "gull_biscuit"
 wander = Rect2(150, 330, 150, 80)
 
 [node name="Gull2" parent="." instance=ExtResource("5")]
 position = Vector2(760, 360)
 kind = "gull"
-nickname = "Mabel"
+nickname = "gull_mabel"
 wander = Rect2(700, 320, 140, 80)
 
 [node name="Shell1" parent="." instance=ExtResource("6")]

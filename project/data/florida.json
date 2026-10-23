@@ -1,5 +1,5 @@
 {
-	"_note": "Tropical Florida Keys sandbox (DESIGN.md section 3). Pure play, no scoring, nothing can be done wrong. Plants grow with days (GameClock); watering only speeds them up. Recipes with a 'wear' block go on the paper doll; the rest are just made, kept and enjoyed. A critter 'surprise' fires when the doll's outfit matches 'when' (first match wins; the entry without 'when' is every critter's default, so every outfit gets a delighted reaction). 'lines' are spoken as the critter's bubble through Voice.speak; 'names' are the critters' own names (set per placed critter as nickname).",
+	"_note": "Tropical Florida Keys sandbox (DESIGN.md section 3). Pure play, no scoring, nothing can be done wrong. Plants grow with days (GameClock); watering only speeds them up. Recipes with a 'wear' block go on the paper doll; the rest are just made, kept and enjoyed. A critter 'surprise' fires when the doll's outfit matches 'when' (first match wins; the entry without 'when' is every critter's default, so every outfit gets a delighted reaction). 'lines' are spoken as the critter's bubble through Voice.speak; 'names' are the critters' cast ids in data/cast.json (set per placed critter as nickname; shown through Cast.short).",
 	"plants": {
 		"hibiscus": {
 			"label": "Hibiscus",
@@ -140,8 +140,8 @@
 		"dolphin": {
 			"pitch": 1.3,
 			"names": [
-				"Sunny",
-				"Pearl"
+				"dolphin_sunny",
+				"dolphin_pearl"
 			],
 			"surprises": [
 				{
@@ -219,9 +219,9 @@
 		"crab": {
 			"pitch": 1.1,
 			"names": [
-				"Sidestep",
-				"Clementine",
-				"Pebble"
+				"crab_sidestep",
+				"crab_clementine",
+				"crab_pebble"
 			],
 			"surprises": [
 				{
@@ -285,9 +285,9 @@
 		"gull": {
 			"pitch": 1.4,
 			"names": [
-				"Biscuit",
-				"Mabel",
-				"Pickle"
+				"gull_biscuit",
+				"gull_mabel",
+				"gull_pickle"
 			],
 			"surprises": [
 				{
@@ -342,8 +342,8 @@
 		"mermaid": {
 			"pitch": 1.2,
 			"names": [
-				"Marina",
-				"Lagoon"
+				"mermaid_marina",
+				"mermaid_lagoon"
 			],
 			"surprises": [
 				{
