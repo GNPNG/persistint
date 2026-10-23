@@ -67,9 +67,8 @@ Discovered Forbidden Knowledge unlocks flashback chapters aboard the pre-wreck c
 - **The Empowerment Emcee:** every celebrity mini-game is introduced by Chelsea Clinton, who explains how *empowering and fun* this is going
   to be. Empowerment-washing as a running gag — the frame that blesses the judging.
 - **"Next Top Comic":** stand-up mini-game using the dialogue system in Monkey Island
-  insult-sword-fighting structure — except every punchline choice is bad, weird, and
-  nonsensically inappropriate (Sarah Silverman). The crowd rewards cruelty-shaped
-  noise; the player feels the wrongness of every "correct" answer.
+  insult-sword-fighting structure (Sarah Silverman). Just horrible unfunny setup /
+  punchline pairings, but of course, the women in the audience think it's hilarious.
 - **The Interview (character creation):** Oprah interviews the
   player about themselves — warm, probing, faux-intimate. Answers drive SPECIAL-style stat
   allocation (Fallout G.O.A.T.-exam register). Character creation *is* a talk show segment.
