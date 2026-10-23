@@ -7,4 +7,6 @@ var next_spawn := "spawn_default"
 
 func goto_map(scene_path: String, spawn := "spawn_default") -> void:
 	next_spawn = spawn
+	if scene_path.contains("/maps/"):
+		WorldState.set_flag("_location", {"scene": scene_path, "spawn": spawn})
 	get_tree().call_deferred("change_scene_to_file", scene_path)
