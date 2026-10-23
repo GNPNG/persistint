@@ -6,9 +6,10 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { ROOT, discoverTasks, parsePromptText, dropFormat, selectTasks, KIND_EXT } from '../lib/tasks.mjs';
-import { loadSelectors, validateSelectors, assertDedicatedProfile, SELECTORS_PATH, DEFAULTS } from '../lib/config.mjs';
+import { ROOT, discoverTasks, parsePromptText, dropFormat, selectTasks, formatStatus, besideFile, KIND_EXT } from '../lib/tasks.mjs';
+import { loadSelectors, validateSelectors, assertDedicatedProfile, assertOutsideRepo, validateNumbers, parseLimit, parseDelay, SELECTORS_PATH, DEFAULTS } from '../lib/config.mjs';
 import { sniffExt, saveToDrop, hasFfmpeg, wslToWindows, windowsToWsl } from '../lib/media.mjs';
+import { Session, redactHtml } from '../lib/engine.mjs';
 import { preparePrompt } from '../drivers/common.mjs';
 
 const FIELDS = ['id', 'tool', 'drop', 'game', 'prompt', 'aspect', 'kind', 'md_path', 'exists'];
@@ -113,6 +114,10 @@ test('format sniffing from magic bytes', () => {
   assert.equal(sniffExt(b(0xff, 0xfb, 0x90, 0x64)), '.mp3');
   assert.equal(sniffExt(b(0x1a, 0x45, 0xdf, 0xa3)), '.webm');
   assert.equal(sniffExt(Buffer.from('hello world')), null);
+  assert.equal(sniffExt(Buffer.from('<!doctype html><html>')), null);
+  assert.equal(sniffExt(Buffer.from('\0\0\0\x1cftypavif\0\0\0\0', 'latin1')), '.avif');
+  assert.equal(sniffExt(Buffer.from('\0\0\0\x1cftypheic\0\0\0\0', 'latin1')), '.heic');
+  assert.equal(sniffExt(Buffer.from('\0\0\0\x1cftypmif1\0\0\0\0', 'latin1')), '.heic');
 });
 
 test('saveToDrop writes matching formats and never leaves a wrong format at the drop', () => {
@@ -128,6 +133,73 @@ test('saveToDrop writes matching formats and never leaves a wrong format at the 
     assert.ok(fs.existsSync(path.join(dir, 'y.jpg')));
   }
   fs.rmSync(dir, { recursive: true, force: true });
+});
+
+test('saveToDrop refuses bytes it cannot identify (sign-in / error pages) and leaves the asset missing', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'webrender-'));
+  const drop = path.join(dir, 'key_art.png');
+  const html = Buffer.from('<!doctype html><html><title>Sign in - Google Accounts</title></html>');
+  assert.throws(() => saveToDrop(html, drop, { log: () => {} }), /not a recognised media file.*Sign in/);
+  assert.ok(!fs.existsSync(drop));
+  assert.ok(fs.existsSync(`${drop}.unknown`));
+  const t = parsePromptText('---\nid: k\ntool: Gemini image\ndrop: key_art.png\n---\n\n## Prompt\n\nx\n', path.join(dir, 'k.md'), dir);
+  assert.equal(t.exists, false);
+  assert.equal(t.beside, null, '.unknown is not a convertible capture');
+  // a real PNG body served as text/html is refused too
+  const png = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 1]);
+  assert.throws(() => saveToDrop(png, drop, { log: () => {}, mime: 'text/html; charset=utf-8' }), /not a recognised media file/);
+  assert.ok(!fs.existsSync(drop));
+  fs.rmSync(dir, { recursive: true, force: true });
+});
+
+test('a capture kept beside the drop in another format reports CONVERT and is not re-rendered', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'webrender-'));
+  fs.mkdirSync(path.join(dir, 'm'));
+  fs.writeFileSync(path.join(dir, 'm/theme.mp4'), Buffer.from('\0\0\0\x18ftypisom', 'latin1'));
+  const t = parsePromptText('---\nid: theme\ntool: Gemini Lyria\ndrop: m/theme.mp3\n---\n\n## Prompt\n\nx\n', path.join(dir, 'theme.md'), dir);
+  assert.equal(t.exists, false);
+  assert.equal(t.beside, path.join(dir, 'm/theme.mp4'));
+  assert.equal(besideFile(path.join(dir, 'm/other.mp3')), null);
+  assert.deepEqual(selectTasks([t]), []);
+  assert.deepEqual(selectTasks([t], { force: true }).map((x) => x.id), ['theme']);
+  assert.match(formatStatus([t]), /\[CONVERT\].*theme.*run --convert/);
+  fs.rmSync(dir, { recursive: true, force: true });
+});
+
+test('--delay, --limit, delaySec and maxPerRun reject non-numbers instead of disabling pacing', () => {
+  assert.throws(() => parseDelay('abc'), /--delay/);
+  assert.throws(() => parseDelay('-5'), /--delay/);
+  assert.throws(() => parseDelay(''), /--delay/);
+  assert.equal(parseDelay('0'), 0);
+  assert.equal(parseDelay('12.5'), 12.5);
+  assert.equal(parseDelay(undefined), undefined);
+  for (const v of ['abc', '0', '-1', '2.5', '']) assert.throws(() => parseLimit(v), /--limit/, v);
+  assert.equal(parseLimit('3'), 3);
+  assert.deepEqual(validateNumbers(DEFAULTS), []);
+  assert.equal(validateNumbers({ ...DEFAULTS, delaySec: NaN }).length, 1);
+  assert.equal(validateNumbers({ ...DEFAULTS, delaySec: '90' }).length, 1);
+  assert.equal(validateNumbers({ ...DEFAULTS, maxPerRun: 0 }).length, 1);
+  assert.equal(validateNumbers({ ...DEFAULTS, maxPerRun: 'lots' }).length, 1);
+  const run = (...args) => spawnSync(process.execPath, [path.join(ROOT, 'tools/web_render/render.mjs'), ...args], { encoding: 'utf8' });
+  const r = run('--render', '--dry-run', '--delay', 'abc');
+  assert.equal(r.status, 2, r.stdout + r.stderr);
+  assert.match(r.stderr, /--delay must be/);
+  assert.equal(run('--render', '--dry-run', '--limit', 'abc').status, 2);
+  assert.equal(run('--render', '--dry-run', '--profile', path.join(ROOT, 'profile')).status, 2);
+});
+
+test('attach mode refuses a download folder the Windows Chrome cannot see', async () => {
+  const s = new Session({}, { browserURL: 'http://127.0.0.1:9222', downloadDir: '/home/u/.local/share/persistint-web-render/downloads' }, { log: () => {} });
+  await assert.rejects(s.init(), /downloadDir .* is not visible to a Windows Chrome/);
+});
+
+test('debug HTML has script bodies, tokens and email addresses removed', () => {
+  const html = '<html><head><script nonce="x">window.WIZ_global_data = {"SNlM0e":"AKlE_secret_token_123","oPEP7c":"me@example.com"};</script></head>'
+    + '<body><div data-email="someone.else@gmail.com">Signed in as Some One (someone.else@gmail.com)</div><button aria-label="Send message"></button></body></html>';
+  const out = redactHtml(html);
+  assert.doesNotMatch(out, /secret_token|example\.com|gmail\.com/);
+  assert.match(out, /aria-label="Send message"/);
+  assert.match(out, /<script nonce="x">\/\* removed by web_render \*\/<\/script>/);
 });
 
 test('WSL <-> Windows path mapping for a Windows-side Chrome', () => {
@@ -146,10 +218,35 @@ test('prompt preparation adds the ratio only when the prompt lacks one', () => {
   assert.equal(preparePrompt({ prompt: 'A cat.', aspect: '16:9' }, { promptPrefix: 'Generate an image:' }), 'Generate an image: A cat.');
 });
 
+test('the shipped surfaces paste prompts as is (no prefix) and never save an on-page preview as final', () => {
+  const cfg = loadSelectors(SELECTORS_PATH);
+  for (const s of Object.values(cfg.surfaces)) assert.equal(s.promptPrefix, undefined);
+  assert.deepEqual(cfg.surfaces[cfg.kinds.image].capture, ['download']);
+  assert.deepEqual(cfg.surfaces[cfg.kinds.music].capture, ['download']);
+});
+
 test('only a dedicated automation profile is accepted', () => {
   assert.doesNotThrow(() => assertDedicatedProfile(DEFAULTS.profileDir));
   for (const p of ['/home/u/.config/google-chrome', '/home/u/.config/chromium/Default', '/home/u/snap/chromium/common/chromium',
     'C:\\Users\\u\\AppData\\Local\\Google\\Chrome\\User Data']) {
     assert.throws(() => assertDedicatedProfile(p), /refusing/, p);
   }
+  for (const p of ['/home/u/.config/microsoft-edge/Default', '/home/u/.config/vivaldi', '/home/u/.config/google-chrome-for-testing',
+    'C:\\Users\\u\\AppData\\Local\\Microsoft\\Edge\\User Data', '/mnt/c/Users/u/AppData/Local/Google/Chrome/User Data']) {
+    assert.throws(() => assertDedicatedProfile(p), /refusing/, p);
+  }
+  // a symlink that points at a normal profile is refused after resolving it
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'webrender-'));
+  fs.mkdirSync(path.join(dir, '.config/google-chrome'), { recursive: true });
+  fs.symlinkSync(path.join(dir, '.config/google-chrome'), path.join(dir, 'innocent'));
+  assert.throws(() => assertDedicatedProfile(path.join(dir, 'innocent')), /refusing.*google-chrome/);
+  assert.throws(() => assertDedicatedProfile(path.join(dir, 'innocent/Default')), /refusing/);
+  // nothing inside the repo, not even through a symlink
+  assert.throws(() => assertOutsideRepo(path.join(ROOT, 'profile'), 'profileDir'), /inside the repository/);
+  assert.throws(() => assertOutsideRepo(path.join(ROOT, 'tools/web_render/downloads/x'), 'downloadDir'), /inside the repository/);
+  fs.symlinkSync(ROOT, path.join(dir, 'repo-link'));
+  assert.throws(() => assertOutsideRepo(path.join(dir, 'repo-link/p'), 'profileDir'), /inside the repository/);
+  assert.doesNotThrow(() => assertOutsideRepo(DEFAULTS.profileDir, 'profileDir'));
+  assert.doesNotThrow(() => assertOutsideRepo(DEFAULTS.downloadDir, 'downloadDir'));
+  fs.rmSync(dir, { recursive: true, force: true });
 });

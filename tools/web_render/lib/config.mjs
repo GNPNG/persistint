@@ -2,7 +2,7 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { WEB_RENDER_DIR } from './tasks.mjs';
+import { WEB_RENDER_DIR, ROOT } from './tasks.mjs';
 
 export const SELECTORS_PATH = path.join(WEB_RENDER_DIR, 'selectors.json');
 export const LOCAL_CONFIG_PATH = path.join(WEB_RENDER_DIR, 'config.local.json');
@@ -31,8 +31,46 @@ export function loadSettings(cli = {}) {
   for (const [k, v] of Object.entries(cli)) if (v !== undefined && v !== null) s[k] = v;
   s.profileDir = expandHome(s.profileDir);
   s.downloadDir = expandHome(s.downloadDir);
+  const bad = validateNumbers(s);
+  if (bad.length) throw new SettingsError(bad.join('\n'));
   assertDedicatedProfile(s.profileDir);
+  assertOutsideRepo(s.profileDir, 'profileDir');
+  assertOutsideRepo(s.downloadDir, 'downloadDir');
   return s;
+}
+
+/** A bad setting; render.mjs exits with code 2 on it. */
+export class SettingsError extends Error {}
+
+/**
+ * delaySec and maxPerRun protect the quota, so a typo must not silently turn them off
+ * (Number('abc') is NaN, and NaN > 0 is false).
+ */
+export function validateNumbers(s) {
+  const errs = [];
+  if (!(typeof s.delaySec === 'number' && Number.isFinite(s.delaySec) && s.delaySec >= 0)) {
+    errs.push(`delaySec / --delay must be a number of seconds >= 0 (got ${JSON.stringify(s.delaySec)})`);
+  }
+  if (!(Number.isInteger(s.maxPerRun) && s.maxPerRun >= 1)) {
+    errs.push(`maxPerRun must be a whole number >= 1 (got ${JSON.stringify(s.maxPerRun)})`);
+  }
+  return errs;
+}
+
+/** Parse --limit: a whole number >= 1, or throw SettingsError. undefined stays undefined. */
+export function parseLimit(v) {
+  if (v === undefined) return undefined;
+  const n = Number(v);
+  if (!(String(v).trim() !== '' && Number.isInteger(n) && n >= 1)) throw new SettingsError(`--limit must be a whole number >= 1 (got ${JSON.stringify(v)})`);
+  return n;
+}
+
+/** Parse --delay: seconds >= 0, or throw SettingsError. */
+export function parseDelay(v) {
+  if (v === undefined) return undefined;
+  const n = Number(v);
+  if (!(String(v).trim() !== '' && Number.isFinite(n) && n >= 0)) throw new SettingsError(`--delay must be a number of seconds >= 0 (got ${JSON.stringify(v)})`);
+  return n;
 }
 
 function expandHome(p) {
@@ -41,15 +79,51 @@ function expandHome(p) {
 
 // The author's everyday browser profile must never be used: refuse the standard locations.
 const NORMAL_PROFILE_RE = [
-  /[\\/]\.config[\\/](google-chrome|google-chrome-beta|chromium|BraveSoftware)([\\/]|$)/i,
-  /[\\/]snap[\\/]chromium[\\/]/i,
+  /[\\/]\.config[\\/](google-chrome(-beta|-unstable|-for-testing)?|chromium|BraveSoftware|microsoft-edge(-beta|-dev)?|vivaldi(-snapshot)?|opera(-beta|-developer)?)([\\/]|$)/i,
+  /[\\/]snap[\\/](chromium|brave|opera|vivaldi)[\\/]/i,
+  /[\\/]\.var[\\/]app[\\/](com\.google\.Chrome|org\.chromium\.Chromium|com\.brave\.Browser|com\.microsoft\.Edge)([\\/]|$)/i,
   /Google[\\/]Chrome[\\/]User Data/i,
-  /[\\/]Library[\\/]Application Support[\\/]Google[\\/]Chrome/i,
+  /Microsoft[\\/]Edge[\\/]User Data/i,
+  /BraveSoftware[\\/]Brave-Browser[\\/]User Data/i,
+  /Vivaldi[\\/]User Data/i,
+  /[\\/]Library[\\/]Application Support[\\/](Google[\\/]Chrome|Microsoft Edge|BraveSoftware|Vivaldi)/i,
 ];
+
+/**
+ * Resolve symlinks in `p`, also when `p` (or its tail) does not exist yet: the longest existing
+ * ancestor is realpath'd and the rest appended.
+ */
+export function realpathLoose(p) {
+  let cur = path.resolve(p);
+  const rest = [];
+  for (;;) {
+    try { return path.join(fs.realpathSync(cur), ...rest); } catch { /* does not exist yet */ }
+    const up = path.dirname(cur);
+    if (up === cur) return path.resolve(p);
+    rest.unshift(path.basename(cur));
+    cur = up;
+  }
+}
+
 export function assertDedicatedProfile(dir) {
-  if (!dir) throw new Error('profileDir is not set');
-  if (NORMAL_PROFILE_RE.some((re) => re.test(dir))) {
-    throw new Error(`refusing to use ${dir}: that is a normal browser profile; use a dedicated automation profile`);
+  if (!dir) throw new SettingsError('profileDir is not set');
+  // Windows paths (C:\...) are only pattern-matched; POSIX paths are also checked after
+  // following symlinks, so a link to ~/.config/google-chrome is refused too.
+  const forms = /^[a-z]:[\\/]/i.test(dir) ? [dir] : [dir, realpathLoose(dir)];
+  for (const f of forms) {
+    if (NORMAL_PROFILE_RE.some((re) => re.test(f))) {
+      throw new SettingsError(`refusing to use ${dir}${f !== dir ? ` (= ${f})` : ''}: that is a normal browser profile; use a dedicated automation profile`);
+    }
+  }
+}
+
+/** Cookies, session data and downloads must never land in the repo, where they could be committed. */
+export function assertOutsideRepo(dir, what, root = ROOT) {
+  if (!dir || /^[a-z]:[\\/]/i.test(dir)) return;
+  const real = realpathLoose(dir);
+  const repo = realpathLoose(root);
+  if (real === repo || real.startsWith(repo + path.sep)) {
+    throw new SettingsError(`refusing ${what} ${dir}: it is inside the repository (${repo}); put it outside, e.g. under ~/.local/share/persistint-web-render/`);
   }
 }
 
@@ -129,6 +203,13 @@ export function validateSelectors(cfg, opts = {}) {
     (st.result || []).forEach((sel, i) => {
       if (typeof sel === 'string' && sel.includes('::-p-')) errors.push(`${w}.steps.result[${i}]: result selectors must be plain CSS (they run in document.querySelectorAll)`);
     });
+    if (st.response !== undefined) {
+      checkSelectorList(st.response, `${w}.steps.response`, errors);
+      (st.response || []).forEach((sel, i) => {
+        if (typeof sel === 'string' && sel.includes('::-p-')) errors.push(`${w}.steps.response[${i}]: response selectors must be plain CSS (they run in document.querySelectorAll)`);
+      });
+    }
+    if (st.limitNotice !== undefined) checkSelectorList(st.limitNotice, `${w}.steps.limitNotice`, errors);
     if (st.download !== undefined) checkSteps(st.download, `${w}.steps.download`, errors, opts);
     const cap = s.capture ?? ['download', 'src'];
     if (!Array.isArray(cap) || !cap.length || cap.some((c) => !CAPTURE_ROUTES.has(c))) {

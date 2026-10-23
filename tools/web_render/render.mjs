@@ -6,7 +6,7 @@ import path from 'node:path';
 import { parseArgs } from 'node:util';
 import { spawnSync } from 'node:child_process';
 import { ROOT, WEB_RENDER_DIR, discoverTasks, selectTasks, formatStatus, dropFormat } from './lib/tasks.mjs';
-import { loadSettings, loadSelectors, SELECTORS_PATH } from './lib/config.mjs';
+import { loadSettings, loadSelectors, SELECTORS_PATH, SettingsError, parseLimit, parseDelay } from './lib/config.mjs';
 
 const HELP = `Usage: node tools/web_render/render.mjs <mode> [options]
 
@@ -17,14 +17,16 @@ Modes
   --render                 render missing assets in the browser (automatic)
   --assist                 like --render, but you click send/download yourself; the script fills
                            the prompt and saves whatever you download or what appears on the page
+  --convert                convert captures kept beside their drop in another format (status
+                           CONVERT) with ffmpeg; no browser, no generation
 
 Options
   --kind image|video|music|all   (default all)
   --only id,id             limit to these asset ids
   --force                  re-render even if the drop file exists
   --dry-run                list what would be rendered and the final prompt text; no browser
-  --limit N                at most N generations this run (also capped by maxPerRun, default 10)
-  --delay SEC              pause between generations (default 90)
+  --limit N                at most N generations this run, N >= 1 (also capped by maxPerRun, default 10)
+  --delay SEC              pause between generations, SEC >= 0 (default 90)
   --pause-on-error         on a failure, wait for you to fix it in the window, then capture
   --sync                   run tools/sync_rendered_assets.py afterwards
   --chrome PATH            Chrome/Chromium executable (default: auto-detect)
@@ -37,7 +39,7 @@ Options
 const { values: a } = parseArgs({
   options: {
     status: { type: 'boolean' }, login: { type: 'boolean' }, render: { type: 'boolean' },
-    assist: { type: 'boolean' }, 'check-selectors': { type: 'boolean' },
+    assist: { type: 'boolean' }, 'check-selectors': { type: 'boolean' }, convert: { type: 'boolean' },
     kind: { type: 'string', default: 'all' }, only: { type: 'string' }, force: { type: 'boolean' },
     'dry-run': { type: 'boolean' }, limit: { type: 'string' }, delay: { type: 'string' },
     'pause-on-error': { type: 'boolean' }, sync: { type: 'boolean' },
@@ -50,10 +52,17 @@ const { values: a } = parseArgs({
 if (a.help) { console.log(HELP); process.exit(0); }
 if (!['image', 'video', 'music', 'all'].includes(a.kind)) { console.error(`--kind must be image, video, music or all`); process.exit(2); }
 
-const settings = loadSettings({
-  chrome: a.chrome, profileDir: a.profile, browserURL: a['browser-url'],
-  delaySec: a.delay !== undefined ? Number(a.delay) : undefined,
-});
+let settings, limit;
+try {
+  limit = parseLimit(a.limit);
+  settings = loadSettings({
+    chrome: a.chrome, profileDir: a.profile, browserURL: a['browser-url'], delaySec: parseDelay(a.delay),
+  });
+} catch (e) {
+  if (!(e instanceof SettingsError)) throw e;
+  console.error(e.message);
+  process.exit(2);
+}
 const selectorsFile = a.selectors ? path.resolve(a.selectors) : SELECTORS_PATH;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -65,10 +74,15 @@ async function main() {
   }
 
   if (a.login) {
-    const { openForLogin, WINDOWS_LAUNCH_HINT } = await import('./lib/browser.mjs');
+    const { openForLogin, WINDOWS_LAUNCH_HINT, WINDOWS_LOGIN_HINT } = await import('./lib/browser.mjs');
     if (settings.browserURL) {
-      console.log('In attach mode, start Chrome yourself on Windows with its own profile folder, sign in there, and keep it open:');
-      console.log(`  PowerShell: ${WINDOWS_LAUNCH_HINT}`);
+      console.log('In attach mode you start Chrome yourself on Windows, on its own profile folder (never your normal one).');
+      console.log('1. Sign in WITHOUT a debugging port (Google may refuse sign-in while one is open), then close that window:');
+      console.log(`     PowerShell: ${WINDOWS_LOGIN_HINT}`);
+      console.log('2. Start it again with the debugging port and leave it running while you render:');
+      console.log(`     PowerShell: ${WINDOWS_LAUNCH_HINT}`);
+      console.log('The dedicated-profile check cannot see which profile an attached Chrome uses; Chrome 136+ refuses');
+      console.log('remote debugging on its default profile, so step 2 fails if --user-data-dir is missing.');
       return;
     }
     // Tabs to open: Google sign-in plus every surface URL in selectors.json.
@@ -79,6 +93,7 @@ async function main() {
   }
 
   const tasks = discoverTasks();
+  if (a.convert) return convertBeside(tasks);
   const doRender = a.render || a.assist;
   if (!doRender) {
     const shown = a.only ? tasks.filter((t) => a.only.split(',').map((s) => s.trim()).includes(t.id)) : tasks;
@@ -88,8 +103,10 @@ async function main() {
   }
 
   const selectors = loadSelectors(selectorsFile);
-  const cap = Math.min(a.limit !== undefined ? Number(a.limit) : Infinity, settings.maxPerRun);
+  const cap = Math.min(limit ?? Infinity, settings.maxPerRun);
   const todo = selectTasks(tasks, { kind: a.kind, only: a.only, force: a.force });
+  const needConv = tasks.filter((t) => t.beside && !a.force && (a.kind === 'all' || t.kind === a.kind));
+  if (needConv.length) console.warn(`[note] ${needConv.length} asset(s) already captured in another format and not re-rendered: ${needConv.map((t) => t.id).join(', ')}. Install ffmpeg and run --convert (or --force to generate again).`);
   for (const t of todo) {
     const f = dropFormat(t);
     if (!f.ok) console.warn(`[warn] ${t.id}: drop ${t.drop} has ${f.ext}, expected ${f.expected} for ${t.kind}`);
@@ -139,6 +156,10 @@ async function main() {
         Object.assign(rec, r.skipped ? { status: 'skipped' } : { status: 'ok', bytes: r.bytes, route: r.route, format: r.format, converted: r.converted });
       } catch (e) {
         Object.assign(rec, { status: 'failed', step: e.step, error: e.message, debugDir: e.debugDir ? path.relative(ROOT, e.debugDir) : null });
+        if (e.abortRun) {
+          stopping = true;
+          console.log(`  !! stopping the run: ${e.message.split('\n')[0]}`);
+        }
       }
       rec.seconds = Math.round((Date.now() - t0) / 1000);
       runLog.results.push(rec);
@@ -165,4 +186,22 @@ async function main() {
   if (failed.length) process.exitCode = 1;
 }
 
-main().catch((e) => { console.error(e.message); process.exit(1); });
+/** --convert: turn captures kept beside their drop (another format) into the drop format. */
+async function convertBeside(tasks) {
+  const { convertFile, hasFfmpeg, sniffExt } = await import('./lib/media.mjs');
+  const todo = tasks.filter((t) => t.beside && (!a.only || a.only.split(',').map((x) => x.trim()).includes(t.id)) && (a.kind === 'all' || t.kind === a.kind));
+  if (!todo.length) { console.log('Nothing to convert.'); return; }
+  if (!hasFfmpeg()) { console.error(`${todo.length} file(s) need conversion but ffmpeg is not installed (sudo apt install ffmpeg).`); process.exitCode = 1; return; }
+  for (const t of todo) {
+    const got = sniffExt(fs.readFileSync(t.beside)) ?? path.extname(t.beside);
+    try {
+      convertFile(t.beside, t.drop_abs, got, { log: (m) => console.log(m) });
+      console.log(`  -> ${t.drop} (from ${path.relative(ROOT, t.beside)})`);
+    } catch (e) {
+      console.error(`  !! ${t.id}: ${e.message}`);
+      process.exitCode = 1;
+    }
+  }
+}
+
+main().catch((e) => { console.error(e.message); process.exit(e instanceof SettingsError ? 2 : 1); });

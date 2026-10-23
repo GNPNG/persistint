@@ -11,9 +11,15 @@ test compares the two parsers on every file under `prompts/`.
 
 | Kind | Default surface | File |
 |---|---|---|
-| image (16) | Gemini app, Tools > Create images. The aspect ratio is stated in the prompt (the app has no ratio control). | `.png` via "Download full size" |
-| video (9) | Gemini app, Tools > Create video. Each clip gets a new chat. | `.mp4` via Share > Download video |
-| music (20) | Gemini app, Tools > Create music | `.mp3` via Download > Audio only |
+| image (16) | Gemini app, Tools > Create images. The aspect ratio is stated in the prompt (the app has no ratio control). | `.png` via "Download full size" (download button only) |
+| video (9) | Gemini app, Tools > Create video. Each clip gets a new chat. | `.mp4` via Share > Download video, else the `<video>` src |
+| music (20) | Gemini app, Tools > Create music | `.mp3` via Download > Audio only (download button only) |
+
+Prompts are pasted as they are in `prompts/` (no prefix). Only the ratio is appended when a
+prompt does not state one. Images and music are taken only from the page's download button:
+the on-page `<img>` is a downscaled preview, and a track can be shown as a `<video>` with cover
+art, so neither is ever saved as the final file. If the download button breaks, fix its selector
+or use `--assist`.
 
 ## Setup
 
@@ -40,22 +46,40 @@ By default the script looks for a Chrome in this order:
 The script starts Chrome itself, with `--user-data-dir=<profile> --remote-debugging-port=0`,
 and connects with `puppeteer.connect`. It does not use `puppeteer.launch` automation flags or
 any stealth plugin. The profile defaults to
-`~/.local/share/persistint-web-render/chrome-profile`. It is never your normal Chrome profile:
-the script refuses `~/.config/google-chrome`, `~/.config/chromium`, snap Chromium and Windows
-`User Data` paths.
+`~/.local/share/persistint-web-render/chrome-profile`. It is never your normal browser profile:
+the script refuses the standard Chrome, Chromium, Chrome for Testing, Edge, Brave, Vivaldi and
+Opera profile folders (Linux, snap, flatpak, Windows `User Data`, macOS), also when reached
+through a symlink. It also refuses a `profileDir` or `downloadDir` inside the repository, where
+cookies or downloads could be committed.
 
 **Alternative: Windows Chrome.** WSL interop is turned off in `/etc/wsl.conf`, so the script
-cannot start `chrome.exe`. Start it yourself in PowerShell with its own profile folder, sign in
-there, and leave it running:
+cannot start `chrome.exe`. Start it yourself in PowerShell, on its own profile folder, in two
+steps (`--login --browser-url ...` prints the same):
 
-```powershell
-& "C:\Program Files\Google\Chrome\Application\chrome.exe" --remote-debugging-port=9222 --user-data-dir="C:\Users\<you>\persistint-chrome-profile" --no-first-run
-```
+1. Sign in **without** a debugging port, because Google may refuse sign-in while one is open.
+   Sign in to the AI Ultra account, open Gemini once, then close the window:
+
+   ```powershell
+   & "C:\Program Files\Google\Chrome\Application\chrome.exe" --user-data-dir="C:\Users\<you>\persistint-chrome-profile" --no-first-run https://accounts.google.com/ https://gemini.google.com/app
+   ```
+
+2. Start it again on the same profile with the debugging port, and leave it running while you
+   render:
+
+   ```powershell
+   & "C:\Program Files\Google\Chrome\Application\chrome.exe" --remote-debugging-port=9222 --user-data-dir="C:\Users\<you>\persistint-chrome-profile" --no-first-run
+   ```
 
 Then add `--browser-url http://127.0.0.1:9222` to every command (mirrored networking makes
-Windows' localhost reachable from WSL). Downloads must go to a folder both sides can see. Set
+Windows' localhost reachable from WSL). Downloads must go to a folder both sides can see: set
 `"downloadDir": "/mnt/c/Users/<you>/persistint-downloads"` in `config.local.json`. The Windows
-form (`C:\...`) is worked out automatically. This mode is untested.
+form (`C:\...`) is worked out automatically. The script refuses to render in this mode while
+`downloadDir` is not under `/mnt/` (and `downloadDirBrowser` is not set).
+
+The dedicated-profile check cannot see which profile an attached Chrome uses, so in this mode
+keeping it off your normal profile is up to the command above. Chrome 136 and later refuse
+remote debugging on the default profile, so step 2 fails if `--user-data-dir` is left out. This
+mode is untested.
 
 ## First run: sign in once
 
@@ -86,6 +110,7 @@ node tools/web_render/render.mjs --render --kind image --limit 5  # five images,
 node tools/web_render/render.mjs --render --kind music --pause-on-error
 node tools/web_render/render.mjs --assist --kind video            # you click, it saves
 node tools/web_render/render.mjs --render --kind all --sync       # then copy into project/
+node tools/web_render/render.mjs --convert                        # ffmpeg-convert CONVERT assets
 ```
 
 - Assets whose drop file already exists are skipped, so an interrupted run can be restarted.
@@ -96,11 +121,23 @@ node tools/web_render/render.mjs --render --kind all --sync       # then copy in
 - Ctrl-C once stops after the current asset. Press it twice to quit at once.
 - Each run writes `tools/web_render/runs/<time>.json` with status, route, bytes, seconds and the
   failing step for every asset.
+- `--delay` must be a number >= 0 and `--limit` a whole number >= 1. Anything else (also a bad
+  `delaySec` or `maxPerRun` in `config.local.json`) stops the script with exit code 2, so a typo
+  cannot switch off the pacing.
 - If the file comes back in a different format (for example JPEG for a `.png` drop), it is
   converted with ffmpeg if ffmpeg is installed. Otherwise it is saved next to the drop with its
-  real extension, and the asset still counts as missing. ffmpeg is not installed on this
-  machine yet (`sudo apt install ffmpeg`). `sync_rendered_assets.py` needs it for `.mp4` to
+  real extension (`theme.mp4` beside `theme.mp3`). `--status` then shows the asset as
+  `CONVERT`, and `--render` does not generate it again (that would spend quota twice). Install
+  ffmpeg (`sudo apt install ffmpeg`) and run `node tools/web_render/render.mjs --convert`.
+  ffmpeg is not installed on this machine yet. `sync_rendered_assets.py` needs it for `.mp4` to
   `.ogv` as well.
+- If the captured bytes are not a media file at all (for example a sign-in or error page in
+  HTML), nothing is written at the drop. The bytes are kept as `<drop>.unknown` for a look, the
+  asset fails and stays `MISSING`.
+- A reply that finishes without media (a refusal, "I can't generate that", a signed-out page)
+  fails after `timeouts.textOnlyMs` (90 s for images, 2 min for music, 5 min for video) with the
+  reply text in the error, instead of waiting out the whole `generateMs`. A usage-limit notice
+  (`steps.limitNotice`) fails the asset and stops the run.
 
 `config.local.json` (gitignored) can override any of `chrome`, `profileDir`, `browserURL`,
 `downloadDir`, `downloadDirBrowser`, `delaySec`, `maxPerRun` and `launchTimeoutSec`. For example:
@@ -118,6 +155,12 @@ when Google moves a button.
 When a step fails, the script writes `tools/web_render/debug/<id>-<time>/` with
 `screenshot.png`, `page.html`, `console.log` and `error.txt`. `error.txt` names the step, for
 example `[mode[1] pick Create images]`. Then it moves on to the next asset.
+
+**Debug folders hold account data. Do not share them or attach them to issues.** The screenshot
+shows the signed-in Gemini page (account name, avatar, chat history), and the console log can
+carry account details. `page.html` has every `<script>` body, known token fields and email
+addresses removed before it is written, but it can still contain your name and chat titles.
+`debug/` is gitignored. Delete the folders when you are done with them.
 
 To fix a selector:
 
@@ -137,7 +180,11 @@ To fix a selector:
 4. `node tools/web_render/render.mjs --check-selectors` checks the file.
 
 The step fields are `open`, `mode`, `options` (step lists), `input` (selector list), `submit`
-(steps), `busy` (selectors visible while generating), `result` (CSS), and `download` (steps).
+(steps), `busy` (selectors visible while generating), `result` (CSS), `response` (CSS for a
+model reply, used to notice a reply without media), `limitNotice` (selectors for a usage-limit
+notice), and `download` (steps). Download controls are scoped under `model-response` or the
+menu overlay (`.cdk-overlay-container`) so they cannot hit the conversation's own Share or
+Download buttons.
 A step is `{ "action": "click" | "hover" | "waitFor" | "press" | "sleep" | "goto", "selectors":
 [...], "optional": true, "timeoutMs": 3000, "afterMs": 500, "note": "..." }`.
 `"target": "result"` acts on the newest result instead of a selector. `capture` sets the order
@@ -151,7 +198,8 @@ file through Chrome's download events. `src` fetches the result element's `src` 
 `options` steps and puts the prompt in the box. **You** then check the settings, click send and
 wait. When the result appears, press Enter, and the newest image, video or audio on the page is
 saved to the drop. Or click the page's own download button: the download is caught and moved to
-the drop. Type `s` and Enter to skip an asset. If the mode or input steps fail, fix them by hand
+the drop. For images and music, click the download button: pressing Enter saves what the
+page shows, which for an image is the downscaled preview (the script warns when it does that). Type `s` and Enter to skip an asset. If the mode or input steps fail, fix them by hand
 in the window and use `--pause-on-error` instead. Its capture works the same way.
 
 ## Video on Flow instead
@@ -168,15 +216,17 @@ selectors from the debug output.
 ```bash
 cd tools/web_render
 npm test             # no browser: parser parity with render_all_assets.py on all 45 prompts,
-                     # selectors.json validation, drop extensions, format sniffing, path mapping
+                     # selectors.json validation, drop extensions, format sniffing, unknown-format
+                     # refusal, CONVERT status, option validation, profile checks, HTML redaction
 DISPLAY=:0 npm run smoke   # headful Chrome against tests/fixtures/fake_gemini.html
 ```
 
 The smoke test runs the real drivers against a local fake page. The page has a Tools menu, a
 Quill-like editor, a send button, a busy indicator, and a result with hover, download and share
 menus. The test checks that an image (download button), a video (Share > Download) and a track
-(in-page fetch of a `blob:` src) are saved with the right format, and that a broken selector
-leaves a debug folder.
+(in-page fetch of a `blob:` src) are saved with the right format, that a broken selector
+leaves a debug folder with redacted HTML, that a text-only reply fails fast at `wait`, and that a
+usage-limit notice stops the run.
 
 ## Known limits
 
@@ -190,7 +240,8 @@ leaves a debug folder.
 - Music length is "short" (about 1 min) or "full" in the app. The stingers ask for 4 to 30 s in
   the prompt. Expect to trim them.
 - Usage limits are compute-based and not published. Keep `--limit` low until you know how much
-  a run costs. A limit notice shows up in the page, and that asset fails at the `wait` step.
+  a run costs. The `limitNotice` phrases are guesses; if a real notice is not caught, the reply
+  still fails after `textOnlyMs`. Add the notice's wording to `limitNotice`.
 - Google's Terms forbid bypassing its protective measures, so this tool has no stealth or
   fingerprint patches. If Google blocks sign-in or generation in the automated browser, use
   `--assist`.

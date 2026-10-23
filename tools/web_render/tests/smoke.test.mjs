@@ -96,9 +96,37 @@ test('a broken selector fails at its step and leaves screenshot, HTML and consol
     assert.equal(e.step, 'input');
     assert.ok(e.debugDir && e.debugDir.startsWith(DEBUG_DIR));
     for (const f of ['screenshot.png', 'page.html', 'console.log', 'error.txt']) assert.ok(fs.existsSync(path.join(e.debugDir, f)), f);
-    assert.match(fs.readFileSync(path.join(e.debugDir, 'page.html'), 'utf8'), /Fake Gemini/);
+    const html = fs.readFileSync(path.join(e.debugDir, 'page.html'), 'utf8');
+    assert.match(html, /Fake Gemini/);
+    assert.match(html, /removed by web_render/);
+    assert.doesNotMatch(html, /window\.__prompts = \[\]/, 'script bodies are stripped from the debug HTML');
     fs.rmSync(e.debugDir, { recursive: true, force: true });
     return true;
   });
   assert.ok(!fs.existsSync(t.drop_abs));
+});
+
+test('a text-only reply (refusal) fails fast at wait with the reply text, without waiting out generateMs', { skip: !chromeOk && skipReason, timeout: 60_000 }, async () => {
+  const t = { ...task('smoke_refuse', 'music', '.mp3'), prompt: 'REFUSE this one.' };
+  const t0 = Date.now();
+  await assert.rejects(music.render(session, cfg.surfaces.fake_music, t), (e) => {
+    assert.equal(e.step, 'wait');
+    assert.match(e.message, /finished without any media.*can't generate that/);
+    assert.ok(!e.abortRun);
+    if (e.debugDir) fs.rmSync(e.debugDir, { recursive: true, force: true });
+    return true;
+  });
+  assert.ok(Date.now() - t0 < 20_000, `took ${Date.now() - t0} ms (generateMs is 30 s)`);
+  assert.ok(!fs.existsSync(t.drop_abs));
+});
+
+test('a usage-limit notice fails at wait and asks the run to stop', { skip: !chromeOk && skipReason, timeout: 60_000 }, async () => {
+  const t = { ...task('smoke_limit', 'music', '.mp3'), prompt: 'LIMIT this one.' };
+  await assert.rejects(music.render(session, cfg.surfaces.fake_music, t), (e) => {
+    assert.equal(e.step, 'wait');
+    assert.match(e.message, /usage limit notice.*reached your limit/);
+    assert.equal(e.abortRun, true);
+    if (e.debugDir) fs.rmSync(e.debugDir, { recursive: true, force: true });
+    return true;
+  });
 });
