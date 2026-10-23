@@ -202,6 +202,11 @@ func _run() -> void:
 	_check(ws.get_flag("comic_done") == true, "comic: enough laughs wins the set; result in WorldState")
 	comic.queue_free()
 
+	# Speech: clip keys match the manifest exporter (md5 of "speaker|text").
+	var voice: Node = root.get_node("/root/Voice")
+	_check(voice.line_key("Chelsea Clinton", "They persisted and so should you.") == "b12e7de7521eb39480f1ef16b0c32b6e",
+		"voice: clip key matches tools/export_voice_lines.py")
+
 	if had_save:
 		var f := FileAccess.open(ws.SAVE_PATH, FileAccess.WRITE)
 		f.store_string(backup)

@@ -33,7 +33,6 @@ func _cycle(slot: String, dir: int) -> void:
 	var idx := items.find(current)
 	idx = wrapi(idx + dir, 0, items.size())
 	WorldState.set_flag("outfit_%s" % slot, items[idx])
-	Voice.speak("ooh", randf_range(1.1, 1.5))
 	_refresh()
 
 

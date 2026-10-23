@@ -56,7 +56,6 @@ func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> voi
 
 
 func interact() -> void:
-	Voice.speak(display_name if display_name != "" else "hello", voice_pitch)
 	if dialogue_path != "" and ResourceLoader.exists(dialogue_path):
 		DialogueManager.show_dialogue_balloon(load(dialogue_path), dialogue_title)
 	else:
