@@ -18,5 +18,6 @@
   "analytics_token": "",
   "thread_support": false,
   "oversized_mode": "gzip",
-  "custom_domain": false
+  "custom_domain": true,
+  "host_type": "pages"
 }
