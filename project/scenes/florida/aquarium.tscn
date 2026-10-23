@@ -1,0 +1,48 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/map.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/placeholder/bg_florida_aquarium.png" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://scenes/maps/door.tscn" id="4"]
+[ext_resource type="PackedScene" path="res://scenes/florida/critter.tscn" id="5"]
+
+[sub_resource type="NavigationPolygon" id="navpoly"]
+vertices = PackedVector2Array(60, 290, 900, 290, 900, 520, 60, 520)
+polygons = [PackedInt32Array(0, 1, 2, 3)]
+outlines = [PackedVector2Array(60, 290, 900, 290, 900, 520, 60, 520)]
+
+[node name="Aquarium" type="Node2D"]
+script = ExtResource("1")
+
+[node name="Background" type="Sprite2D" parent="."]
+texture = ExtResource("2")
+centered = false
+
+[node name="Nav" type="NavigationRegion2D" parent="."]
+navigation_polygon = SubResource("navpoly")
+
+[node name="spawn_default" type="Marker2D" parent="."]
+position = Vector2(480, 400)
+
+[node name="spawn_from_beach" type="Marker2D" parent="."]
+position = Vector2(160, 480)
+
+[node name="Player" parent="." instance=ExtResource("3")]
+position = Vector2(480, 400)
+
+[node name="BeachDoor" parent="." instance=ExtResource("4")]
+position = Vector2(120, 500)
+target_scene = "res://scenes/florida/beach.tscn"
+target_spawn = "spawn_from_aquarium"
+
+[node name="Mermaid1" parent="." instance=ExtResource("5")]
+position = Vector2(300, 130)
+kind = "mermaid"
+nickname = "Marina"
+wander = Rect2(140, 70, 260, 110)
+
+[node name="Mermaid2" parent="." instance=ExtResource("5")]
+position = Vector2(640, 150)
+kind = "mermaid"
+nickname = "Lagoon"
+wander = Rect2(480, 70, 300, 110)

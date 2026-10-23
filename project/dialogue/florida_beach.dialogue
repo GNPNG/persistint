@@ -1,0 +1,44 @@
+~ father
+if WorldState.has_flag("fl_met_father")
+	Father: Back again. Good. The tide's kind this afternoon.
+else
+	do WorldState.set_flag("fl_met_father", true)
+	Father: Well, hello there. We don't get many visitors out past the mangroves.
+	Father: I'm a fisherman, mostly. Or something close to it. The boat does the real work.
+Father: You can try the stones if you like. Flat ones skip best.
+- Show me how.
+	Father: Low and sideways, from the wrist. Don't throw it, let it go.
+	Father: There. Three skips. Don't tell anyone I counted.
+	do WorldState.set_flag("fl_skipped_stones", true)
+- Who taught you?
+	Father: Her mother, actually. She could get seven out of a flat stone, and she never once let me forget it.
+	Father: It's all right. It's a good thing to remember.
+	Father: My daughter has her wrist.
+- I'd rather just sit for a while.
+	Father: That's allowed. The beach isn't going anywhere.
+	Father: There's lemonade up at the house when you want it. Key lime, from our own tree.
+=> END
+
+~ daughter
+if WorldState.has_flag("fl_invited_to_horses")
+	Daughter: Come on! They haven't had their brushing yet.
+	=> END
+Daughter: Hi! I've got two hundred stones in this bucket and I'm only allowed to keep fifty.
+Daughter: Dad says I'm a collector, not a hoarder. I think that's just a nicer word.
+- Which ones are your favorites?
+	Daughter: The grey ones with a white stripe all the way around. Those are lucky.
+	Daughter: You can have one. I've got four more.
+- What else is out here?
+	Daughter: Dolphins, if you wait. Crabs, always. A pelican who thinks he owns the dock.
+	Daughter: And the horses, out back of the house. Do you like horses?
+- I love horses.
+	Daughter: Then you have to come see them! Wait. Hat.
+	Daughter: Okay, got my hat. And my brush. Let's go!
+	do WorldState.set_flag("fl_invited_to_horses", true)
+- I've never really met one.
+	Daughter: Oh, that's the best! They'll just stand there and let you be new.
+	Daughter: Wait, hat. Okay. This way!
+	do WorldState.set_flag("fl_invited_to_horses", true)
+- Maybe later.
+	Daughter: Okay! I'll be here. They'll be there. Nobody's in a hurry.
+=> END
