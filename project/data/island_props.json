@@ -1,0 +1,17 @@
+{
+	"_note": "Crops (full-res WxH+X+Y) of the canon sheets for tools/cut_island_props.py. Names are file names only; no in-world names are asserted here.",
+	"props": {
+		"prop_ship":      { "gap_tol": 247, "sheet": "Gemini_Generated_Image_i7kl", "crop": "1380x1000+100+60", "mode": "white", "height": 150 },
+		"prop_bunker":    { "sheet": "Gemini_Generated_Image_i7kl", "crop": "950x900+1700+40", "mode": "white", "height": 120 },
+		"prop_fence_a":   { "sheet": "Gemini_Generated_Image_i7kl", "crop": "680x400+85+1040", "mode": "white", "height": 34 },
+		"prop_fence_b":   { "sheet": "Gemini_Generated_Image_i7kl", "crop": "680x400+850+1040", "mode": "white", "height": 34 },
+		"prop_sign_a":    { "sheet": "Gemini_Generated_Image_i7kl", "crop": "460x520+1640+910", "mode": "white", "height": 48 },
+		"prop_sign_b":    { "sheet": "Gemini_Generated_Image_i7kl", "crop": "400x520+2230+910", "mode": "white", "height": 48 },
+		"prop_icon_queen_mother": { "sheet": "PERSISTINT", "crop": "272x310+982+745", "mode": "fuzz", "tol": 26, "height": 72 },
+		"prop_seal_o":    { "sheet": "PERSISTINT", "crop": "180x170+1585+790", "mode": "ellipse", "height": 36 },
+		"prop_pillar_orb":{ "sheet": "PERSISTINT", "crop": "190x310+1290+1010", "mode": "fuzz", "tol": 30, "height": 64 },
+		"prop_skull_altar":{ "sheet": "PERSISTINT", "crop": "230x230+1040+1100", "mode": "fuzz", "tol": 30, "height": 48 },
+		"prop_calendar":  { "sheet": "PERSISTINT", "crop": "200x200+1535+1045", "mode": "fuzz", "tol": 45, "height": 40 },
+		"prop_tag_x":     { "sheet": "Gemini_Generated_Image_481b", "crop": "520x680+140+760", "mode": "white", "height": 36 }
+	}
+}
