@@ -75,5 +75,25 @@
 	"mermaid_lagoon": {
 		"name": "Lagoon",
 		"short": "Lagoon"
+	},
+	"epstein": {
+		"name": "Jeffrey Epstein",
+		"short": "Epstein"
+	},
+	"bill_clinton": {
+		"name": "Bill Clinton",
+		"short": "Bill"
+	},
+	"hillary_clinton": {
+		"name": "Hillary Clinton",
+		"short": "Hillary"
+	},
+	"bill_gates": {
+		"name": "Bill Gates",
+		"short": "Gates"
+	},
+	"polar_bear_clone": {
+		"name": "Polar bear clone",
+		"short": "Cub"
 	}
 }
