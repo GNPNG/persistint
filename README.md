@@ -11,7 +11,7 @@ soon from [GNPNG](https://gnpng.org), an independent Canadian press.**
 
 *"Persistint" — a novel by Brett Whitty, coming soon from GNPNG (book trailer, 2:11)*
 
-**Status: v0.0.0 — zeroth release (playable vertical slice, placeholder art in places).**
+**Status: v0.1.0 — zeroth release (playable vertical slice, placeholder art in places).**
 
 PERSISTINT (Per-sist-INT, "INT like INTJ") is a free companion game: a small 2D game
 made in Godot 4. It wraps social control in the cutest possible packaging, so
