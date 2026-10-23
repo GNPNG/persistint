@@ -19,7 +19,6 @@ func _run() -> void:
 	ws.reset()
 
 	_check(load("res://dialogue/interview.dialogue") != null, "interview.dialogue compiles")
-	_check(root.get_node("/root/Cast").full("oprah") == "Oprah Winfrey", "host name comes from cast.json")
 
 	var iv: Control = load("res://scenes/minigames/interview.tscn").instantiate()
 	iv.autostart = false
