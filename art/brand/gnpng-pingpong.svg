@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="3.5in" height="2.2in" viewBox="0 0 252 158" font-family="'EB Garamond', 'Hoefler Text', 'Garamond', serif">
+
+  <!-- Letters -->
+  <text x="66" y="46" text-anchor="middle" font-size="46" fill="#0D2137">G</text>
+  <text x="126" y="46" text-anchor="middle" font-size="46" fill="#0D2137">P</text>
+  <text x="186" y="46" text-anchor="middle" font-size="46" fill="#0D2137">G</text>
+
+  <!-- Left paddle -->
+  <rect x="90" y="14" width="8" height="36" fill="#0D2137">
+    <animate attributeName="y" values="14;22;8;18;14" dur="3s" repeatCount="indefinite" />
+  </rect>
+
+  <!-- Right paddle -->
+  <rect x="154" y="14" width="8" height="36" fill="#0D2137">
+    <animate attributeName="y" values="18;10;24;14;18" dur="3s" repeatCount="indefinite" />
+  </rect>
+
+  <!-- Ball -->
+  <rect x="123" y="20" width="6" height="6" fill="#F2C94C">
+    <animate attributeName="x" values="96;152;96" dur="1.5s" repeatCount="indefinite" />
+    <animate attributeName="y" values="18;32;12;28;18" dur="3s" repeatCount="indefinite" />
+  </rect>
+
+  <!-- Rule -->
+  <line x1="48" y1="74" x2="204" y2="74" stroke="#0D2137" stroke-width="0.5" />
+
+  <!-- PING PONG text -->
+  <text x="126" y="108" text-anchor="middle" font-size="36" font-weight="400" letter-spacing="6" fill="#0D2137">PING PONG</text>
+
+  <!-- Subtitle -->
+  <text x="126" y="138" text-anchor="middle" font-size="9" letter-spacing="3" fill="#0D2137">an imprint of GNPNG</text>
+</svg>
