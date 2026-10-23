@@ -52,5 +52,5 @@ text = "New Game"
 layout_mode = 2
 theme_override_colors/font_color = Color(0.6, 0.5, 0.55, 1)
 theme_override_font_sizes/font_size = 7
-text = "click to walk · click people to talk · P for wardrobe"
+text = "click or arrow keys to walk · click people to talk · P for wardrobe"
 horizontal_alignment = 1
