@@ -125,7 +125,7 @@ sparkle shimmer. It is the one place the game's music is allowed to sound fully,
   she's trying not to crash a dead ship." Systems failing, chaos on deck, the first mate yelling
   for the captain.
 - **The island** is the real Little St. James (Jeffrey Epstein's island) — in the game **Little
-  St. Piere Island**, in the faith **the Isle of Galgrla**. Epstein had built a doomsday bunker
+  St. Piere Island**. Epstein had built a doomsday bunker
   and a breeding/clone lab there, a zoo (with a polar bear) and an art collection. The survivors
   found the bunker and everything lying around: cruise-ship gift-shop books, the art, celebrity
   books from the cabins.
@@ -358,7 +358,7 @@ night-deck navy. The ruins drop to blue-green and machine grey with pink/mint ac
 ## 5. Little St. Piere Island — the village (island present)
 
 **In-story:** the island the cruise wrecked on, decades later: a compound run by the Covenant of
-Mothers. In-faith name: **the Isle of Galgrla**. It is a pun on Little St. James; the map is
+Mothers. Its name is a pun on Little St. James; the map is
 **traced from OpenStreetMap data for the real Little Saint James** (coastline, path network,
 positions of the temple, helipad, pier, pools, tennis court, ruins and buildings; 24 m per cell,
 north up; reference photos show a green, hilly island with a beach on the south shore), then
