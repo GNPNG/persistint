@@ -1,0 +1,18 @@
+{
+  "slug": "persistint",
+  "title": "PERSISTINT",
+  "pitch": "",
+  "site_host": "persistint.gnpng.org",
+  "zone": "gnpng.org",
+  "worker_name": "persistint-site",
+  "build_bucket": "persistint-builds",
+  "oversized_files": ["index.wasm"],
+  "repo_url": "",
+  "itch_url": "",
+  "contact": "",
+  "disclosure_file": "docs/DISCLOSURE.md",
+  "icon_master": "prompts/image/ui/icon/app_icon.md",
+  "hero_image": "prompts/image/ui/title/title_screen_plain.md",
+  "analytics_token": "",
+  "thread_support": false
+}
