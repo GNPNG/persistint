@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/main_menu.gd" id="1"]
 [ext_resource type="Texture2D" path="res://assets/ui/title/title_screen_plain.png" id="2_art"]
+[ext_resource type="Script" path="res://scripts/ui/imprint_mark.gd" id="3_imprint"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -69,3 +70,20 @@ layout_mode = 2
 theme_type_variation = &"HintLabel"
 text = "click to walk · click people to talk · P for wardrobe"
 horizontal_alignment = 1
+
+[node name="Imprint" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = -56.0
+offset_right = 82.0
+offset_bottom = -8.0
+grow_vertical = 0
+theme_type_variation = &"ImprintPlate"
+
+[node name="Mark" type="Control" parent="Imprint"]
+custom_minimum_size = Vector2(64, 40)
+layout_mode = 2
+script = ExtResource("3_imprint")

@@ -13,6 +13,8 @@ prompt it stands in for (a Gemini render synced to that path replaces it). Paths
 | `assets/ui/backdrops/ship_cutaway.png` | ship_cutaway | tools/gen_ui_art.py | static; The Landing station map, 600x150 | - |
 | `assets/ui/backdrops/talk_show_set.png` | talk_show_set | tools/gen_ui_art.py | static; The Interview backdrop, 640x360 | - |
 | `assets/ui/backdrops/temple_altar.png` | temple_altar | tools/gen_ui_art.py | static; ritual puzzle backdrop, 640x360 (canon prop_pillar_orb) | - |
+| `assets/ui/brand/gnpng_pingpong.png` | gnpng_pingpong | tools/gen_imprint_mark.py (renders the author's art/brand/gnpng-pingpong.svg in EB Garamond) | static; 1008x632 still of the GNPNG Ping Pong imprint mark, the rally at t = 0; boot splash | - |
+| `assets/ui/brand/gnpng_pingpong_sheet.png` | gnpng_pingpong_sheet | tools/gen_imprint_mark.py | sheet; frames 504x316, 6 columns x 6 rows, 36 frames row-major, one animation idle (paddles and ball rally), 12 fps, loop; SpriteFrames built by scripts/ui/imprint_mark.gd, main menu lower left | - |
 | `assets/ui/chapter_cards/chapter_card_before_the_wreck.png` | chapter_card_before_the_wreck | tools/gen_ui_art.py (stand-in) | static; 640x360, white gold-trimmed ship low right, clear of the centred lines, behind chapter_end and flashback_card text | `prompts/image/ui/chapter_cards/chapter_card_before_the_wreck.md` |
 | `assets/ui/chrome/altar_tile_gold.png` | altar_tile_gold | tools/gen_ui_art.py | static; ritual puzzle altar tile, gold (9-slice, margin 7) | - |
 | `assets/ui/chrome/altar_tile_rose.png` | altar_tile_rose | tools/gen_ui_art.py | static; ritual puzzle altar tile, rose (9-slice, margin 7) | - |
