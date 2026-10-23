@@ -1,0 +1,72 @@
+{
+  "_note": "Bill Clinton's own words only, each checked against the page in 'url' on 2026-10-23.",
+  "quotes": [
+    {
+      "text": "There is nothing wrong with America that cannot be cured by what is right with America.",
+      "source": "First inaugural address, 20 Jan 1993",
+      "url": "https://www.thecrimson.com/article/1993/1/21/president-clintons-inaugural-address-pmy-fellow/",
+      "aggregator": false
+    },
+    {
+      "text": "But, by the words we speak and the faces we show the world, we force the spring.",
+      "source": "First inaugural address, 20 Jan 1993",
+      "url": "https://www.thecrimson.com/article/1993/1/21/president-clintons-inaugural-address-pmy-fellow/",
+      "aggregator": false
+    },
+    {
+      "text": "So today, we pledge that the era of deadlock and drift is over.",
+      "source": "First inaugural address, 20 Jan 1993",
+      "url": "https://www.thecrimson.com/article/1993/1/21/president-clintons-inaugural-address-pmy-fellow/",
+      "aggregator": false
+    },
+    {
+      "text": "The era of big government is over.",
+      "source": "State of the Union address, 23 Jan 1996 (as delivered)",
+      "url": "https://clintonwhitehouse4.archives.gov/textonly/WH/New/other/sotu.html",
+      "aggregator": false
+    },
+    {
+      "text": "But we can't go back to the era of fending for yourself.",
+      "source": "State of the Union address, 23 Jan 1996 (as delivered)",
+      "url": "https://clintonwhitehouse4.archives.gov/textonly/WH/New/other/sotu.html",
+      "aggregator": false
+    },
+    {
+      "text": "I did not have sexual relations with that woman, Miss Lewinsky.",
+      "source": "White House remarks, 26 Jan 1998",
+      "url": "https://speakola.com/political/bill-clinton-press-coference-lewinsky-scandal-denial-child-care-1998",
+      "aggregator": false
+    },
+    {
+      "text": "I never told anybody to lie, not a single time, never.",
+      "source": "White House remarks, 26 Jan 1998",
+      "url": "https://speakola.com/political/bill-clinton-press-coference-lewinsky-scandal-denial-child-care-1998",
+      "aggregator": false
+    },
+    {
+      "text": "It depends upon what the meaning of the word \"is\" is.",
+      "source": "Grand jury testimony, 17 Aug 1998",
+      "url": "https://www.cbsnews.com/news/text-of-clinton-testimony-4/",
+      "aggregator": false
+    },
+    {
+      "text": "It's arithmetic.",
+      "source": "Democratic National Convention address, Charlotte, 5 Sep 2012",
+      "url": "https://www.presidency.ucsb.edu/documents/address-the-democratic-national-convention-charlotte-north-carolina",
+      "aggregator": false
+    },
+    {
+      "text": "We simply cannot afford to give the reins of government to someone who will double down on trickle down.",
+      "source": "Democratic National Convention address, Charlotte, 5 Sep 2012",
+      "url": "https://www.presidency.ucsb.edu/documents/address-the-democratic-national-convention-charlotte-north-carolina",
+      "aggregator": false
+    }
+  ],
+  "_verification": {
+    "method": "WebFetch/WebSearch extraction on 2026-10-23 (tool output, not raw page text); wording not character-checked against the original page",
+    "verified": "2026-10-23",
+    "expires": "never for listed source/date; wording re-check required before use of any line",
+    "aggregator_only": 0,
+    "total": 10
+  }
+}

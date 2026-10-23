@@ -24,7 +24,8 @@ OUT = ROOT / "project/audio/voice"
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--speaker", help="only this speaker")
+    ap.add_argument("--speaker", action="append", help="only this speaker (repeatable)")
+    ap.add_argument("--key", action="append", help="only this clip key (repeatable; e.g. to redo a flagged clip)")
     ap.add_argument("--force", action="store_true", help="regenerate existing clips")
     args = ap.parse_args()
 
@@ -35,7 +36,7 @@ def main():
     by_name.update({k: v for k, v in voices.items() if not k.startswith("_") and k not in cast})
 
     def voice_for(speaker):
-        v = by_name.get(speaker) or {}
+        v = by_name.get(speaker) or voices.get(speaker) or {}
         if "ref" in v and (ROOT / v["ref"]).exists():
             return {"speaker_wav": str(ROOT / v["ref"])}
         if "builtin" in v:
@@ -44,7 +45,9 @@ def main():
 
     todo = []
     for line in lines:
-        if args.speaker and line["speaker"] != args.speaker:
+        if args.speaker and line["speaker"] not in args.speaker:
+            continue
+        if args.key and line["key"] not in args.key:
             continue
         clip = OUT / f"{line['key']}.wav"
         voice = voice_for(line["speaker"])
