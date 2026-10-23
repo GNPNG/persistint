@@ -45,7 +45,7 @@
     },
     "fake_music": {
       "kind": "music", "url": "{fixture}", "capture": ["src"],
-      "timeouts": { "stepMs": 5000, "generateMs": 30000 },
+      "timeouts": { "stepMs": 5000, "generateMs": 30000, "textOnlyMs": 3000 },
       "steps": {
         "mode": [
           { "action": "click", "selectors": ["::-p-aria(Tools)"] },
@@ -54,6 +54,8 @@
         "input": [".ql-editor"],
         "submit": [{ "action": "click", "selectors": ["::-p-aria(Send message)"] }],
         "busy": ["::-p-aria(Stop response)"],
+        "response": ["model-response"],
+        "limitNotice": ["model-response ::-p-text(reached your limit)"],
         "result": ["model-response audio"]
       }
     }

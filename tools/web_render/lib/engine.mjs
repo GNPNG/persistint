@@ -4,7 +4,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import readline from 'node:readline';
-import { fill } from './config.mjs';
+import { fill, SettingsError } from './config.mjs';
 import { WEB_RENDER_DIR } from './tasks.mjs';
 import { saveToDrop, extFromMime, windowsToWsl, wslToWindows } from './media.mjs';
 
@@ -31,6 +31,13 @@ export class Session {
 
   async init() {
     const local = this.settings.downloadDir;
+    if (this.settings.browserURL && !this.settings.downloadDirBrowser && !local.startsWith('/mnt/')) {
+      // An attached Chrome (normally Windows Chrome) cannot write to a WSL-only folder, so every
+      // download would time out before falling back. Fail now instead.
+      throw new SettingsError(`attach mode (--browser-url): downloadDir ${local} is not visible to a Windows Chrome. ` +
+        'Set "downloadDir": "/mnt/c/Users/<you>/persistint-downloads" in config.local.json (or set downloadDirBrowser ' +
+        'to the same folder as the attached browser sees it).');
+    }
     fs.mkdirSync(local, { recursive: true });
     let browserDir = this.settings.downloadDirBrowser;
     if (!browserDir && this.settings.browserURL && local.startsWith('/mnt/')) browserDir = wslToWindows(local);
@@ -94,12 +101,24 @@ export class Session {
     fs.mkdirSync(dir, { recursive: true });
     const p = this.page;
     try { await p.screenshot({ path: path.join(dir, 'screenshot.png'), fullPage: false }); } catch (e) { fs.writeFileSync(path.join(dir, 'screenshot.error.txt'), String(e)); }
-    try { fs.writeFileSync(path.join(dir, 'page.html'), await p.content()); } catch (e) { fs.writeFileSync(path.join(dir, 'page.error.txt'), String(e)); }
+    try { fs.writeFileSync(path.join(dir, 'page.html'), redactHtml(await p.content())); } catch (e) { fs.writeFileSync(path.join(dir, 'page.error.txt'), String(e)); }
     fs.writeFileSync(path.join(dir, 'console.log'), this.console.join('\n'));
     fs.writeFileSync(path.join(dir, 'error.txt'),
       `step: ${err.step ?? '?'}\nurl: ${p?.url?.() ?? '?'}\n\n${err.stack || err}\n`);
     return dir;
   }
+}
+
+/**
+ * Strip what a signed-in Google page embeds about the account before a debug copy is written:
+ * every <script> body (WIZ_global_data holds session and XSRF tokens), inline JSON, and email
+ * addresses. The DOM structure needed to fix selectors is kept. The screenshot is not redacted.
+ */
+export function redactHtml(html) {
+  return String(html)
+    .replace(/(<script\b[^>]*>)[\s\S]*?(<\/script\s*>)/gi, '$1/* removed by web_render */$2')
+    .replace(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g, '[email removed]')
+    .replace(/\b(SNlM0e|FdrFJe|cfb2h|WZsZ1e|at|xsrf[_-]?token|csrf[_-]?token)(["']?\s*[:=]\s*["'])[^"']{8,}(["'])/gi, '$1$2[token removed]$3');
 }
 
 // ------------------------------------------------------------------ element finding
@@ -247,11 +266,31 @@ export async function resultHandle(page, selectors, minSize = 0) {
   return (await newestResult(page, selectors, minSize)).last;
 }
 
-export async function waitForResult(session, surface, baseline, timeoutMs) {
+/** How many elements match the CSS `selectors`, and the newest one's text (for a reply with no media). */
+export async function responseInfo(page, selectors) {
+  if (!selectors?.length) return { count: 0, text: '' };
+  return page.evaluate((sels) => {
+    const set = new Set();
+    for (const s of sels) { try { document.querySelectorAll(s).forEach((e) => set.add(e)); } catch { /* bad selector */ } }
+    const all = [...set].sort((a, b) => (a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1));
+    const last = all[all.length - 1];
+    return { count: all.length, text: last ? (last.innerText || '').replace(/\s+/g, ' ').trim() : '' };
+  }, selectors);
+}
+
+/**
+ * Wait for a new, loaded, stable media result. Fails fast instead of waiting out generateMs when
+ * - a usage-limit notice (steps.limitNotice) shows: the error has abortRun = true, so the run
+ *   stops instead of spending the next assets on the same notice;
+ * - a new reply (steps.response) has finished (not busy) but still holds no media after
+ *   timeouts.textOnlyMs: a refusal, "can't generate", or a signed-out page.
+ */
+export async function waitForResult(session, surface, baseline, timeoutMs, respBaseline = null) {
   const { page, log } = session;
   const st = surface.steps;
+  const textOnlyMs = surface.timeouts?.textOnlyMs ?? 90_000;
   const t0 = Date.now();
-  let lastLog = t0, prevSrc = null, stable = 0;
+  let lastLog = t0, prevSrc = null, stable = 0, quietSince = null;
   while (Date.now() - t0 < timeoutMs) {
     const info = await resultInfo(page, st.result, surface.resultMinSize ?? 0);
     const busy = await anyVisible(page, st.busy);
@@ -260,9 +299,27 @@ export async function waitForResult(session, surface, baseline, timeoutMs) {
       prevSrc = info.src;
       if (stable >= 1) return info;
     }
+    if (info.count <= baseline) {
+      const limitSel = await anyVisible(page, st.limitNotice);
+      if (limitSel) {
+        const text = (await responseInfo(page, st.response ?? ['model-response'])).text;
+        const e = new StepError('wait', `usage limit notice on the page (${limitSel}): "${text.slice(0, 300)}"`);
+        e.abortRun = true;
+        throw e;
+      }
+      if (!busy && st.response && respBaseline !== null) {
+        const r = await responseInfo(page, st.response);
+        if (r.count > respBaseline) {
+          quietSince ??= Date.now();
+          if (Date.now() - quietSince >= textOnlyMs) {
+            throw new StepError('wait', `the reply finished without any media after ${Math.round(textOnlyMs / 1000)}s: "${r.text.slice(0, 300) || '(no text)'}"`);
+          }
+        } else quietSince = null;
+      } else quietSince = null;
+    } else quietSince = null;
     if (Date.now() - lastLog >= 30_000) {
       lastLog = Date.now();
-      log(`    ... waiting ${Math.round((Date.now() - t0) / 1000)}s (results ${info.count}/${baseline + 1}${busy ? ', busy' : ''}${info.count > baseline && !info.ready ? ', loading' : ''})`);
+      log(`    ... waiting ${Math.round((Date.now() - t0) / 1000)}s (results ${info.count}/${baseline + 1}${busy ? ', busy' : ''}${info.count > baseline && !info.ready ? ', loading' : ''}${quietSince ? ', reply has no media yet' : ''})`);
     }
     await sleep(2000);
   }
@@ -344,6 +401,9 @@ export async function manualCapture(session, surface, baseline, message) {
     return { ...got, route: 'manual-download' };
   }
   const info = await resultInfo(session.page, surface.steps.result, surface.resultMinSize ?? 0);
+  if (info.src && !(surface.capture ?? ['download', 'src']).includes('src')) {
+    session.log(`  warning: saving the on-page ${info.tag} (this surface normally takes only its download button; for an image this is the downscaled preview). Use --force later to replace it.`);
+  }
   if (info.count > baseline && info.src) return { ...(await fetchSrc(session.page, info.src)), route: 'manual-src' };
   if (info.src) {
     const a = await ask(`  No NEW result found, but the newest one on the page is ${info.tag}. Use it? [y/N] `);
@@ -374,6 +434,7 @@ export async function renderOnSurface(session, surface, task, prompt, opts = {})
     step = 'options'; await runSteps(session, st.options, 'options', ctx);
     step = 'input'; await insertText(session, st.input, prompt, ctx);
     baseline = (await resultInfo(session.page, st.result, surface.resultMinSize ?? 0)).count;
+    const respBaseline = st.response ? (await responseInfo(session.page, st.response)).count : null;
     if (opts.assist) {
       const got = await manualCapture(session, surface, baseline,
         `  [assist] Prompt is in the box. Check the settings, click send, wait, then press Enter (or click the download button).`);
@@ -384,7 +445,7 @@ export async function renderOnSurface(session, surface, task, prompt, opts = {})
     step = 'wait';
     const gms = surface.timeouts?.generateMs ?? 900_000;
     log(`    submitted; waiting for the result (up to ${gms < 120_000 ? `${Math.round(gms / 1000)} s` : `${Math.round(gms / 60_000)} min`})`);
-    await waitForResult(session, surface, baseline, surface.timeouts?.generateMs ?? 900_000);
+    await waitForResult(session, surface, baseline, gms, respBaseline);
     step = 'capture';
     const got = await capture(session, surface, ctx);
     return finish(task, got, log);
@@ -404,7 +465,7 @@ export async function renderOnSurface(session, surface, task, prompt, opts = {})
 }
 
 function finish(task, got, log) {
-  const saved = saveToDrop(got.buf, task.drop_abs, { log });
+  const saved = saveToDrop(got.buf, task.drop_abs, { log, mime: got.mime });
   const mimeExt = extFromMime(got.mime);
   log(`  -> ${task.drop} (${got.buf.length} bytes via ${got.route}${mimeExt ? `, ${got.mime}` : ''})`);
   return { saved: saved.path, bytes: got.buf.length, route: got.route, format: saved.format, converted: saved.converted };

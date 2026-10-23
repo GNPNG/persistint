@@ -117,4 +117,7 @@ export async function getBrowser(settings, log = console.log) {
   return launchAndConnect({ ...settings, log });
 }
 
+// Windows Chrome in attach mode: sign in first WITHOUT a debugging port (Google may refuse
+// sign-in while one is open), close it, then start it again with the port to render.
+export const WINDOWS_LOGIN_HINT = String.raw`& "C:\Program Files\Google\Chrome\Application\chrome.exe" --user-data-dir="C:\Users\<you>\persistint-chrome-profile" --no-first-run https://accounts.google.com/ https://gemini.google.com/app`;
 export const WINDOWS_LAUNCH_HINT = String.raw`& "C:\Program Files\Google\Chrome\Application\chrome.exe" --remote-debugging-port=9222 --user-data-dir="C:\Users\<you>\persistint-chrome-profile" --no-first-run`;

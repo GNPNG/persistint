@@ -72,6 +72,13 @@
     setTimeout(async () => {
       busy.innerHTML = '';
       const resp = document.createElement('model-response');
+      // Text-only replies: a refusal, or a usage-limit notice (prompt contains REFUSE / LIMIT).
+      const textOnly = /REFUSE/.test(model) ? "I can't generate that for you." : /LIMIT/.test(model) ? "You've reached your limit for music generation. Your limit resets tomorrow." : null;
+      if (textOnly) {
+        const p = document.createElement('p'); p.textContent = textOnly; resp.appendChild(p);
+        document.getElementById('chat').appendChild(resp);
+        return;
+      }
       const actions = document.createElement('div'); actions.className = 'actions';
       if (mode === 'image') {
         const c = document.createElement('canvas'); c.width = 640; c.height = 360;

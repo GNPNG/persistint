@@ -13,10 +13,10 @@
       "_note": "Gemini app, Tools > Create images (Nano Banana). No aspect control in the UI, so the ratio is put in the prompt when the prompt does not already state one.",
       "aspectInPrompt": true,
       "promptSuffix": "{aspect} aspect ratio.",
-      "promptPrefix": "Generate an image:",
       "resultMinSize": 256,
-      "capture": ["download", "src"],
-      "timeouts": { "stepMs": 20000, "generateMs": 600000, "downloadMs": 180000 },
+      "capture": ["download"],
+      "_capture": "download only: the on-page <img> is a downscaled preview, so it must never be saved as the final PNG. If Download full size breaks, fix its selector or use --assist / --pause-on-error.",
+      "timeouts": { "stepMs": 20000, "generateMs": 600000, "downloadMs": 180000, "textOnlyMs": 90000 },
       "steps": {
         "open": [
           { "action": "click", "optional": true, "timeoutMs": 3000, "note": "close a promo dialog if one is up",
@@ -35,11 +35,13 @@
             "selectors": ["::-p-aria(Send message)", "button.send-button", "button[aria-label*='Send']", "::-p-aria(Submit)"] }
         ],
         "busy": ["::-p-aria(Stop response)", "button[aria-label*='Stop']"],
+        "limitNotice": ["model-response ::-p-text(reached your limit)", "model-response ::-p-text(reached the limit)", "model-response ::-p-text(usage limit)", "model-response ::-p-text(limit resets)"],
+        "response": ["model-response"],
         "result": ["model-response generated-image img", "model-response single-image img", "model-response img", "message-content img"],
         "download": [
           { "action": "hover", "target": "result", "afterMs": 500 },
           { "action": "click", "note": "Download full size",
-            "selectors": ["::-p-aria(Download full size image)", "::-p-aria(Download full size)", "button:has(mat-icon[fonticon='download'])", "mat-icon[fonticon='download']"] }
+            "selectors": ["model-response ::-p-aria(Download full size image)", "model-response ::-p-aria(Download full size)", "model-response button:has(mat-icon[fonticon='download'])", "::-p-aria(Download full size image)"] }
         ]
       }
     },
@@ -52,7 +54,7 @@
       "promptSuffix": "{aspect} aspect ratio.",
       "resultMinSize": 0,
       "capture": ["download", "src"],
-      "timeouts": { "stepMs": 20000, "generateMs": 1500000, "downloadMs": 300000 },
+      "timeouts": { "stepMs": 20000, "generateMs": 1500000, "downloadMs": 300000, "textOnlyMs": 300000 },
       "steps": {
         "open": [
           { "action": "click", "optional": true, "timeoutMs": 3000, "note": "close a promo dialog if one is up",
@@ -75,14 +77,16 @@
           { "action": "click", "note": "send",
             "selectors": ["::-p-aria(Send message)", "button.send-button", "button[aria-label*='Send']", "::-p-aria(Submit)"] }
         ],
-        "busy": ["::-p-aria(Stop response)", "button[aria-label*='Stop']"],
+        "busy": ["::-p-aria(Stop response)", "button[aria-label*='Stop']", "model-response [role='progressbar']", "model-response mat-progress-bar", "model-response mat-progress-spinner"],
+        "limitNotice": ["model-response ::-p-text(reached your limit)", "model-response ::-p-text(reached the limit)", "model-response ::-p-text(usage limit)", "model-response ::-p-text(limit resets)"],
+        "response": ["model-response"],
         "result": ["model-response video", "message-content video"],
         "download": [
           { "action": "hover", "target": "result", "afterMs": 500 },
           { "action": "click", "note": "Share (the download lives under it)", "afterMs": 800,
-            "selectors": ["::-p-aria(Share)", "::-p-aria(Share video)", "button:has(mat-icon[fonticon='share'])"] },
-          { "action": "click", "note": "Download video",
-            "selectors": ["::-p-aria(Download video)", "::-p-text(Download video)", "::-p-text(Download)"] }
+            "selectors": ["model-response ::-p-aria(Share video)", "model-response ::-p-aria(Share)", "model-response button:has(mat-icon[fonticon='share'])"] },
+          { "action": "click", "note": "Download video (in the share menu)",
+            "selectors": [".cdk-overlay-container ::-p-aria(Download video)", ".cdk-overlay-container ::-p-text(Download video)", "model-response ::-p-aria(Download video)", ".cdk-overlay-container ::-p-text(Download)"] }
         ]
       }
     },
@@ -93,8 +97,9 @@
       "_note": "Gemini app, Tools > Create music (Lyria). Length is steered by the prompt text (every music prompt states its length); the app has only short (~1 min) and full lengths. The download menu must choose audio only (MP3), not the MP4 with cover art.",
       "aspectInPrompt": false,
       "resultMinSize": 0,
-      "capture": ["download", "src"],
-      "timeouts": { "stepMs": 20000, "generateMs": 900000, "downloadMs": 180000 },
+      "capture": ["download"],
+      "_capture": "download only: the page may show the track as a <video> with cover art, so an in-page src fetch could save the wrong file.",
+      "timeouts": { "stepMs": 20000, "generateMs": 900000, "downloadMs": 180000, "textOnlyMs": 120000 },
       "steps": {
         "open": [
           { "action": "click", "optional": true, "timeoutMs": 3000, "note": "close a promo dialog if one is up",
@@ -113,12 +118,15 @@
             "selectors": ["::-p-aria(Send message)", "button.send-button", "button[aria-label*='Send']", "::-p-aria(Submit)"] }
         ],
         "busy": ["::-p-aria(Stop response)", "button[aria-label*='Stop']"],
+        "limitNotice": ["model-response ::-p-text(reached your limit)", "model-response ::-p-text(reached the limit)", "model-response ::-p-text(usage limit)", "model-response ::-p-text(limit resets)"],
+        "response": ["model-response"],
         "result": ["model-response audio", "model-response video", "message-content audio"],
         "download": [
+          { "action": "hover", "target": "result", "afterMs": 500 },
           { "action": "click", "note": "Download (top right of the cover art)", "afterMs": 800,
-            "selectors": ["::-p-aria(Download track)", "::-p-aria(Download)", "button:has(mat-icon[fonticon='download'])"] },
+            "selectors": ["model-response ::-p-aria(Download track)", "model-response button:has(mat-icon[fonticon='download'])", "model-response ::-p-aria(Download)"] },
           { "action": "click", "note": "audio only (MP3)",
-            "selectors": ["::-p-text(Audio only)", "::-p-aria(Audio only)", "::-p-text(MP3)"] }
+            "selectors": [".cdk-overlay-container ::-p-text(Audio only)", ".cdk-overlay-container ::-p-aria(Audio only)", ".cdk-overlay-container ::-p-text(MP3)"] }
         ]
       }
     },

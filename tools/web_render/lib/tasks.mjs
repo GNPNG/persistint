@@ -4,6 +4,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { BESIDE_EXTS } from './media.mjs';
 
 export const WEB_RENDER_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 export const ROOT = path.resolve(WEB_RENDER_DIR, '..', '..');
@@ -45,7 +46,22 @@ export function parsePromptText(text, mdPath, root = ROOT) {
   meta.md_path = path.relative(root, mdPath).split(path.sep).join('/');
   meta.drop_abs = path.resolve(root, meta.drop);
   meta.exists = dropExists(meta.drop_abs);
+  meta.beside = meta.exists ? null : besideFile(meta.drop_abs);
   return meta;
+}
+
+/**
+ * A capture kept next to the drop in another format (<stem>.<ext>, written when ffmpeg was
+ * missing), or null. Such an asset needs conversion (--convert), not a new generation.
+ */
+export function besideFile(dropAbs) {
+  const want = path.extname(dropAbs).toLowerCase();
+  const stem = dropAbs.slice(0, dropAbs.length - path.extname(dropAbs).length);
+  for (const ext of BESIDE_EXTS) {
+    if (ext === want) continue;
+    if (dropExists(stem + ext)) return stem + ext;
+  }
+  return null;
 }
 
 export function dropExists(p) {
@@ -95,21 +111,30 @@ export function dropFormat(task) {
   return { ext, expected, ok: !!expected && ext === expected };
 }
 
-/** Filter tasks the way render.mjs does: kind, --only ids, skip existing unless forced. */
+/**
+ * Filter tasks the way render.mjs does: kind, --only ids, skip existing unless forced. A task
+ * with a capture kept beside its drop (needs conversion) is also skipped unless forced, so a
+ * missing ffmpeg never costs a second generation.
+ */
 export function selectTasks(tasks, { kind = 'all', only = null, force = false } = {}) {
   const wanted = only ? new Set(only.split(',').map((s) => s.trim()).filter(Boolean)) : null;
   return tasks.filter((t) =>
     (!wanted || wanted.has(t.id)) &&
     (kind === 'all' ? t.kind in KIND_EXT : t.kind === kind) &&
-    (force || !t.exists));
+    (force || (!t.exists && !t.beside)));
+}
+
+export function taskStatus(t) {
+  return t.exists ? 'DONE' : t.beside ? 'CONVERT' : 'MISSING';
 }
 
 export function formatStatus(tasks) {
   const lines = [`${'STATUS'.padEnd(9)} ${'KIND'.padEnd(6)} ${'ID'.padEnd(38)} DROP`, '-'.repeat(110)];
   for (const t of tasks) {
-    lines.push(`[${(t.exists ? 'DONE' : 'MISSING').padEnd(7)}] ${t.kind.padEnd(6)} ${t.id.padEnd(38)} ${t.drop}`);
+    lines.push(`[${taskStatus(t).padEnd(7)}] ${t.kind.padEnd(6)} ${t.id.padEnd(38)} ${t.drop}${t.beside ? `  (have ${path.extname(t.beside)}: run --convert)` : ''}`);
   }
   const done = tasks.filter((t) => t.exists).length;
-  lines.push('', `Progress: ${done}/${tasks.length} assets rendered.`);
+  const conv = tasks.filter((t) => t.beside).length;
+  lines.push('', `Progress: ${done}/${tasks.length} assets rendered.${conv ? ` ${conv} need conversion (install ffmpeg, then --convert).` : ''}`);
   return lines.join('\n');
 }
