@@ -1,0 +1,7 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "embedded",
+  "dolt_database": "persistint_game",
+  "project_id": "ed7f9a3a-633d-47e8-808a-f1fb8a590a6a"
+}
