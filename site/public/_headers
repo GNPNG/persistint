@@ -1,0 +1,13 @@
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Strict-Transport-Security: max-age=31536000
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+/play/*/index.pck
+  Content-Type: application/octet-stream
+  Cache-Control: public, max-age=31536000, immutable
+/play/*/index.js
+  Cache-Control: public, max-age=31536000, immutable
+/play/*/*.worklet.js
+  Cache-Control: public, max-age=31536000, immutable
