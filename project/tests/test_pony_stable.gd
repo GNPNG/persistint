@@ -195,8 +195,9 @@ func _run() -> void:
 	var hannah: Node = stable.get_node("Hannah")
 	_check(hannah.visible and hannah.display_name == cast.full("stable_friend") and cast.full("stable_friend") != "stable_friend",
 		"Hannah brushes a pony at the stable, named from cast.json")
-	_check(hannah.current_bark() != "..." and hannah.sprite_texture != "" and hannah.get_node("Sprite2D").texture != null,
-		"Hannah has barks and a sprite")
+	_check(hannah.current_bark() != "..." and hannah.sprite_texture != ""
+		and hannah.rig != null and hannah.rig.sprite_frames.has_animation("idle_front"),
+		"Hannah has barks and a rigged sprite sheet")
 	stable.queue_free()
 	await process_frame
 	var beach_map: Node = load("res://scenes/florida/beach.tscn").instantiate()
