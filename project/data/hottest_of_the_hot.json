@@ -1,0 +1,10 @@
+{
+  "_note": "DESIGN.md: Hottest of the HOT, Tyra Banks's top-model judging show; passengers judged on appearance with negative framing and passive-aggressive language. Verdicts are the design doc's examples; add more here.",
+  "title": "Hottest of the HOT",
+  "host": "tyra",
+  "return_map": "res://scenes/maps/village.tscn",
+  "verdicts": [
+    "who did your hair?",
+    "so brave to wear that"
+  ]
+}

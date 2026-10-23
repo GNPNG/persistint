@@ -146,6 +146,22 @@ func _run() -> void:
 		"wardrobe draws a canon outfit entirely from canon art")
 	wardrobe.queue_free()
 
+	# Hottest of the HOT: Chelsea Clinton introduces, the paper doll is dressed, Tyra Banks judges.
+	ws.reset()
+	var hot_data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/hottest_of_the_hot.json"))
+	var hot: Control = load("res://scenes/minigames/hottest_of_the_hot.tscn").instantiate()
+	root.add_child(hot)
+	_check(hot.emcee_name() == "Chelsea Clinton", "hottest: introduced by Chelsea Clinton")
+	_check(hot.host_name() == "Tyra Banks", "hottest: judged by Tyra Banks")
+	hot.choose("hair", "hair_crown")
+	_check(hot.doll.outfit["hair"] == "hair_crown", "hottest: makeover dresses the shared paper doll")
+	var verdict: String = hot.walk()
+	_check(hot_data["verdicts"].has(verdict), "hottest: verdict comes from the show's data")
+	_check(ws.get_flag("hottest_done") == true and ws.get_flag("hottest_outfit")["hair"] == "hair_crown",
+		"hottest: result and judged outfit written to WorldState")
+	_check(name_it.beat("hottest_verdict").has("lines"), "hottest: a Name It beat follows the verdict")
+	hot.queue_free()
+
 	if had_save:
 		var f := FileAccess.open(ws.SAVE_PATH, FileAccess.WRITE)
 		f.store_string(backup)
