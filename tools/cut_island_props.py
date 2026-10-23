@@ -7,6 +7,7 @@ Reads project/data/island_props.json: each prop names a sheet under art/canon, a
   fuzz   - flood the colour found at the crop corners (tolerance "tol")
   ellipse- keep only the inscribed ellipse (round seals)
 Output: project/assets/canon/<name>.png scaled to "height" px tall.
+A prop whose sheet is no longer under art/canon is skipped (its committed PNG stays).
 """
 import json
 from pathlib import Path
@@ -21,9 +22,13 @@ OUT = ROOT / "project/assets/canon"
 sheets = {}
 
 
+def sheet_path(name):
+    return next((ROOT / "art/canon").glob(f"*/{name}*"), None)
+
+
 def sheet(name):
     if name not in sheets:
-        sheets[name] = np.asarray(Image.open(next((ROOT / "art/canon").glob(f"*/{name}*"))).convert("RGB")).astype(int)
+        sheets[name] = np.asarray(Image.open(sheet_path(name)).convert("RGB")).astype(int)
     return sheets[name]
 
 
@@ -68,6 +73,9 @@ def cut(spec):
 
 OUT.mkdir(parents=True, exist_ok=True)
 for name, spec in CFG["props"].items():
+    if sheet_path(spec["sheet"]) is None:
+        print(name, "skipped: sheet", spec["sheet"], "not under art/canon")
+        continue
     im = cut(spec)
     im.save(OUT / f"{name}.png")
     print(name, im.size)

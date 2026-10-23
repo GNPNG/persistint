@@ -68,7 +68,7 @@ texture = ExtResource("3_pfb5w")
 offset = Vector2(0, -18)
 
 [node name="Calendar_Left" type="Sprite2D" parent="." unique_id=880844376]
-position = Vector2(352, 92)
+position = Vector2(392, 92)
 texture = ExtResource("4_rc1lt")
 offset = Vector2(0, -20)
 
