@@ -1,7 +1,8 @@
 {
-  "_note": "Next Top Comic (DESIGN.md): stand-up mini-game using the dialogue system in Monkey Island insult-sword-fighting structure (Sarah Silverman). Just horrible unfunny setup / punchline pairings, but the women in the audience think it's hilarious. 'setups' is the set, in order: each is {\"setup\": text, \"punchlines\": [text, ...]}; the player picks a punchline. Content is the author's and ships empty. When the setups run out the set ends and comic_done is written.",
+  "_note": "Next Top Comic (DESIGN.md): stand-up mini-game using the dialogue system in Monkey Island insult-sword-fighting structure (Sarah Silverman). Just horrible unfunny setup / punchline pairings, but the women in the audience think it's hilarious. 'sources' are the comics whose 'jokes' (data/quotes/<id>.json, setup and punchline as separate lines) are mixed into one shared pool: Sarah Silverman and the player draw from the same lines, fully randomized, so a pairing that happens to fit doesn't matter. 'interjections' are the author's lines, added to the punchline pool so they turn up every so often.",
   "title": "Next Top Comic",
   "host": "silverman",
   "return_map": "res://scenes/maps/village.tscn",
-  "setups": []
+  "sources": ["schumer", "silverman", "gadsby"],
+  "interjections": ["My vagina itches", "I just queefed"]
 }

@@ -1,0 +1,42 @@
+{
+  "_note": "Amy Schumer's own stand-up jokes, setup and punchline kept as separate lines, each checked against the page in 'url' on 2026-10-23. Used by Next Top Comic's shared pool.",
+  "quotes": [],
+  "jokes": [
+    {
+      "setup": "Yeah, I did it.",
+      "punchline": "I'm amazing. I laid there and… that's it.",
+      "source": "Growing (Netflix, 2019)",
+      "url": "https://www.fatherly.com/play/12-funniest-jokes-from-amy-schumers-new-netflix-special-growing"
+    },
+    {
+      "setup": "What are you having? Do you know what you're having?",
+      "punchline": "Hemorrhoids.",
+      "source": "Growing (Netflix, 2019); page spells it 'Hemroids'",
+      "url": "https://www.fatherly.com/play/12-funniest-jokes-from-amy-schumers-new-netflix-special-growing"
+    },
+    {
+      "setup": "I haven't even wanted wine, that's how I know this baby's not mine.",
+      "punchline": "This baby's a lie!",
+      "source": "Growing (Netflix, 2019)",
+      "url": "https://www.fatherly.com/play/12-funniest-jokes-from-amy-schumers-new-netflix-special-growing"
+    },
+    {
+      "setup": "Marrying a chef is a little on-the-nose for me.",
+      "punchline": "It's like Snoop marrying weed.",
+      "source": "Growing (Netflix, 2019)",
+      "url": "https://www.fatherly.com/play/12-funniest-jokes-from-amy-schumers-new-netflix-special-growing"
+    },
+    {
+      "setup": "At that age, for men, the most embarrassing thing is unwanted erections.",
+      "punchline": "but then they grow up and show them to everyone.",
+      "source": "Growing (Netflix, 2019)",
+      "url": "https://www.fatherly.com/play/12-funniest-jokes-from-amy-schumers-new-netflix-special-growing"
+    }
+  ],
+  "_verification": {
+    "method": "WebFetch extraction on 2026-10-23 (tool output, not raw page text); wording not character-checked against the original; setup/punchline split taken from the extraction",
+    "verified": "2026-10-23",
+    "aggregator_only": 5,
+    "total": 5
+  }
+}

@@ -31,5 +31,13 @@
 	"silverman": {
 		"name": "Sarah Silverman",
 		"short": "Sarah"
+	},
+	"schumer": {
+		"name": "Amy Schumer",
+		"short": "Amy"
+	},
+	"gadsby": {
+		"name": "Hannah Gadsby",
+		"short": "Hannah"
 	}
 }

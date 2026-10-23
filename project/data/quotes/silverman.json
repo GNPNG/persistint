@@ -1,5 +1,5 @@
 {
-  "_note": "Sarah Silverman's own words only, each checked against the page in 'url' on 2026-10-23.",
+  "_note": "Sarah Silverman's own words only, each checked against the page in 'url' on 2026-10-23. 'jokes' are setup/punchline pairs (WebFetch extraction of the same Wikiquote page on 2026-10-23, split into two lines) used by Next Top Comic's shared pool.",
   "quotes": [
     {
       "text": "Can I just say to the 'Bernie or bust' people, you're being ridiculous.",
@@ -212,5 +212,37 @@
     "expires": "never for listed source/date; wording re-check required before use of any line",
     "aggregator_only": 29,
     "total": 34
-  }
+  },
+  "jokes": [
+    {
+      "setup": "I don't care if you think I'm racist.",
+      "punchline": "I just want you to think I'm thin.",
+      "source": "Jesus Is Magic, 2005",
+      "url": "https://en.wikiquote.org/wiki/Sarah_Silverman"
+    },
+    {
+      "setup": "I want to get an abortion.",
+      "punchline": "But my boyfriend and I are having trouble conceiving.",
+      "source": "Jesus Is Magic, 2005",
+      "url": "https://en.wikiquote.org/wiki/Sarah_Silverman"
+    },
+    {
+      "setup": "I really wanted an abortion, but then I thought about it",
+      "punchline": "and it turned out I was just thirsty.",
+      "source": "Jesus Is Magic, 2005",
+      "url": "https://en.wikiquote.org/wiki/Sarah_Silverman"
+    },
+    {
+      "setup": "When God gives you AIDS – and God does give you AIDS –",
+      "punchline": "make lemon-AIDS!",
+      "source": "Jesus Is Magic, 2005",
+      "url": "https://en.wikiquote.org/wiki/Sarah_Silverman"
+    },
+    {
+      "setup": "Jesus is magic, you know, because he turned water to wine",
+      "punchline": "I think he made the Statue of Liberty disappear in the 80's.",
+      "source": "Jesus Is Magic, 2005",
+      "url": "https://en.wikiquote.org/wiki/Sarah_Silverman"
+    }
+  ]
 }

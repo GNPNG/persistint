@@ -7,6 +7,8 @@ do begin_set()
 if set_done()
 	do finish()
 	=> END
+if player_turn()
+	=> player_beat
 do deliver_setup()
 {{host_name()}}: {{current_setup()}}
 - {{punchline(0)}} [if has_punchline(0)]
@@ -33,9 +35,232 @@ do deliver_setup()
 - {{punchline(7)}} [if has_punchline(7)]
 	do pick(7)
 	=> laugh
+- {{punchline(8)}} [if has_punchline(8)]
+	do pick(8)
+	=> laugh
+- {{punchline(9)}} [if has_punchline(9)]
+	do pick(9)
+	=> laugh
+- {{punchline(10)}} [if has_punchline(10)]
+	do pick(10)
+	=> laugh
+- {{punchline(11)}} [if has_punchline(11)]
+	do pick(11)
+	=> laugh
+- {{punchline(12)}} [if has_punchline(12)]
+	do pick(12)
+	=> laugh
+- {{punchline(13)}} [if has_punchline(13)]
+	do pick(13)
+	=> laugh
+- {{punchline(14)}} [if has_punchline(14)]
+	do pick(14)
+	=> laugh
+- {{punchline(15)}} [if has_punchline(15)]
+	do pick(15)
+	=> laugh
+- {{punchline(16)}} [if has_punchline(16)]
+	do pick(16)
+	=> laugh
+- {{punchline(17)}} [if has_punchline(17)]
+	do pick(17)
+	=> laugh
+- {{punchline(18)}} [if has_punchline(18)]
+	do pick(18)
+	=> laugh
+- {{punchline(19)}} [if has_punchline(19)]
+	do pick(19)
+	=> laugh
+- {{punchline(20)}} [if has_punchline(20)]
+	do pick(20)
+	=> laugh
+- {{punchline(21)}} [if has_punchline(21)]
+	do pick(21)
+	=> laugh
+- {{punchline(22)}} [if has_punchline(22)]
+	do pick(22)
+	=> laugh
+- {{punchline(23)}} [if has_punchline(23)]
+	do pick(23)
+	=> laugh
+- {{punchline(24)}} [if has_punchline(24)]
+	do pick(24)
+	=> laugh
+- {{punchline(25)}} [if has_punchline(25)]
+	do pick(25)
+	=> laugh
+- {{punchline(26)}} [if has_punchline(26)]
+	do pick(26)
+	=> laugh
+- {{punchline(27)}} [if has_punchline(27)]
+	do pick(27)
+	=> laugh
+- {{punchline(28)}} [if has_punchline(28)]
+	do pick(28)
+	=> laugh
+- {{punchline(29)}} [if has_punchline(29)]
+	do pick(29)
+	=> laugh
+- {{punchline(30)}} [if has_punchline(30)]
+	do pick(30)
+	=> laugh
+- {{punchline(31)}} [if has_punchline(31)]
+	do pick(31)
+	=> laugh
+- {{punchline(32)}} [if has_punchline(32)]
+	do pick(32)
+	=> laugh
+- {{punchline(33)}} [if has_punchline(33)]
+	do pick(33)
+	=> laugh
+- {{punchline(34)}} [if has_punchline(34)]
+	do pick(34)
+	=> laugh
+- {{punchline(35)}} [if has_punchline(35)]
+	do pick(35)
+	=> laugh
+- {{punchline(36)}} [if has_punchline(36)]
+	do pick(36)
+	=> laugh
+- {{punchline(37)}} [if has_punchline(37)]
+	do pick(37)
+	=> laugh
+- {{punchline(38)}} [if has_punchline(38)]
+	do pick(38)
+	=> laugh
+- {{punchline(39)}} [if has_punchline(39)]
+	do pick(39)
+	=> laugh
+=> laugh
+
+~ player_beat
+- {{setup(0)}} [if has_setup(0)]
+	do pick_setup(0)
+	=> answer
+- {{setup(1)}} [if has_setup(1)]
+	do pick_setup(1)
+	=> answer
+- {{setup(2)}} [if has_setup(2)]
+	do pick_setup(2)
+	=> answer
+- {{setup(3)}} [if has_setup(3)]
+	do pick_setup(3)
+	=> answer
+- {{setup(4)}} [if has_setup(4)]
+	do pick_setup(4)
+	=> answer
+- {{setup(5)}} [if has_setup(5)]
+	do pick_setup(5)
+	=> answer
+- {{setup(6)}} [if has_setup(6)]
+	do pick_setup(6)
+	=> answer
+- {{setup(7)}} [if has_setup(7)]
+	do pick_setup(7)
+	=> answer
+- {{setup(8)}} [if has_setup(8)]
+	do pick_setup(8)
+	=> answer
+- {{setup(9)}} [if has_setup(9)]
+	do pick_setup(9)
+	=> answer
+- {{setup(10)}} [if has_setup(10)]
+	do pick_setup(10)
+	=> answer
+- {{setup(11)}} [if has_setup(11)]
+	do pick_setup(11)
+	=> answer
+- {{setup(12)}} [if has_setup(12)]
+	do pick_setup(12)
+	=> answer
+- {{setup(13)}} [if has_setup(13)]
+	do pick_setup(13)
+	=> answer
+- {{setup(14)}} [if has_setup(14)]
+	do pick_setup(14)
+	=> answer
+- {{setup(15)}} [if has_setup(15)]
+	do pick_setup(15)
+	=> answer
+- {{setup(16)}} [if has_setup(16)]
+	do pick_setup(16)
+	=> answer
+- {{setup(17)}} [if has_setup(17)]
+	do pick_setup(17)
+	=> answer
+- {{setup(18)}} [if has_setup(18)]
+	do pick_setup(18)
+	=> answer
+- {{setup(19)}} [if has_setup(19)]
+	do pick_setup(19)
+	=> answer
+- {{setup(20)}} [if has_setup(20)]
+	do pick_setup(20)
+	=> answer
+- {{setup(21)}} [if has_setup(21)]
+	do pick_setup(21)
+	=> answer
+- {{setup(22)}} [if has_setup(22)]
+	do pick_setup(22)
+	=> answer
+- {{setup(23)}} [if has_setup(23)]
+	do pick_setup(23)
+	=> answer
+- {{setup(24)}} [if has_setup(24)]
+	do pick_setup(24)
+	=> answer
+- {{setup(25)}} [if has_setup(25)]
+	do pick_setup(25)
+	=> answer
+- {{setup(26)}} [if has_setup(26)]
+	do pick_setup(26)
+	=> answer
+- {{setup(27)}} [if has_setup(27)]
+	do pick_setup(27)
+	=> answer
+- {{setup(28)}} [if has_setup(28)]
+	do pick_setup(28)
+	=> answer
+- {{setup(29)}} [if has_setup(29)]
+	do pick_setup(29)
+	=> answer
+- {{setup(30)}} [if has_setup(30)]
+	do pick_setup(30)
+	=> answer
+- {{setup(31)}} [if has_setup(31)]
+	do pick_setup(31)
+	=> answer
+- {{setup(32)}} [if has_setup(32)]
+	do pick_setup(32)
+	=> answer
+- {{setup(33)}} [if has_setup(33)]
+	do pick_setup(33)
+	=> answer
+- {{setup(34)}} [if has_setup(34)]
+	do pick_setup(34)
+	=> answer
+- {{setup(35)}} [if has_setup(35)]
+	do pick_setup(35)
+	=> answer
+- {{setup(36)}} [if has_setup(36)]
+	do pick_setup(36)
+	=> answer
+- {{setup(37)}} [if has_setup(37)]
+	do pick_setup(37)
+	=> answer
+- {{setup(38)}} [if has_setup(38)]
+	do pick_setup(38)
+	=> answer
+- {{setup(39)}} [if has_setup(39)]
+	do pick_setup(39)
+	=> answer
+=> answer
+
+~ answer
+{{host_name()}}: {{host_punchline()}}
 => laugh
 
 ~ laugh
 {{audience_laugh()}}
-do next_setup()
+do next_turn()
 => beat

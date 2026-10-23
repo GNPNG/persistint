@@ -182,46 +182,64 @@ func _run() -> void:
 	_check(name_it.beat("hottest_verdict").has("lines"), "hottest: a Name It beat follows the verdict")
 	hot.queue_free()
 
-	# Next Top Comic: Silverman's set on the dialogue system. Test data injected at runtime only.
+	# Next Top Comic: Silverman's set on the dialogue system, Monkey Island structure.
+	# Joke text comes from data/quotes/*.json; tests inject clearly-fake pairs at runtime only.
 	var comic_res: DialogueResource = load("res://dialogue/next_top_comic.dialogue")
 	_check(comic_res != null, "comic: dialogue file exists")
 	ws.reset()
 	var comic: Control = load("res://scenes/minigames/next_top_comic.tscn").instantiate()
 	comic.autostart = false
 	root.add_child(comic)
-	_check(comic.data.get("setups", ["x"]).is_empty(), "comic: shipped content is empty (the author's)")
-	comic.data["setups"] = [
-		{"setup": "_s1", "punchlines": ["_p1a", "_p1b"]},
-		{"setup": "_s2", "punchlines": ["_p2a"]},
-	]
+	_check(comic.pool.size() >= 10 and comic.pool.size() <= comic.MAX_SLOTS, "comic: the shared pool of sourced jokes is loaded and fits the choice list")
+	var pool_ok := true
+	for j: Dictionary in comic.pool:
+		pool_ok = pool_ok and j.get("setup", "") != "" and j.get("punchline", "") != "" and j.get("setup") != j.get("punchline") \
+			and str(j.get("url", "")).begins_with("https://") and j.get("by", "") in ["schumer", "silverman", "gadsby"]
+	_check(pool_ok, "comic: every joke has a separate setup line and punchline line, a source url, and is by Schumer, Silverman or Gadsby")
+	var by := {}
+	for j: Dictionary in comic.pool:
+		by[j["by"]] = true
+	_check(by.size() == 3, "comic: the pool mixes all three comics")
 	_check(comic.host_name() == "Sarah Silverman", "comic: Sarah Silverman's set")
+	comic.pool = [
+		{"setup": "_s1", "punchline": "_p1"},
+		{"setup": "_s2", "punchline": "_p2"},
+		{"setup": "_s3", "punchline": "_p3"},
+	]
+	_check(comic.data["interjections"] == ["My vagina itches", "I just queefed"], "comic: the author's interjections ship in the data")
+	comic.data["interjections"] = ["_i1"]
 	comic.begin_set()
 	var dline = await dm.get_next_dialogue_line(comic_res, "start", [comic])
 	_check(dline != null and dline.character == "Chelsea Clinton" and dline.text == comic.emcee_intro() and dline.text != "",
 		"comic: Chelsea Clinton introduces it with her emcee.json lines")
 	var texts: Array = []
 	var laughs := 0
-	var offered: Array = []
+	var offers: Array = []
+	var speakers: Array = []
 	var guard := 0
-	while dline != null and guard < 60:
+	while dline != null and guard < 80:
 		guard += 1
 		texts.append(dline.text)
-		if dline.text.contains("♥"):
+		speakers.append(dline.character)
+		if dline.text == "[audience laughs riotously]":
 			laughs += 1
 		if dline.responses.size() > 0:
-			var names: Array = []
 			var allowed: Array = dline.responses.filter(func(x): return x.is_allowed)
+			var names: Array = []
 			for resp in allowed:
 				names.append(resp.text)
-			offered.append(names)
-			dline = await dm.get_next_dialogue_line(comic_res, allowed[allowed.size() - 1].next_id, [comic])
+			names.sort()
+			offers.append(names)
+			dline = await dm.get_next_dialogue_line(comic_res, allowed[0].next_id, [comic])
 		else:
 			dline = await dm.get_next_dialogue_line(comic_res, dline.next_id, [comic])
-	_check(guard < 60 and dline == null, "comic: the set plays out and then it ends")
-	_check(texts.has("_s1") and texts.has("_s2") and texts.find("_s1") < texts.find("_s2"), "comic: Silverman delivers each setup in order")
-	_check(offered == [["_p1a", "_p1b"], ["_p2a"]], "comic: each setup offers its punchlines as responses (filled from the JSON)")
-	_check(laughs == 2, "comic: the women in the audience laugh at whatever was picked")
-	_check(comic.picks == ["_p1b", "_p2a"], "comic: the player's picks are recorded")
+	_check(guard < 80 and dline == null, "comic: the set plays out and then it ends")
+	_check(offers.size() == 3, "comic: one exchange per setup in the pool")
+	_check(offers[0] == ["_i1", "_p1", "_p2", "_p3"], "comic: Silverman throws a setup; the player chooses from the whole shared pool of punchlines, interjections included")
+	_check(offers[1].size() == 2 and offers[1][0].begins_with("_s"), "comic: then the player throws a setup, chosen from the same shared pool")
+	_check(offers[2].size() == 2, "comic: lines are used up as they are thrown")
+	_check(speakers.has("Sarah Silverman"), "comic: Sarah Silverman delivers setups")
+	_check(laughs == 3, "comic: [audience laughs riotously] after every exchange, matched or not")
 	_check(ws.get_flag("comic_done") == true, "comic: comic_done written to WorldState at the end")
 	_check(name_it._layer == null and name_it.beat("next_top_comic").get("hook") == null, "comic: Name It follow-up wired, stays off until the author sets the beat")
 	comic.queue_free()

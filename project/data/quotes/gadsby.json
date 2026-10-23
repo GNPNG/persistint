@@ -1,0 +1,42 @@
+{
+  "_note": "Hannah Gadsby's own stand-up jokes from Nanette (2018), setup and punchline kept as separate lines, each checked against the fan transcript in 'url' on 2026-10-23. Used by Next Top Comic's shared pool.",
+  "quotes": [],
+  "jokes": [
+    {
+      "setup": "For a long time, I knew more facts about unicorns than I did about lesbians.",
+      "punchline": "There are no facts about unicorns.",
+      "source": "Nanette (2018)",
+      "url": "https://scrapsfromtheloft.com/comedy/hannah-gadsby-nanette-transcript/"
+    },
+    {
+      "setup": "I just don't think there was enough lesbian content.",
+      "punchline": "I'd been on stage the whole time.",
+      "source": "Nanette (2018)",
+      "url": "https://scrapsfromtheloft.com/comedy/hannah-gadsby-nanette-transcript/"
+    },
+    {
+      "setup": "No, Grandma. No, I don't have time for boyfriends.",
+      "punchline": "But if I had time, heaps!",
+      "source": "Nanette (2018)",
+      "url": "https://scrapsfromtheloft.com/comedy/hannah-gadsby-nanette-transcript/"
+    },
+    {
+      "setup": "I cook dinner way more than I lesbian.",
+      "punchline": "But nobody ever introduces me as 'that chef comedian,' do they?",
+      "source": "Nanette (2018); page spells it 'every'",
+      "url": "https://scrapsfromtheloft.com/comedy/hannah-gadsby-nanette-transcript/"
+    },
+    {
+      "setup": "Would you put a bangle on a potato?",
+      "punchline": "No, that's organic. I paid a lot for that potato.",
+      "source": "Nanette (2018)",
+      "url": "https://scrapsfromtheloft.com/comedy/hannah-gadsby-nanette-transcript/"
+    }
+  ],
+  "_verification": {
+    "method": "WebFetch extraction of a fan transcript on 2026-10-23 (tool output, not raw page text); wording not checked against the Netflix audio",
+    "verified": "2026-10-23",
+    "aggregator_only": 5,
+    "total": 5
+  }
+}
