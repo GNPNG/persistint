@@ -120,7 +120,7 @@ func refresh_outfit() -> void:
 	var pattern := PaperDoll.art_dir_for(outfit.values())
 	for sprite: Sprite2D in outfit:
 		var item: String = outfit[sprite]
-		var path := pattern % item
+		var path := PaperDoll.part_path(pattern, item)
 		sprite.texture = load(path) if item != "none" and ResourceLoader.exists(path) else null
 		# Scale the doll to 48 px tall (NPC height) with its feet on the collision circle.
 		var h := float(sprite.texture.get_height()) if sprite.texture else 48.0
