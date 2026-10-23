@@ -163,6 +163,7 @@ func _run() -> void:
 	var hot: Control = load("res://scenes/minigames/hottest_of_the_hot.tscn").instantiate()
 	root.add_child(hot)
 	_check(hot.emcee_name() == "Chelsea Clinton", "hottest: introduced by Chelsea Clinton")
+	_check(hot._say.text.contains("They persisted and so should you."), "hottest: Chelsea Clinton's intro uses her She Persisted lines")
 	_check(hot.host_name() == "Tyra Banks", "hottest: judged by Tyra Banks")
 	hot.choose("hair", "hair_crown")
 	_check(hot.doll.outfit["hair"] == "hair_crown", "hottest: makeover dresses the shared paper doll")
