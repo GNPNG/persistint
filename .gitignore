@@ -18,3 +18,6 @@ art/voice_refs/*.wav
 .beads/interactions.jsonl
 .beads/issues.jsonl
 tools/deploy_web.env
+# tools/web_render: unidentified captures (may be a sign-in/error page) and ffmpeg temp inputs
+prompts/**/*.unknown
+prompts/**/*.src.*

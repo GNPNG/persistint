@@ -1,0 +1,16 @@
+{
+  "name": "persistint-web-render",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Drives the Gemini web app with Puppeteer to render the asset prompts in prompts/",
+  "type": "module",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "status": "node render.mjs --status",
+    "test": "node --test tests/unit.test.mjs",
+    "smoke": "node --test tests/smoke.test.mjs"
+  },
+  "dependencies": {
+    "puppeteer-core": "24.43.1"
+  }
+}
