@@ -43,7 +43,11 @@ func record(beat_id: String) -> void:
 
 ## Opens the two-step Name It panel for a beat (called from dialogue mutations).
 func start(beat_id: String) -> void:
-	if beat(beat_id).is_empty() or WorldState.has_flag("named_%s" % beat_id):
+	var b := beat(beat_id)
+	# A beat runs only once its author has set the hook line and the answer.
+	if b.is_empty() or b.get("hook") == null or b.get("answer") == null:
+		return
+	if WorldState.has_flag("named_%s" % beat_id):
 		return
 	if _layer and is_instance_valid(_layer):
 		_layer.queue_free()
