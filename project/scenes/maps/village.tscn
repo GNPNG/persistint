@@ -478,8 +478,7 @@ target_spawn = "spawn_default"
 [node name="Exit_Cruise" type="Area2D" parent="." unique_id=673605257 instance=ExtResource("21_fo683")]
 position = Vector2(542.72, 319.36)
 script = ExtResource("22_a3xfr")
-locked = true
-metadata/wire_to = "Cruise flashback world (unlocked by Forbidden Knowledge)"
+target_scene = "res://scenes/chapters/chapter_end.tscn"
 
 [node name="Exit_Tropical" type="Area2D" parent="." unique_id=955344869 instance=ExtResource("21_fo683")]
 position = Vector2(1139.2, 752)
