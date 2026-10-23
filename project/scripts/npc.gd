@@ -26,9 +26,12 @@ func _ready() -> void:
 			if parsed is Dictionary:
 				_barks = parsed
 	if sprite_texture != "":
-		var path := "res://assets/placeholder/%s.png" % sprite_texture
-		if ResourceLoader.exists(path):
-			$Sprite2D.texture = load(path)
+		# Canon art (cut from the NotebookLM sheets) wins over the placeholders.
+		for dir in ["canon", "placeholder"]:
+			var path := "res://assets/%s/%s.png" % [dir, sprite_texture]
+			if ResourceLoader.exists(path):
+				$Sprite2D.texture = load(path)
+				break
 	bubble.hide()
 	input_event.connect(_on_input_event)
 	$Proximity.body_entered.connect(_on_proximity_entered)
