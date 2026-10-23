@@ -16,22 +16,35 @@ export const DEFAULTS = {
   delaySec: 90,                 // pause between generations
   maxPerRun: 10,                // hard cap on generations per run (--limit can lower it)
   launchTimeoutSec: 120,        // Chrome on WSLg can take ~20 s to open its DevTools port
+  trackerUrl: null,             // render tracker web app /exec URL (tools/render_tracker/DEPLOY.md)
+  trackerSecret: null,          // its TRACKER_SECRET; never printed or written to run logs
+  trackerMaxWaitSec: 1800,      // tracker mode: wait in-process for a kind's min gap / retry up to this long, else exit
 };
 
 const ENV = {
   chrome: 'WEB_RENDER_CHROME', profileDir: 'WEB_RENDER_PROFILE', browserURL: 'WEB_RENDER_BROWSER_URL',
   downloadDir: 'WEB_RENDER_DOWNLOAD_DIR', downloadDirBrowser: 'WEB_RENDER_DOWNLOAD_DIR_BROWSER',
+  trackerUrl: 'WEB_RENDER_TRACKER_URL', trackerSecret: 'WEB_RENDER_TRACKER_SECRET',
 };
+
+/** config.local.json, or the file named by WEB_RENDER_CONFIG (tests point it elsewhere). */
+export function localConfigPath() {
+  return process.env.WEB_RENDER_CONFIG || LOCAL_CONFIG_PATH;
+}
+
+/** Plain http to 127.0.0.1 is allowed for the tracker only with this env set (the test mock server). */
+export const trackerAllowsLoopbackHttp = () => process.env.WEB_RENDER_TRACKER_ALLOW_LOOPBACK_HTTP === '1';
 
 export function loadSettings(cli = {}) {
   let local = {};
-  if (fs.existsSync(LOCAL_CONFIG_PATH)) local = JSON.parse(fs.readFileSync(LOCAL_CONFIG_PATH, 'utf8'));
+  const cfgPath = localConfigPath();
+  if (fs.existsSync(cfgPath)) local = JSON.parse(fs.readFileSync(cfgPath, 'utf8'));
   const s = { ...DEFAULTS, ...local };
   for (const [k, v] of Object.entries(ENV)) if (process.env[v]) s[k] = process.env[v];
   for (const [k, v] of Object.entries(cli)) if (v !== undefined && v !== null) s[k] = v;
   s.profileDir = expandHome(s.profileDir);
   s.downloadDir = expandHome(s.downloadDir);
-  const bad = validateNumbers(s);
+  const bad = [...validateNumbers(s), ...validateTracker(s)];
   if (bad.length) throw new SettingsError(bad.join('\n'));
   assertDedicatedProfile(s.profileDir);
   assertOutsideRepo(s.profileDir, 'profileDir');
@@ -55,6 +68,32 @@ export function validateNumbers(s) {
     errs.push(`maxPerRun must be a whole number >= 1 (got ${JSON.stringify(s.maxPerRun)})`);
   }
   return errs;
+}
+
+/** Tracker settings: https URL (loopback http only for tests) and a secret, both or neither. */
+export function validateTracker(s) {
+  const errs = [];
+  if (!s.trackerUrl && !s.trackerSecret) return errs;
+  if (!s.trackerUrl) errs.push('trackerSecret is set but trackerUrl is not (config.local.json or WEB_RENDER_TRACKER_URL)');
+  else {
+    let u = null;
+    try { u = new URL(s.trackerUrl); } catch { errs.push('trackerUrl is not a valid URL'); }
+    if (u && u.protocol !== 'https:' && !(trackerAllowsLoopbackHttp() && u.protocol === 'http:' && ['127.0.0.1', 'localhost'].includes(u.hostname))) {
+      errs.push(`trackerUrl must be https:// (got ${u.protocol}//${u.host})`);
+    }
+  }
+  if (s.trackerUrl && !s.trackerSecret) errs.push('trackerUrl is set but trackerSecret is not (config.local.json or WEB_RENDER_TRACKER_SECRET)');
+  if (s.trackerSecret && String(s.trackerSecret).length < 32) errs.push('trackerSecret must be at least 32 characters (tools/render_tracker/configure.mjs --new-secret makes one)');
+  if (!(typeof s.trackerMaxWaitSec === 'number' && Number.isFinite(s.trackerMaxWaitSec) && s.trackerMaxWaitSec >= 0)) {
+    errs.push(`trackerMaxWaitSec must be a number of seconds >= 0 (got ${JSON.stringify(s.trackerMaxWaitSec)})`);
+  }
+  return errs;
+}
+
+/** Settings without the tracker secret, for run logs. */
+export function publicSettings(s) {
+  const { trackerSecret, ...rest } = s;
+  return { ...rest, trackerSecret: trackerSecret ? '[set]' : null };
 }
 
 /** Parse --limit: a whole number >= 1, or throw SettingsError. undefined stays undefined. */
@@ -188,6 +227,12 @@ export function validateSelectors(cfg, opts = {}) {
     if (!name) errors.push(`kinds.${k}: missing`);
     else if (!cfg.surfaces[name]) errors.push(`kinds.${k}: surface "${name}" is not defined`);
     else if (cfg.surfaces[name].kind !== k) errors.push(`kinds.${k}: surface "${name}" has kind "${cfg.surfaces[name].kind}"`);
+  }
+  if (cfg.outcomeText !== undefined) {
+    for (const k of ['quota', 'refused']) {
+      const l = cfg.outcomeText?.[k];
+      if (l !== undefined && !(Array.isArray(l) && l.every((p) => typeof p === 'string' && p.trim()))) errors.push(`outcomeText.${k}: must be an array of non-empty phrases`);
+    }
   }
   for (const [name, s] of Object.entries(cfg.surfaces)) {
     const w = `surfaces.${name}`;
