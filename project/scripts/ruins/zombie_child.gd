@@ -49,7 +49,8 @@ func quote() -> String:
 
 
 ## Every line a clone of `orig` may speak: the quotes in its data/quotes/<file>.json marked
-## verified=true (checked verbatim against a primary source; tests/test_quotes_vv.gd).
+## verified=true (checked verbatim against a primary source; tests/test_quotes_vv.gd) and not
+## marked excluded_from_game.
 static func quote_pool(orig: String) -> Array:
 	var file: String = data().get("originals", {}).get(orig, {}).get("quotes", "")
 	var path := "res://data/quotes/%s.json" % file
@@ -58,7 +59,8 @@ static func quote_pool(orig: String) -> Array:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
 	var pool: Array = []
 	for q: Variant in (parsed.get("quotes", []) if parsed is Dictionary else []):
-		if q is Dictionary and q.get("verified", false) == true and String(q.get("text", "")) != "":
+		if q is Dictionary and q.get("verified", false) == true and not q.get("excluded_from_game", false) \
+				and String(q.get("text", "")) != "":
 			pool.append(String(q["text"]))
 	return pool
 

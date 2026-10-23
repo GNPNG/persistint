@@ -1,12 +1,12 @@
 {
-  "_note": "Oprah Winfrey's own words only, each checked against the page in 'url' on 2026-10-23.",
+  "_note": "Oprah Winfrey's own words only, each checked verbatim against the page in 'checked_url' (the page the wording was matched on; 'primary_source' when that differs from the listed 'url') on 2026-10-23.",
   "_verification": {
     "method": "Verbatim check on 2026-10-23: every source page was downloaded as raw HTML/PDF (Wayback Machine snapshot where the live site refuses non-browser requests) and each quote's text was string-matched against the page text, ignoring only quote-mark/dash typography. Aggregator pages (Goodreads, Wikiquote, quote listicles) were also searched for a primary source; quotes found only on aggregators are verified=false.",
     "fields": "per quote: verified, checked_url (page the wording was matched on), primary_source (when not the listed url), note, was (original text when corrected)",
-    "verified": 20,
+    "verified": 23,
     "unverified": 16,
     "corrected": 1,
-    "total": 36,
+    "total": 39,
     "date": "2026-10-23",
     "rule": "Only quotes with verified=true may be used in game (tests/test_quotes_vv.gd)."
   },
@@ -341,6 +341,30 @@
       "verified": false,
       "checked_url": "https://www.goodreads.com/author/quotes/3518.Oprah_Winfrey",
       "note": "Aggregator-only: wording appears on www.goodreads.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
+    },
+    {
+      "text": "One of my favorite questions to ask on Super Soul is what is the lesson that took you the longest to learn?",
+      "source": "Oprah's SuperSoul Conversations podcast, 'Oprah Winfrey: Broken Open' (host introduction, 00:00:25)",
+      "url": "https://podcasts.happyscribe.com/oprah-s-supersoul-conversations/oprah-winfrey-broken-open",
+      "verified": true,
+      "checked_url": "https://podcasts.happyscribe.com/oprah-s-supersoul-conversations/oprah-winfrey-broken-open",
+      "note": "Matched verbatim in the episode transcript (live WebFetch and cached raw HTML, 2026-10-23). The transcript is unlabelled machine transcription; this is Oprah's solo host introduction (she names herself at 00:00:01 and speaks alone until the first clip)."
+    },
+    {
+      "text": "You have to pay attention to your life, because it is speaking to you all the time.",
+      "source": "Oprah Winfrey, Colorado College commencement address, 2019 (Singju Post transcript)",
+      "url": "https://singjupost.com/oprah-winfreys-commencement-address-at-colorado-college-full-transcript/",
+      "verified": true,
+      "checked_url": "https://singjupost.com/oprah-winfreys-commencement-address-at-colorado-college-full-transcript/",
+      "note": "Matched verbatim in the transcript (live WebFetch and cached raw HTML, 2026-10-23). Transcript site, not the college's own publication."
+    },
+    {
+      "text": "You need to make your bed every day.",
+      "source": "Oprah Winfrey, Colorado College commencement address, 2019 (Singju Post transcript)",
+      "url": "https://singjupost.com/oprah-winfreys-commencement-address-at-colorado-college-full-transcript/",
+      "verified": true,
+      "checked_url": "https://singjupost.com/oprah-winfreys-commencement-address-at-colorado-college-full-transcript/",
+      "note": "Matched verbatim in the transcript (live WebFetch and cached raw HTML, 2026-10-23), between 'You need to keep your commitments.' and 'Because when you do that it makes the whole house look better.' Transcript site, not the college's own publication."
     }
   ]
 }
