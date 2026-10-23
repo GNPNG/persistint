@@ -1,5 +1,14 @@
 ~ start
 do begin_interview()
+if has_intro(0)
+	do say_intro(0)
+	{{host_name()}}: {{intro_line(0)}}
+if has_intro(1)
+	do say_intro(1)
+	{{host_name()}}: {{intro_line(1)}}
+if has_intro(2)
+	do say_intro(2)
+	{{host_name()}}: {{intro_line(2)}}
 => beat
 
 ~ beat

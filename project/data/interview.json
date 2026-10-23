@@ -1,12 +1,529 @@
 {
-  "_note": "The Interview (DESIGN.md §2): character creation as a talk show segment. Oprah interviews the player about themselves; answers drive SPECIAL-style stat allocation (Fallout G.O.A.T.-exam register). 'stats' lists the stat ids/labels; 'base' and 'min'/'max' bound each stat; 'questions' is the interview, in order: each is {\"prompt\": text, \"answers\": [{\"text\": text, \"stats\": {stat_id: delta}}]} (up to 8 answers per question). Content is the author's and ships empty. Oprah's own lines must come from data/quotes/oprah.json. When the questions run out the stats are written to WorldState (stats, interview_done).",
-  "title": "The Interview",
-  "host": "oprah",
-  "return_map": "res://scenes/maps/village.tscn",
-  "base": 5,
-  "min": 1,
-  "max": 10,
-  "intro": [],
-  "stats": [],
-  "questions": []
+	"_note": "The Interview (DESIGN.md §2): character creation as a talk show segment. Oprah's every spoken line (intro and each prompt) is a quote from data/quotes/oprah.json, verbatim; the player's answers are the Fallout-style replies, each shifting stats. 'stats' lists the stat ids/labels; 'base' and 'min'/'max' bound each stat; 'questions' is the interview, in order: each is {\"prompt\": text, \"answers\": [{\"text\": text, \"stats\": {stat_id: delta}}]} (up to 8 answers per question). When the questions run out the stats are written to WorldState (stats, interview_done).",
+	"title": "The Interview",
+	"host": "oprah",
+	"return_map": "res://scenes/maps/village.tscn",
+	"base": 5,
+	"min": 1,
+	"max": 10,
+	"intro": [
+		"So I want all the girls watching here, now, to know that a new day is on the horizon!",
+		"Each of us in this room are celebrated because of the stories that we tell, and this year we became the story.",
+		"The more you praise and celebrate your life, the more there is in life to celebrate."
+	],
+	"stats": [
+		{
+			"id": "strength",
+			"label": "Strength"
+		},
+		{
+			"id": "perception",
+			"label": "Perception"
+		},
+		{
+			"id": "endurance",
+			"label": "Endurance"
+		},
+		{
+			"id": "charisma",
+			"label": "Charisma"
+		},
+		{
+			"id": "intelligence",
+			"label": "Intelligence"
+		},
+		{
+			"id": "agility",
+			"label": "Agility"
+		},
+		{
+			"id": "luck",
+			"label": "Luck"
+		}
+	],
+	"questions": [
+		{
+			"prompt": "You are your possibilities.",
+			"answers": [
+				{
+					"text": "I am a first-year receptionist with a dental plan. That is the full list.",
+					"stats": {
+						"endurance": 1,
+						"luck": -1
+					}
+				},
+				{
+					"text": "Whatever the audience claps for. I can work with that.",
+					"stats": {
+						"charisma": 2,
+						"intelligence": -1
+					}
+				},
+				{
+					"text": "I prefer to read the terms and conditions of my possibilities first.",
+					"stats": {
+						"intelligence": 2,
+						"charisma": -1
+					}
+				},
+				{
+					"text": "Mostly I am the ability to leave a room quickly.",
+					"stats": {
+						"agility": 2,
+						"strength": -1
+					}
+				},
+				{
+					"text": "[Say nothing. Let the silence be a gift to the studio audience.]",
+					"stats": {
+						"perception": 2,
+						"charisma": -1
+					}
+				}
+			]
+		},
+		{
+			"prompt": "Turn your wounds into wisdom.",
+			"answers": [
+				{
+					"text": "Great. I have a lot of wounds. How much airtime is there?",
+					"stats": {
+						"charisma": 1,
+						"endurance": 1
+					}
+				},
+				{
+					"text": "I have kept them in a drawer, labeled and dated, in case of litigation.",
+					"stats": {
+						"intelligence": 2,
+						"luck": -1
+					}
+				},
+				{
+					"text": "I turned them into a podcast and the podcast into a second wound.",
+					"stats": {
+						"charisma": 1,
+						"luck": -2
+					}
+				},
+				{
+					"text": "Those are not wounds, Oprah, those are my muscles.",
+					"stats": {
+						"strength": 2,
+						"perception": -1
+					}
+				},
+				{
+					"text": "What is the exchange rate on wisdom? I will need it in writing.",
+					"stats": {
+						"intelligence": 1,
+						"perception": 1
+					}
+				}
+			]
+		},
+		{
+			"prompt": "There is no such thing as failure — failure is just life trying to move us in another direction.",
+			"answers": [
+				{
+					"text": "That is what I told the landlord, and he did not find it moving.",
+					"stats": {
+						"luck": -1,
+						"charisma": 1
+					}
+				},
+				{
+					"text": "Then my entire résumé is just life directing me, very firmly, out of buildings.",
+					"stats": {
+						"agility": 1,
+						"endurance": 1
+					}
+				},
+				{
+					"text": "A failure is a failure. I will take the failure and keep the direction.",
+					"stats": {
+						"strength": 2,
+						"intelligence": -1
+					}
+				},
+				{
+					"text": "I have never failed. I have only been misunderstood by institutions.",
+					"stats": {
+						"charisma": 2,
+						"perception": -2
+					}
+				},
+				{
+					"text": "[Nod slowly. Take the quote. Sell the quote.]",
+					"stats": {
+						"intelligence": 1,
+						"luck": 1
+					}
+				}
+			]
+		},
+		{
+			"prompt": "The key to life is to develop an internal moral, emotional GPS that can tell you which way to go.",
+			"answers": [
+				{
+					"text": "Mine only says 'recalculating.' It has said that for eleven years.",
+					"stats": {
+						"perception": 1,
+						"luck": -1
+					}
+				},
+				{
+					"text": "I outsourced it to a group chat. They are very decisive.",
+					"stats": {
+						"charisma": 1,
+						"perception": -1
+					}
+				},
+				{
+					"text": "I follow the crowd. The crowd has never once been wrong in my presence.",
+					"stats": {
+						"agility": 1,
+						"intelligence": -2,
+						"luck": 1
+					}
+				},
+				{
+					"text": "I have a compass, a paper map, and a deep distrust of anything that speaks to me kindly.",
+					"stats": {
+						"perception": 2,
+						"charisma": -1
+					}
+				},
+				{
+					"text": "It points, quite firmly, at the nearest exit.",
+					"stats": {
+						"agility": 2
+					}
+				}
+			]
+		},
+		{
+			"prompt": "Surround yourself only with people who are going to take you higher.",
+			"answers": [
+				{
+					"text": "My friends will be so thrilled to hear they are being reviewed.",
+					"stats": {
+						"charisma": 1,
+						"perception": -1
+					}
+				},
+				{
+					"text": "Who decides who is going higher? Is there a rubric? Is it a committee?",
+					"stats": {
+						"intelligence": 2,
+						"charisma": -1
+					}
+				},
+				{
+					"text": "Done. I have already muted everyone who owns a lease.",
+					"stats": {
+						"agility": 1,
+						"endurance": -1
+					}
+				},
+				{
+					"text": "I would rather be lifted by someone I have met.",
+					"stats": {
+						"perception": 1,
+						"endurance": 1
+					}
+				},
+				{
+					"text": "Higher than what, exactly? I have a fear of heights and of accountability.",
+					"stats": {
+						"luck": 1,
+						"strength": -1
+					}
+				}
+			]
+		},
+		{
+			"prompt": "You get in life what you have the courage to ask for.",
+			"answers": [
+				{
+					"text": "A raise. A window. An apology from the man who parked in my spot.",
+					"stats": {
+						"strength": 1,
+						"charisma": 1
+					}
+				},
+				{
+					"text": "I have the courage to ask for the check. Is that the same?",
+					"stats": {
+						"luck": 1,
+						"intelligence": 1
+					}
+				},
+				{
+					"text": "I asked once, at a church, and I am still not sure what I agreed to.",
+					"stats": {
+						"perception": 1,
+						"luck": -2
+					}
+				},
+				{
+					"text": "I never ask. I just stand near what I want until it becomes awkward.",
+					"stats": {
+						"agility": 2,
+						"charisma": -1
+					}
+				},
+				{
+					"text": "Everything. In order of alphabet.",
+					"stats": {
+						"endurance": 2,
+						"intelligence": -1
+					}
+				}
+			]
+		},
+		{
+			"prompt": "Challenges are gifts that force us to search for a new center of gravity.",
+			"answers": [
+				{
+					"text": "My center of gravity is a bowl of cereal. It has been very reliable.",
+					"stats": {
+						"endurance": 2,
+						"agility": -1
+					}
+				},
+				{
+					"text": "I searched for a new center of gravity and found a lawyer instead.",
+					"stats": {
+						"intelligence": 1,
+						"luck": -1
+					}
+				},
+				{
+					"text": "This is a gift? I would like to return it for store credit.",
+					"stats": {
+						"charisma": 1,
+						"luck": -1
+					}
+				},
+				{
+					"text": "Gravity has always been my friend. I have been falling toward the good things for years.",
+					"stats": {
+						"luck": 2,
+						"agility": -1
+					}
+				},
+				{
+					"text": "Please do not ask me to search anything. I will lose my balance.",
+					"stats": {
+						"agility": -1,
+						"strength": 1,
+						"endurance": 1
+					}
+				}
+			]
+		},
+		{
+			"prompt": "When you pay attention to what feeds your energy, you move in the direction of the life for which you were intended.",
+			"answers": [
+				{
+					"text": "My energy is fed by sleep, and I am told that is a character flaw.",
+					"stats": {
+						"endurance": 2,
+						"charisma": -1
+					}
+				},
+				{
+					"text": "Snacks, mostly. And the feeling that someone else is in charge.",
+					"stats": {
+						"luck": 1,
+						"intelligence": -1
+					}
+				},
+				{
+					"text": "Standing at the back of a crowd and nodding. It feeds everyone.",
+					"stats": {
+						"charisma": 1,
+						"perception": 1
+					}
+				},
+				{
+					"text": "Arguing, in the comments, with strangers, for eight hours at a time.",
+					"stats": {
+						"strength": 1,
+						"endurance": 1,
+						"charisma": -1
+					}
+				},
+				{
+					"text": "I could not tell you. I have an appointment, and I do not know what for.",
+					"stats": {
+						"perception": -2,
+						"luck": 1
+					}
+				}
+			]
+		},
+		{
+			"prompt": "If you have faith, even if it's as little as a mustard seed, you can move mountains.",
+			"answers": [
+				{
+					"text": "A mustard seed. Is it organic? I have a rash.",
+					"stats": {
+						"perception": 1,
+						"agility": -1
+					}
+				},
+				{
+					"text": "I have faith in a very small number of mountains and an enormous number of seeds.",
+					"stats": {
+						"strength": 1,
+						"luck": 1
+					}
+				},
+				{
+					"text": "I would need to see the mountain move first, and then I would tell everybody I always believed.",
+					"stats": {
+						"intelligence": 1,
+						"charisma": 1,
+						"perception": -1
+					}
+				},
+				{
+					"text": "I used to have faith. Now I have a spreadsheet with a column for it.",
+					"stats": {
+						"intelligence": 2,
+						"luck": -1
+					}
+				},
+				{
+					"text": "Faith moves mountains and I move furniture. We each have our department.",
+					"stats": {
+						"strength": 2
+					}
+				}
+			]
+		},
+		{
+			"prompt": "What I know for sure is you become what you believe.",
+			"answers": [
+				{
+					"text": "I would like to become the person who leaves this show with a free car.",
+					"stats": {
+						"luck": 2,
+						"intelligence": -1
+					}
+				},
+				{
+					"text": "Then I believe a great deal of nonsense and have become an enormous amount of it.",
+					"stats": {
+						"perception": -1,
+						"charisma": 1
+					}
+				},
+				{
+					"text": "I believe in my lunch break. I have become it.",
+					"stats": {
+						"endurance": 1,
+						"strength": -1
+					}
+				},
+				{
+					"text": "Careful, Oprah. That sentence has been a cult recruitment pitch before.",
+					"stats": {
+						"perception": 2,
+						"charisma": -2
+					}
+				},
+				{
+					"text": "What I believe is that it is nearly the end of the segment.",
+					"stats": {
+						"agility": 1,
+						"perception": 1
+					}
+				}
+			]
+		},
+		{
+			"prompt": "Everything is always working out for you.",
+			"answers": [
+				{
+					"text": "That is certainly something I have been told by people who were selling something.",
+					"stats": {
+						"perception": 2,
+						"luck": -1
+					}
+				},
+				{
+					"text": "It is! It is! Everything is working out, and it has been since birth!",
+					"stats": {
+						"charisma": 2,
+						"perception": -2
+					}
+				},
+				{
+					"text": "I will need that in a contract, with my name spelled right.",
+					"stats": {
+						"intelligence": 2
+					}
+				},
+				{
+					"text": "Then why is the ship so far from land?",
+					"stats": {
+						"perception": 1,
+						"luck": -1,
+						"endurance": 1
+					}
+				},
+				{
+					"text": "[Smile. Hold the smile. Hold it a little longer. It is almost a spine.]",
+					"stats": {
+						"endurance": 2,
+						"charisma": 1
+					}
+				}
+			]
+		},
+		{
+			"prompt": "Think like a queen.",
+			"answers": [
+				{
+					"text": "Done. I have already ordered the crown, in gold and in a size I will grow into.",
+					"stats": {
+						"charisma": 2,
+						"intelligence": -1
+					}
+				},
+				{
+					"text": "Queens get killed in the third act. I would like to be a minor duchess.",
+					"stats": {
+						"intelligence": 1,
+						"luck": 1
+					}
+				},
+				{
+					"text": "I think like a person who thinks on a ship with no exit. It is going fine.",
+					"stats": {
+						"perception": 1,
+						"endurance": 1
+					}
+				},
+				{
+					"text": "A queen. In what kingdom? Whose census? Who is the dronish one holding the train?",
+					"stats": {
+						"intelligence": 2,
+						"charisma": -1
+					}
+				},
+				{
+					"text": "Yes, ma'am. Yes. Right away.",
+					"stats": {
+						"agility": 1,
+						"strength": -1,
+						"luck": 1
+					}
+				}
+			]
+		}
+	]
 }

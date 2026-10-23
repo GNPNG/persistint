@@ -19,17 +19,27 @@ func _run() -> void:
 	ws.reset()
 
 	_check(load("res://dialogue/interview.dialogue") != null, "interview.dialogue compiles")
+	_check(root.get_node("/root/Cast").full("oprah") == "Oprah Winfrey", "host name comes from cast.json")
 
 	var iv: Control = load("res://scenes/minigames/interview.tscn").instantiate()
 	iv.autostart = false
 	root.add_child(iv)
 	await process_frame
 
-	# Shipped data is empty: the interview ends at once and writes the (empty) result.
+	# Shipped content: every Oprah line is a verbatim quote from oprah.json.
 	iv.begin_interview()
-	_check(iv.interview_done(), "empty content: nothing to ask")
+	_check(not iv.interview_done() and iv.stats.size() == 7, "shipped content: questions and 7 stats")
+	var quotes: Array = []
+	for q: Dictionary in JSON.parse_string(FileAccess.get_file_as_string("res://data/quotes/oprah.json"))["quotes"]:
+		quotes.append(q["text"])
+	var ok: bool = iv.data["intro"].size() > 0
+	for line: String in iv.data["intro"]:
+		ok = ok and quotes.has(line)
+	for q: Dictionary in iv.data["questions"]:
+		ok = ok and quotes.has(q["prompt"]) and q["answers"].size() >= 4
+	_check(ok, "intro and prompts are Oprah quotes; 4+ answers each")
 	iv.finish()
-	_check(ws.get_flag("interview_done") == true and ws.get_flag("stats") == {}, "empty content: result written")
+	_check(ws.get_flag("interview_done") == true and ws.get_flag("stats").size() == 7, "shipped content: result written")
 
 	# Synthetic content.
 	iv.data = {"host": "oprah", "base": 5, "min": 1, "max": 10,
