@@ -645,29 +645,42 @@ def title_screen_plain():
 
 
 def chapter_card():
-    """The ship before the wreck at sunset, lit up, film grain and faint VHS lines; dark enough
-    for the card's 85% white lines to read over it (STYLE.md 4.10)."""
+    """The ship before the wreck at sunset: white with gold trim and a smiling bow face, lit up,
+    string lights and balloons, seen slightly from below over a sunset-gold and lavender sea, with
+    film grain and faint VHS lines. The sky stays dark above the horizon so the card's centred 85%
+    white lines read over it (STYLE.md 4.10); the ship sits low at the right, clear of them."""
     rng = random.Random(83)
-    im = vgrad(W * K, H * K, [(0, "#05080f"), (.45, "#2a1838"), (.64, "#a04a68"), (.72, CORAL), (.73, "#3a2a48"), (1, "#0a0e1a")])
+    sky = vgrad(W * K, H * K, [(0, "#05080f"), (.45, "#2a1838"), (.64, "#a04a68"), (.72, CORAL),
+                               (.73, "#c890a8"), (.8, "#9a78b0"), (1, "#3a2a58")])
+    im = sky.copy()
     d = ImageDraw.Draw(im)
-    ell(d, 70, 236, 150, 290, "#ffd080")                                    # setting sun
-    d.rectangle(box(0, 263, W, 300), fill="#3a2a48")
+    ell(d, 70, 236, 150, 290, "#ffd080")                                    # setting sun, half set
+    im.paste(sky.crop((0, 263 * K, W * K, H * K)), (0, 263 * K))
+    d.rectangle(box(0, 263, W, 265), fill="#f0b8a8")                         # horizon glow
     for i in range(12):                                                      # sun path on the water
         y = 267 + i * 7
         half = 28 - i * 1.6
-        d.line([((110 - half) * K, y * K), ((110 + half) * K, y * K)], fill="#f0a070", width=K)
-    # ship silhouette, slightly from below, bow to the left; drawn large on its own canvas and
-    # set small at the lower right so the card's centred lines stay clear
+        d.line([((110 - half) * K, y * K), ((110 + half) * K, y * K)], fill="#ffd0a0", width=K)
+    # the ship, bow to the left, drawn large on its own canvas then set small at the lower right
     ship_im, d = canvas(W, H)
-    sil = "#140e1c"
-    d.polygon([(250 * K, 230 * K), (620 * K, 230 * K), (600 * K, 284 * K), (300 * K, 284 * K)], fill=sil)
+    hull_lit, deck_lit, trim = "#fff4ec", "#fffaf2", "#e8c060"
+    ow = 3                                                                   # outline, canvas px
+    d.polygon([(250 * K, 230 * K), (620 * K, 230 * K), (600 * K, 284 * K), (300 * K, 284 * K)],
+              fill=hull_lit, outline=INK, width=ow * K)
+    d.line([(262 * K, 240 * K), (614 * K, 240 * K)], fill=trim, width=4 * K)    # gold trim
+    d.line([(280 * K, 266 * K), (606 * K, 266 * K)], fill=PINK, width=5 * K)    # pink stripe
     for x0, x1, y0 in ((290, 600, 200), (320, 580, 176), (350, 540, 154), (420, 500, 134)):
-        d.rectangle(box(x0, y0, x1, y0 + 30), fill=sil)
-    d.polygon([(450 * K, 134 * K), (460 * K, 104 * K), (494 * K, 104 * K), (490 * K, 134 * K)], fill=sil)
-    for y0, x0, x1 in ((208, 296, 596), (184, 326, 576), (162, 356, 536), (240, 280, 590)):
+        d.rectangle(box(x0, y0, x1, y0 + 30), fill=deck_lit, outline=INK, width=ow * K)
+        d.line([((x0 + 3) * K, (y0 + 3) * K), ((x1 - 3) * K, (y0 + 3) * K)], fill=trim, width=2 * K)
+    d.polygon([(450 * K, 134 * K), (460 * K, 104 * K), (494 * K, 104 * K), (490 * K, 134 * K)],
+              fill=PINK, outline=INK, width=ow * K)                          # funnel
+    d.rectangle(box(455, 112, 492, 120), fill=WHITE)
+    for y0, x0, x1 in ((208, 296, 596), (184, 326, 576), (162, 356, 536), (246, 360, 590)):
         for x in range(x0, x1, 9):
             if rng.random() < .82:
-                d.rectangle(box(x, y0, x + 5, y0 + 4), fill=rng.choice(["#ffe9a0", "#ffd890", "#fff3c8"]))
+                d.rectangle(box(x, y0, x + 5, y0 + 5), fill=rng.choice(["#ffe08a", "#ffd070", "#fff0b0"]),
+                            outline="#c09060", width=K)
+    face(d, 296, 250, 2.6)                                                   # smiling bow
     # string lights from bow to funnel to stern, and balloons
     import math
     for (ax, ay), (bx, by) in (((252, 228), (470, 104)), ((470, 104), (618, 226))):
@@ -676,15 +689,16 @@ def chapter_card():
             t = i / n
             x, y = ax + (bx - ax) * t, ay + (by - ay) * t + math.sin(t * math.pi) * 10
             c = [ROSE, SPARK, TURQ, LAVENDER][i % 4]
-            ell(d, x - 1.5, y - 1.5, x + 1.5, y + 1.5, c)
+            ell(d, x - 2, y - 2, x + 2, y + 2, c)
     for _ in range(9):
-        x, y = rng.uniform(300, 620), rng.uniform(60, 130)
+        x, y = rng.uniform(320, 620), rng.uniform(64, 120)
         c = rng.choice([ROSE, LAVENDER, TURQ, SPARK])
-        d.line([(x * K, (y + 9) * K), ((x + rng.uniform(-4, 4)) * K, (y + 30) * K)], fill="#806070", width=K // 2)
-        ell(d, x - 5, y - 6, x + 5, y + 9, c)
+        d.line([(x * K, (y + 9) * K), ((x + rng.uniform(-4, 4)) * K, (y + 30) * K)], fill=INK, width=K)
+        ell(d, x - 6, y - 7, x + 6, y + 9, c, INK, 1.5)
+        ell(d, x - 3.5, y - 4, x - 1, y - 1, WHITE)
     ship_im = ship_im.crop((240 * K, 50 * K, 630 * K, 290 * K))
     ship_im = ship_im.resize((ship_im.width // 2, ship_im.height // 2), Image.LANCZOS)
-    im.alpha_composite(ship_im, (442 * K, 180 * K))
+    im.alpha_composite(ship_im, (442 * K, 218 * K))
     out = down(im, W, H)
     # film grain, VHS lines and a vignette
     px = out.load()

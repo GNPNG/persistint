@@ -63,7 +63,7 @@ func _build_ui() -> void:
 	prompt.text = card.get("prompt", "")
 	prompt.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	prompt.theme_type_variation = &"CardLabel"
-	prompt.modulate = Color(1, 1, 1, 0.6)
+	prompt.modulate = Color(1, 1, 1, 0.5)  # STYLE.md 4.10: the prompt at 50%
 	box.add_child(prompt)
 
 
