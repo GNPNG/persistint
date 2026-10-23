@@ -1,0 +1,44 @@
+{
+	"_note": "Tropical Florida Keys sandbox (DESIGN.md section 3). Pure play, no scoring, nothing can be done wrong. Plants grow with days (GameClock); watering only speeds them up. A critter 'surprise' fires when the doll's outfit matches 'when' (first match wins; the entry without 'when' is every critter's default, so every outfit gets a delighted reaction). 'lines' are spoken as the critter's bubble through Voice.speak; they are the author's to write and ship empty.",
+	"plants": {
+		"hibiscus": { "label": "Hibiscus", "grow_days": 2, "yield": 2, "color": "#ff9ad0" },
+		"sea_grape": { "label": "Sea grape", "grow_days": 2, "yield": 2, "color": "#b89ae0" },
+		"key_lime": { "label": "Key lime", "grow_days": 3, "yield": 2, "color": "#d8f07a" }
+	},
+	"seeds": ["hibiscus", "sea_grape", "key_lime"],
+	"recipes": {
+		"flower_crown": { "label": "Flower crown", "needs": { "hibiscus": 2 }, "wear": { "slot": "accessory", "part": "acc_flower_crown" } },
+		"shell_garland": { "label": "Shell garland", "needs": { "shell": 2, "sea_grape": 1 }, "wear": { "slot": "accessory", "part": "acc_shell_garland" } }
+	},
+	"critters": {
+		"dolphin": {
+			"pitch": 1.3,
+			"surprises": [
+				{ "when": { "accessory": "acc_flower_crown" }, "effect": "jump", "lines": [] },
+				{ "when": { "accessory": "acc_shell_garland" }, "effect": "spin", "lines": [] },
+				{ "effect": "jump", "lines": [] }
+			]
+		},
+		"crab": {
+			"pitch": 1.1,
+			"surprises": [
+				{ "when": { "accessory": "acc_shell_garland" }, "effect": "spin", "lines": [] },
+				{ "effect": "wiggle", "lines": [] }
+			]
+		},
+		"gull": {
+			"pitch": 1.4,
+			"surprises": [
+				{ "when": { "accessory": "acc_flower_crown" }, "effect": "spin", "lines": [] },
+				{ "effect": "hop", "lines": [] }
+			]
+		},
+		"mermaid": {
+			"pitch": 1.2,
+			"surprises": [
+				{ "when": { "accessory": "acc_flower_crown" }, "effect": "spin", "lines": [] },
+				{ "effect": "wiggle", "lines": [] }
+			]
+		}
+	}
+}

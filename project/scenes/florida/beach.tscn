@@ -1,0 +1,84 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://scripts/map.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/placeholder/bg_florida_beach.png" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://scenes/maps/door.tscn" id="4"]
+[ext_resource type="PackedScene" path="res://scenes/florida/critter.tscn" id="5"]
+[ext_resource type="PackedScene" path="res://scenes/florida/shell.tscn" id="6"]
+
+[sub_resource type="NavigationPolygon" id="navpoly"]
+vertices = PackedVector2Array(60, 230, 900, 230, 900, 520, 60, 520)
+polygons = [PackedInt32Array(0, 1, 2, 3)]
+outlines = [PackedVector2Array(60, 230, 900, 230, 900, 520, 60, 520)]
+
+[node name="Beach" type="Node2D"]
+script = ExtResource("1")
+
+[node name="Background" type="Sprite2D" parent="."]
+texture = ExtResource("2")
+centered = false
+
+[node name="Nav" type="NavigationRegion2D" parent="."]
+navigation_polygon = SubResource("navpoly")
+
+[node name="spawn_default" type="Marker2D" parent="."]
+position = Vector2(480, 330)
+
+[node name="spawn_from_garden" type="Marker2D" parent="."]
+position = Vector2(160, 300)
+
+[node name="spawn_from_aquarium" type="Marker2D" parent="."]
+position = Vector2(800, 300)
+
+[node name="Player" parent="." instance=ExtResource("3")]
+position = Vector2(480, 330)
+
+[node name="GardenDoor" parent="." instance=ExtResource("4")]
+position = Vector2(120, 250)
+target_scene = "res://scenes/florida/garden.tscn"
+target_spawn = "spawn_from_beach"
+
+[node name="AquariumDoor" parent="." instance=ExtResource("4")]
+position = Vector2(840, 250)
+target_scene = "res://scenes/florida/aquarium.tscn"
+target_spawn = "spawn_from_beach"
+
+[node name="Dolphin1" parent="." instance=ExtResource("5")]
+position = Vector2(300, 120)
+kind = "dolphin"
+wander = Rect2(150, 70, 300, 100)
+
+[node name="Dolphin2" parent="." instance=ExtResource("5")]
+position = Vector2(650, 140)
+kind = "dolphin"
+wander = Rect2(500, 80, 300, 100)
+
+[node name="Crab1" parent="." instance=ExtResource("5")]
+position = Vector2(400, 420)
+kind = "crab"
+wander = Rect2(330, 380, 140, 80)
+
+[node name="Crab2" parent="." instance=ExtResource("5")]
+position = Vector2(640, 460)
+kind = "crab"
+wander = Rect2(580, 420, 140, 70)
+
+[node name="Gull1" parent="." instance=ExtResource("5")]
+position = Vector2(220, 380)
+kind = "gull"
+wander = Rect2(150, 330, 150, 80)
+
+[node name="Gull2" parent="." instance=ExtResource("5")]
+position = Vector2(760, 360)
+kind = "gull"
+wander = Rect2(700, 320, 140, 80)
+
+[node name="Shell1" parent="." instance=ExtResource("6")]
+position = Vector2(260, 470)
+
+[node name="Shell2" parent="." instance=ExtResource("6")]
+position = Vector2(520, 495)
+
+[node name="Shell3" parent="." instance=ExtResource("6")]
+position = Vector2(820, 440)
