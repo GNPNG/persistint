@@ -19,7 +19,13 @@ func _ready() -> void:
 	add_child(_player)
 
 
+## Silent until speech replaces it: the author finds the gibberish talking noises annoying.
+const ENABLED := false
+
+
 func speak(text: String, base_pitch := 1.0) -> void:
+	if not ENABLED:
+		return
 	var data := _synthesize(text, base_pitch)
 	if data.is_empty():
 		return
