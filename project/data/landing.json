@@ -1,5 +1,5 @@
 {
-  "_note": "The Landing (DESIGN.md: Spaceteam-style coordinated-panic bridge game as the ship comes down, Among Us-flavored crew tasks around the ship; prologue-capable). Story Structure, Camera 1 / opening scene: the dead cruise ship (EMP) drifts through fog toward the island; Cap'n Kate is trying not to crash a dead ship; systems failing, chaos on deck, the first mate yelling for the captain. Each command names the station around the ship and the control there. Commands come only from the design doc; add more here. seconds_per_command is an agent placeholder.",
+  "_note": "The Landing (DESIGN.md: Spaceteam-style coordinated-panic bridge game as the ship comes down, Among Us-flavored crew tasks around the ship; prologue-capable). Story Structure, Camera 1 / opening scene: the dead cruise ship (EMP) drifts through fog toward the island; Cap'n Kate is trying not to crash a dead ship; systems failing, chaos on deck, the first mate yelling for the captain. Each command names the station around the ship and the control there. Commands come only from the design doc; add more here. seconds_per_command is an agent placeholder. stations: the ship layout (pos = x,y fractions of the ship plan); each station's crew tasks are {id,text} entries, empty until the author supplies them.",
   "captain": "kate",
   "first_mate": "First Mate",
   "seconds_per_command": 6.0,
@@ -9,6 +9,16 @@
       "station": "Promenade",
       "control": "Promenade Stabilizers",
       "text": "Align the Promenade Stabilizers!"
+    }
+  ],
+  "stations": [
+    {
+      "name": "Promenade",
+      "pos": [
+        0.5,
+        0.5
+      ],
+      "tasks": []
     }
   ]
 }
