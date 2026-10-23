@@ -85,7 +85,7 @@ func entries() -> Array:
 func play(id: String) -> void:
 	var here := get_tree().current_scene
 	var origin := here.scene_file_path if here else ""
-	if Flashbacks.enter(id, origin).is_empty():
+	if Flashbacks.enter(id, origin, Flashbacks.nearest_spawn(here)).is_empty():
 		return
 	get_tree().call_deferred("change_scene_to_file", Flashbacks.CARD_SCENE)
 

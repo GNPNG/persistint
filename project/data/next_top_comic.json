@@ -1,7 +1,32 @@
 {
-  "_note": "Next Top Comic (DESIGN.md): stand-up mini-game using the dialogue system in Monkey Island insult-sword-fighting structure (Sarah Silverman). Just horrible unfunny setup / punchline pairings, but the women in the audience think it's hilarious. 'setups' is the set, in order: each is {\"setup\": text, \"punchlines\": [text, ...]}; the player picks a punchline. Content is the author's and ships empty. When the setups run out the set ends and comic_done is written.",
+  "_note": "Next Top Comic (DESIGN.md): stand-up mini-game using the dialogue system in Monkey Island insult-sword-fighting structure (Sarah Silverman). Just horrible unfunny setup / punchline pairings, but the women in the audience think it's hilarious. 'setups' is the set, in order: each is {\"setup\": text, \"punchlines\": [text, ...]}; the player picks a punchline. Every setup is spoken by Silverman, so each is one of her own lines, verbatim from data/quotes/silverman.json. The punchlines are the player's, and per Story Structure (Camera 2: cruise dialogue is lifted almost verbatim from TED talks, Lean In, Women's March posters) each is a Women's March sign, verbatim from data/empowerment_lines.json. None of them fit the setup; that is the joke, and the audience laughs anyway. The set escalates toward the end of the voyage. When the setups run out the set ends and comic_done is written.",
   "title": "Next Top Comic",
   "host": "silverman",
   "return_map": "res://scenes/maps/village.tscn",
-  "setups": []
+  "setups": [
+    {
+      "setup": "It wasn't scripted at all",
+      "punchlines": ["Not afraid.", "Silence is not an option.", "Hear me roar!"]
+    },
+    {
+      "setup": "I know I'm not funny.",
+      "punchlines": ["Females are strong as hell.", "I'm a feminist. What's your superpower?", "Bossy women rule."]
+    },
+    {
+      "setup": "But I think you can make fun of anything as long as it's funny enough.",
+      "punchlines": ["Girls just want to have FUNdamental human rights.", "Ask me about my feminist agenda.", "Today we smash the patriarchy."]
+    },
+    {
+      "setup": "I'm excited about the next generation!",
+      "punchlines": ["The future is female.", "Our voice is the future.", "Girls to the front."]
+    },
+    {
+      "setup": "I will vote for Hillary with gusto",
+      "punchlines": ["Goddess bless America", "Rise of the woman = rise of the nation.", "Women hold up half the sky."]
+    },
+    {
+      "setup": "It's not cold in here, you're just dying.",
+      "punchlines": ["We didn't come this far only to come this far", "United we thrive", "We are the storm and we will leave light in our wake."]
+    }
+  ]
 }

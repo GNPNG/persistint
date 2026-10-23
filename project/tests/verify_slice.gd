@@ -189,7 +189,7 @@ func _run() -> void:
 	var comic: Control = load("res://scenes/minigames/next_top_comic.tscn").instantiate()
 	comic.autostart = false
 	root.add_child(comic)
-	_check(comic.data.get("setups", ["x"]).is_empty(), "comic: shipped content is empty (the author's)")
+	_check(not comic.data.get("setups", []).is_empty(), "comic: ships a set (no empty content slots)")
 	comic.data["setups"] = [
 		{"setup": "_s1", "punchlines": ["_p1a", "_p1b"]},
 		{"setup": "_s2", "punchlines": ["_p2a"]},
