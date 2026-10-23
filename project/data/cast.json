@@ -155,5 +155,13 @@
 	"pony_dumpling": {
 		"name": "Dumpling",
 		"short": "Dumpling"
+	},
+	"schumer": {
+		"name": "Amy Schumer",
+		"short": "Amy"
+	},
+	"gadsby": {
+		"name": "Hannah Gadsby",
+		"short": "Hannah"
 	}
 }

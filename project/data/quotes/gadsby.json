@@ -1,0 +1,63 @@
+{
+  "_note": "Hannah Gadsby's own stand-up jokes from Nanette (2018), setup and punchline kept as separate lines. Used by Next Top Comic's shared pool (data/next_top_comic.json 'sources').",
+  "_verification": {
+    "verified": 0,
+    "total": 0,
+    "note": "no 'quotes' in this file; see _jokes_verification"
+  },
+  "quotes": [],
+  "jokes": [
+    {
+      "setup": "For a long time, I knew more facts about unicorns than I did about lesbians.",
+      "punchline": "There are no facts about unicorns.",
+      "source": "Nanette (Netflix, 2018)",
+      "url": "https://scrapsfromtheloft.com/comedy/hannah-gadsby-nanette-transcript/",
+      "verified": true,
+      "checked_url": "https://scrapsfromtheloft.com/comedy/hannah-gadsby-nanette-transcript/",
+      "note": "Both lines verbatim in the transcript (an aside sits between them on stage)."
+    },
+    {
+      "setup": "I just don't think there was enough lesbian content.",
+      "punchline": "I'd been on stage the whole time.",
+      "source": "Nanette (Netflix, 2018)",
+      "url": "https://scrapsfromtheloft.com/comedy/hannah-gadsby-nanette-transcript/",
+      "verified": true,
+      "checked_url": "https://scrapsfromtheloft.com/comedy/hannah-gadsby-nanette-transcript/",
+      "note": "Verbatim in the transcript (the setup is the audience member's feedback as Gadsby quotes it)."
+    },
+    {
+      "setup": "No, Grandma. No, I don't have time for boyfriends.",
+      "punchline": "But if I had time, heaps!",
+      "source": "Nanette (Netflix, 2018)",
+      "url": "https://scrapsfromtheloft.com/comedy/hannah-gadsby-nanette-transcript/",
+      "verified": true,
+      "checked_url": "https://scrapsfromtheloft.com/comedy/hannah-gadsby-nanette-transcript/",
+      "note": "Verbatim in the transcript."
+    },
+    {
+      "setup": "I cook dinner way more than I lesbian.",
+      "punchline": "But nobody ever introduces me as 'that chef comedian,' do they?",
+      "source": "Nanette (Netflix, 2018)",
+      "url": "https://scrapsfromtheloft.com/comedy/hannah-gadsby-nanette-transcript/",
+      "verified": true,
+      "checked_url": "https://scrapsfromtheloft.com/comedy/hannah-gadsby-nanette-transcript/",
+      "note": "Verbatim in the transcript except its typo 'nobody every introduces', kept as 'ever'."
+    },
+    {
+      "setup": "Would you put a bangle on a potato?",
+      "punchline": "No, that's organic. I paid a lot for that potato.",
+      "source": "Nanette (Netflix, 2018)",
+      "url": "https://scrapsfromtheloft.com/comedy/hannah-gadsby-nanette-transcript/",
+      "verified": true,
+      "checked_url": "https://scrapsfromtheloft.com/comedy/hannah-gadsby-nanette-transcript/",
+      "note": "Verbatim in the transcript ('would' mid-sentence there)."
+    }
+  ],
+  "_jokes_verification": {
+    "method": "Jokes from a stand-up special: the special is the primary source and a full transcript of it is the text checked. On 2026-10-23 each transcript page was downloaded as raw HTML and each joke's setup and punchline were string-matched against the page text, ignoring only quote-mark/dash/ellipsis typography and sentence-initial capitals; the setup/punchline split is ours. Wording was not checked against the special's audio. Lines found only on aggregators (quote wikis, listicles) or that the transcript does not carry verbatim are verified=false and stay out of the comic's pool.",
+    "verified": 5,
+    "total": 5,
+    "date": "2026-10-23",
+    "rule": "Only jokes with verified=true are in Next Top Comic's pool (tests/test_quotes_vv.gd)."
+  }
+}
