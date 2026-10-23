@@ -330,6 +330,7 @@ log "Generating site/wrangler.toml and site/src/worker.js"
   echo "name = \"$WORKER_NAME\""
   echo 'main = "src/worker.js"'
   echo "compatibility_date = \"$COMPAT_DATE\""
+  [[ "$CUSTOM_DOMAIN" == true ]] || echo 'workers_dev = true'
   echo
   echo '[assets]'
   echo 'directory = "./public"'
@@ -352,8 +353,6 @@ log "Generating site/wrangler.toml and site/src/worker.js"
     echo '[[routes]]'
     echo "pattern = \"$SITE_HOST\""
     echo 'custom_domain = true'
-  else
-    echo 'workers_dev = true'
   fi
 } >"$SITE/wrangler.toml"
 
