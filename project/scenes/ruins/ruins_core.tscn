@@ -1,9 +1,11 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://scripts/map.gd" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="3"]
 [ext_resource type="PackedScene" path="res://scenes/maps/door.tscn" id="5"]
 [ext_resource type="PackedScene" path="res://scenes/ruins/knowledge_pickup.tscn" id="6"]
+
+[ext_resource type="Script" path="res://scripts/ruins/ruins_decor.gd" id="7"]
 
 [sub_resource type="NavigationPolygon" id="navpoly"]
 vertices = PackedVector2Array(60, 130, 900, 130, 900, 500, 60, 500)
@@ -21,8 +23,15 @@ color = Color(0.12, 0.14, 0.2, 1)
 [node name="Nav" type="NavigationRegion2D" parent="."]
 navigation_polygon = SubResource("navpoly")
 
+[node name="Decor" type="Node2D" parent="."]
+script = ExtResource("7")
+room_id = "core"
+
 [node name="spawn_default" type="Marker2D" parent="."]
 position = Vector2(120, 300)
+
+[node name="spawn_from_bunker" type="Marker2D" parent="."]
+position = Vector2(480, 440)
 
 [node name="spawn_from_corridor" type="Marker2D" parent="."]
 position = Vector2(120, 300)
@@ -33,6 +42,11 @@ position = Vector2(120, 300)
 [node name="CorridorDoor" parent="." instance=ExtResource("5")]
 position = Vector2(60, 300)
 target_scene = "res://scenes/ruins/ruins_corridor.tscn"
+target_spawn = "spawn_from_core"
+
+[node name="BunkerDoor" parent="." instance=ExtResource("5")]
+position = Vector2(480, 496)
+target_scene = "res://scenes/ruins/ruins_bunker_lift.tscn"
 target_spawn = "spawn_from_core"
 
 [node name="Piece1" parent="." instance=ExtResource("6")]

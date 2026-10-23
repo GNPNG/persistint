@@ -48,6 +48,18 @@ func _run() -> void:
 	for id: String in FK.pieces():
 		_check(pickups_in_scenes.has(id), "piece %s is placed in a ruins map" % id)
 
+	for room: String in data["rooms"]:
+		var r: Dictionary = data["rooms"][room]
+		_check(r["title"] != "" and not r["ambient"].is_empty() and r["props"].size() >= 5, "room %s has title, ambient lines and props" % room)
+	for id: String in FK.pieces():
+		_check(FK.pieces()[id]["title"] != "" and FK.pieces()[id]["text"] != "", "piece %s has title and text" % id)
+	for room: String in ["bunker_lift", "clone_hall", "records"]:
+		_check(data["rooms"].has(room), "bunker room %s defined" % room)
+	var core_targets := []
+	for door in _find_all(packed["res://scenes/ruins/ruins_core.tscn"].instantiate(), "Door"):
+		core_targets.append(door.target_scene)
+	_check(core_targets.has("res://scenes/ruins/ruins_bunker_lift.tscn"), "bunker is reached from the core")
+
 	_check(FK.all().is_empty(), "nothing recovered at start")
 	_check(FK.recover("fk_wreck_1"), "first recovery succeeds")
 	_check(not FK.recover("fk_wreck_1"), "second recovery of same piece is a no-op")
