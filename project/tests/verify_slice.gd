@@ -165,7 +165,7 @@ func _run() -> void:
 	_check(hot.emcee_name() == "Chelsea Clinton", "hottest: introduced by Chelsea Clinton")
 	_check(hot._say.text.contains("They persisted and so should you."), "hottest: Chelsea Clinton's intro uses her She Persisted lines")
 	var cc_texts: Array = []
-	for q: Dictionary in JSON.parse_string(FileAccess.get_file_as_string("res://data/chelsea_clinton_quotes.json"))["quotes"]:
+	for q: Dictionary in JSON.parse_string(FileAccess.get_file_as_string("res://data/quotes/chelsea.json"))["quotes"]:
 		cc_texts.append(q["text"])
 	var cc_ok := true
 	for intro_lines: Array in hot.emcee.get("intros", {}).values():
