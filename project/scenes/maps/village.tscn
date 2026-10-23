@@ -420,7 +420,7 @@ position = Vector2(624, 400)
 position = Vector2(192, 947.2)
 
 [node name="spawn_from_ruins" type="Marker2D" parent="." unique_id=946855541]
-position = Vector2(656, 787.2)
+position = Vector2(596, 777.6)
 
 [node name="spawn_from_tropical" type="Marker2D" parent="."]
 position = Vector2(1088, 752)
@@ -458,6 +458,7 @@ position = Vector2(192, 912)
 script = ExtResource("22_a3xfr")
 target_scene = "res://scenes/maps/temple.tscn"
 target_spawn = "spawn_from_village"
+exit_label = "To the Temple"
 
 [node name="Mirror" type="Area2D" parent="." unique_id=393032371]
 position = Vector2(624, 352)
@@ -474,17 +475,20 @@ position = Vector2(656, 777.6)
 script = ExtResource("22_a3xfr")
 target_scene = "res://scenes/ruins/ruins_wreck.tscn"
 target_spawn = "spawn_default"
+exit_label = "To the Ruins of Utopia"
 
 [node name="Exit_Cruise" type="Area2D" parent="." unique_id=673605257 instance=ExtResource("21_fo683")]
 position = Vector2(542.72, 319.36)
 script = ExtResource("22_a3xfr")
 target_scene = "res://scenes/chapters/chapter_end.tscn"
+exit_label = "Back to the Cruise"
 
 [node name="Exit_Tropical" type="Area2D" parent="." unique_id=955344869 instance=ExtResource("21_fo683")]
 position = Vector2(1139.2, 752)
 script = ExtResource("22_a3xfr")
 target_scene = "res://scenes/florida/beach.tscn"
 target_spawn = "spawn_default"
+exit_label = "To the Tropical Beach"
 
 [node name="Ground" type="TileMapLayer" parent="." unique_id=652126285]
 z_index = -10

@@ -14,6 +14,8 @@ const JOURNAL_SCRIPT := preload("res://scripts/ui/journal.gd")
 
 
 func _ready() -> void:
+	# Doors and NPCs are Area2Ds clicked through input_event, which needs picking on.
+	get_viewport().physics_object_picking = true
 	_spawn_player()
 	_limit_camera()
 	_build_hud()
