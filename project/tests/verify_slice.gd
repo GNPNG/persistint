@@ -109,19 +109,30 @@ func _run() -> void:
 	name_it.start("priestess_easy_girl")
 	_check(name_it._layer == null, "a beat with no author-set answer stays off")
 
-	# The Landing: right control scores, wrong control costs hull, result lands in WorldState.
+	# The Landing: Cap'n Kate's dead ship; crew stations around the ship; a missed command is a failing system.
 	ws.reset()
 	var landing: Control = load("res://scenes/minigames/landing.tscn").instantiate()
+	var landing_cmds: Array = [
+		{"station": "_st_a", "control": "_c1", "text": "_t1"},
+		{"station": "_st_b", "control": "_c2", "text": "_t2"}]
+	landing.set_process(false)
 	root.add_child(landing)
-	var hull_start: int = landing.hull
-	landing._on_control(landing.current["control"])
-	_check(landing.score == 1, "landing: matching control scores")
-	landing._on_control("__wrong__")
-	_check(landing.hull == hull_start - 1, "landing: wrong control costs hull")
-	while landing.running:
-		landing._on_control(landing.current["control"])
-	_check(ws.get_flag("landing_done") == true and ws.get_flag("landing_score") == landing.score,
-		"landing result written to WorldState")
+	landing.data["commands"] = landing_cmds
+	landing.queue = landing_cmds.duplicate()
+	landing._next_command()
+	_check(landing.captain_name() == "Cap'n Kate", "landing: Cap'n Kate is the captain")
+	var first: Dictionary = landing.current
+	landing.go_to("_st_a" if first["station"] == "_st_b" else "_st_b")
+	landing.press(first["control"])
+	_check(landing.score == 0, "landing: a control is only in reach at its own station")
+	landing.go_to(first["station"])
+	landing.press(first["control"])
+	_check(landing.score == 1, "landing: the right control at the right station scores")
+	var second: Dictionary = landing.current
+	landing._system_fails()
+	_check(landing.failed.has(second["station"]), "landing: a missed command is a failing system")
+	_check(ws.get_flag("landing_done") == true and ws.get_flag("landing_score") == 1
+		and ws.get_flag("landing_failed").has(second["station"]), "landing: the ship comes down; result in WorldState")
 	landing.queue_free()
 
 	# Paper doll: one art set per doll, layers follow the outfit, wardrobe uses it.
