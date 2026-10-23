@@ -265,5 +265,12 @@
       "url": "https://www.goodreads.com/author/quotes/2778471.Hillary_Rodham_Clinton",
       "aggregator": true
     }
-  ]
+  ],
+  "_verification": {
+    "method": "WebFetch/WebSearch extraction on 2026-10-23 (tool output, not raw page text); wording not character-checked against the original page",
+    "verified": "2026-10-23",
+    "expires": "never for listed source/date; wording re-check required before use of any line",
+    "aggregator_only": 1,
+    "total": 44
+  }
 }
