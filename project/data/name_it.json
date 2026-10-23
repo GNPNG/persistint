@@ -1,0 +1,18 @@
+{
+	"_note": "Name It beats (DESIGN.md: pedagogy loop). Edit freely. lines = what was said; hook = index of the line with the hook; answer = the tactic. tactics = the choices offered.",
+	"tactics": ["negging", "concern-trolling", "in-group gatekeeping"],
+	"prompts": {
+		"hook": "Name It: pick the hook hidden in the compliment.",
+		"tactic": "Name the tactic.",
+		"retry": "Look again.",
+		"added": "Added to your journal:"
+	},
+	"beats": {
+		"priestess_easy_girl": {
+			"speaker": "ondine",
+			"lines": ["See how easy?", "The Covenant loves an easy girl.", "...That was a compliment, dear."],
+			"hook": 1,
+			"answer": "negging"
+		}
+	}
+}

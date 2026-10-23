@@ -91,6 +91,22 @@ func _run() -> void:
 	_check(line != null and line.character == cast_data["maren"]["name"],
 		"offering speaker resolves from cast.json (got %s)" % (line.character if line else "null"))
 
+	# Name It: wrong answers are rejected; the right hook + tactic lands in the journal.
+	var name_it: Node = root.get_node("/root/NameIt")
+	ws.reset()
+	_check(not name_it.check_hook("priestess_easy_girl", 0), "Name It rejects a wrong hook")
+	_check(name_it.check_hook("priestess_easy_girl", 1), "Name It accepts the hook line")
+	_check(not name_it.check_tactic("priestess_easy_girl", "concern-trolling"), "Name It rejects a wrong tactic")
+	_check(name_it.check_tactic("priestess_easy_girl", "negging"), "Name It accepts the tactic")
+	name_it.record("priestess_easy_girl")
+	ws.flags = {}
+	ws.load_save()
+	var journal: Dictionary = ws.get_flag("journal", {})
+	_check(journal.get("negging", []).has("The Covenant loves an easy girl."),
+		"journal holds the named tactic and hook after save/load")
+	name_it.start("priestess_easy_girl")
+	_check(ws.has_flag("named_priestess_easy_girl"), "a named beat is marked done")
+
 	if had_save:
 		var f := FileAccess.open(ws.SAVE_PATH, FileAccess.WRITE)
 		f.store_string(backup)
