@@ -4,8 +4,9 @@ extends RefCounted
 ## entry scene and intro card. Playing one goes through the chapter system: the current
 ## player character's flags are archived and cleared (the characters aren't shared), the
 ## chapter becomes the cruise for the episode, and leave() restores everything afterwards.
-## State lives in WorldState so quitting mid-flashback survives: `flashback_active`
-## ({id, chapter, origin: {scene, spawn}}), `flashback_archive` (the archived player flags),
+## State lives in WorldState so quitting mid-flashback survives (Continue reopens the card,
+## or the episode once the card has moved on): `flashback_active`
+## ({id, chapter, origin: {scene, spawn}}), `flashback_archive` (the archived character flags, see is_character_flag),
 ## `flashback_seen_<id>` once an episode has been played through.
 
 const DATA_PATH := "res://data/flashbacks.json"
@@ -79,6 +80,39 @@ static func card(id: String) -> Dictionary:
 	return c
 
 
+## Flags that belong to whoever is playing, so a flashback archives them on enter and puts the
+## island character's back on leave: the chapter system's player flags (data/chapters.json
+## "player_flags" prefixes) plus the episode-owned keys in data/flashbacks.json
+## "character_flags" (the passenger's makeover, judged outfit and carried items). Every other
+## flag an episode writes (landing_*, hottest_done, hottest_chain_done, comic_done, the Name It
+## journal) is a story result and stays on purpose.
+static func is_character_flag(key: String) -> bool:
+	if data().get("character_flags", []).has(key):
+		return true
+	for prefix: String in Chapters.data().get("player_flags", []):
+		if key.begins_with(prefix):
+			return true
+	return false
+
+
+## The spawn marker (a node named spawn*) nearest the player in `scene_root`, so a flashback
+## comes back where it was started rather than at the room's default spawn.
+static func nearest_spawn(scene_root: Node) -> String:
+	if scene_root == null:
+		return "spawn_default"
+	var player := scene_root.get_tree().get_first_node_in_group("player") as Node2D
+	var best := "spawn_default"
+	var best_d := INF
+	if player == null:
+		return best
+	for m: Node in scene_root.find_children("spawn*", "Marker2D", true, false):
+		var d := (m as Node2D).global_position.distance_squared_to(player.global_position)
+		if d < best_d:
+			best_d = d
+			best = String(m.name)
+	return best
+
+
 ## Starts flashback `id` from `origin_scene` (where to come back to). Archives and clears the
 ## player flags, sets the chapter, and returns the entry ({scene, spawn}); {} if locked.
 static func enter(id: String, origin_scene := "", origin_spawn := "spawn_default") -> Dictionary:
@@ -91,17 +125,16 @@ static func enter(id: String, origin_scene := "", origin_spawn := "spawn_default
 		origin = loc if loc is Dictionary else {"scene": Chapters.return_scene(Chapters.current(), ""), "spawn": "spawn_default"}
 	var archive := {}
 	for key: String in ws.flags.keys():
-		for prefix: String in Chapters.data().get("player_flags", []):
-			if key.begins_with(prefix):
-				archive[key] = ws.flags[key]
-				ws.flags.erase(key)
-				break
+		if is_character_flag(key):
+			archive[key] = ws.flags[key]
+			ws.flags.erase(key)
 	ws.set_flag("flashback_archive", archive)
 	ws.set_flag("flashback_active", {"id": id, "chapter": Chapters.current(), "origin": origin})
 	ws.set_flag("chapter", data().get("chapter", "cruise"))
 	var entry := {"scene": flashback(id).get("entry_scene", ""), "spawn": "spawn_default"}
-	# Continue resumes inside the episode; it still comes back through leave().
-	ws.set_flag("_location", entry)
+	# Continue resumes at the intro card until it moves on to the episode (flashback_card.gd),
+	# then inside the episode; either way it still comes back through leave().
+	ws.set_flag("_location", {"scene": CARD_SCENE, "spawn": "spawn_default"})
 	return entry
 
 
@@ -123,10 +156,8 @@ static func leave(fallback: String) -> Dictionary:
 		return target
 	var ws := _ws()
 	for key: String in ws.flags.keys():
-		for prefix: String in Chapters.data().get("player_flags", []):
-			if key.begins_with(prefix):
-				ws.flags.erase(key)
-				break
+		if is_character_flag(key):
+			ws.flags.erase(key)
 	var archive: Variant = ws.get_flag("flashback_archive", {})
 	if archive is Dictionary:
 		for key: String in archive:

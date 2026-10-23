@@ -57,7 +57,7 @@ func current_setup() -> String:
 	return data["setups"][index]["setup"] if not set_done() else ""
 
 
-## Silverman delivers the setup in her Animalese voice.
+## Silverman delivers the setup in her voice.
 func deliver_setup() -> void:
 	Voice.speak(current_setup(), 1.2)
 

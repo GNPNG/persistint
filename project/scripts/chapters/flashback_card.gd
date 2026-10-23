@@ -64,4 +64,6 @@ func go_on() -> void:
 	if entry.is_empty() or entry["scene"] == "":
 		get_tree().call_deferred("change_scene_to_file", FALLBACK)
 	else:
+		# From here Continue resumes inside the episode instead of at this card.
+		WorldState.set_flag("_location", entry.duplicate())
 		SceneRouter.goto_map(entry["scene"], entry["spawn"])
