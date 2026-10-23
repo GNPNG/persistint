@@ -2,14 +2,21 @@ extends SceneTree
 ## Screenshot tool — loads each main scene, waits a few frames and saves the
 ## viewport as a PNG. Needs a display (not --headless):
 ##   godot --path project -s tools/screenshot_scenes.gd -- <out_dir> [prefix] [filter]
-## [filter] is an optional comma-separated list of shot names to capture.
+## [filter] is an optional comma-separated list of shot names, or one substring ("ruins");
+## only matching shots are taken.
 
 const SHOTS := [
 	["main_menu", "res://scenes/ui/main_menu.tscn", ""],
 	["village", "res://scenes/maps/village.tscn", ""],
 	["temple", "res://scenes/maps/temple.tscn", ""],
 	["ruins_wreck", "res://scenes/ruins/ruins_wreck.tscn", ""],
+	["ruins_corridor", "res://scenes/ruins/ruins_corridor.tscn", ""],
+	["ruins_core", "res://scenes/ruins/ruins_core.tscn", ""],
+	["ruins_bunker_lift", "res://scenes/ruins/ruins_bunker_lift.tscn", ""],
 	["clone_hall", "res://scenes/ruins/ruins_clone_hall.tscn", ""],
+	["ruins_clone_hall_bark", "res://scenes/ruins/ruins_clone_hall.tscn", "clone_bark"],
+	["ruins_clone_hall_east", "res://scenes/ruins/ruins_clone_hall.tscn", "east"],
+	["ruins_records", "res://scenes/ruins/ruins_records.tscn", ""],
 	["beach", "res://scenes/florida/beach.tscn", ""],
 	["interview", "res://scenes/minigames/interview.tscn", ""],
 	["landing", "res://scenes/minigames/landing.tscn", ""],
@@ -42,11 +49,11 @@ func _run() -> void:
 	var args := OS.get_cmdline_user_args()
 	var out_dir: String = args[0] if args.size() > 0 else "user://shots"
 	var prefix: String = args[1] if args.size() > 1 else ""
-	var only: PackedStringArray = args[2].split(",") if args.size() > 2 else PackedStringArray()
+	var filter: String = args[2] if args.size() > 2 else ""
 	DirAccess.make_dir_recursive_absolute(out_dir)
 	await _wait(5)
 	for shot: Array in SHOTS:
-		if not only.is_empty() and not only.has(shot[0]):
+		if filter != "" and not (shot[0] in filter.split(",") or (not "," in filter and filter in shot[0])):
 			continue
 		change_scene_to_file(shot[1])
 		await _wait(10)
@@ -68,6 +75,18 @@ func _run() -> void:
 					if sc != null and sc.resource_path.get_file() == "npc.gd" and n.visible:
 						p.global_position = n.global_position + Vector2(40, 0)
 						break
+			"clone_bark":
+				for n in current_scene.get_children():
+					if n.is_in_group("zombie_clones"):
+						n.bark("barks")
+						break
+				for n in current_scene.get_children():
+					if n.is_in_group("polar_cubs"):
+						n.say("Mrrf!")
+						break
+			"east":
+				var p := current_scene.get_tree().get_first_node_in_group("player") as Node2D
+				p.global_position = Vector2(820, 300)
 			"door", "bark":
 				var player := current_scene.get_tree().get_first_node_in_group("player") as Node2D
 				for n in current_scene.find_children("*", "", true, false):
