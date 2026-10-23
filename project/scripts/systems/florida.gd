@@ -125,7 +125,7 @@ static func craft(recipe_id: String) -> bool:
 ## Put a crafted piece on the paper doll (the same outfit_* flags the wardrobe uses).
 static func wear(recipe_id: String) -> bool:
 	var recipe: Dictionary = data()["recipes"].get(recipe_id, {})
-	if recipe.is_empty() or count(recipe_id) < 1:
+	if recipe.is_empty() or not recipe.has("wear") or count(recipe_id) < 1:
 		return false
 	_ws().set_flag("outfit_%s" % recipe["wear"]["slot"], recipe["wear"]["part"])
 	return true

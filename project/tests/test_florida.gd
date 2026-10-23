@@ -49,6 +49,8 @@ func _run() -> void:
 	_check(doll.get_node("Accessory").texture != null, "paper doll shows the crafted crown")
 	doll.queue_free()
 	for r: String in Florida.data()["recipes"]:
+		if not Florida.data()["recipes"][r].has("wear"):
+			continue
 		_check(ResourceLoader.exists("res://assets/placeholder/%s.png" % Florida.data()["recipes"][r]["wear"]["part"]), "art exists for %s" % r)
 
 	# Critter surprises: every outfit gets one, matching outfits get theirs
@@ -63,7 +65,12 @@ func _run() -> void:
 	critter.queue_free()
 	for kind: String in Florida.data()["critters"]:
 		for s: Dictionary in Florida.data()["critters"][kind]["surprises"]:
-			_check(s.has("lines"), "%s surprise has a lines slot" % kind)
+			_check(s.get("lines", []).size() > 0, "%s surprise has lines" % kind)
+		_check(Florida.data()["critters"][kind]["names"].size() > 0, "%s has names" % kind)
+	_check(not Florida.wear("key_lime_pie"), "food is not wearable")
+	for r: String in Florida.data()["recipes"]:
+		for item: String in Florida.data()["recipes"][r]["needs"]:
+			_check(item == "shell" or Florida.data()["plants"].has(item), "recipe %s ingredient %s is grown or found" % [r, item])
 
 	# Save/load
 	ws.flags = {}
@@ -76,6 +83,9 @@ func _run() -> void:
 		var scene: Node = load("res://scenes/florida/%s.tscn" % m).instantiate()
 		root.add_child(scene)
 		await process_frame
+		for c in scene.get_children():
+			if c.get("kind") != null and c.get("nickname") != null:
+				_check(c.nickname in Florida.data()["critters"][c.kind]["names"], "%s has a name from the data" % c.name)
 		_check(scene.get_node("Player") != null, "%s map loads" % m)
 		if m == "garden":
 			var p: Node = scene.get_node("Plot1")
