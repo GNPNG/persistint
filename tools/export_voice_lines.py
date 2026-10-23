@@ -20,7 +20,7 @@ lines = []
 def add(speaker, text):
     if speaker and text and text.strip():
         key = hashlib.md5(f"{speaker}|{text}".encode()).hexdigest()
-        lines.append({"speaker": speaker, "text": text, "key": key, "clip": f"res://audio/voice/{key}.ogg"})
+        lines.append({"speaker": speaker, "text": text, "key": key, "clip": f"res://audio/voice/{key}.wav"})
 
 
 emcee = json.loads((ROOT / "data/emcee.json").read_text())
