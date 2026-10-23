@@ -40,16 +40,19 @@ position = Vector2(480, 330)
 position = Vector2(120, 250)
 target_scene = "res://scenes/florida/garden.tscn"
 target_spawn = "spawn_from_beach"
+exit_label = "To the Garden"
 
 [node name="AquariumDoor" parent="." instance=ExtResource("4")]
 position = Vector2(840, 250)
 target_scene = "res://scenes/florida/aquarium.tscn"
 target_spawn = "spawn_from_beach"
+exit_label = "To the Aquarium"
 
 [node name="VillageDoor" parent="." instance=ExtResource("4")]
 position = Vector2(480, 380)
 target_scene = "res://scenes/maps/village.tscn"
 target_spawn = "spawn_from_tropical"
+exit_label = "Back to the Village"
 
 [node name="Dolphin1" parent="." instance=ExtResource("5")]
 position = Vector2(300, 120)
