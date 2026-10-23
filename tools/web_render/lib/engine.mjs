@@ -305,6 +305,7 @@ export async function waitForResult(session, surface, baseline, timeoutMs, respB
         const text = (await responseInfo(page, st.response ?? ['model-response'])).text;
         const e = new StepError('wait', `usage limit notice on the page (${limitSel}): "${text.slice(0, 300)}"`);
         e.abortRun = true;
+        e.replyText = text;
         throw e;
       }
       if (!busy && st.response && respBaseline !== null) {
@@ -312,7 +313,10 @@ export async function waitForResult(session, surface, baseline, timeoutMs, respB
         if (r.count > respBaseline) {
           quietSince ??= Date.now();
           if (Date.now() - quietSince >= textOnlyMs) {
-            throw new StepError('wait', `the reply finished without any media after ${Math.round(textOnlyMs / 1000)}s: "${r.text.slice(0, 300) || '(no text)'}"`);
+            const e = new StepError('wait', `the reply finished without any media after ${Math.round(textOnlyMs / 1000)}s: "${r.text.slice(0, 300) || '(no text)'}"`);
+            e.textOnly = true;          // lib/tracker.mjs classifies the reply text (refused / quota / failed)
+            e.replyText = r.text;
+            throw e;
           }
         } else quietSince = null;
       } else quietSince = null;
