@@ -92,20 +92,22 @@ func _run() -> void:
 		"offering speaker resolves from cast.json (got %s)" % (line.character if line else "null"))
 
 	# Name It: wrong answers are rejected; the right hook + tactic lands in the journal.
+	# Mechanics only, on a test beat; the real beats' answers are the author's to set.
 	var name_it: Node = root.get_node("/root/NameIt")
+	name_it.data["beats"]["_test"] = {"lines": ["a", "b"], "hook": 1, "answer": "t1"}
 	ws.reset()
-	_check(not name_it.check_hook("priestess_easy_girl", 0), "Name It rejects a wrong hook")
-	_check(name_it.check_hook("priestess_easy_girl", 1), "Name It accepts the hook line")
-	_check(not name_it.check_tactic("priestess_easy_girl", "concern-trolling"), "Name It rejects a wrong tactic")
-	_check(name_it.check_tactic("priestess_easy_girl", "negging"), "Name It accepts the tactic")
-	name_it.record("priestess_easy_girl")
+	_check(not name_it.check_hook("_test", 0), "Name It rejects a wrong hook")
+	_check(name_it.check_hook("_test", 1), "Name It accepts the hook line")
+	_check(not name_it.check_tactic("_test", "t2"), "Name It rejects a wrong tactic")
+	_check(name_it.check_tactic("_test", "t1"), "Name It accepts the tactic")
+	name_it.record("_test")
 	ws.flags = {}
 	ws.load_save()
 	var journal: Dictionary = ws.get_flag("journal", {})
-	_check(journal.get("negging", []).has("The Covenant loves an easy girl."),
-		"journal holds the named tactic and hook after save/load")
+	_check(journal.get("t1", []).has("b"), "journal holds the named tactic and hook after save/load")
+	_check(ws.has_flag("named__test"), "a named beat is marked done")
 	name_it.start("priestess_easy_girl")
-	_check(ws.has_flag("named_priestess_easy_girl"), "a named beat is marked done")
+	_check(name_it._layer == null, "a beat with no author-set answer stays off")
 
 	if had_save:
 		var f := FileAccess.open(ws.SAVE_PATH, FileAccess.WRITE)
