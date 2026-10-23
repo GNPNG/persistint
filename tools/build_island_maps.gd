@@ -547,7 +547,7 @@ func _build_temple() -> void:
 	for x in [3, 6, 9, 20, 23, 26]:
 		_prop("prop_icon_queen_mother", Vector2(x * CELL + 16, 3 * CELL), "Icon_%d" % x)
 	_prop("prop_seal_o", Vector2(15 * CELL, 2 * CELL + 18), "Seal")
-	_prop("prop_calendar", Vector2(11 * CELL, 3 * CELL - 4), "Calendar_Left")
+	_prop("prop_calendar", Vector2(12 * CELL + 8, 3 * CELL - 4), "Calendar_Left")
 	# Colonnade.
 	for x in [3, 26]:
 		for y in [8, 11, 14, 17]:

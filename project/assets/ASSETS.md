@@ -7,6 +7,7 @@ Rows are sorted by path.
 
 | id | path | generator | frame layout | stands in for |
 |---|---|---|---|---|
+| prop_calendar | project/assets/canon/prop_calendar.png | tools/cut_island_props.py (canon sheet 481b, crop in project/data/island_props.json) | single 46x40, foot at bottom | - |
 | npc_barren_rig | project/assets/characters/npc_barren_rig.png | tools/gen_npc_rigs.py (from the canon cuts) | 32x52 frames, feet y 50; rows down / left / up; cols 0-3 idle, 4-7 walk | - |
 | npc_drone_rig | project/assets/characters/npc_drone_rig.png | tools/gen_npc_rigs.py (from the canon cuts) | as npc_barren_rig | - |
 | npc_initiate_rig | project/assets/characters/npc_initiate_rig.png | tools/gen_npc_rigs.py (from the canon cuts) | as npc_barren_rig | - |
