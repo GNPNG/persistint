@@ -1,24 +1,19 @@
 {
-  "_note": "Next Top Comic (DESIGN.md): stand-up mini-game using the dialogue system in Monkey Island insult-sword-fighting structure (Sarah Silverman). Just horrible unfunny setup / punchline pairings, but the women in the audience think it's hilarious. 'setups' is the set, in order: each is {\"setup\": text, \"punchlines\": [text, ...]}; the player picks a punchline. Silverman speaks every setup, so each setup is a quote from data/quotes/silverman.json, verbatim, and only quotes marked verified=true there (tests/test_quotes_vv.gd). The punchlines are the player's, and per Story Structure (Camera 2: cruise dialogue is lifted almost verbatim from TED talks, Lean In, Women's March posters) each is a Women's March sign, verbatim from data/empowerment_lines.json. None of them fit the setup; that is the joke, and the audience laughs anyway. When the setups run out the set ends and comic_done is written.",
-  "title": "Next Top Comic",
+  "_note": "America's Next Top Comic (DESIGN.md \"Next Top Comic\"; the author's name for the segment): stand-up mini-game using the dialogue system in Monkey Island insult-sword-fighting structure. Sarah Silverman hosts; the player is the contestant and picks a setup, then a punchline, from one shared pool. Just horrible unfunny pairings, but the women in the audience think it's hilarious. 'sources' are the comics whose 'jokes' (data/quotes/<id>.json, setup and punchline as separate lines) are mixed into the pool, fully randomized, so a pairing that happens to fit doesn't matter. 'interjections' (punchlines) and 'openers' (setups) are the author's lines; picking one gets boos, and the judges dock 'steal_penalty' points (an agent placeholder) for stealing jokes from Amy Schumer; the total goes to WorldState comic_points.",
+  "title": "America's Next Top Comic",
   "host": "silverman",
   "return_map": "res://scenes/maps/village.tscn",
-  "setups": [
-    {
-      "setup": "Can I just say to the 'Bernie or bust' people, you're being ridiculous.",
-      "punchlines": ["Females are strong as hell.", "I'm a feminist. What's your superpower?", "Bossy women rule."]
-    },
-    {
-      "setup": "I will vote for Hillary with gusto",
-      "punchlines": ["Goddess bless America", "Rise of the woman = rise of the nation.", "Women hold up half the sky."]
-    },
-    {
-      "setup": "I'm proud to be a part of Bernie's movement",
-      "punchlines": ["The future is female.", "Our voice is the future.", "Girls to the front."]
-    },
-    {
-      "setup": "It wasn't scripted at all",
-      "punchlines": ["Not afraid.", "Silence is not an option.", "Hear me roar!"]
-    }
-  ]
+  "sources": [
+    "schumer",
+    "silverman",
+    "gadsby"
+  ],
+  "interjections": [
+    "My vagina itches",
+    "I just queefed"
+  ],
+  "openers": [
+    "I'm so fat..."
+  ],
+  "steal_penalty": 1
 }

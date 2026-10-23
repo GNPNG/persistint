@@ -159,5 +159,13 @@
 	"stable_friend": {
 		"name": "Hannah",
 		"short": "Hannah"
+	},
+	"schumer": {
+		"name": "Amy Schumer",
+		"short": "Amy"
+	},
+	"gadsby": {
+		"name": "Hannah Gadsby",
+		"short": "Hannah"
 	}
 }
