@@ -64,6 +64,7 @@ func _begin(root_name: String, w: int, h: int, fill: String) -> void:
 	_root.y_sort_enabled = true
 	_root.set_script(load("res://scripts/map.gd"))
 	_root.set("map_size", Vector2(w * CELL, h * CELL))
+	_root.set("sort_characters", true)
 	for x in w:
 		for y in h:
 			_grid[Vector2i(x, y)] = fill
@@ -167,9 +168,9 @@ func _inst(path: String, node_name: String, pos: Vector2, props := {}) -> Node2D
 
 
 func _character(path: String, node_name: String, pos: Vector2, props := {}) -> Node2D:
-	var n := _inst(path, node_name, pos, props)
-	n.z_index = 0  # y-sorted with props instead of floating above them
-	return n
+	# Sorted with the props by map.gd (sort_characters): a z_index of 0 set here is
+	# not saved for an instanced scene.
+	return _inst(path, node_name, pos, props)
 
 
 func _door(node_name: String, pos: Vector2, props := {}) -> Node2D:
@@ -337,7 +338,7 @@ func _build_village() -> void:
 	# Spawns (names unchanged) and exits.
 	_marker("spawn_default", _px(19.5, 12.5))
 	_marker("spawn_from_temple", _px(tx, ty + 2.6))
-	_marker("spawn_from_ruins", _px(rx + 0.5, 24.6))
+	_marker("spawn_from_ruins", _px(rx - 1.375, 24.3))  # beside the wreck door, not on it
 	_marker("spawn_from_tropical", _px(34.0, 23.5))
 	_character("res://scenes/player/player.tscn", "Player", _px(19.5, 12.5))
 	_character("res://scenes/npc/npc.tscn", "Initiate", _px(22.5, 12.6), {
@@ -348,17 +349,20 @@ func _build_village() -> void:
 	_character("res://scenes/npc/npc.tscn", "Barren", _px(17.5, 18.0), {
 		"npc_id": "barren", "caste": "barren", "sprite_texture": "npc_barren", "voice_pitch": 0.9})
 	_door("TempleDoor", _px(tx, ty + 1.5), {
-		"target_scene": "res://scenes/maps/temple.tscn", "target_spawn": "spawn_from_village"})
+		"target_scene": "res://scenes/maps/temple.tscn", "target_spawn": "spawn_from_village",
+		"exit_label": "To the Temple"})
 	_mirror(_px(19.5, 11.0))
 
 	# ---- Exit points for other areas. ----
 	_door("Exit_Ruins", _px(rx + 0.5, 24.3), {
-		"target_scene": "res://scenes/ruins/ruins_wreck.tscn", "target_spawn": "spawn_default"})
+		"target_scene": "res://scenes/ruins/ruins_wreck.tscn", "target_spawn": "spawn_default",
+		"exit_label": "To the Ruins of Utopia"})
 	# The island chapter ends here: time-jump card, then the cruise chapter (data/chapters.json).
 	_door("Exit_Cruise", _px(pr[0] - 2.5, pr[1] + 0.5), {
-		"target_scene": "res://scenes/chapters/chapter_end.tscn"})
+		"target_scene": "res://scenes/chapters/chapter_end.tscn", "exit_label": "Back to the Cruise"})
 	_door("Exit_Tropical", _px(35.6, 23.5), {
-		"target_scene": "res://scenes/florida/beach.tscn", "target_spawn": "spawn_default"})
+		"target_scene": "res://scenes/florida/beach.tscn", "target_spawn": "spawn_default",
+		"exit_label": "To the Tropical Beach"})
 	_save("res://scenes/maps/village.tscn")
 
 
@@ -419,16 +423,20 @@ func _build_temple() -> void:
 
 	_marker("spawn_default", Vector2(15 * CELL, 15 * CELL))
 	_marker("spawn_from_village", Vector2(15 * CELL, 17 * CELL + 8))
+	_marker("spawn_from_ruins", Vector2(2 * CELL + 8, 8 * CELL))
 	_marker("spawn_from_puzzle", Vector2(25 * CELL, 12 * CELL))
 	_character("res://scenes/player/player.tscn", "Player", Vector2(15 * CELL, 15 * CELL))
 	_character("res://scenes/npc/npc.tscn", "Priestess", Vector2(15 * CELL, 7 * CELL + 16), {
 		"npc_id": "priestess", "caste": "priestess", "sprite_texture": "npc_priestess",
 		"dialogue_path": "res://dialogue/priestess.dialogue", "voice_pitch": 0.85})
 	_door("ExitDoor", Vector2(15 * CELL, 19 * CELL + 16), {
-		"target_scene": "res://scenes/maps/village.tscn", "target_spawn": "spawn_from_temple"})
+		"target_scene": "res://scenes/maps/village.tscn", "target_spawn": "spawn_from_temple",
+		"exit_label": "Back to the Village"})
 	var table := _door("RitualTable", Vector2(25 * CELL, 9 * CELL + 16), {
-		"target_scene": "res://scenes/minigames/ritual_puzzle.tscn"})
+		"target_scene": "res://scenes/minigames/ritual_puzzle.tscn", "exit_label": "The Ritual Table",
+		"show_marker": false})
 	_prop("prop_skull_altar", Vector2(25 * CELL, 9 * CELL + 24), "RitualAltar")
 	_door("RuinsDoor", Vector2(CELL / 2.0 + 8, 8 * CELL), {
-		"target_scene": "res://scenes/ruins/ruins_wreck.tscn", "target_spawn": "spawn_default"})
+		"target_scene": "res://scenes/ruins/ruins_wreck.tscn", "target_spawn": "spawn_default",
+		"exit_label": "Into the Ruins of Utopia"})
 	_save("res://scenes/maps/temple.tscn")
