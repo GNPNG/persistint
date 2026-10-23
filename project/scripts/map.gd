@@ -4,6 +4,9 @@ extends Node2D
 
 const WARDROBE_SCENE := "res://scenes/ui/wardrobe.tscn"
 
+## Pixel size of the map; the camera stops at its edge. Zero leaves the camera free.
+@export var map_size := Vector2.ZERO
+
 var _hud_label: Label
 var _wardrobe: CanvasLayer
 var _journal: CanvasLayer
@@ -12,6 +15,7 @@ const JOURNAL_SCRIPT := preload("res://scripts/ui/journal.gd")
 
 func _ready() -> void:
 	_spawn_player()
+	_limit_camera()
 	_build_hud()
 	GameClock.phase_changed.connect(func(_p: String) -> void: _update_hud())
 	GameClock.day_changed.connect(func(_d: int) -> void: _update_hud())
@@ -24,6 +28,16 @@ func _spawn_player() -> void:
 		marker = find_child("spawn_default", true, false)
 	if player and marker:
 		player.global_position = (marker as Node2D).global_position
+
+
+func _limit_camera() -> void:
+	var player := get_tree().get_first_node_in_group("player")
+	var cam: Camera2D = player.get_node_or_null("Camera2D") if player else null
+	if cam and map_size != Vector2.ZERO:
+		cam.limit_left = 0
+		cam.limit_top = 0
+		cam.limit_right = int(map_size.x)
+		cam.limit_bottom = int(map_size.y)
 
 
 func _build_hud() -> void:
