@@ -155,5 +155,9 @@
 	"pony_dumpling": {
 		"name": "Dumpling",
 		"short": "Dumpling"
+	},
+	"stable_friend": {
+		"name": "Hannah",
+		"short": "Hannah"
 	}
 }

@@ -1,9 +1,13 @@
 extends CanvasLayer
 ## StablePanel — the grooming panel for one pony (the paper-doll makeover, on a pony): a big
 ## PonyDoll preview, Brush, mane style and accessory pickers, Ride, and one "Foal with ..."
-## button per grown-up friend. Every choice is a good one; nothing is scored.
+## button per grown-up friend (in a short scrolling list, so a big herd still fits the 360 px
+## view). Every choice is a good one; nothing is scored. Sizes come from themes/default.tres.
 
 signal spoke(text: String)
+
+## How many "Foal with ..." buttons show before the list scrolls.
+const FOAL_ROWS := 3
 
 var pony_id := ""
 
@@ -15,6 +19,8 @@ func _ready() -> void:
 	layer = 15
 	var panel := PanelContainer.new()
 	panel.name = "Panel"
+	panel.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	panel.grow_vertical = Control.GROW_DIRECTION_BOTH
 	panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
 	add_child(panel)
 	var hbox := HBoxContainer.new()
@@ -45,13 +51,11 @@ func _build() -> void:
 	_box.add_child(title)
 	var looks := Label.new()
 	looks.text = Ponies.describe(pony_id)
-	looks.add_theme_font_size_override("font_size", 9)
 	_box.add_child(looks)
 	var parents: Array = Ponies.pony(pony_id).get("parents", [])
 	if parents.size() == 2:
 		var fam := Label.new()
 		fam.text = "Foal of %s and %s" % [Ponies.display_name(parents[0]), Ponies.display_name(parents[1])]
-		fam.add_theme_font_size_override("font_size", 9)
 		_box.add_child(fam)
 
 	_button("Brush", _brush)
@@ -65,18 +69,31 @@ func _build() -> void:
 		_button("Ride", _ride)
 	else:
 		_button("Ride", _ride, false)
-		for other: String in Ponies.ids():
-			if Ponies.can_breed(pony_id, other, today):
-				_button("Foal with %s" % Ponies.display_name(other), _foal.bind(other), false)
+		var friends: Array = Ponies.ids().filter(func(other: String) -> bool: return Ponies.can_breed(pony_id, other, today))
+		if not friends.is_empty():
+			var scroll := ScrollContainer.new()
+			scroll.name = "Foals"
+			scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+			var list := VBoxContainer.new()
+			list.name = "List"
+			list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			scroll.add_child(list)
+			_box.add_child(scroll)
+			for other: String in friends:
+				_button("Foal with %s" % Ponies.display_name(other), _foal.bind(other), false, list)
+			var row := maxf(list.get_child(0).get_combined_minimum_size().y, 13.0)
+			var sep := float(list.get_theme_constant("separation"))
+			var rows := mini(friends.size(), FOAL_ROWS)
+			scroll.custom_minimum_size = Vector2(0, rows * row + (rows - 1) * sep)
 	_button("Close", queue_free, false)
 
 
-func _button(text: String, action: Callable, rebuild := true) -> void:
+func _button(text: String, action: Callable, rebuild := true, parent: Control = null) -> Button:
 	var b := Button.new()
 	b.text = text
-	b.add_theme_font_size_override("font_size", 10)
 	b.pressed.connect(_press.bind(action, rebuild))
-	_box.add_child(b)
+	(parent if parent else _box).add_child(b)
+	return b
 
 
 func _press(action: Callable, rebuild: bool) -> void:
