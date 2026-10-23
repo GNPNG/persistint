@@ -316,3 +316,15 @@ figcaption { margin-top: 10px; font-size: .9rem; color: var(--plum-soft); text-a
   .video-play { transition: transform .2s ease; }
   .video-facade:hover .video-play { transform: translate(-50%, -50%) scale(1.08); }
 }
+
+/* GNPNG Ping Pong imprint mark, floating at the lower left of every page */
+.gnpng-float {
+  position: fixed; left: 16px; bottom: 16px; z-index: 50;
+  display: block; padding: 8px 10px; border-radius: 12px;
+  background: rgba(253, 246, 227, 0.92); box-shadow: 0 4px 14px rgba(89, 56, 89, 0.18);
+  line-height: 0; transition: transform .15s ease;
+}
+.gnpng-float img { width: 96px; height: auto; }
+.gnpng-float:hover, .gnpng-float:focus-visible { transform: translateY(-2px); }
+@media (max-width: 480px) { .gnpng-float { left: 10px; bottom: 10px; padding: 6px 8px; } .gnpng-float img { width: 64px; } }
+@media (prefers-reduced-motion: reduce) { .gnpng-float { transition: none; } }
