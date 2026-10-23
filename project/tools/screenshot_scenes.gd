@@ -1,7 +1,9 @@
 extends SceneTree
 ## Screenshot tool — loads each main scene, waits a few frames and saves the
 ## viewport as a PNG. Needs a display (not --headless):
-##   godot --path project -s tools/screenshot_scenes.gd -- <out_dir> [prefix]
+##   godot --path project -s tools/screenshot_scenes.gd -- <out_dir> [prefix] [names]
+## <names> is an optional comma-separated list of shot names (first column of SHOTS) to take;
+## without it every shot is taken.
 
 const SHOTS := [
 	["main_menu", "res://scenes/ui/main_menu.tscn", ""],
@@ -22,6 +24,10 @@ const SHOTS := [
 	["village_bark", "res://scenes/maps/village.tscn", "bark"],
 	["florida_garden", "res://scenes/florida/garden.tscn", ""],
 	["chapter_end", "res://scenes/chapters/chapter_end.tscn", ""],
+	["next_top_comic", "res://scenes/minigames/next_top_comic.tscn", ""],
+	["hottest_of_the_hot", "res://scenes/minigames/hottest_of_the_hot.tscn", ""],
+	["flashback_card", "res://scenes/chapters/flashback_card.tscn", ""],
+	["stable", "res://scenes/florida/stable.tscn", ""],
 ]
 
 
@@ -38,9 +44,12 @@ func _run() -> void:
 	var args := OS.get_cmdline_user_args()
 	var out_dir: String = args[0] if args.size() > 0 else "user://shots"
 	var prefix: String = args[1] if args.size() > 1 else ""
+	var only: PackedStringArray = args[2].split(",", false) if args.size() > 2 else PackedStringArray()
 	DirAccess.make_dir_recursive_absolute(out_dir)
 	await _wait(5)
 	for shot: Array in SHOTS:
+		if not only.is_empty() and not only.has(shot[0]):
+			continue
 		change_scene_to_file(shot[1])
 		await _wait(10)
 		match shot[2]:
