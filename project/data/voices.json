@@ -1,0 +1,13 @@
+{
+	"_note": "Voice for each speaker's impersonated clips (tools/generate_voice_clips.py). Keys are cast ids from cast.json (or a literal speaker label such as the landing's first mate). \"ref\": a reference recording of that person (6-30 s of clean speech) under art/voice_refs/; \"builtin\": one of XTTS-v2's built-in studio voices, for characters who aren't real people. Speakers with neither are spoken with system text-to-speech.",
+	"chelsea": { "ref": "art/voice_refs/chelsea.wav" },
+	"tyra": { "ref": "art/voice_refs/tyra.wav" },
+	"oprah": { "ref": "art/voice_refs/oprah.wav" },
+	"silverman": { "ref": "art/voice_refs/silverman.wav" },
+	"kate": { "ref": "art/voice_refs/kate.wav" },
+	"initiate": { "builtin": "Daisy Studious" },
+	"priestess": { "builtin": "Ana Florence" },
+	"barren": { "builtin": "Gracie Wise" },
+	"drone": { "builtin": "Andrew Chipper" },
+	"First Mate": { "builtin": "Damien Black" }
+}
