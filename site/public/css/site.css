@@ -317,13 +317,14 @@ figcaption { margin-top: 10px; font-size: .9rem; color: var(--plum-soft); text-a
   .video-facade:hover .video-play { transform: translate(-50%, -50%) scale(1.08); }
 }
 
-/* GNPNG Ping Pong imprint mark (G|P|G with the pong animation), floating at the lower left */
+/* GNPNG Ping Pong imprint mark (G|P|G with the pong animation, colourful rounded sans), floating at the lower left */
+@media (prefers-reduced-motion: reduce) { .gnpng-float animate { display: none; } }
 .gnpng-float {
   position: fixed; left: 16px; bottom: 16px; z-index: 50;
   display: block; line-height: 0; border-radius: 16px;
   box-shadow: 0 4px 14px rgba(13, 33, 55, 0.22); transition: transform .15s ease;
 }
-.gnpng-float img { width: 96px; height: auto; border-radius: 16px; }
+.gnpng-float svg { display: block; width: 96px; height: auto; }
 .gnpng-float:hover, .gnpng-float:focus-visible { transform: translateY(-2px); }
-@media (max-width: 480px) { .gnpng-float { left: 10px; bottom: 10px; } .gnpng-float img { width: 72px; } }
+@media (max-width: 480px) { .gnpng-float { left: 10px; bottom: 10px; } .gnpng-float svg { width: 72px; } }
 @media (prefers-reduced-motion: reduce) { .gnpng-float { transition: none; } }
