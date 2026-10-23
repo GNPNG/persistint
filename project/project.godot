@@ -14,6 +14,10 @@ config/name="Persistint"
 run/main_scene="res://scenes/ui/main_menu.tscn"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 
+[audio]
+
+general/text_to_speech=true
+
 [autoload]
 
 WorldState="*res://scripts/autoload/world_state.gd"
@@ -23,6 +27,10 @@ SceneRouter="*res://scripts/autoload/scene_router.gd"
 Cast="*res://scripts/autoload/cast.gd"
 NameIt="*res://scripts/autoload/name_it.gd"
 DialogueManager="*res://addons/dialogue_manager/dialogue_manager.gd"
+
+[dialogue_manager]
+
+runtime/balloon_path="res://scenes/ui/dialogue_balloon.tscn"
 
 [display]
 
@@ -37,24 +45,16 @@ window/stretch/aspect="keep"
 
 enabled=PackedStringArray("res://addons/dialogue_manager/plugin.cfg")
 
+[gui]
+
+theme/custom="res://themes/default.tres"
+
 [internationalization]
 
-locale/translations_pot_files=PackedStringArray("res://dialogue/priestess.dialogue", "res://dialogue/offering.dialogue")
+locale/translations_pot_files=PackedStringArray("res://dialogue/priestess.dialogue", "res://dialogue/offering.dialogue", "res://dialogue/interview.dialogue", "res://dialogue/florida_beach.dialogue", "res://dialogue/florida_stable.dialogue", "res://dialogue/next_top_comic.dialogue")
 
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
-
-[audio]
-
-general/text_to_speech=true
-
-[dialogue_manager]
-
-runtime/balloon_path="res://scenes/ui/dialogue_balloon.tscn"
-
-[gui]
-
-theme/custom="res://themes/default.tres"
