@@ -1,5 +1,5 @@
 {
-  "_note": "DESIGN.md: every celebrity mini-game is introduced by Chelsea Clinton, who explains how empowering and fun this is going to be. Her lines are her own words; every line here must come from data/chelsea_clinton_quotes.json (sourced). intros: mini-game id -> lines; '_default' is used for any game without its own.",
+  "_note": "DESIGN.md: every celebrity mini-game is introduced by Chelsea Clinton, who explains how empowering and fun this is going to be. Her lines are her own words; every line here must come from data/quotes/chelsea.json (sourced). intros: mini-game id -> lines; '_default' is used for any game without its own.",
   "emcee": "chelsea",
   "intros": {
     "_default": [
