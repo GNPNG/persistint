@@ -14,11 +14,13 @@ outlines = [PackedVector2Array(60, 130, 900, 130, 900, 500, 60, 500)]
 
 [node name="RuinsCorridor" type="Node2D"]
 script = ExtResource("1")
+map_size = Vector2(960, 540)
 
 [node name="Background" type="ColorRect" parent="."]
 offset_right = 960.0
 offset_bottom = 540.0
 color = Color(0.14, 0.17, 0.22, 1)
+mouse_filter = 2
 
 [node name="Nav" type="NavigationRegion2D" parent="."]
 navigation_polygon = SubResource("navpoly")
@@ -40,14 +42,16 @@ position = Vector2(840, 300)
 position = Vector2(120, 300)
 
 [node name="WreckDoor" parent="." instance=ExtResource("5")]
-position = Vector2(60, 300)
+position = Vector2(80, 300)
 target_scene = "res://scenes/ruins/ruins_wreck.tscn"
 target_spawn = "spawn_from_corridor"
+exit_label = "Back to the Promenade Deck"
 
 [node name="CoreDoor" parent="." instance=ExtResource("5")]
-position = Vector2(900, 300)
+position = Vector2(880, 300)
 target_scene = "res://scenes/ruins/ruins_core.tscn"
 target_spawn = "spawn_from_corridor"
+exit_label = "To the Reliquary Core"
 
 [node name="Piece1" parent="." instance=ExtResource("6")]
 position = Vector2(300, 200)

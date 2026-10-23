@@ -24,19 +24,19 @@ anchor_bottom = 1.0
 
 [node name="VBox" type="VBoxContainer" parent="Center"]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 5
 
 [node name="Title" type="Label" parent="Center/VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.35, 0.55, 1)
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 20
 text = "PERSISTINT"
 horizontal_alignment = 1
 
 [node name="Subtitle" type="Label" parent="Center/VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.55, 0.4, 0.5, 1)
-theme_override_font_sizes/font_size = 10
+theme_override_font_sizes/font_size = 9
 text = "a lovely little island. everyone contributes. everyone."
 horizontal_alignment = 1
 
@@ -51,6 +51,6 @@ text = "New Game"
 [node name="Hint" type="Label" parent="Center/VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.6, 0.5, 0.55, 1)
-theme_override_font_sizes/font_size = 8
+theme_override_font_sizes/font_size = 7
 text = "click to walk · click people to talk · P for wardrobe"
 horizontal_alignment = 1
