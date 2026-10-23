@@ -38,7 +38,7 @@ propagates. You never command anyone.
 
 ## Game structure
 
-Two interleaved worlds:
+Three worlds:
 
 ### 1. Island present (the sandbox)
 - Overhead 2D, small connected map areas (Animal Crossing scale), Stardew *aesthetic only* —
@@ -122,7 +122,7 @@ journal — the player's own growing Forbidden Knowledge.
 - Audio: Animalese synth is the default voice; local TTS (Piper/XTTS) cute-voice experiments
   for short barks evaluated against it.
 
-## Legal/brand guardrails
+## Legal/brand rules
 
 - Celebrities appear under their real names, exactly as in the source material (Story
   Structure); never renamed or swapped for archetypes.
