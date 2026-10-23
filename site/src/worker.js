@@ -5,23 +5,28 @@
 const TYPES = { wasm: "application/wasm", pck: "application/octet-stream", js: "text/javascript" };
 const OVERSIZED = /^\/play\/([\w.-]+)\/(index\.wasm)$/;
 
+// oversized_mode "gzip": the file ships as static <name>.gz; it is served with
+// Content-Encoding: gzip (encodeBody "manual" passes the bytes through) and the browser
+// inflates it.
 export default {
   async fetch(req, env) {
-    const m = new URL(req.url).pathname.match(OVERSIZED);
+    const url = new URL(req.url);
+    const m = url.pathname.match(OVERSIZED);
     if (m) {
       if (req.method !== "GET" && req.method !== "HEAD") {
         return new Response("Method not allowed", { status: 405, headers: { allow: "GET, HEAD" } });
       }
-      const obj = await env.GAME.get(`${m[1]}/${m[2]}`);
-      if (!obj) return new Response("Not found", { status: 404 });
+      const gz = await env.ASSETS.fetch(new Request(new URL(url.pathname + ".gz", url)));
+      if (!gz.ok) return new Response("Not found", { status: 404 });
       const h = new Headers();
-      obj.writeHttpMetadata(h);
-      h.set("etag", obj.httpEtag);
       h.set("content-type", TYPES[m[2].split(".").pop()] || "application/octet-stream");
+      h.set("content-encoding", "gzip");
       h.set("cache-control", "public, max-age=31536000, immutable");
+      const etag = gz.headers.get("etag");
+      if (etag) h.set("etag", etag);
       h.set("x-content-type-options", "nosniff");
       h.set("strict-transport-security", "max-age=31536000");
-      return new Response(req.method === "HEAD" ? null : obj.body, { headers: h });
+      return new Response(req.method === "HEAD" ? null : gz.body, { headers: h, encodeBody: "manual" });
     }
     return env.ASSETS.fetch(req);
   }
