@@ -1,7 +1,8 @@
 extends Area2D
 ## NPC — clickable villager with state-reactive barks (data/barks.json) and an
 ## optional Dialogue Manager tree for story conversations.
-## Bark selection: first entry whose "if" flags all match WorldState wins.
+## Bark selection: first entry whose "if" flags all match WorldState and whose
+## optional "when" (cycle day, festival, phase...; see GameClock.matches_when) holds wins.
 
 const BARKS_PATH := "res://data/barks.json"
 
@@ -42,7 +43,7 @@ func _ready() -> void:
 
 func current_bark() -> String:
 	for entry: Dictionary in _barks.get(npc_id, []):
-		if WorldState.matches(entry.get("if", {})):
+		if WorldState.matches(entry.get("if", {})) and GameClock.matches_when(entry.get("when", {})):
 			return entry.get("text", "")
 	return "..."
 
