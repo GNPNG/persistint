@@ -64,7 +64,8 @@ node tools/web_render/render.mjs --login
 ```
 
 This opens Chrome on the automation profile with **no** debugging port (Google may refuse
-sign-in when one is open), showing accounts.google.com, gemini.google.com and Flow. Then:
+sign-in when one is open), with a tab for Google sign-in (`loginUrl`) and one for each surface
+URL in `selectors.json` (gemini.google.com and Flow). Then:
 
 1. Sign in with the AI Ultra account.
 2. Open Gemini and accept any first-run prompts. Check that Tools lists Create images, Create
