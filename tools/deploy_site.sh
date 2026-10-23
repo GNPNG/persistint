@@ -74,11 +74,19 @@ TITLE="$(cfg '.title | select(. != "")')"
 BUILD_BUCKET="$(jq -r '.build_bucket // ""' "$CONFIG")"
 THREAD_SUPPORT="$(jq -r '.thread_support // false' "$CONFIG")"
 mapfile -t OVERSIZED < <(jq -r '.oversized_files // [] | .[]' "$CONFIG")
+# oversized_mode: "r2" uploads oversized files to R2 (build_bucket); "gzip" ships each as a
+# static <file>.gz (which must fit the 25 MiB limit) and the worker serves it with
+# Content-Encoding: gzip, so no R2 is needed. custom_domain false: no route; the worker is
+# served on the account's workers.dev subdomain.
+OVERSIZED_MODE="$(jq -r '.oversized_mode // "r2"' "$CONFIG")"
+CUSTOM_DOMAIN="$(jq -r 'if has("custom_domain") then .custom_domain else true end' "$CONFIG")"
+[[ "$OVERSIZED_MODE" == r2 || "$OVERSIZED_MODE" == gzip ]] || die "oversized_mode must be r2 or gzip"
+use_r2() { [[ "$OVERSIZED_MODE" == r2 ]] && ((${#OVERSIZED[@]})); }
 [[ "$SITE_HOST" =~ ^[a-z0-9.-]+$ ]] || die "site_host is not a hostname: $SITE_HOST"
 for f in "${OVERSIZED[@]}"; do
   [[ "$f" =~ ^[A-Za-z0-9._-]+$ ]] || die "oversized_files entry is not a plain file name: $f"
 done
-if ((${#OVERSIZED[@]})) && [[ -z "$BUILD_BUCKET" ]]; then
+if use_r2 && [[ -z "$BUILD_BUCKET" ]]; then
   die "oversized_files is set but build_bucket is empty"
 fi
 if [[ "$THREAD_SUPPORT" == "true" ]] && ! grep -q '^ *Cross-Origin-Embedder-Policy' "$PUBLIC/_headers"; then
@@ -182,7 +190,11 @@ else
   while IFS= read -r -d '' p; do
     f="${p#"$EXPORT"/}"
     bytes="$(stat -c %s "$p")"
-    if is_oversized "$f"; then
+    if is_oversized "$f" && [[ "$OVERSIZED_MODE" == gzip ]]; then
+      gz="$(gzip -9 -n -c "$p" | wc -c)"
+      where="static $f.gz ($(human "$gz") gzip)"
+      ((gz <= MAX_ASSET_BYTES)) || { where="GZIP STILL OVER LIMIT ($gz B)"; over=1; }
+    elif is_oversized "$f"; then
       where="R2 $BUILD_BUCKET/$BUILD_ID/$f"
       ((bytes <= MAX_R2_PUT_BYTES)) || { where="TOO BIG FOR r2 object put"; over=1; }
     elif ((bytes > MAX_ASSET_BYTES)); then
@@ -207,7 +219,10 @@ else
   mkdir -p "$PLAY/$BUILD_ID"
   while IFS= read -r -d '' p; do
     f="${p#"$EXPORT"/}"
-    is_oversized "$f" && continue
+    if is_oversized "$f"; then
+      [[ "$OVERSIZED_MODE" == gzip ]] && gzip -9 -n -c "$p" >"$PLAY/$BUILD_ID/$f.gz"
+      continue
+    fi
     mkdir -p "$PLAY/$BUILD_ID/$(dirname "$f")"
     cp "$p" "$PLAY/$BUILD_ID/$f"
   done < <(find "$EXPORT" -type f -print0)
@@ -325,15 +340,21 @@ log "Generating site/wrangler.toml and site/src/worker.js"
     sep=""
     for f in "${OVERSIZED[@]}"; do printf '%s"/play/*/%s"' "$sep" "$f"; sep=", "; done
     echo ']'
-    echo
-    echo '[[r2_buckets]]'
-    echo 'binding = "GAME"'
-    echo "bucket_name = \"$BUILD_BUCKET\""
+    if use_r2; then
+      echo
+      echo '[[r2_buckets]]'
+      echo 'binding = "GAME"'
+      echo "bucket_name = \"$BUILD_BUCKET\""
+    fi
   fi
   echo
-  echo '[[routes]]'
-  echo "pattern = \"$SITE_HOST\""
-  echo 'custom_domain = true'
+  if [[ "$CUSTOM_DOMAIN" == true ]]; then
+    echo '[[routes]]'
+    echo "pattern = \"$SITE_HOST\""
+    echo 'custom_domain = true'
+  else
+    echo 'workers_dev = true'
+  fi
 } >"$SITE/wrangler.toml"
 
 mkdir -p "$SITE/src"
@@ -344,7 +365,39 @@ for f in "${OVERSIZED[@]}"; do NAMES_RE+="${NAMES_RE:+|}${f//./\\.}"; done
   echo '// Serves the build files too big for static assets (oversized_files) from R2; every'
   echo '// other request goes to the static assets in ./public. _headers does not apply to'
   echo '// responses built here, so the headers are set below.'
-  if [[ -n "$NAMES_RE" ]]; then
+  if [[ -n "$NAMES_RE" && "$OVERSIZED_MODE" == gzip ]]; then
+    cat <<EOF
+const TYPES = { wasm: "application/wasm", pck: "application/octet-stream", js: "text/javascript" };
+const OVERSIZED = /^\/play\/([\w.-]+)\/($NAMES_RE)\$/;
+
+// oversized_mode "gzip": the file ships as static <name>.gz; it is served with
+// Content-Encoding: gzip (encodeBody "manual" passes the bytes through) and the browser
+// inflates it.
+export default {
+  async fetch(req, env) {
+    const url = new URL(req.url);
+    const m = url.pathname.match(OVERSIZED);
+    if (m) {
+      if (req.method !== "GET" && req.method !== "HEAD") {
+        return new Response("Method not allowed", { status: 405, headers: { allow: "GET, HEAD" } });
+      }
+      const gz = await env.ASSETS.fetch(new Request(new URL(url.pathname + ".gz", url)));
+      if (!gz.ok) return new Response("Not found", { status: 404 });
+      const h = new Headers();
+      h.set("content-type", TYPES[m[2].split(".").pop()] || "application/octet-stream");
+      h.set("content-encoding", "gzip");
+      h.set("cache-control", "public, max-age=31536000, immutable");
+      const etag = gz.headers.get("etag");
+      if (etag) h.set("etag", etag);
+      h.set("x-content-type-options", "nosniff");
+      h.set("strict-transport-security", "max-age=31536000");
+      return new Response(req.method === "HEAD" ? null : gz.body, { headers: h, encodeBody: "manual" });
+    }
+    return env.ASSETS.fetch(req);
+  }
+};
+EOF
+  elif [[ -n "$NAMES_RE" ]]; then
     cat <<EOF
 const TYPES = { wasm: "application/wasm", pck: "application/octet-stream", js: "text/javascript" };
 const OVERSIZED = /^\/play\/([\w.-]+)\/($NAMES_RE)\$/;
@@ -381,7 +434,11 @@ export default {
 EOF
   fi
 } >"$SITE/src/worker.js"
-echo "worker routes: ${OVERSIZED[*]:-(none)} -> R2 ${BUILD_BUCKET:-(none)}"
+if [[ "$OVERSIZED_MODE" == gzip ]]; then
+  echo "worker routes: ${OVERSIZED[*]:-(none)} -> static .gz"
+else
+  echo "worker routes: ${OVERSIZED[*]:-(none)} -> R2 ${BUILD_BUCKET:-(none)}"
+fi
 
 # ---------------------------------------------------------------- absolute social-card URLs
 log "Making social-card URLs in site/public/index.html absolute (https://$SITE_HOST)"
@@ -438,7 +495,7 @@ python3 -I tools/check_site_links.py "$PUBLIC" --host "$SITE_HOST" "${allow[@]}"
 cd "$SITE"
 if ((DRY_RUN)); then
   log "Dry run: skipping R2 upload; wrangler deploy --dry-run"
-  if ((!SITE_ONLY)) && ((${#OVERSIZED[@]})); then
+  if ((!SITE_ONLY)) && use_r2; then
     for f in "${OVERSIZED[@]}"; do echo "would upload $f -> r2://$BUILD_BUCKET/$BUILD_ID/$f"; done
   fi
   "${WRANGLER[@]}" deploy --dry-run --outdir "$TMP/wrangler-dist"
@@ -446,7 +503,7 @@ if ((DRY_RUN)); then
   exit 0
 fi
 
-if ((!SITE_ONLY)) && ((${#OVERSIZED[@]})); then
+if ((!SITE_ONLY)) && use_r2; then
   log "R2: bucket $BUILD_BUCKET"
   if "${WRANGLER[@]}" r2 bucket info "$BUILD_BUCKET" >/dev/null 2>&1; then
     echo "bucket exists"
