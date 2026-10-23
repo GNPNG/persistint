@@ -38,11 +38,11 @@ target_spawn = "spawn_from_aquarium"
 [node name="Mermaid1" parent="." instance=ExtResource("5")]
 position = Vector2(300, 130)
 kind = "mermaid"
-nickname = "Marina"
+nickname = "mermaid_marina"
 wander = Rect2(140, 70, 260, 110)
 
 [node name="Mermaid2" parent="." instance=ExtResource("5")]
 position = Vector2(640, 150)
 kind = "mermaid"
-nickname = "Lagoon"
+nickname = "mermaid_lagoon"
 wander = Rect2(480, 70, 300, 110)

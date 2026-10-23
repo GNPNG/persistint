@@ -35,5 +35,45 @@
 	"oprah": {
 		"name": "Oprah Winfrey",
 		"short": "Oprah"
+	},
+	"dolphin_sunny": {
+		"name": "Sunny",
+		"short": "Sunny"
+	},
+	"dolphin_pearl": {
+		"name": "Pearl",
+		"short": "Pearl"
+	},
+	"crab_sidestep": {
+		"name": "Sidestep",
+		"short": "Sidestep"
+	},
+	"crab_clementine": {
+		"name": "Clementine",
+		"short": "Clementine"
+	},
+	"crab_pebble": {
+		"name": "Pebble",
+		"short": "Pebble"
+	},
+	"gull_biscuit": {
+		"name": "Biscuit",
+		"short": "Biscuit"
+	},
+	"gull_mabel": {
+		"name": "Mabel",
+		"short": "Mabel"
+	},
+	"gull_pickle": {
+		"name": "Pickle",
+		"short": "Pickle"
+	},
+	"mermaid_marina": {
+		"name": "Marina",
+		"short": "Marina"
+	},
+	"mermaid_lagoon": {
+		"name": "Lagoon",
+		"short": "Lagoon"
 	}
 }

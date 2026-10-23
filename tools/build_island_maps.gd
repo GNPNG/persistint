@@ -338,6 +338,7 @@ func _build_village() -> void:
 	_marker("spawn_default", _px(19.5, 12.5))
 	_marker("spawn_from_temple", _px(tx, ty + 2.6))
 	_marker("spawn_from_ruins", _px(rx + 0.5, 24.6))
+	_marker("spawn_from_tropical", _px(34.0, 23.5))
 	_character("res://scenes/player/player.tscn", "Player", _px(19.5, 12.5))
 	_character("res://scenes/npc/npc.tscn", "Initiate", _px(22.5, 12.6), {
 		"npc_id": "initiate", "caste": "initiate", "sprite_texture": "npc_initiate",
@@ -350,13 +351,13 @@ func _build_village() -> void:
 		"target_scene": "res://scenes/maps/temple.tscn", "target_spawn": "spawn_from_village"})
 	_mirror(_px(19.5, 11.0))
 
-	# ---- Exit points for other areas (wired at merge). Locked until then. ----
-	var ruins := _door("Exit_Ruins", _px(rx + 0.5, 24.3), {"locked": true})
-	ruins.set_meta("wire_to", "Ruins of Utopia entry scene, spawn from_island")
+	# ---- Exit points for other areas. ----
+	_door("Exit_Ruins", _px(rx + 0.5, 24.3), {
+		"target_scene": "res://scenes/ruins/ruins_wreck.tscn", "target_spawn": "spawn_default"})
 	var cruise := _door("Exit_Cruise", _px(pr[0] - 2.5, pr[1] + 0.5), {"locked": true})
 	cruise.set_meta("wire_to", "Cruise flashback world (unlocked by Forbidden Knowledge)")
-	var tropical := _door("Exit_Tropical", _px(35.6, 23.5), {"locked": true})
-	tropical.set_meta("wire_to", "Tropical Florida Keys entry scene")
+	_door("Exit_Tropical", _px(35.6, 23.5), {
+		"target_scene": "res://scenes/florida/beach.tscn", "target_spawn": "spawn_default"})
 	_save("res://scenes/maps/village.tscn")
 
 
@@ -427,8 +428,6 @@ func _build_temple() -> void:
 	var table := _door("RitualTable", Vector2(25 * CELL, 9 * CELL + 16), {
 		"target_scene": "res://scenes/minigames/ritual_puzzle.tscn"})
 	_prop("prop_skull_altar", Vector2(25 * CELL, 9 * CELL + 24), "RitualAltar")
-	var ruins := _door("RuinsDoor", Vector2(CELL / 2.0 + 8, 8 * CELL), {
-		"locked": true,
-		"locked_bark": "Sealed since the Before. The Covenant says there is nothing inside. The lock says otherwise."})
-	ruins.set_meta("wire_to", "Ruins of Utopia dungeon entry (from the temple), spawn from_temple")
+	_door("RuinsDoor", Vector2(CELL / 2.0 + 8, 8 * CELL), {
+		"target_scene": "res://scenes/ruins/ruins_wreck.tscn", "target_spawn": "spawn_default"})
 	_save("res://scenes/maps/temple.tscn")

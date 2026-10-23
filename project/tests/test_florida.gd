@@ -86,6 +86,7 @@ func _run() -> void:
 		for c in scene.get_children():
 			if c.get("kind") != null and c.get("nickname") != null:
 				_check(c.nickname in Florida.data()["critters"][c.kind]["names"], "%s has a name from the data" % c.name)
+				_check(root.get_node("/root/Cast").short(c.nickname) != c.nickname, "%s name comes from cast.json" % c.name)
 		_check(scene.get_node("Player") != null, "%s map loads" % m)
 		if m == "garden":
 			var p: Node = scene.get_node("Plot1")
