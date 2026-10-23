@@ -71,7 +71,10 @@ async function main() {
       console.log(`  PowerShell: ${WINDOWS_LAUNCH_HINT}`);
       return;
     }
-    await openForLogin({ ...settings, urls: ['https://accounts.google.com/', 'https://gemini.google.com/app', 'https://labs.google/fx/tools/flow'] });
+    // Tabs to open: Google sign-in plus every surface URL in selectors.json.
+    const cfg = loadSelectors(selectorsFile);
+    const urls = [...new Set([cfg.loginUrl || 'https://accounts.google.com/', ...Object.values(cfg.surfaces).map((s) => s.url)])];
+    await openForLogin({ ...settings, urls });
     return;
   }
 

@@ -108,6 +108,7 @@ export function validateSelectors(cfg, opts = {}) {
   if (!cfg.surfaces || typeof cfg.surfaces !== 'object') errors.push('"surfaces" object is missing');
   if (!cfg.kinds || typeof cfg.kinds !== 'object') errors.push('"kinds" object is missing');
   if (errors.length) return errors;
+  if (cfg.loginUrl !== undefined) checkUrl(cfg.loginUrl, 'loginUrl', errors, opts);
   for (const k of KINDS) {
     const name = cfg.kinds[k];
     if (!name) errors.push(`kinds.${k}: missing`);

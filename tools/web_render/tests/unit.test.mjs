@@ -89,6 +89,7 @@ test('selector validation catches bad configs', () => {
   assert.match(bad((c) => { c.surfaces.gemini_image.url = 'file:///tmp/x.html'; }), /only https/);
   assert.equal(validateSelectors((() => { const c = structuredClone(good); c.surfaces.gemini_image.url = 'file:///tmp/x.html'; return c; })(), { allowFileUrls: true }).length, 0);
   assert.match(bad((c) => { c.surfaces.gemini_image.steps.mode[0].action = 'tap'; }), /unknown action/);
+  assert.match(bad((c) => { c.loginUrl = 'http://accounts.google.com/'; }), /loginUrl: only https/);
   assert.match(bad((c) => { c.surfaces.gemini_image.steps.input = []; }), /steps\.input: must be a non-empty array/);
   assert.match(bad((c) => { c.surfaces.gemini_image.steps.input = ['aria/Prompt']; }), /legacy aria\//);
   assert.match(bad((c) => { c.surfaces.gemini_image.steps.input = ['::-p-aria(Prompt']; }), /unbalanced/);
