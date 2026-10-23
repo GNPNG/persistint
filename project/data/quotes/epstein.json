@@ -1,0 +1,66 @@
+{
+  "_note": "Jeffrey Epstein's own words only, each checked against the page in 'url' on 2026-10-23.",
+  "quotes": [
+    {
+      "text": "I'm not a sexual predator, I'm an 'offender.'",
+      "source": "Interview with the New York Post, Feb 2011 (as reported by the Village Voice, 25 Feb 2011)",
+      "url": "https://www.villagevoice.com/jeffrey-epstein-sex-offender-underage-girls-are-like-bagels-or-something/",
+      "aggregator": false
+    },
+    {
+      "text": "It's the difference between a murderer and a person who steals a bagel.",
+      "source": "Interview with the New York Post, Feb 2011 (as reported by the Village Voice, 25 Feb 2011)",
+      "url": "https://www.villagevoice.com/jeffrey-epstein-sex-offender-underage-girls-are-like-bagels-or-something/",
+      "aggregator": false
+    },
+    {
+      "text": "I just want you to know I'm not a pedophile.",
+      "source": "Phone call with Charlie Gasparino, as recounted in FOX Business, 13 Aug 2019",
+      "url": "https://www.foxbusiness.com/features/jeffrey-epstein-exclusive-hedge-fund",
+      "aggregator": false
+    },
+    {
+      "text": "Maybe the only thing worse than being called a pedophile is being called a hedge fund manager.",
+      "source": "Phone call with Charlie Gasparino, as recounted in FOX Business, 13 Aug 2019",
+      "url": "https://www.foxbusiness.com/features/jeffrey-epstein-exclusive-hedge-fund",
+      "aggregator": false
+    },
+    {
+      "text": "It's hard to believe that not so long ago people actually thought I was a good guy.",
+      "source": "Phone call with Charlie Gasparino, as recounted in FOX Business, 13 Aug 2019",
+      "url": "https://www.foxbusiness.com/features/jeffrey-epstein-exclusive-hedge-fund",
+      "aggregator": false
+    },
+    {
+      "text": "And now people are ashamed to say they knew me.",
+      "source": "Phone call with Charlie Gasparino, as recounted in FOX Business, 13 Aug 2019",
+      "url": "https://www.foxbusiness.com/features/jeffrey-epstein-exclusive-hedge-fund",
+      "aggregator": false
+    },
+    {
+      "text": "Ethics is always a complicated subject.",
+      "source": "Videotaped interview with Steve Bannon (2019), released by the Justice Department",
+      "url": "https://www.ms.now/news/epstein-discusses-jail-time-in-newly-released-audio-with-steve-bannon",
+      "aggregator": false
+    },
+    {
+      "text": "Men want to measure everything.",
+      "source": "Videotaped interview with Steve Bannon (2019), released by the Justice Department",
+      "url": "https://www.ms.now/news/epstein-discusses-jail-time-in-newly-released-audio-with-steve-bannon",
+      "aggregator": false
+    },
+    {
+      "text": "The devil scares me.",
+      "source": "Videotaped interview with Steve Bannon (2019), released by the Justice Department",
+      "url": "https://www.ms.now/news/epstein-discusses-jail-time-in-newly-released-audio-with-steve-bannon",
+      "aggregator": false
+    }
+  ],
+  "_verification": {
+    "method": "WebFetch/WebSearch extraction on 2026-10-23 (tool output, not raw page text); wording not character-checked against the original page",
+    "verified": "2026-10-23",
+    "expires": "never for listed source/date; wording re-check required before use of any line",
+    "aggregator_only": 0,
+    "total": 9
+  }
+}

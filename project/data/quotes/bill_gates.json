@@ -1,0 +1,54 @@
+{
+  "_note": "Bill Gates's own words only, from his 2015 TED talk; wording checked against the talk's recording (YouTube 6Af6b_wyiwI, captions + transcription) on 2026-10-23.",
+  "quotes": [
+    {
+      "text": "If anything kills over 10 million people in the next few decades, it's most likely to be a highly infectious virus rather than a war.",
+      "source": "TED talk \"The next outbreak? We're not ready\", Vancouver, 18 Mar 2015",
+      "url": "https://www.ted.com/talks/bill_gates_the_next_outbreak_we_re_not_ready",
+      "aggregator": false
+    },
+    {
+      "text": "Not missiles, but microbes.",
+      "source": "TED talk \"The next outbreak? We're not ready\", Vancouver, 18 Mar 2015",
+      "url": "https://www.ted.com/talks/bill_gates_the_next_outbreak_we_re_not_ready",
+      "aggregator": false
+    },
+    {
+      "text": "We're not ready for the next epidemic.",
+      "source": "TED talk \"The next outbreak? We're not ready\", Vancouver, 18 Mar 2015",
+      "url": "https://www.ted.com/talks/bill_gates_the_next_outbreak_we_re_not_ready",
+      "aggregator": false
+    },
+    {
+      "text": "The problem wasn't that there was a system that didn't work well enough. The problem was that we didn't have a system at all.",
+      "source": "TED talk \"The next outbreak? We're not ready\", Vancouver, 18 Mar 2015",
+      "url": "https://www.ted.com/talks/bill_gates_the_next_outbreak_we_re_not_ready",
+      "aggregator": false
+    },
+    {
+      "text": "There's no need to panic. We don't have to hoard cans of spaghetti or go down into the basement.",
+      "source": "TED talk \"The next outbreak? We're not ready\", Vancouver, 18 Mar 2015",
+      "url": "https://www.ted.com/talks/bill_gates_the_next_outbreak_we_re_not_ready",
+      "aggregator": false
+    },
+    {
+      "text": "But we need to get going, because time is not on our side.",
+      "source": "TED talk \"The next outbreak? We're not ready\", Vancouver, 18 Mar 2015",
+      "url": "https://www.ted.com/talks/bill_gates_the_next_outbreak_we_re_not_ready",
+      "aggregator": false
+    },
+    {
+      "text": "If we start now, we can be ready for the next epidemic.",
+      "source": "TED talk \"The next outbreak? We're not ready\", Vancouver, 18 Mar 2015",
+      "url": "https://www.ted.com/talks/bill_gates_the_next_outbreak_we_re_not_ready",
+      "aggregator": false
+    }
+  ],
+  "_verification": {
+    "method": "WebFetch/WebSearch extraction on 2026-10-23 (tool output, not raw page text); wording not character-checked against the original page; Gates lines checked against the talk recording's captions (https://www.youtube.com/watch?v=6Af6b_wyiwI)",
+    "verified": "2026-10-23",
+    "expires": "never for listed source/date; wording re-check required before use of any line",
+    "aggregator_only": 0,
+    "total": 7
+  }
+}
