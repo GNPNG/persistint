@@ -1,0 +1,7 @@
+{
+  "_note": "DESIGN.md: Hottest of the HOT makeover / hair-salon / get-ready-for-the-fashion-show chains, Day of the Tentacle-style chained tasks across the ship. Task and station text is not in the design doc, so it ships empty (content needed from author). A task: {id, station, text, needs: [item ids held], requires: [task ids done], gives: item id, outfit: {slot: part_id} applied to the paper doll}. Stations are the places aboard the ship the tasks happen in. When every task is done the passenger can go on to the show.",
+  "show_scene": "res://scenes/minigames/hottest_of_the_hot.tscn",
+  "return_map": "res://scenes/maps/village.tscn",
+  "stations": [],
+  "tasks": []
+}
