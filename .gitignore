@@ -21,3 +21,9 @@ tools/deploy_web.env
 # tools/web_render: unidentified captures (may be a sign-in/error page) and ffmpeg temp inputs
 prompts/**/*.unknown
 prompts/**/*.src.*
+# promo site: build output written by tools/deploy_site.sh (names a build; not committed)
+site/public/play/*/
+site/public/play/index.html
+site/public/_redirects
+site/.wrangler/
+site/node_modules/

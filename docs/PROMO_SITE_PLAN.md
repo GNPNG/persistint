@@ -51,7 +51,7 @@ Other files: `index.html`, `index.audio.worklet.js`, `index.audio.position.workl
 - **Worker requests:** every request for `/play/*/index.wasm` that reaches Cloudflare invokes the worker, cached or not; 100,000 a day on the free plan is therefore an upper bound on uncached engine loads a day, not on visitors (template section 6, "Worker requests and cost").
 - **Precompressed wasm** (`index.wasm.gz`, 9.4 MB, returned with `content-encoding: gzip` and `encodeBody: "manual"`: https://developers.cloudflare.com/workers/runtime-apis/response/) would fit under 25 MiB as a static asset. Unverified whether the edge passes it through cleanly; test before relying on it.
 - **Size-optimised engine build** (template section 3): unmeasured for this project; do not count on it to get under 25 MiB.
-- **Deploy:** `tools/deploy_site.sh` (planned) beside `tools/deploy_web.sh`, which stays for the self-hosted host. Gitea Actions availability on the project's Gitea instance is unverified (server reports 1.24.5). A GitHub mirror plus Workers Builds is possible only if decision 6 picks a mirror.
+- **Deploy:** `tools/deploy_site.sh` (section 6) beside `tools/deploy_web.sh`, which stays for the self-hosted host. Gitea Actions availability on the project's Gitea instance is unverified (server reports 1.24.5). A GitHub mirror plus Workers Builds is possible only if decision 6 picks a mirror.
 
 ## 4. Persistint asset sources
 
@@ -76,7 +76,26 @@ Prompt paths are under `prompts/` (SOP-03); none is rendered yet. "New" means no
 
 The disclosure text (LP-09, author's text) covers: satire using real public figures under their real names (`docs/DESIGN.md`, "Legal/brand rules"); voices for real people cloned with Coqui XTTS v2 from public recordings, and voices for fictional characters from XTTS v2's built-in studio voices (`project/data/voices.json`); real-person lines taken from sourced quotes (`project/data/quotes/*.json`, with a Sources list); generated art, music and video and the tools actually used; the not-for-profit purpose stated in `README.md`. Then the content advisory (LP-10); credits including the Dialogue Manager addon (`project/addons/dialogue_manager/LICENSE`, MIT), Godot, the OpenStreetMap ODbL attribution and derived-database notice for `project/data/island_layout.json` (`art/reference/little_st_james/SOURCES.md`); the XTTS v2 licence notice for every voice clip (CPML: https://huggingface.co/coqui/XTTS-v2/raw/main/LICENSE.txt); and the complaints contact and takedown route (LA-06). Counsel review is checklist item LP-08.
 
-## 6. Open items
+## 6. Deploying
+
+`tools/deploy_site.sh` implements template sections 6 and 7 (header comment in the script has the details):
+
+```bash
+tools/deploy_site.sh --dry-run              # export, size check, generate, link check, wrangler deploy --dry-run
+tools/deploy_site.sh                        # the real deploy: R2 upload of index.wasm, then wrangler deploy
+tools/deploy_site.sh --site-only            # landing page only; keeps the play build already in site/public/play/
+tools/deploy_site.sh --allow-dirty          # permit uncommitted changes (build id <hash>-dirty)
+tools/deploy_site.sh --check-external       # link check also fetches external links
+```
+
+- **Credentials:** `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`, from the environment or `~/.config/persistint/cloudflare.env` (outside the repo, `chmod 600`). The token needs Workers Scripts edit and Workers R2 Storage edit on the account, and Workers Routes plus DNS edit on the `gnpng.org` zone (the `custom_domain` route creates the DNS record). `--dry-run` needs neither.
+- **Build id** is the short commit hash; the script refuses a dirty tree. The build goes to `site/public/play/<build-id>/` (older local build folders are pruned; their R2 objects stay), `index.wasm` to R2 `persistint-builds/<build-id>/index.wasm` (the bucket is created if missing), and `/play/current/*` redirects to the current build.
+- **Generated and committed** (deterministic, from `site/site.config.json`): `site/wrangler.toml` (pinned `compatibility_date`), `site/src/worker.js`, and the absolute `og:image`, `twitter:image`, `og:url` and canonical URLs in `site/public/index.html`, which the script rewrites in place and idempotently from `site_host`. If a run changes any of them, commit the change. **Generated and gitignored** (they name a build): `site/public/play/index.html`, `site/public/play/<build-id>/`, `site/public/_redirects`, `site/.wrangler/`.
+- **Link check (PW-13):** `tools/check_site_links.py` over `site/public` (internal links, `srcset`, CSS `url()`, same-page fragments; `https://persistint.gnpng.org/...` maps to local files). lychee is not installed; the template's `README.md docs/` scope is not checked.
+- **`--site-only` caveat:** a deploy replaces every static asset. Without a local play build, `/play/` becomes a "not available yet" page and the live game goes away until the next full deploy.
+
+## 7. Open items
 
 - Blocked on author decisions in `docs/RELEASE_CHECKLIST.md`: domain spelling (1), real-person review (5), mirror (6), disclosure text (9), data collection (10), contact and takedown route (12).
 - Unverified: Gitea Actions on the project's Gitea instance; edge behaviour for precompressed wasm; the content type Workers infers for `.pck` (the `_headers` rule sets it anyway).
+- `site/public/404.html` (template section 6 starter) does not exist yet; with `not_found_handling = "404-page"` Workers then returns a plain 404.
