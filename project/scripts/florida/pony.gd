@@ -22,7 +22,11 @@ func _ready() -> void:
 func refresh() -> void:
 	doll.set_outfit(Ponies.parts(pony_id))
 	doll.scale = Vector2.ONE * (0.65 if Ponies.is_foal(pony_id, GameClock.day) else 1.0)
-	visible = Ponies.riding() != pony_id
+	# The ridden pony is out with the player: not drawn and not clickable in its stall.
+	var ridden := Ponies.riding() == pony_id
+	visible = not ridden
+	input_pickable = not ridden
+	$CollisionShape2D.set_deferred("disabled", ridden)
 
 
 func interact() -> void:

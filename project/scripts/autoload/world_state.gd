@@ -4,7 +4,8 @@ extends Node
 
 signal flag_changed(key: String, value: Variant)
 
-const SAVE_PATH := "user://save.json"
+## A var so headless tests can point it at a temp file instead of the player's real save.
+var SAVE_PATH := "user://save.json"
 
 var flags: Dictionary = {}
 
