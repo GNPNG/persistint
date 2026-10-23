@@ -53,5 +53,11 @@
 		{ "when": { "cycle_min": 2, "phase": "midday" }, "text": "The festival drifts. Every cycle it's a bit off. Nobody notices. Noticing needs measuring, and measuring's forbidden." },
 		{ "when": { "phase": "night" }, "text": "The tide's out. It goes out when the moon says, you know. I'm not saying anything. I'm just standing here." },
 		{ "text": "Water doesn't care what the Calendar says. Neither do I, much." }
+	],
+	"stable_friend": [
+		{ "when": { "phase": "evening" }, "text": "Last brush of the day. Then a carrot each, and goodnight, and goodnight, and goodnight." },
+		{ "when": { "phase": "night" }, "text": "Shh, they're sleepy. I'm just doing her mane one more time. She likes it." },
+		{ "if": { "fl_met_ponies": true }, "text": "You came back! I saved you the sparkly brush. It doesn't do anything. It's just sparkly." },
+		{ "text": "Hi! I'm doing the tangly bit of her mane. Slow and gentle, from the bottom up." }
 	]
 }

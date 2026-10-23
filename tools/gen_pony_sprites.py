@@ -2,7 +2,8 @@
 
 Usage: python3 -I tools/gen_pony_sprites.py
 Reads project/data/ponies.json (coat and mane colours, mane styles, accessories) and writes
-project/assets/placeholder/pony_*.png and bg_florida_stable.png.
+project/assets/placeholder/pony_*.png, bg_florida_stable.png and npc_stable_friend.png (the
+Daughter's friend who brushes the ponies).
 
 Every pony part shares one 64x52 frame (pony faces right, three-quarter side view) so the parts
 stack: body (coat colour; legs, head, face), spots, mane (mane + tail, per style and colour),
@@ -144,6 +145,61 @@ def shine():
     done(im, "pony_sparkle")
 
 
+def hibiscus(e, x, y, r):
+    """Five round coral-pink petals and a yellow middle (STYLE.md 4.4 hibiscus #ff9ad0)."""
+    for a in range(5):
+        e(x + r * 0.7 * math.cos(a * 1.2566 - 1.57), y + r * 0.7 * math.sin(a * 1.2566 - 1.57), r * 0.6, r * 0.6, "#ff9ad0", 1)
+    e(x, y, r * 0.3, r * 0.3, "#ffe27a", 0)
+
+
+def palm(d, x, y, lean, S):
+    """A friendly palm: a bumpy coconut-brown trunk, a crown of leaves and three coconuts."""
+    top = (x + 22 * lean, y - 120)
+    for i in range(9):
+        t = i / 8
+        cx = x + 22 * lean * t * t
+        cy = y - 120 * t
+        rr = 9 - 3 * t
+        d.ellipse([(cx - rr) * S, (cy - 8) * S, (cx + rr) * S, (cy + 8) * S], fill="#b08a5a", outline=INK, width=2 * S)
+    for ang in (-170, -130, -90, -50, -10, 160, 20):
+        a = math.radians(ang)
+        tip = (top[0] + 58 * math.cos(a), top[1] + 32 * math.sin(a) + 18)
+        mid = (top[0] + 26 * math.cos(a), top[1] + 15 * math.sin(a) - 6)
+        side = (-math.sin(a) * 15, math.cos(a) * 10)
+        pts = [top, (mid[0] + side[0], mid[1] + side[1]), tip, (mid[0] - side[0], mid[1] - side[1])]
+        d.polygon([(px * S, py * S) for px, py in pts], fill="#7cc46a", outline=INK, width=2 * S)
+    for dx, dy in ((-6, 6), (5, 7), (0, 12)):
+        d.ellipse([(top[0] + dx - 5) * S, (top[1] + dy - 5) * S, (top[0] + dx + 5) * S, (top[1] + dy + 5) * S],
+                  fill="#9a6a3a", outline=INK, width=2 * S)
+
+
+def stable_friend():
+    """The Daughter's friend (cast stable_friend): sun hat, golden pigtails, turquoise
+    sundress, a pink pony brush in her hand. Same 24x32 frame as the other NPC placeholders."""
+    w, h = 24, 32
+    im, d = canvas(w, h)
+    d.rounded_rectangle([7 * K, 15 * K, 17 * K, 29 * K], 3 * K, fill="#70d0c0", outline=INK, width=K)  # dress
+    d.line([7 * K, 24 * K, 17 * K, 24 * K], fill="#ffffff", width=K)
+    for x in (9.5, 14.5):  # legs
+        d.rounded_rectangle([(x - 1.2) * K, 28 * K, (x + 1.2) * K, 31.5 * K], K, fill="#ffe0c8", outline=INK, width=K // 2)
+    for x in (4.5, 19.5):  # pigtails
+        ell(d, x, 13, 2.6, 3.4, "#f4cf6a")
+    ell(d, 12, 10, 6.5, 6.5, "#ffe0c8")  # head
+    d.chord([5.5 * K, 3.5 * K, 18.5 * K, 16 * K], 180, 360, fill="#f4cf6a", outline=INK, width=K)  # fringe
+    ell(d, 12, 5, 10.5, 2.2, "#fff1b8")  # sun hat brim
+    d.chord([7 * K, 0, 17 * K, 9 * K], 180, 360, fill="#fff1b8", outline=INK, width=K)
+    d.line([7.5 * K, 4 * K, 16.5 * K, 4 * K], fill="#ff9ad0", width=K)  # hat ribbon
+    ell(d, 9.6, 11, 0.9, 1.0, INK, 0)  # dot eyes
+    ell(d, 14.4, 11, 0.9, 1.0, INK, 0)
+    ell(d, 8.2, 13.2, 1.3, 0.8, BLUSH, 0)
+    ell(d, 15.8, 13.2, 1.3, 0.8, BLUSH, 0)
+    d.arc([10.5 * K, 12 * K, 13.5 * K, 14.5 * K], 20, 160, fill=INK, width=K // 2)
+    d.rounded_rectangle([17 * K, 18 * K, 23 * K, 21 * K], K, fill="#ff9ad0", outline=INK, width=K // 2)  # brush
+    d.line([18 * K, 21 * K, 22 * K, 21 * K], fill="#fff1e6", width=K)
+    ell(d, 17.5, 20, 1.4, 1.4, "#ffe0c8")  # hand
+    done(im, "npc_stable_friend", w, h)
+
+
 def stable_bg():
     w, h = 960, 540
     im = Image.new("RGBA", (w * 2, h * 2), "#c4eab0")
@@ -173,14 +229,31 @@ def stable_bg():
     for x in (330, 630):
         e(x, 122, 14, 8, BLUSH, 0)
     d.arc([462 * S, 52 * S, 498 * S, 76 * S], 20, 160, fill=INK, width=3 * S)  # smile above the door
-    # paddock fence
-    for y in (190, 520):
-        r((40, y - 4, 920, y + 4), "#fff1e6", 3, 2)
+    # palms behind the paddock: it's the Keys, even out back
+    for px, py, lean in [(70, 175, 1), (885, 172, -1), (230, 150, 1)]:
+        palm(d, px, py, lean, S)
+    # soft dirt patch for the stalls, and the sandy path out through the gate
+    e(480, 360, 400, 130, "#e9d49b", 0)
+    d.polygon([(452 * S, 470 * S), (508 * S, 470 * S), (516 * S, 540 * S), (444 * S, 540 * S)], fill="#efdcaa")
+    for x, y in [(462, 500), (494, 515), (470, 530), (488, 486)]:  # stepping shells on the path
+        e(x, y, 4, 2.5, "#fff1e6", 1)
+    # paddock fence; the front fence has an open gate (the path back to the beach, BeachDoor)
+    r((40, 186, 920, 194), "#fff1e6", 3, 2)
+    r((40, 516, 446, 524), "#fff1e6", 3, 2)
+    r((514, 516, 920, 524), "#fff1e6", 3, 2)
     for x in range(40, 921, 80):
         r((x - 5, 176, x + 5, 204), "#fff1e6", 3, 2)
-        r((x - 5, 506, x + 5, 534), "#fff1e6", 3, 2)
-    # soft dirt patch for the stalls, hay, a trough, flowers
-    e(480, 360, 400, 130, "#e9d49b", 0)
+        if x not in (440, 520):
+            r((x - 5, 506, x + 5, 534), "#fff1e6", 3, 2)
+    for x in (446, 514):  # gate posts with little hibiscus on top
+        r((x - 6, 500, x + 6, 538), "#fff1e6", 3, 2)
+        hibiscus(e, x, 497, 6)
+    # hibiscus bushes by the gate and along the fence
+    for x, y in [(390, 538), (570, 538), (120, 540), (840, 540)]:
+        e(x, y, 34, 18, "#8fce7a")
+        for dx, dy in ((-16, -4), (0, -10), (16, -3)):
+            hibiscus(e, x + dx, y + dy, 6)
+    # hay, a trough, flowers
     for x, y in [(110, 260), (860, 300), (130, 450)]:
         r((x - 26, y - 16, x + 26, y + 16), "#ffe27a", 8)
         d.line([(x - 20) * S, y * S, (x + 20) * S, y * S], fill="#e0b24a", width=2 * S)
@@ -202,6 +275,7 @@ def main():
     accessories()
     shine()
     stable_bg()
+    stable_friend()
     print("Pony art written to", OUT)
 
 

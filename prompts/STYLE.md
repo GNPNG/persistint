@@ -596,6 +596,8 @@ crafting (gardening is only gendered on the island; in Florida it is just fun). 
   stone-skipping ("Low and sideways, from the wrist"). Key lime lemonade up at the house.
 - **Daughter** — collects stones (two hundred in a bucket, allowed to keep fifty; grey ones with a
   white stripe are lucky); grabs her hat and her brush to show you the horses out back.
+- **Hannah** — the Daughter's friend from down the road, at the stable "basically every day",
+  brushing a pony's mane ("Little strokes, like you're brushing a cloud").
 - **Dolphins** Sunny and Pearl; **crabs** Sidestep, Clementine and Pebble; **gulls** Biscuit, Mabel
   and Pickle; **mermaids** Marina and Lagoon. A pelican "who thinks he owns the dock" is mentioned.
 - Every critter reacts with delight to whatever the player wears ("A flower crown! You look like a
@@ -750,6 +752,7 @@ with blank signs; the Barren hold brooms beside a red X.
 | crab_sidestep, crab_clementine, crab_pebble | Sidestep, Clementine, Pebble | Florida crabs |
 | gull_biscuit, gull_mabel, gull_pickle | Biscuit, Mabel, Pickle | Florida gulls |
 | mermaid_marina, mermaid_lagoon | Marina, Lagoon | aquarium mermaids |
+| stable_friend | Hannah | the Daughter's friend from down the road, brushing a pony's mane at the stable |
 | epstein, bill_clinton, hillary_clinton, bill_gates | Jeffrey Epstein, Bill Clinton, Hillary Clinton, Bill Gates | clone originals (bunker) |
 | polar_bear_clone | Polar bear clone (Cub) | the cub batch |
 

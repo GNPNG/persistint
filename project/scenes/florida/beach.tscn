@@ -124,3 +124,4 @@ sprite_texture = "npc_daughter"
 dialogue_path = "res://dialogue/florida_beach.dialogue"
 dialogue_title = "daughter"
 voice_pitch = 1.25
+hide_if_flag = "fl_invited_to_horses"
