@@ -9,3 +9,6 @@ exports/
 .beads-credential-key
 .beads/proxieddb/
 .superpowers/
+
+# Voice reference recordings (source audio, not shipped)
+art/voice_refs/*.wav
