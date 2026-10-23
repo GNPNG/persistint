@@ -12,6 +12,7 @@
 		"prop_pillar_orb":{ "sheet": "PERSISTINT", "crop": "190x310+1290+1010", "mode": "fuzz", "tol": 30, "height": 64 },
 		"prop_skull_altar":{ "sheet": "PERSISTINT", "crop": "230x230+1040+1100", "mode": "fuzz", "tol": 30, "height": 48 },
 		"prop_calendar":  { "sheet": "PERSISTINT", "crop": "200x200+1535+1045", "mode": "fuzz", "tol": 45, "height": 40 },
-		"prop_tag_x":     { "sheet": "Gemini_Generated_Image_481b", "crop": "520x680+140+760", "mode": "white", "height": 36 }
+		"prop_tag_x":     { "sheet": "Gemini_Generated_Image_481b", "crop": "520x680+140+760", "mode": "white", "height": 36 },
+		"prop_scroll":    { "sheet": "Gemini_Generated_Image_481b", "crop": "820x680+1850+765", "mode": "white", "height": 40 }
 	}
 }

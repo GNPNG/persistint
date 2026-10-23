@@ -1,25 +1,119 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://scripts/ruins/knowledge_pickup.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/ruins/glow.png" id="2"]
 
 [sub_resource type="CircleShape2D" id="shape"]
 radius = 14.0
 
+[sub_resource type="StyleBoxFlat" id="card"]
+content_margin_left = 5.0
+content_margin_top = 2.0
+content_margin_right = 5.0
+content_margin_bottom = 3.0
+bg_color = Color(0.2, 0.12, 0.25, 0.92)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.79, 0.7, 0.94, 0.6)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="Animation" id="RESET"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Icon:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, -6)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Glow:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 0.93, 0.66, 0.55)]
+}
+
+[sub_resource type="Animation" id="bob"]
+resource_name = "bob"
+length = 2.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Icon:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1, 2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(0, -6), Vector2(0, -9), Vector2(0, -6)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Glow:modulate")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1, 2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 0.93, 0.66, 0.55), Color(1, 0.93, 0.66, 0.85), Color(1, 0.93, 0.66, 0.55)]
+}
+
+[sub_resource type="AnimationLibrary" id="lib"]
+_data = {
+&"RESET": SubResource("RESET"),
+&"bob": SubResource("bob")
+}
+
 [node name="KnowledgePickup" type="Area2D"]
 script = ExtResource("1")
+
+[node name="Glow" type="Sprite2D" parent="."]
+modulate = Color(1, 0.93, 0.66, 0.55)
+position = Vector2(0, -6)
+scale = Vector2(0.6, 0.6)
+texture = ExtResource("2")
+
+[node name="Icon" type="Sprite2D" parent="."]
+position = Vector2(0, -6)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("lib")
+}
+autoplay = "bob"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("shape")
 
 [node name="Label" type="Label" parent="."]
+z_index = 20
 offset_left = -100.0
 offset_top = -60.0
 offset_right = 100.0
 offset_bottom = -18.0
-theme_override_colors/font_color = Color(0.35, 0.2, 0.3, 1)
-theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
-theme_override_constants/outline_size = 2
+theme_override_colors/font_color = Color(0.95, 0.9, 0.95, 1)
 theme_override_font_sizes/font_size = 5
+theme_override_styles/normal = SubResource("card")
 horizontal_alignment = 1
 vertical_alignment = 2
 autowrap_mode = 2
