@@ -5,9 +5,9 @@ const FIRST_MAP := "res://scenes/maps/village.tscn"
 
 
 func _ready() -> void:
-	$Center/VBox/BeginButton.pressed.connect(_on_begin)
-	$Center/VBox/NewButton.pressed.connect(_on_new_game)
-	$Center/VBox/BeginButton.visible = WorldState.get_flag("_location") is Dictionary
+	%BeginButton.pressed.connect(_on_begin)
+	%NewButton.pressed.connect(_on_new_game)
+	%BeginButton.visible = WorldState.get_flag("_location") is Dictionary
 
 
 func _on_begin() -> void:

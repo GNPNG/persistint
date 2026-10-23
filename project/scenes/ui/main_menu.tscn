@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/main_menu.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/ui/title/title_screen_plain.png" id="2_art"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -16,41 +17,55 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color(0.988235, 0.905882, 0.937255, 1)
 
-[node name="Center" type="CenterContainer" parent="."]
+[node name="Art" type="TextureRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+mouse_filter = 2
+texture = ExtResource("2_art")
+expand_mode = 1
+stretch_mode = 6
 
-[node name="VBox" type="VBoxContainer" parent="Center"]
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+anchor_bottom = 0.6
+grow_horizontal = 2
+
+[node name="Panel" type="PanelContainer" parent="Center"]
+custom_minimum_size = Vector2(230, 0)
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="Center/Panel"]
 layout_mode = 2
 theme_override_constants/separation = 5
 
-[node name="Title" type="Label" parent="Center/VBox"]
+[node name="Title" type="Label" parent="Center/Panel/VBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.85, 0.35, 0.55, 1)
-theme_override_font_sizes/font_size = 20
+theme_type_variation = &"TitleLabel"
 text = "PERSISTINT"
 horizontal_alignment = 1
 
-[node name="Subtitle" type="Label" parent="Center/VBox"]
+[node name="Subtitle" type="Label" parent="Center/Panel/VBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.55, 0.4, 0.5, 1)
-theme_override_font_sizes/font_size = 9
+theme_type_variation = &"SubtleLabel"
 text = "a lovely little island. everyone contributes. everyone."
 horizontal_alignment = 1
 
-[node name="BeginButton" type="Button" parent="Center/VBox"]
+[node name="BeginButton" type="Button" parent="Center/Panel/VBox"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Continue"
 
-[node name="NewButton" type="Button" parent="Center/VBox"]
+[node name="NewButton" type="Button" parent="Center/Panel/VBox"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "New Game"
 
-[node name="Hint" type="Label" parent="Center/VBox"]
+[node name="Hint" type="Label" parent="Center/Panel/VBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.6, 0.5, 0.55, 1)
-theme_override_font_sizes/font_size = 7
+theme_type_variation = &"HintLabel"
 text = "click to walk · click people to talk · P for wardrobe"
 horizontal_alignment = 1

@@ -4,11 +4,19 @@ extends Control
 ## The priestess's dialogue and barks react to it.
 
 const RETURN_MAP := "res://scenes/maps/temple.tscn"
-const COLORS: Array[Color] = [
-	Color("f7a8c4"),  # icon rose
-	Color("a8d8f0"),  # icon sky
-	Color("f9e4a8"),  # icon gold
+## The three sacred icons: canon temple props (tools/cut_island_props.py) on rose, sky and gold
+## altar tiles (tools/gen_ui_art.py).
+const ICONS: Array[Texture2D] = [
+	preload("res://assets/canon/prop_seal_o.png"),
+	preload("res://assets/canon/prop_pillar_orb.png"),
+	preload("res://assets/canon/prop_icon_queen_mother.png"),
 ]
+const TILES: Array[Texture2D] = [
+	preload("res://assets/ui/chrome/altar_tile_rose.png"),
+	preload("res://assets/ui/chrome/altar_tile_sky.png"),
+	preload("res://assets/ui/chrome/altar_tile_gold.png"),
+]
+const TILE_SELECTED := preload("res://assets/ui/chrome/altar_tile_selected.png")
 
 var target: Array[int] = [0, 1, 2, 1, 2, 0, 2, 0, 1]
 var grid: Array[int] = []
@@ -27,31 +35,48 @@ func _ready() -> void:
 func _build_ui() -> void:
 	var target_grid: GridContainer = $Panel/HBox/TargetSide/TargetGrid
 	for value in target:
-		var swatch := ColorRect.new()
-		swatch.custom_minimum_size = Vector2(24, 24)
-		swatch.color = COLORS[value]
+		var swatch := PanelContainer.new()
+		swatch.custom_minimum_size = Vector2(28, 28)
+		swatch.add_theme_stylebox_override("panel", _tile_style(TILES[value], 3))
+		swatch.add_child(_icon(value))
 		target_grid.add_child(swatch)
 	var play_grid: GridContainer = $Panel/HBox/PlaySide/PlayGrid
 	for i in grid.size():
 		var b := Button.new()
-		b.custom_minimum_size = Vector2(48, 48)
+		b.custom_minimum_size = Vector2(52, 52)
 		b.pressed.connect(_on_tile_pressed.bind(i))
+		var icon := _icon(0)
+		icon.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE, 7)
+		b.add_child(icon)
 		play_grid.add_child(b)
 		buttons.append(b)
 	$Panel/HBox/TargetSide/BackButton.pressed.connect(_leave)
 	_paint()
 
 
+func _icon(value: int) -> TextureRect:
+	var icon := TextureRect.new()
+	icon.texture = ICONS[value]
+	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return icon
+
+
+func _tile_style(tex: Texture2D, pad: float) -> StyleBoxTexture:
+	var style := StyleBoxTexture.new()
+	style.texture = tex
+	style.set_texture_margin_all(7)
+	style.set_content_margin_all(pad)
+	return style
+
+
 func _paint() -> void:
 	for i in grid.size():
-		buttons[i].modulate = Color.WHITE if i != selected else Color(1.3, 1.3, 1.3)
-		buttons[i].add_theme_color_override("font_color", Color.TRANSPARENT)
-		var style := StyleBoxFlat.new()
-		style.bg_color = COLORS[grid[i]]
-		style.set_corner_radius_all(8)
-		buttons[i].add_theme_stylebox_override("normal", style)
-		buttons[i].add_theme_stylebox_override("hover", style)
-		buttons[i].add_theme_stylebox_override("pressed", style)
+		var style := _tile_style(TILE_SELECTED if i == selected else TILES[grid[i]], 7)
+		for state in ["normal", "hover", "pressed", "focus"]:
+			buttons[i].add_theme_stylebox_override(state, style)
+		(buttons[i].get_child(0) as TextureRect).texture = ICONS[grid[i]]
 
 
 func _on_tile_pressed(i: int) -> void:
