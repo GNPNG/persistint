@@ -2,15 +2,18 @@
 
 Usage: python3 -I tools/gen_florida_wearables.py
 Inputs: the canon paper-doll body project/assets/canon/body_base.png (cut by
-tools/cut_paperdoll.py; it fixes the 91x96 frame and where the head and neck sit) and the canon
+tools/cut_paperdoll.py at the sheet's resolution; it fixes the frame and where the head and
+neck sit) and the canon
 shells project/assets/florida/shell_*.png (cut from the tide scroll by tools/cut_island_props.py)
 for the shell garland.
-Outputs (project/assets/florida/, 91x96, transparent, same frame and origin as every canon
+Outputs (project/assets/florida/, transparent, the same size, frame and origin as every canon
 paper-doll part, so PaperDoll stacks them with canon body, dress and hair):
   acc_flower_crown, acc_plumeria_lei, acc_shell_garland, acc_bougainvillea_wreath
   (the "wear" parts of project/data/florida.json recipes).
-Drawn at 8x in the canon character line colour with flat fills and one highlight
-(prompts/STYLE.md 4.3, Florida plant colours 4.4), then LANCZOS-resized. Deterministic.
+Shapes are laid out in doll units (the doll is 96 units tall, whatever the cut's pixel size),
+drawn at twice the canon cut's resolution in the canon character line colour with flat fills
+and one highlight (prompts/STYLE.md 4.3, Florida plant colours 4.4), then LANCZOS-resized to
+the cut's size. Deterministic.
 """
 import math
 import sys
@@ -22,22 +25,24 @@ from PIL import Image
 sys.path.insert(0, str(Path(__file__).resolve().parent))  # -I leaves tools/ off the path
 import florida_draw as fd  # noqa: E402
 
-S = 8
-FW, FH = 91, 96
+SS = 2  # supersample over the canon cut's resolution
+BODY = fd.canon_sprite("body_base")
+PW, PH = BODY.size  # the canon doll frame in pixels
+U = PH / 96.0  # pixels per doll unit
 
 
 def head():
-    """Head centre x, top row and chin row of the canon doll body, measured from its alpha."""
-    a = np.asarray(fd.canon_sprite("body_base"))[..., 3] > 128
+    """Head centre x, top row and chin row of the canon doll body (doll units), from its alpha."""
+    a = np.asarray(BODY)[..., 3] > 128
     widths = a.sum(axis=1)
     rows = np.where(widths > 0)[0]
     top = int(rows[0])
-    upper = rows[rows < top + 60]
+    upper = rows[rows < top + 60 * U]
     widest = int(upper[np.argmax(widths[upper])])
-    below = np.arange(widest, top + 60)
+    below = np.arange(widest, round(top + 60 * U))
     neck = int(below[np.argmin(widths[below])])
     xs = np.where(a[widest])[0]
-    return (xs.min() + xs.max()) / 2, top, neck
+    return (xs.min() + xs.max()) / 2 / U, top / U, neck / U
 
 
 CX, TOP, NECK = head()
@@ -45,8 +50,8 @@ HEAD_RX = 26.0  # hair volume round the canon head
 
 
 def canvas():
-    im = Image.new("RGBA", (FW * S, FH * S))
-    return im, fd.Pen(im, S, fd.CANON_INK)
+    im = Image.new("RGBA", (PW * SS, PH * SS))
+    return im, fd.Pen(im, U * SS, fd.CANON_INK)
 
 
 def arc_points(cx, cy, rx, ry, a0, a1, n):
@@ -115,8 +120,9 @@ def shell_garland():
         sh = shells[i % 3]
         h = 6
         w = round(sh.width * h / sh.height)
-        sm = sh.resize((w * S, h * S), Image.LANCZOS)
-        im.alpha_composite(sm, (round((x - w / 2) * S), round((y - h / 2 + 1.5) * S)))
+        k = U * SS
+        sm = sh.resize((round(w * k), round(h * k)), Image.LANCZOS)
+        im.alpha_composite(sm, (round((x - w / 2) * k), round((y - h / 2 + 1.5) * k)))
     for x, y in arc_points(CX, cy, 15, 8, 30, 150, 6):
         p.ell(x, y, 0.7, 0.7, "#ffd3c2", 0.25)
     return im
@@ -125,7 +131,7 @@ def shell_garland():
 def main():
     for name, draw in (("acc_flower_crown", flower_crown), ("acc_plumeria_lei", plumeria_lei),
                        ("acc_shell_garland", shell_garland), ("acc_bougainvillea_wreath", bougainvillea_wreath)):
-        fd.save(fd.finish(draw(), FW, FH), name)
+        fd.save(draw().resize((PW, PH), Image.LANCZOS), name)
         print(name)
 
 

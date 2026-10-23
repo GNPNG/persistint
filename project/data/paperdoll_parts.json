@@ -1,6 +1,5 @@
 {
-	"_note": "Paper-doll layers cut from art/canon/gemini/Gemini_Generated_Image_ktfw47ktfw47ktfw.jpg by tools/cut_paperdoll.py. crop = WxH+X+Y on the sheet. Placement is measured: hair face openings fit the body's face and sit on the chin; dresses share the body's baseline; accessories use anchor (px from head center-x / head top) and scale.",
-	"height": 96,
+	"_note": "Paper-doll layers cut from art/canon/gemini/Gemini_Generated_Image_ktfw47ktfw47ktfw.jpg by tools/cut_paperdoll.py. crop = WxH+X+Y on the sheet. Placement is measured: hair face openings fit the body's face and sit on the chin; dresses share the body's baseline; accessories use anchor (px from head center-x / head top) and scale. Layers keep the sheet's resolution.",
 	"parts": {
 		"body_base":     { "crop": "402x698+97+300" },
 		"hair_pigtails": { "crop": "379x419+595+89" },
