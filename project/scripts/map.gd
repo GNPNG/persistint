@@ -11,6 +11,7 @@ var _hud_label: Label
 var _wardrobe: CanvasLayer
 var _journal: CanvasLayer
 const JOURNAL_SCRIPT := preload("res://scripts/ui/journal.gd")
+const HUD_ICON := preload("res://assets/canon/prop_calendar.png")
 
 
 func _ready() -> void:
@@ -49,13 +50,25 @@ func _build_hud() -> void:
 	var layer := CanvasLayer.new()
 	layer.name = "HUD"
 	add_child(layer)
+	# A small cream tag (theme HudPanel) with the canon Calendar of Blood as its icon.
+	var tag := PanelContainer.new()
+	tag.name = "Clock"
+	tag.theme_type_variation = &"HudPanel"
+	tag.position = Vector2(6, 5)
+	tag.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	layer.add_child(tag)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 4)
+	tag.add_child(row)
+	var icon := TextureRect.new()
+	icon.texture = HUD_ICON
+	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	icon.custom_minimum_size = Vector2(15, 14)
+	row.add_child(icon)
 	_hud_label = Label.new()
-	_hud_label.position = Vector2(8, 4)
-	_hud_label.add_theme_font_size_override("font_size", 9)
-	_hud_label.add_theme_color_override("font_color", Color(0.35, 0.22, 0.35))
-	_hud_label.add_theme_color_override("font_outline_color", Color(1, 1, 1, 0.9))
-	_hud_label.add_theme_constant_override("outline_size", 2)
-	layer.add_child(_hud_label)
+	_hud_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	row.add_child(_hud_label)
 	_update_hud()
 
 

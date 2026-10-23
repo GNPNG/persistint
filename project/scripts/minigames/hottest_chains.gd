@@ -22,6 +22,7 @@ var _status: Label
 var _stations: HFlowContainer
 var _tasks: VBoxContainer
 var _go: Button
+var _station_label: Label
 
 
 func _ready() -> void:
@@ -31,23 +32,34 @@ func _ready() -> void:
 		done.append(id)
 	for id: String in WorldState.get_flag("hottest_chain_items", []):
 		items.append(id)
+	# Cabin backdrop (scene); the stations along the top, the doll at the vanity on the left,
+	# the station's tasks, what is in hand and the way to the show in a panel on the right.
+	var margin := MarginContainer.new()
+	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	for side in ["left", "top", "right", "bottom"]:
+		margin.add_theme_constant_override("margin_" + side, 8)
+	add_child(margin)
 	_box = VBoxContainer.new()
-	_box.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE, 6)
-	add_child(_box)
-	_status = Label.new()
-	_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_box.add_child(_status)
+	_box.add_theme_constant_override("separation", 6)
+	margin.add_child(_box)
+	var top := PanelContainer.new()
+	top.theme_type_variation = &"HudPanel"
+	_box.add_child(top)
 	_stations = HFlowContainer.new()
-	_box.add_child(_stations)
+	_stations.alignment = FlowContainer.ALIGNMENT_CENTER
+	top.add_child(_stations)
 	for name: String in station_names():
 		var b := Button.new()
 		b.text = name
 		b.pressed.connect(go_to.bind(name))
 		_stations.add_child(b)
 	var row := HBoxContainer.new()
+	row.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	row.add_theme_constant_override("separation", 10)
 	_box.add_child(row)
 	doll = PAPER_DOLL.new()
-	doll.custom_minimum_size = Vector2(64, 96)
+	doll.custom_minimum_size = Vector2(182, 192)  # 2x the 91x96 paper-doll parts
+	doll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	row.add_child(doll)
 	var outfit: Dictionary = WorldState.get_flag("hottest_prep_outfit", {}).duplicate()
 	if outfit.is_empty():
@@ -55,13 +67,28 @@ func _ready() -> void:
 		for slot: String in options:
 			outfit[slot] = options[slot][0]
 	doll.set_outfit(outfit)
+	var panel := PanelContainer.new()
+	panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(panel)
+	var side := VBoxContainer.new()
+	side.add_theme_constant_override("separation", 5)
+	panel.add_child(side)
+	_station_label = Label.new()
+	_station_label.theme_type_variation = &"HeaderLabel"
+	_station_label.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	side.add_child(_station_label)
 	_tasks = VBoxContainer.new()
 	_tasks.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	row.add_child(_tasks)
+	_tasks.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	side.add_child(_tasks)
+	_status = Label.new()
+	_status.theme_type_variation = &"SubtleLabel"
+	_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	side.add_child(_status)
 	_go = Button.new()
 	_go.text = "Go to the show"
 	_go.pressed.connect(start_show)
-	_box.add_child(_go)
+	side.add_child(_go)
 	var names := station_names()
 	go_to(names[0] if not names.is_empty() else "")
 
@@ -99,6 +126,8 @@ func available(id: String) -> bool:
 
 func go_to(name: String) -> void:
 	station = name
+	_station_label.text = name
+	_station_label.visible = name != ""
 	for child in _tasks.get_children():
 		child.queue_free()
 	for t: Dictionary in data.get("tasks", []):
