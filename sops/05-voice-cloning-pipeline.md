@@ -232,7 +232,7 @@ Main checkout (`main`, 93870ee):
 - First pass, 57ef5b2: 28 clips, manifest of 28 lines (Gloria 13, Priestess Betty 10, Chelsea Clinton 2, Tyra Banks 2, First Mate 1). One of them, `00e2cd72...wav`, is the template bug: its text is `Ah. {{Cast.short("initiate")}}'s little offering. ...`.
 - `art/voice_refs/`: `README.md` tracked, `*.wav` ignored by `.gitignore` line 14. Local refs are mono, 22050 Hz, 30.0 s.
 
-Branch `sys-clone-voices` (worktree `/home/brett/persistint-game-wt-voices`, f84a22a, not yet merged to `main`):
+Branch `sys-clone-voices` (worktree `../persistint-game-wt-voices`, f84a22a, not yet merged to `main`):
 - Exporter resolves `Cast.full` and `Cast.short`, drops lines still containing `{{`, adds quote lines from `project/data/quotes/{epstein,bill_clinton,hillary,bill_gates}.json` under cast ids; deletes the stale `00e2cd72...` clip.
 - `voices.json` adds epstein, bill_clinton, hillary_clinton, bill_gates with `ref`, YouTube `source`, `span` and `from`.
 - Generator gains repeatable `--speaker` and `--key`.

@@ -12,3 +12,9 @@ exports/
 
 # Voice reference recordings (source audio, not shipped)
 art/voice_refs/*.wav
+
+# local runtime logs and exports (never commit)
+.claude/logs/
+.beads/interactions.jsonl
+.beads/issues.jsonl
+tools/deploy_web.env

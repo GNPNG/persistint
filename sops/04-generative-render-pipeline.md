@@ -178,7 +178,7 @@ Browser run flags: `--assist` (headed; pause for the author on login, captcha or
 - The repo's front-matter key for the copy target is `game:` (the generic `target:` in section 8). The prompt `tool:` values are `Gemini image`, `Gemini Veo` and `Gemini Lyria`; the renderer maps `Gemini Veo` and `Gemini Omni` both to the video kind.
 - `tools/check_prompts.py` (commit f1345e9): pre-flight checker for the 47 prompt Markdown files under `prompts/` (count includes `STYLE.md` and `README.md`).
 - `tools/sync_rendered_assets.py`: copies each `drop:` to its `game:` path under `project/`, converting `.mp4` to `.ogv` (Theora) with ffmpeg.
-- Browser path (planned, in progress): Puppeteer pipeline on branch `sys-web-render`, worktree `/home/brett/persistint-game-wt-webrender`. At the time of review the branch has no commits beyond main (93870ee); dedicated automation profile, `selectors.json`, debug dumps, `--assist` and pacing are design, not code.
+- Browser path (planned, in progress): Puppeteer pipeline on branch `sys-web-render`, worktree `../persistint-game-wt-webrender`. At the time of review the branch has no commits beyond main (93870ee); dedicated automation profile, `selectors.json`, debug dumps, `--assist` and pacing are design, not code.
 - Google Sheet tracker with Assets, Attempts and Quotas tabs, Apps Script write path, throttle and per-class retry policy: planned (author, 2026-10-23). Tabs to be created by the controller agent through the Google Sheets connector.
 - Extraction of the browser render pipeline into a standalone Gitea repository for reuse in other projects: planned (author's choice). Whether the tracker's Apps Script goes into that repository is not decided.
 
