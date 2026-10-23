@@ -38,7 +38,7 @@ propagates. You never command anyone.
 
 ## Game structure
 
-Two interleaved layers:
+Two interleaved worlds:
 
 ### 1. Island present (the sandbox)
 - Overhead 2D, small connected map areas (Animal Crossing scale), Stardew *aesthetic only* —
@@ -72,13 +72,13 @@ Discovered Forbidden Knowledge unlocks flashback chapters aboard the pre-wreck c
 - **The Interview (character creation):** Oprah interviews the
   player about themselves — warm, probing, faux-intimate. Answers drive SPECIAL-style stat
   allocation (Fallout G.O.A.T.-exam register). Character creation *is* a talk show segment.
-- **The same paper-doll system powers both layers**: island dress-up is kind (play, identity);
+- **The same paper-doll system powers both worlds**: island dress-up is kind (play, identity);
   cruise makeovers are judged (control dressed as care). The mechanical identity of the two,
   with opposite emotional framing, IS the lesson.
 
-### 3. Florida Keys idyll (the innocent sandbox)
-The pre-dystopia normal world: an idyllic Toca World / Animal Crossing setting in the
-Florida Keys. THIS layer gets the gardening and crafting — pure sandbox play, paper-doll
+### 3. Tropical Florida Keys (the innocent sandbox)
+The pre-dystopia normal world: a tropical Toca World / Animal Crossing setting in the
+Florida Keys. THIS world gets the gardening and crafting — pure sandbox play, paper-doll
 surprise interactions, zero judgment (gardening is only gendered on the island; in Florida
 it's just fun). Pet dolphins, friendly crabs and seagulls. Mermaids are "real" —
 aquarium-show mermaids, friendly Sofia-the-First register, never explained.
@@ -131,5 +131,5 @@ journal — the player's own growing Forbidden Knowledge.
 ## Vertical slice scope (current milestone)
 
 Village + Temple maps, 4 caste NPCs with reactive barks, one branching quest ("The Offering"),
-paper-doll wardrobe, one ritual puzzle, Animalese voices, HTML5 export. Cruise layer and
+paper-doll wardrobe, one ritual puzzle, Animalese voices, HTML5 export. Cruise world and
 dungeon crawl are stubbed doors with barks.
