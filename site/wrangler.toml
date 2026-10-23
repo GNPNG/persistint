@@ -14,5 +14,5 @@ binding = "GAME"
 bucket_name = "persistint-builds"
 
 [[routes]]
-pattern = "persistint.gnpng.org"
+pattern = "persistint.dataglut.org"
 custom_domain = true

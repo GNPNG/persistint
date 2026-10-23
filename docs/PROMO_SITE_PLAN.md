@@ -2,7 +2,7 @@
 
 Persistint's values and measurements for the generic site plan in [`sops/templates/promo-site-plan.md`](../sops/templates/promo-site-plan.md) (pages, config schema, worker, headers, deploy steps). Checklist: [`docs/RELEASE_CHECKLIST.md`](RELEASE_CHECKLIST.md), items PW-01 to PW-14, SP-04 to SP-07 and PR-08. Written 2026-10-23 against commit 93870ee.
 
-**Domain:** **persistint.gnpng.org** (confirmed by the author 2026-10-23; "persitint" was a typo). It does not resolve yet. `dig +short NS gnpng.org` returned `dom.ns.cloudflare.com` and `gwen.ns.cloudflare.com` on 2026-10-23, so the zone is on Cloudflare.
+**Domain:** the site is hosted at **persistint.dataglut.org** (Cloudflare account brett@dataglut.org, 2026-10-23). **persistint.gnpng.org** is the public name the author points at it from the GNPNG Cloudflare account. A plain CNAME between two Cloudflare accounts fails with error 1014 "CNAME Cross-User Banned" unless the target uses Cloudflare for SaaS (https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-1xxx-errors/error-1014/), so on the GNPNG side use a proxied placeholder record plus a Redirect Rule to https://persistint.dataglut.org (preserving path and query).
 
 ## 1. Per-game values
 
@@ -13,8 +13,8 @@ These become `site/site.config.json` (schema in the template, section 6).
 | `slug` | `persistint` | |
 | `title` | `PERSISTINT` | `project/project.godot` `config/name` |
 | `pitch` | not written | author (decision 9 in the checklist) |
-| `site_host` | `persistint.gnpng.org` | decision 1 (confirmed 2026-10-23) |
-| `zone` | `gnpng.org` | dig, 2026-10-23 |
+| `site_host` | `persistint.dataglut.org` | decision 1 (author 2026-10-23; persistint.gnpng.org redirects here) |
+| `zone` | `dataglut.org` | author 2026-10-23 |
 | `worker_name` | `persistint-site` | |
 | `build_bucket` | `persistint-builds` | |
 | `oversized_files` | `["index.wasm"]` | section 2 |
@@ -91,7 +91,7 @@ tools/deploy_site.sh --check-external       # link check also fetches external l
 - **Credentials:** `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`, from the environment or `~/.config/persistint/cloudflare.env` (outside the repo, `chmod 600`). The token needs Workers Scripts edit and Workers R2 Storage edit on the account, and Workers Routes plus DNS edit on the `gnpng.org` zone (the `custom_domain` route creates the DNS record). `--dry-run` needs neither.
 - **Build id** is the short commit hash; the script refuses a dirty tree. The build goes to `site/public/play/<build-id>/` (older local build folders are pruned; their R2 objects stay), `index.wasm` to R2 `persistint-builds/<build-id>/index.wasm` (the bucket is created if missing), and `/play/current/*` redirects to the current build.
 - **Generated and committed** (deterministic, from `site/site.config.json`): `site/wrangler.toml` (pinned `compatibility_date`), `site/src/worker.js`, and the absolute `og:image`, `twitter:image`, `og:url` and canonical URLs in `site/public/index.html`, which the script rewrites in place and idempotently from `site_host`. If a run changes any of them, commit the change. **Generated and gitignored** (they name a build): `site/public/play/index.html`, `site/public/play/<build-id>/`, `site/public/_redirects`, `site/.wrangler/`.
-- **Link check (PW-13):** `tools/check_site_links.py` over `site/public` (internal links, `srcset`, CSS `url()`, same-page fragments; `https://persistint.gnpng.org/...` maps to local files). lychee is not installed; the template's `README.md docs/` scope is not checked.
+- **Link check (PW-13):** `tools/check_site_links.py` over `site/public` (internal links, `srcset`, CSS `url()`, same-page fragments; `https://{site_host}/...` maps to local files). lychee is not installed; the template's `README.md docs/` scope is not checked.
 - **`--site-only` caveat:** a deploy replaces every static asset. Without a local play build, `/play/` becomes a "not available yet" page and the live game goes away until the next full deploy.
 
 ## 7. Open items
