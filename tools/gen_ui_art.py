@@ -4,7 +4,7 @@ chapter card.
 
 Usage: python3 -I tools/gen_ui_art.py   (run after tools/cut_island_props.py: it reads canon props)
 
-Inputs:  project/assets/canon/{prop_ship,prop_bunker,prop_pillar_orb,prop_icon_queen_mother,
+Inputs:  project/assets/canon/{prop_ship,prop_bunker,prop_pillar_orb,
          deco_tree_a,deco_tree_b,deco_tree_c,deco_flowers,deco_heart,deco_sparkle}.png
 Outputs (all static, no animation frames):
   project/assets/ui/chrome/<id>.png     theme chrome, read by project/themes/default.tres as
