@@ -37,8 +37,8 @@ func _village() -> void:
 		"village Initiate keeps npc_id and dialogue")
 	_check(m.get_node("TempleDoor").target_scene == TEMPLE and m.get_node("TempleDoor").target_spawn == "spawn_from_village",
 		"village TempleDoor leads to temple spawn_from_village")
-	_check(m.get_node("Ground").get_used_cells().size() == 36 * 24, "village ground tiles cover the map")
-	_check(_has_collision(m.get_node("Ground"), Vector2i(0, 5)) and not _has_collision(m.get_node("Ground"), Vector2i(18, 12)),
+	_check(m.get_node("Ground").get_used_cells().size() == 40 * 38, "village ground tiles cover the map")
+	_check(_has_collision(m.get_node("Ground"), Vector2i(0, 5)) and not _has_collision(m.get_node("Ground"), Vector2i(19, 12)),
 		"village walls collide, plaza does not")
 	var from: Vector2 = m.get_node("spawn_default").position
 	var region: NavigationRegion2D = m.get_node("Nav")

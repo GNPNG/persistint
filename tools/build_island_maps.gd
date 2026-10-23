@@ -5,7 +5,7 @@ extends SceneTree
 
 const CELL := 32
 const WALK := ["grass_a", "grass_b", "grass_flower", "path", "sand", "soil", "sprouts", "plaza", "floor", "floor_alt", "rug"]
-const SOLID := ["water", "foam", "wall", "wall_cap", "hedge", "rock"]
+const SOLID := ["water", "foam", "wall", "wall_cap", "hedge", "rock", "stripe", "gold_cap"]
 const TILESET_PATH := "res://assets/tiles/island_tileset.tres"
 const PROPS_DIR := "res://assets/canon/"
 
@@ -205,93 +205,169 @@ func _save(path: String) -> void:
 	_root.free()
 
 
-# ---------- village (36 x 24 cells) ----------
+# ---------- village (40 x 38 cells) ----------
+## Traced from OpenStreetMap data for Little Saint James (ODbL, (c) OpenStreetMap contributors;
+## see art/reference/little_st_james/SOURCES.md): the coastline, the real path network, and the
+## positions of the temple, helipad, pier, pools, tennis court, ruins and buildings, projected by
+## tools/project_osm_island.py at 24 m per cell, north up. The caste areas, NPCs and exits are
+## mapped onto those places; sprites are the game's own.
+
+func _land(x0: int, y0: int, x1: int, y1: int, tile: String) -> void:
+	## Paint only cells that are already island (not sea or foam).
+	for x in range(x0, x1 + 1):
+		for y in range(y0, y1 + 1):
+			var t: String = _grid.get(Vector2i(x, y), "water")
+			if t != "water" and t != "foam":
+				_grid[Vector2i(x, y)] = tile
+
+
+func _is_land(x: int, y: int) -> bool:
+	var t: String = _grid.get(Vector2i(x, y), "water")
+	return t != "water" and t != "foam"
+
+
+func _px(x: float, y: float) -> Vector2:
+	return Vector2(x * CELL, y * CELL)
+
+
+func _trees() -> void:
+	## Bubbly trees and flower clumps on open grass, kept clear of paths and everything built.
+	var taken: Dictionary = {}
+	for c: Vector2i in _grid:
+		var t: String = _grid[c]
+		if not t.begins_with("grass") or _blocked.has(c):
+			taken[c] = true
+	for y in _size.y:
+		for x in _size.x:
+			var c := Vector2i(x, y)
+			if taken.has(c) or not _is_land(x, y):
+				continue
+			var r := _rng.randf()
+			if r < 0.16:
+				taken[c] = true
+				_block(x, y, x, y)
+				_prop("deco_tree_" + ["a", "b", "c"][_rng.randi() % 3], _px(x + 0.5, y + 1.0), "Tree_%d_%d" % [x, y])
+			elif r < 0.26:
+				_prop("deco_flowers", _px(x + 0.5, y + 0.9), "Flowers_%d_%d" % [x, y])
+
 
 func _build_village() -> void:
-	_begin("Village", 36, 24, "grass_a")
+	var L: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/island_layout.json"))
+	_begin("Village", int(L["w"]), int(L["h"]), "water")
+	var rows: Array = L["mask"]
+	for y in rows.size():
+		for x in (rows[y] as String).length():
+			var ch: String = (rows[y] as String)[x]
+			_grid[Vector2i(x, y)] = {"L": "grass_a", "S": "sand", "F": "foam", "w": "water"}[ch]
 	_scatter_grass()
-	# Sea along the south edge, sand shore above it.
-	_fill(0, 19, 35, 20, "sand")
-	_fill(0, 21, 35, 21, "foam")
-	_fill(0, 22, 35, 23, "water")
-	# Hedge rim and the high wall of the temple precinct across the north.
-	_fill(0, 0, 0, 18, "hedge")
-	_fill(35, 0, 35, 18, "hedge")
-	_fill(1, 0, 34, 0, "wall_cap")
-	_fill(1, 1, 34, 2, "wall")
-	_fill(17, 1, 18, 2, "floor")  # the gate
-	# Stone plaza under the temple (Mothers and Priestesses), pink rug up the middle.
-	_fill(12, 3, 23, 8, "plaza")
-	_fill(17, 3, 18, 8, "rug")
-	# Main paths: south spine, west to the compound, east to the Initiates' quarter.
-	_fill(16, 9, 19, 19, "path")
-	_fill(12, 10, 15, 11, "path")
-	_fill(20, 10, 23, 11, "path")
-	# Drones' compound (west): garden beds inside a fence, gate on the east side.
-	_fill(3, 6, 10, 12, "soil")
-	_fill(3, 6, 10, 7, "sprouts")
-	_fill(3, 10, 10, 11, "sprouts")
-	_fill(3, 8, 10, 9, "path")
-	_fill(11, 8, 11, 9, "path")
-	_fill(11, 10, 15, 11, "path")
-	_fence_cells(2, 5, 11, 12, 11, 8, 9)
-	_fill(11, 8, 11, 9, "path")
-	# Initiates' quarter (east): pink paving and two dwellings.
-	_fill(24, 5, 33, 13, "floor_alt")
-	_fill(24, 10, 33, 11, "path")
-	_fill(20, 10, 23, 11, "path")
-	# Barren yard (south-east): bare ground to the shore, a rock pile to haul from.
-	_fill(23, 15, 33, 18, "path")
-	_fill(30, 15, 31, 16, "rock")
-	# Piers into the sea.
-	_fill(17, 21, 18, 22, "path")
-	_fill(29, 21, 30, 22, "path")
+	for p: Array in L["paths"]:
+		_grid[Vector2i(int(p[0]), int(p[1]))] = "path"
+	var tp: Array = L["temple"]
+	var hp: Array = L["helipad"]
+	var ph: Array = L["pitch"]
+	var pools: Array = L["pools"]
 
-	# Ship: the wreck on the south-west beach, entrance of the Ruins of Utopia.
-	_fill(2, 15, 8, 19, "sand")
-	_block(3, 16, 8, 19)
-	_prop("prop_ship", Vector2(6 * CELL + 16, 20 * CELL), "Ship")
-	# Dwellings in the Initiates' quarter (bunker-style, canon building sheet).
-	_block(25, 6, 28, 8)
-	_prop("prop_bunker", Vector2(27 * CELL, 9 * CELL), "Dwelling_1")
-	_block(30, 6, 33, 8)
-	_prop("prop_bunker", Vector2(32 * CELL, 9 * CELL), "Dwelling_2", true)
-	# Gate icons and seal on the temple wall.
-	_prop("prop_icon_queen_mother", Vector2(11 * CELL + 16, 3 * CELL), "Icon_1")
-	_prop("prop_icon_queen_mother", Vector2(24 * CELL + 16, 3 * CELL), "Icon_2")
-	_prop("prop_seal_o", Vector2(17 * CELL + 16, CELL + 10), "Seal_Gate")
-	# Signs: compound gate, barren yard.
-	_block(12, 7, 12, 7)
-	_prop("prop_sign_a", Vector2(12 * CELL + 16, 8 * CELL), "Sign_Compound")
-	_block(24, 14, 24, 14)
-	_prop("prop_sign_b", Vector2(24 * CELL + 16, 15 * CELL), "Sign_Yard")
-	_block(22, 16, 22, 16)
-	_prop("prop_tag_x", Vector2(22 * CELL + 16, 17 * CELL), "Tag_Yard")
+	# North tip: main house, paving and pool (Mothers and Priestesses).
+	_land(21, 5, 25, 9, "plaza")
+	_land(22, 5, 23, 9, "rug")
+	_land(26, 7, 26, 8, "water")
+	_block(21, 3, 24, 4)
+	_prop("prop_bunker", _px(22.6, 5.0), "MainHouse", false, Vector2(0.95, 0.95))
+	# Guest villas (Initiates' quarter), beside the main compound.
+	_land(20, 11, 25, 15, "floor_alt")
+	_block(21, 10, 24, 10)
+	_prop("prop_bunker", _px(22.6, 11.0), "Dwelling_1", false, Vector2(0.8, 0.8))
+	_block(21, 14, 24, 14)
+	_prop("prop_bunker", _px(22.6, 15.0), "Dwelling_2", true, Vector2(0.8, 0.8))
+	# Helipad with its two small buildings; a walkway runs down to the beach.
+	_land(int(hp[0]) - 1, int(hp[1]), int(hp[0]), int(hp[1]) + 1, "plaza")
+	_block(int(hp[0]) - 2, int(hp[1]), int(hp[0]) - 2, int(hp[1]))
+	_prop("prop_bunker", _px(hp[0] - 1.5, hp[1] + 1.0), "HelipadHut_1", false, Vector2(0.4, 0.4))
+	_block(int(hp[0]) + 1, int(hp[1]), int(hp[0]) + 1, int(hp[1]))
+	_prop("prop_bunker", _px(hp[0] + 1.5, hp[1] + 1.0), "HelipadHut_2", true, Vector2(0.4, 0.4))
+	_land(int(hp[0]), int(hp[1]) + 2, int(hp[0]), int(hp[1]) + 6, "path")
+	# Pool house and pool at the west end; the Drones' fenced garden beside them.
+	_land(int(pools[1][0]) - 1, int(pools[1][1]) - 1, int(pools[1][0]), int(pools[1][1]), "water")
+	_prop("prop_bunker", _px(6.5, 17.0), "PoolHouse", false, Vector2(0.5, 0.5))
+	_block(6, 16, 7, 16)
+	_land(8, 14, 11, 17, "soil")
+	_land(8, 14, 11, 14, "sprouts")
+	_land(8, 16, 11, 16, "sprouts")
+	_land(8, 15, 11, 15, "path")
+	_fence_cells(7, 13, 12, 18, 12, 15, 16)
+	_land(12, 15, 14, 16, "path")
+	_land(13, 15, 13, 18, "path")
+	_block(13, 13, 13, 13)
+	_prop("prop_sign_a", _px(13.5, 14.0), "Sign_Compound")
+	# Tennis court, fenced (the real pitch is disused).
+	_land(int(ph[0]) - 1, int(ph[1]), int(ph[0]) + 1, int(ph[1]), "plaza")
+	_fence_cells(int(ph[0]) - 2, int(ph[1]) - 1, int(ph[0]) + 2, int(ph[1]) + 1)
+	# Barren yard (maintenance sheds): bare ground, rock pile, signs.
+	_land(14, 16, 19, 19, "path")
+	_land(15, 17, 16, 18, "rock")
+	_block(14, 20, 14, 20)
+	_prop("prop_sign_b", _px(14.5, 21.0), "Sign_Yard")
+	_block(20, 17, 20, 17)
+	_prop("prop_tag_x", _px(20.5, 18.0), "Tag_Yard")
+	# Temple on the south-west hill, at the real temple's spot: terrace, striped pavilion, gold dome.
+	var tx := int(tp[0])
+	var ty := int(tp[1])
+	_land(tx - 4, ty - 3, tx + 3, ty + 2, "plaza")
+	_fill(tx - 1, ty - 2, tx, ty - 2, "gold_cap")
+	_fill(tx - 2, ty - 1, tx + 1, ty - 1, "gold_cap")
+	_fill(tx - 3, ty, tx + 2, ty + 1, "stripe")
+	_fill(tx - 1, ty, tx, ty + 1, "floor")  # doorway
+	_prop("prop_icon_queen_mother", _px(tx - 2, ty + 2.0), "Icon_1")
+	_prop("prop_icon_queen_mother", _px(tx + 2, ty + 2.0), "Icon_2")
+	_prop("prop_seal_o", _px(tx, ty - 1.0 + 0.9), "Seal_Gate")
+	# Ship: the wreck on the south beach at the real ruins' spot, entrance of the Ruins of Utopia.
+	var rx := int(L["ruins"][0]) + 2
+	_block(rx - 2, 21, rx + 3, 23)
+	_prop("prop_ship", _px(rx + 0.5, 24.0), "Ship")
+	# Dock on the west side of the neck at the real pier, dock house beside its end.
+	var pr: Array = L["piers"][0]
+	_fill(int(pr[0]) - 3, int(pr[1]), int(pr[0]) + 2, int(pr[1]), "path")
+	_prop("prop_bunker", _px(pr[0] - 4.0, pr[1] + 1.0), "BoatHouse", false, Vector2(0.55, 0.55))
+	# East jetty for the tropical exit (the map's own; the real island has none).
+	_fill(33, 23, 36, 23, "path")
+
+	_trees()
+	_hearts_and_sparkles()
 
 	# Spawns (names unchanged) and exits.
-	_marker("spawn_default", Vector2(18 * CELL, 12 * CELL))
-	_marker("spawn_from_temple", Vector2(18 * CELL, 4 * CELL + 8))
-	_marker("spawn_from_ruins", Vector2(6 * CELL + 16, 20 * CELL + 24))
-	_character("res://scenes/player/player.tscn", "Player", Vector2(18 * CELL, 12 * CELL))
-	_character("res://scenes/npc/npc.tscn", "Initiate", Vector2(22 * CELL, 10 * CELL + 16), {
+	_marker("spawn_default", _px(19.5, 12.5))
+	_marker("spawn_from_temple", _px(tx, ty + 2.6))
+	_marker("spawn_from_ruins", _px(rx + 0.5, 24.6))
+	_character("res://scenes/player/player.tscn", "Player", _px(19.5, 12.5))
+	_character("res://scenes/npc/npc.tscn", "Initiate", _px(22.5, 12.6), {
 		"npc_id": "initiate", "caste": "initiate", "sprite_texture": "npc_initiate",
 		"dialogue_path": "res://dialogue/offering.dialogue", "voice_pitch": 1.25})
-	_character("res://scenes/npc/npc.tscn", "Drone", Vector2(6 * CELL, 8 * CELL + 16), {
+	_character("res://scenes/npc/npc.tscn", "Drone", _px(9.5, 15.5), {
 		"npc_id": "drone", "caste": "drone", "sprite_texture": "npc_drone", "voice_pitch": 0.7})
-	_character("res://scenes/npc/npc.tscn", "Barren", Vector2(29 * CELL, 17 * CELL), {
+	_character("res://scenes/npc/npc.tscn", "Barren", _px(17.5, 18.0), {
 		"npc_id": "barren", "caste": "barren", "sprite_texture": "npc_barren", "voice_pitch": 0.9})
-	_door("TempleDoor", Vector2(18 * CELL, 2 * CELL), {
+	_door("TempleDoor", _px(tx, ty + 1.5), {
 		"target_scene": "res://scenes/maps/temple.tscn", "target_spawn": "spawn_from_village"})
-	_mirror(Vector2(21 * CELL, 13 * CELL + 16))
+	_mirror(_px(19.5, 11.0))
 
 	# ---- Exit points for other areas (wired at merge). Locked until then. ----
-	var ruins := _door("Exit_Ruins", Vector2(6 * CELL + 16, 20 * CELL + 8), {"locked": true})
+	var ruins := _door("Exit_Ruins", _px(rx + 0.5, 24.3), {"locked": true})
 	ruins.set_meta("wire_to", "Ruins of Utopia entry scene, spawn from_island")
-	var cruise := _door("Exit_Cruise", Vector2(18 * CELL, 22 * CELL), {"locked": true})
+	var cruise := _door("Exit_Cruise", _px(pr[0] - 2.5, pr[1] + 0.5), {"locked": true})
 	cruise.set_meta("wire_to", "Cruise flashback world (unlocked by Forbidden Knowledge)")
-	var tropical := _door("Exit_Tropical", Vector2(30 * CELL, 22 * CELL), {"locked": true})
+	var tropical := _door("Exit_Tropical", _px(35.6, 23.5), {"locked": true})
 	tropical.set_meta("wire_to", "Tropical Florida Keys entry scene")
 	_save("res://scenes/maps/village.tscn")
+
+
+func _hearts_and_sparkles() -> void:
+	## Hearts on the dwellings and the main house, sparkles on the temple and the ship.
+	for n: String in ["MainHouse", "Dwelling_1", "Dwelling_2"]:
+		var b: Sprite2D = _root.get_node(n)
+		_prop("deco_heart", b.position + Vector2(-34, -62 * b.scale.y), "Heart_" + n)
+	for n: String in ["Ship", "Seal_Gate"]:
+		var b: Sprite2D = _root.get_node(n)
+		_prop("deco_sparkle", b.position + Vector2(30, -b.texture.get_height() * b.scale.y), "Sparkle_" + n)
 
 
 func _mirror(pos: Vector2) -> void:
