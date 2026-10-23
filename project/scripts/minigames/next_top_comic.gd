@@ -1,123 +1,100 @@
 extends Control
-## Next Top Comic — stand-up in Monkey Island insult-sword-fighting structure (DESIGN.md §2),
-## hosted by Sarah Silverman, introduced by Chelsea Clinton. A setup is fired at the player;
-## the player answers with a punchline they know. Every pairing is horrible and unfunny,
-## but the women in the audience think the "correct" one is hilarious. As in Monkey Island,
-## a punchline the player gets beaten with is learned and usable from then on.
-## Data: data/next_top_comic.json. Learned punchlines persist in WorldState comic_known.
-## Result goes to WorldState: comic_done, comic_laughs.
+## Next Top Comic — stand-up on the dialogue system in Monkey Island insult-sword-fighting
+## structure (DESIGN.md §2). Sarah Silverman delivers each setup, the player picks a punchline,
+## and whatever is picked the women in the audience think it's hilarious. When the setups run
+## out the set ends. Chelsea Clinton introduces it like every celebrity mini-game.
+## The conversation lives in dialogue/next_top_comic.dialogue; this node is its game state.
+## Data: data/next_top_comic.json (setups: [{setup, punchlines}]), data/emcee.json.
+## After the set, the Name It beat follows. Result goes to WorldState: comic_done.
 
 const DATA_PATH := "res://data/next_top_comic.json"
 const EMCEE_PATH := "res://data/emcee.json"
+const DIALOGUE_PATH := "res://dialogue/next_top_comic.dialogue"
 const GAME_ID := "next_top_comic"
 
 var data: Dictionary = {}
 var emcee: Dictionary = {}
-var current := -1
-var laughs := 0
-var audience_laughing := false
-
-var _say: Label
-var _audience: Label
-var _choices: VBoxContainer
+var autostart := true
+var index := 0
+var picks: Array = []
 
 
 func _ready() -> void:
 	data = _load(DATA_PATH)
 	emcee = _load(EMCEE_PATH)
-	var box := VBoxContainer.new()
-	box.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	add_child(box)
-	var title := Label.new()
-	title.text = data.get("title", "")
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	box.add_child(title)
-	_say = Label.new()
-	_say.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	box.add_child(_say)
-	_audience = Label.new()
-	box.add_child(_audience)
-	_choices = VBoxContainer.new()
-	box.add_child(_choices)
-	var intros: Dictionary = emcee.get("intros", {})
-	var lines: Array = intros.get(GAME_ID, intros.get("_default", []))
-	_say.text = "%s: %s" % [Cast.full(emcee.get("emcee", "")), " ".join(lines)]
-	if not data.get("pairs", []).is_empty():
-		fire_setup(randi() % data["pairs"].size())
+	if autostart:
+		DialogueManager.dialogue_ended.connect(_on_dialogue_ended, CONNECT_ONE_SHOT)
+		var balloon := DialogueManager.show_dialogue_balloon(load(DIALOGUE_PATH), "start", [self])
+		# The dialogue has fixed punchline slots; only the ones this setup fills are shown.
+		for menu in balloon.find_children("*", "DialogueResponsesMenu", true, false):
+			menu.hide_failed_responses = true
 
 
 func host_name() -> String:
 	return Cast.full(data.get("host", ""))
 
 
-## Punchlines the player can answer with: the starting set plus every one learned.
-func known() -> Array:
-	var learned: Array = WorldState.get_flag("comic_known", [])
-	var all: Array = data.get("starting_punchlines", []).duplicate()
-	for p: String in learned:
-		if not all.has(p):
-			all.append(p)
-	return all
+func emcee_name() -> String:
+	return Cast.full(emcee.get("emcee", ""))
 
 
-func fire_setup(index: int) -> void:
-	current = index
-	audience_laughing = false
-	_audience.text = ""
-	_say.text = "%s: %s" % [host_name(), data["pairs"][index]["setup"]]
-	Voice.speak(data["pairs"][index]["setup"], 1.2)
-	for child in _choices.get_children():
-		child.queue_free()
-	for p: String in known():
-		var b := Button.new()
-		b.text = p
-		b.pressed.connect(func() -> void: answer(p))
-		_choices.add_child(b)
-	if known().is_empty():
-		var b := Button.new()
-		b.text = "..."
-		b.pressed.connect(func() -> void: answer(""))
-		_choices.add_child(b)
+func emcee_intro() -> String:
+	var intros: Dictionary = emcee.get("intros", {})
+	return " ".join(intros.get(GAME_ID, intros.get("_default", [])))
 
 
-## Answer the current setup. Returns true when the women in the audience laugh.
-func answer(punchline: String) -> bool:
-	var correct: String = data["pairs"][current]["punchline"]
-	if punchline == correct:
-		laughs += 1
-		audience_laughing = true
-		_audience.text = "♥ ♥ ♥"
-		Voice.speak("hahaha", 1.6)
-	else:
-		audience_laughing = false
-		_audience.text = ""
-		_say.text = "%s: %s" % [host_name(), correct]
-		var learned: Array = WorldState.get_flag("comic_known", []).duplicate()
-		if not learned.has(correct):
-			learned.append(correct)
-		WorldState.set_flag("comic_known", learned)
-	for child in _choices.get_children():
-		child.queue_free()
-	if laughs >= int(data.get("wins_needed", 3)):
-		_finish()
-	else:
-		var next := Button.new()
-		next.text = "Next"
-		next.pressed.connect(func() -> void: fire_setup(randi() % data["pairs"].size()))
-		_choices.add_child(next)
-	return audience_laughing
+func begin_set() -> void:
+	index = 0
+	picks = []
 
 
-func _finish() -> void:
+func set_done() -> bool:
+	return index >= data.get("setups", []).size()
+
+
+func current_setup() -> String:
+	return data["setups"][index]["setup"] if not set_done() else ""
+
+
+## Silverman delivers the setup in her Animalese voice.
+func deliver_setup() -> void:
+	Voice.speak(current_setup(), 1.2)
+
+
+func punchline(slot: int) -> String:
+	var all := _punchlines()
+	return all[slot] if slot < all.size() else ""
+
+
+func has_punchline(slot: int) -> bool:
+	return slot < _punchlines().size()
+
+
+func pick(slot: int) -> void:
+	picks.append(punchline(slot))
+
+
+## The women in the audience think it's hilarious, whatever was picked.
+func audience_laugh() -> String:
+	Voice.speak("hahaha", 1.6)
+	return "♥ ♥ ♥"
+
+
+func next_setup() -> void:
+	index += 1
+
+
+func finish() -> void:
 	WorldState.set_flag("comic_done", true)
-	WorldState.set_flag("comic_laughs", laughs)
-	for child in _choices.get_children():
-		child.queue_free()
-	var back := Button.new()
-	back.text = "OK"
-	back.pressed.connect(func() -> void:
-		SceneRouter.goto_map(data.get("return_map", "res://scenes/maps/village.tscn")))
-	_choices.add_child(back)
+	NameIt.start(GAME_ID)  # the pedagogy loop; a beat the author hasn't set stays off
+
+
+func _punchlines() -> Array:
+	return data["setups"][index].get("punchlines", []) if not set_done() else []
+
+
+func _on_dialogue_ended(_resource: Resource) -> void:
+	SceneRouter.goto_map(data.get("return_map", "res://scenes/maps/village.tscn"))
 
 
 func _load(path: String) -> Dictionary:
