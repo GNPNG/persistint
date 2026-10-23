@@ -24,7 +24,7 @@
 # build-id = short commit hash.
 #
 # Credentials: CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID from the environment or from
-# ~/.config/persistint/cloudflare.env (sourced if present; outside the repo; never printed).
+# ~/.config/persistint/cloudflare.env, or the file named by PERSISTINT_CF_ENV (sourced if present; outside the repo; never printed).
 #
 # Generated files: site/wrangler.toml, site/src/worker.js and the absolute URLs in
 # site/public/index.html depend only on site.config.json, so they are committed; a run that
@@ -112,7 +112,7 @@ fi
 echo "commit $(git rev-parse --short HEAD), build id $BUILD_ID"
 
 # ---------------------------------------------------------------- credentials
-CRED_FILE="$HOME/.config/persistint/cloudflare.env"
+CRED_FILE="${PERSISTINT_CF_ENV:-$HOME/.config/persistint/cloudflare.env}"
 if [[ -f "$CRED_FILE" ]]; then
   set -a
   # shellcheck source=/dev/null
