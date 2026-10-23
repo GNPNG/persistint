@@ -1,22 +1,57 @@
 {
 	"initiate": [
+		{ "when": { "festival": true }, "text": "It's the Fourteenth! Everyone contributes. Everyone. I wore my good sash!" },
+		{ "when": { "days_until_festival": 1 }, "text": "One more sleep until the Fourteenth. I practiced my chants on the tomatoes." },
 		{ "if": { "refused_offering": true }, "text": "You just... said no. Politely. I keep thinking about it." },
 		{ "if": { "questioned_ritual": true }, "text": "I asked 'why' out loud today. The sky did not fall." },
 		{ "if": { "offering_delivered": true }, "text": "The Priestess logged your offering. You're 'seen' now!" },
+		{ "when": { "cycle_day_min": 1, "cycle_day_max": 5 }, "text": "The Gate is open! The cohort says so, so it must be the start of the month. Of cycle. Whichever." },
+		{ "when": { "cycle_day_min": 6, "cycle_day_max": 11 }, "text": "Training week. I memorized forty-one blood-art patterns. Devotion is mostly memorizing." },
+		{ "when": { "cycle_day_min": 12, "cycle_day_max": 13 }, "text": "The Fourteenth approaches! Everyone contributes. Everyone." },
+		{ "when": { "cycle_day_min": 15, "cycle_day_max": 20 }, "text": "Everyone is quiet after the Fourteenth. Nobody says why. We don't count the days since, either." },
+		{ "when": { "cycle_day_min": 21, "cycle_day_max": 28 }, "text": "I cried at breakfast and then got furious at the porridge. The Priestess says that's holiness. Isn't that nice?" },
+		{ "when": { "cycle_min": 2, "phase": "night" }, "text": "The festival was in the cool season last cycle. Now it's hot. Probably the weather is wrong." },
+		{ "when": { "phase": "morning" }, "text": "Good morning, sister! Have you been seen yet today?" },
+		{ "when": { "phase": "night" }, "text": "Lights out soon. The icons watch us sleep, which is very comforting." },
 		{ "text": "The Fourteenth approaches! Everyone contributes. Everyone." }
 	],
 	"priestess": [
+		{ "when": { "festival": true }, "text": "Today the cohort rises as one. Do try to look luminous, dear. The icons are counting." },
+		{ "when": { "days_until_festival": 1 }, "text": "Tomorrow is the Fourteenth. Everything is ready, because I made it ready, because nobody else would." },
 		{ "if": { "offering_delivered": true }, "text": "The obedient simply glow, don't you think?" },
 		{ "if": { "refused_offering": true }, "text": "'No thank you.' What a fascinating phrase." },
+		{ "when": { "cycle_day_min": 1, "cycle_day_max": 5 }, "text": "The Gate has opened, so the new cycle begins. The cohort agrees, and the cohort is never wrong. We checked each other." },
+		{ "when": { "cycle_day_min": 6, "cycle_day_max": 11 }, "text": "The rites are scheduled for the days when the womb calls. Which, happily, are the days we've always held them." },
+		{ "when": { "cycle_day_min": 12, "cycle_day_max": 13 }, "text": "No calendars, no thermometers, no 'tests.' Devices of domination. We count in blood, and blood does not lie." },
+		{ "when": { "cycle_day_min": 15, "cycle_day_max": 20 }, "text": "The rite is done. If the Mothers' number does not grow, it is a failure of devotion. It is always a failure of devotion." },
+		{ "when": { "cycle_day_min": 21, "cycle_day_max": 28 }, "text": "The sacred weeks. Everything feels unbearable and enormous. That is communion, dear. Do not take an aspirin." },
+		{ "when": { "cycle_min": 2, "phase": "midday" }, "text": "Yes, the Fourteenth lands a little later each cycle. That is the cohort's business, not the sky's." },
+		{ "when": { "phase": "night" }, "text": "Anyone found measuring the tides at night will be asked to sit quietly for a very long time." },
 		{ "text": "Stand straighter, dear. The icons are watching." }
 	],
 	"drone": [
+		{ "when": { "festival": true }, "text": "They brought us the tonic early this morning. Festival day. I don't ask what's in it." },
+		{ "when": { "days_until_festival": 1 }, "text": "Rites tomorrow. They'll collect us at sunset and return us by sunrise. Fine. The tomatoes can wait." },
 		{ "if": { "offering_delivered": true }, "text": "Extra weeding today. Festival greens for the Fourteenth." },
+		{ "when": { "cycle_day_min": 1, "cycle_day_max": 5 }, "text": "They say the Gate is open, so they'll want us soon. Nobody's told us what day it is for a while." },
+		{ "when": { "cycle_day_min": 6, "cycle_day_max": 13 }, "text": "Watering the greenhouse. Glass houses, funny thing. Everyone can see in. Nobody looks." },
+		{ "when": { "cycle_day_min": 15, "cycle_day_max": 20 }, "text": "Back in the compound. The rite 'didn't take' again. They say I need more devotion. I garden. That's my devotion." },
+		{ "when": { "cycle_day_min": 21, "cycle_day_max": 28 }, "text": "The Priestesses are in their sacred weeks. Keep your head down and your trowel quiet." },
+		{ "when": { "cycle_min": 2, "phase": "evening" }, "text": "Tomatoes ripen when they ripen. The Calendar says otherwise. I trust the tomatoes." },
+		{ "when": { "phase": "morning" }, "text": "Morning shift. Four hundred seedlings and a watering can. Good thing I like peace and quiet." },
 		{ "text": "The tomatoes listen better than anyone on this island." }
 	],
 	"barren": [
+		{ "when": { "festival": true }, "text": "Festival. They'll parade the Mothers and I'll carry the baskets. Same as every cycle, but with ribbons." },
+		{ "when": { "days_until_festival": 1 }, "text": "Tomorrow they'll all be so sure. I'll be hauling water and counting tides, quietly." },
 		{ "if": { "refused_offering": true }, "text": "Heard you refused. Sweetly, even. There's more of us than you'd think." },
 		{ "if": { "puzzle_ritual_done": true }, "text": "You arranged their little icons? The water still doesn't care." },
+		{ "when": { "cycle_day_min": 1, "cycle_day_max": 5 }, "text": "Gate's open, they say. Another month, another 'maybe next time' for the likes of me." },
+		{ "when": { "cycle_day_min": 6, "cycle_day_max": 13 }, "text": "Funny. They do their rites at the start of the cycle. Everyone I've ever known who got lucky, it was in the middle." },
+		{ "when": { "cycle_day_min": 15, "cycle_day_max": 20 }, "text": "Rites are over and nobody's expecting. Nobody ever asks why. They ask who's to blame." },
+		{ "when": { "cycle_day_min": 21, "cycle_day_max": 28 }, "text": "Everyone's weepy and snappish. They call it holy. I call it Tuesday." },
+		{ "when": { "cycle_min": 2, "phase": "midday" }, "text": "The festival drifts. Every cycle it's a bit off. Nobody notices. Noticing needs measuring, and measuring's forbidden." },
+		{ "when": { "phase": "night" }, "text": "The tide's out. It goes out when the moon says, you know. I'm not saying anything. I'm just standing here." },
 		{ "text": "Water doesn't care what the Calendar says. Neither do I, much." }
 	]
 }

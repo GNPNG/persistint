@@ -1,4 +1,53 @@
 {
-	"cohort_signals": [],
-	"schedules": {}
+	"cohort_signals": [
+		{ "id": "gate_opens", "cohort": "first", "when": { "cycle_day_min": 1, "cycle_day_max": 3 },
+		  "text": "The first cohort's Gate has opened. By the Covenant's count, a new cycle begins today." },
+		{ "id": "womb_calls", "cohort": "all", "when": { "cycle_day_min": 4, "cycle_day_max": 6 },
+		  "text": "The cohorts are aligned. The womb calls. The rites are held, and the drones are brought in." },
+		{ "id": "training_days", "cohort": "second", "when": { "cycle_day_min": 7, "cycle_day_max": 11 },
+		  "text": "Second cohort chants for the initiates. Training days: texts, blood-art, memorization." },
+		{ "id": "fourteenth_eve", "cohort": "all", "when": { "days_until_festival": 1 },
+		  "text": "The cohorts fast and sing. The Festival of the Fourteenth is tomorrow, by the cohort's count." },
+		{ "id": "festival_of_the_fourteenth", "cohort": "all", "when": { "festival": true },
+		  "text": "The Fourteenth. The cohorts rise as one. Offerings are made and the Mothers are praised." },
+		{ "id": "quiet_after", "cohort": "third", "when": { "cycle_day_min": 15, "cycle_day_max": 20 },
+		  "text": "Quiet days. The cohort does not discuss what the rites did or did not accomplish." },
+		{ "id": "sacred_weeks", "cohort": "all", "when": { "cycle_day_min": 21, "cycle_day_max": 27 },
+		  "text": "The sacred weeks. Visions, weeping and fury are holy. Do not interrupt a vision." },
+		{ "id": "gate_closing", "cohort": "all", "when": { "cycle_day": 28 },
+		  "text": "The Gate is nearly shut. The cohort waits for the next to open. The count will drift again." }
+	],
+	"schedules": {
+		"initiate": [
+			{ "when": { "festival": true }, "location": "great_hall", "activity": "festival offerings" },
+			{ "when": { "phase": "night" }, "location": "dormitory", "activity": "sleeping beneath the icons" },
+			{ "when": { "cycle_day_min": 21, "cycle_day_max": 28 }, "location": "temple", "activity": "visions and weeping" },
+			{ "when": { "phase": "morning" }, "location": "temple", "activity": "memorizing the sacred texts" },
+			{ "when": { "phase": "midday" }, "location": "village", "activity": "blood-art practice" },
+			{ "when": { "phase": "evening" }, "location": "village", "activity": "gossip by the well" }
+		],
+		"priestess": [
+			{ "when": { "festival": true }, "location": "great_hall", "activity": "leading the Festival of the Fourteenth" },
+			{ "when": { "phase": "night" }, "location": "temple", "activity": "vigil before the icons" },
+			{ "when": { "cycle_day_min": 4, "cycle_day_max": 6, "phase": "evening" }, "location": "birth_chambers", "activity": "preparing the rites" },
+			{ "when": { "phase": "morning" }, "location": "temple", "activity": "inspecting initiates" },
+			{ "when": { "phase": "midday" }, "location": "village", "activity": "doctrinal rounds" },
+			{ "when": { "phase": "evening" }, "location": "temple", "activity": "cohort chant" }
+		],
+		"drone": [
+			{ "when": { "festival": true, "phase": "evening" }, "location": "birth_chambers", "activity": "brought in for the rite" },
+			{ "when": { "cycle_day_min": 4, "cycle_day_max": 6, "phase": "evening" }, "location": "birth_chambers", "activity": "brought in for the rite" },
+			{ "when": { "phase": "night" }, "location": "compound", "activity": "returned to the compound" },
+			{ "when": { "phase": "morning" }, "location": "greenhouse", "activity": "watering the seedlings" },
+			{ "when": { "phase": "midday" }, "location": "garden", "activity": "weeding the tomatoes" },
+			{ "when": { "phase": "evening" }, "location": "greenhouse", "activity": "tending the glass houses" }
+		],
+		"barren": [
+			{ "when": { "festival": true }, "location": "great_hall", "activity": "carrying baskets for the Mothers" },
+			{ "when": { "phase": "night" }, "location": "shore", "activity": "standing by the tide line" },
+			{ "when": { "phase": "morning" }, "location": "well", "activity": "hauling water" },
+			{ "when": { "phase": "midday" }, "location": "village", "activity": "manual labor" },
+			{ "when": { "phase": "evening" }, "location": "shore", "activity": "mending nets" }
+		]
+	}
 }
