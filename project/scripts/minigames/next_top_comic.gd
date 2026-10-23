@@ -11,6 +11,7 @@ const DATA_PATH := "res://data/next_top_comic.json"
 const EMCEE_PATH := "res://data/emcee.json"
 const DIALOGUE_PATH := "res://dialogue/next_top_comic.dialogue"
 const GAME_ID := "next_top_comic"
+const Flashbacks := preload("res://scripts/chapters/flashbacks.gd")
 
 var data: Dictionary = {}
 var emcee: Dictionary = {}
@@ -56,7 +57,7 @@ func current_setup() -> String:
 	return data["setups"][index]["setup"] if not set_done() else ""
 
 
-## Silverman delivers the setup in her Animalese voice.
+## Silverman delivers the setup in her voice.
 func deliver_setup() -> void:
 	Voice.speak(current_setup(), 1.2)
 
@@ -94,7 +95,17 @@ func _punchlines() -> Array:
 
 
 func _on_dialogue_ended(_resource: Resource) -> void:
-	SceneRouter.goto_map(data.get("return_map", "res://scenes/maps/village.tscn"))
+	go_back()
+
+
+## Where the set ends up: back to where a cruise flashback was started from, otherwise return_map.
+func return_target() -> Dictionary:
+	return Flashbacks.return_target(data.get("return_map", "res://scenes/maps/village.tscn"))
+
+
+func go_back() -> void:
+	var to := Flashbacks.leave(data.get("return_map", "res://scenes/maps/village.tscn"))
+	SceneRouter.goto_map(to["scene"], to["spawn"])
 
 
 func _load(path: String) -> Dictionary:
