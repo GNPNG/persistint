@@ -5,6 +5,13 @@ Holds the Florida palette from prompts/STYLE.md 4.3/4.4 (warm-brown outline #8a5
 sea blue, turquoise, foam, coral and the Florida plant colours), a Pen that draws at a
 supersample factor with coordinates given in output pixels, the canon cut loader, the sticker
 finish (supersample then LANCZOS down) and the SpriteFrames writer every rigged sheet uses.
+
+Resolution: generators lay art out in world pixels (the units the maps, spawns and nav use),
+but every PNG is written at D = 4 texture pixels per world pixel, which is one texture pixel
+per screen pixel at the 1280x720 window with the 2x map camera. Drawing happens at a further
+supersample on top of that and is LANCZOS-resized down. Scenes show the textures at
+scale 1/D (DISPLAY_SCALE); every SpriteFrames written here carries
+metadata/display_scale = 1/D so code that loads a rig at run time scales it the same way.
 """
 import json
 import math
@@ -16,6 +23,8 @@ from PIL import Image, ImageDraw
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "project/assets/florida"
 RES = "res://assets/florida"
+D = 4  # texture pixels per world pixel
+DISPLAY_SCALE = 1.0 / D
 sys.path.insert(0, str(ROOT / "tools"))
 
 # prompts/STYLE.md 4.3 / 4.4
@@ -107,7 +116,10 @@ class Pen:
 
     def _end(self):
         if self._ov:
-            self.im.alpha_composite(self._ov[0])
+            ov = self._ov[0]
+            box = ov.getbbox()  # blend only the touched area (big supersampled grounds)
+            if box:
+                self.im.alpha_composite(ov.crop(box), box[:2])
             self._ov = None
 
     def _w(self, width):
@@ -216,8 +228,8 @@ def canvas(w, h, s, bg=(0, 0, 0, 0)):
 
 
 def finish(im, w, h):
-    """Supersampled drawing down to the game size; alpha kept crisp enough to read at 4x."""
-    return im.resize((w, h), Image.LANCZOS)
+    """Supersampled drawing of a w x h (world px) sprite down to its texture: (w*D) x (h*D)."""
+    return im.resize((round(w * D), round(h * D)), Image.LANCZOS)
 
 
 def save(img, name, rgb_only=False):
@@ -242,7 +254,9 @@ def canon_sprite(name):
 
 def write_frames(name, fw, fh, anims):
     """Write project/assets/florida/<name>.tres: a SpriteFrames over <name>.png.
+    fw, fh: the frame size in world px (the sheet holds frames of fw*D x fh*D texture px).
     anims: list of (anim_name, row, columns, fps, loop)."""
+    fw, fh = round(fw * D), round(fh * D)
     lines, subs, frames_by_anim = [], [], []
     n = 0
     for anim, row, cols, fps, loop in anims:
@@ -259,5 +273,6 @@ def write_frames(name, fw, fh, anims):
     lines.append(f'[gd_resource type="SpriteFrames" load_steps={n + 2} format=3]\n')
     lines.append(f'[ext_resource type="Texture2D" path="{RES}/{name}.png" id="1"]\n')
     lines.extend(subs)
-    lines.append("[resource]\nanimations = [%s]\n" % ", ".join(frames_by_anim))
+    lines.append("[resource]\nanimations = [%s]\nmetadata/display_scale = %s\n"
+                 % (", ".join(frames_by_anim), DISPLAY_SCALE))
     (OUT / f"{name}.tres").write_text("\n".join(lines))

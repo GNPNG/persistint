@@ -6,12 +6,14 @@ plants) and the canon flower cluster project/assets/canon/deco_flowers.png, scat
 lawns. The canon sheets hold no tropical scenery, so everything else is drawn in their sticker
 look: warm-brown outline #8a5a5a, flat pastel fills with one highlight, faces on the big
 friendly things (STYLE.md 4.1), Florida's saturated accents (coral, hibiscus, bougainvillea,
-mango, key lime, turquoise). Props and items are drawn at 6x, backgrounds at 2x, all
-LANCZOS-resized. Every random choice comes from a fixed-seed random.Random.
+mango, key lime, turquoise). Sizes below are world px; every PNG is written at
+tools/florida_draw.D (4) texture px per world px. Props and items are drawn at 8x and
+backgrounds at 6x world size, then LANCZOS-resized. Every random choice comes from a
+fixed-seed random.Random.
 
 Outputs, all in project/assets/florida/:
   bg_florida_beach.png, bg_florida_garden.png, bg_florida_aquarium.png, bg_florida_stable.png
-      960x540 ground only (sea, sand, lawn, paths, floors, the dock and the tank wall);
+      960x540 world px (3840x2160 texture) ground only (sea, sand, lawn, paths, floors, the dock and the tank wall);
       everything a person can stand in front of or behind is a prop below.
   Props (the bottom edge is where the prop stands; scenes y-sort them with the people):
       prop_palm_a, prop_palm_b, prop_tree_mango, prop_tree_key_lime, prop_bush_hibiscus,
@@ -21,7 +23,7 @@ Outputs, all in project/assets/florida/:
       prop_trough
   Garden items: plot_empty, plot_growing, plot_ready_<plant> (one per plant in
       project/data/florida.json), seed_bag, craft_bench
-  fish.png + fish.tres: frame 16x12; rows 0 coral, 1 mango, 2 lilac; columns 0-2 swim
+  fish.png + fish.tres: frame 16x12 world px (64x48 texture); rows 0 coral, 1 mango, 2 lilac; columns 0-2 swim
       (tail wiggle), 3 fin wave. Animations swim_<colour> (frames 0,1,2,1 at 5 fps) and
       wave_<colour> (frames 3,0 at 2 fps). Faces right; anchor: frame centre.
 """
@@ -37,8 +39,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))  # -I leaves tools/ off
 import florida_draw as fd  # noqa: E402
 from florida_draw import INK, WHITE, Pen, mix  # noqa: E402
 
-K = 6  # prop supersample
-BG_S = 2  # background supersample
+K = 8  # prop drawing scale (world px -> drawing px)
+BG_S = 6  # background drawing scale
 PLANTS = json.loads((fd.ROOT / "project/data/florida.json").read_text())["plants"]
 CLEAR = fd.alpha(WHITE, 0)  # outline-only redraw
 
@@ -559,7 +561,8 @@ def craft_bench(p, w, h):
 def fish_sheet():
     fw, fh = 16, 12
     cols = [("coral", fd.CORAL), ("mango", fd.MANGO), ("lilac", "#c9a8f0")]
-    out = Image.new("RGBA", (fw * 4, fh * 3))
+    D = fd.D
+    out = Image.new("RGBA", (fw * 4 * D, fh * 3 * D))
     for r, (_, col) in enumerate(cols):
         for c in range(4):
             im, p = fd.canvas(fw, fh, 8)
@@ -576,7 +579,7 @@ def fish_sheet():
             p.ell(11.7, 5.0, 0.3, 0.3, WHITE, 0)
             p.arc(12.2, 6.6, 0.9, 0.6, 20, 160, INK, 0.35)
             p.ell(10.6, 7.0, 0.9, 0.5, fd.BLUSH, 0)
-            out.alpha_composite(fd.finish(im, fw, fh), (c * fw, r * fh))
+            out.alpha_composite(fd.finish(im, fw, fh), (c * fw * D, r * fh * D))
     fd.save(out, "fish")
     anims = []
     for r, (cname, _) in enumerate(cols):
@@ -595,7 +598,7 @@ class Ground:
         self.p = Pen(self.im, BG_S)
 
     def save(self, name):
-        fd.save(self.im.resize((960, 540), Image.LANCZOS), name, rgb_only=True)
+        fd.save(self.im.resize((960 * fd.D, 540 * fd.D), Image.LANCZOS), name, rgb_only=True)
 
 
 def speckle(p, rnd, box, n, colors, r=(0.6, 1.4)):
@@ -621,9 +624,13 @@ def stone(p, x, y, r=5):
     p.ell(x - r * 0.3, y - r * 0.2, r * 0.35, r * 0.18, WHITE, 0)
 
 
+FLOWERS_W = 36
+
+
 def canon_flowers(im, x, y):
     fl = fd.canon_sprite("deco_flowers")
-    fl = fl.resize((fl.width * BG_S, fl.height * BG_S), Image.LANCZOS)
+    k = FLOWERS_W * BG_S / fl.width  # the cluster is FLOWERS_W world px wide at any cut size
+    fl = fl.resize((round(fl.width * k), round(fl.height * k)), Image.LANCZOS)
     im.alpha_composite(fl, (round(x * BG_S - fl.width / 2), round(y * BG_S - fl.height)))
 
 

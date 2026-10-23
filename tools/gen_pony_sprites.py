@@ -6,15 +6,16 @@ project/assets/florida/pony_<part>.png: pony_body_<coat>, pony_spots, pony_mane_
 pony_acc_<accessory>, pony_sparkle.
 
 Every part is a sheet on one shared grid so the parts stack and animate together: frame 64x52
-(pony faces right, three-quarter side view), 4 columns x 2 rows.
+world px, stored at D = 4 texture px per world px (256x208 per frame, sheet 1024x416; pony
+faces right, three-quarter side view), 4 columns x 2 rows.
   row 0 idle: 0 rest, 1 breath (body half a pixel lower, tail swishes back), 2 rest,
               3 blink (eyes closed, tail swishes forward)
   row 1 walk: four steps, legs swinging in diagonal pairs, body bobbing on the passing steps
 PonyDoll (scripts/florida/pony_doll.gd) stacks the parts as Sprite2D layers (hframes 4,
 vframes 2) and one AnimationPlayer drives every layer's frame: idle at 3 fps, walk at 8 fps.
 Kawaii sticker look from prompts/STYLE.md 4.3: warm-brown outline #8a5a5a, flat pastel fills
-with one highlight, dot eyes with a catch-light, pink blush, small smile. Drawn at 4x and
-LANCZOS-resized; deterministic.
+with one highlight, dot eyes with a catch-light, pink blush, small smile. Drawn at 8x world
+size and LANCZOS-resized to 4x; deterministic. PonyDoll scales the layers back to 64x52.
 """
 import json
 import math
@@ -27,7 +28,8 @@ OUT = ROOT / "project/assets/florida"
 DATA = json.loads((ROOT / "project/data/ponies.json").read_text())
 INK = "#8a5a5a"
 BLUSH = "#ff9fb8"
-K = 4
+K = 8  # drawing scale
+D = 4  # texture px per world px
 W, H = 64, 52
 
 # (bob, leg swing, tail swing, blink) per frame; row 0 idle, row 1 walk
@@ -49,13 +51,13 @@ P = Pose()
 
 def sheet(name, draw):
     """Render draw(d) once per pose into a 4x2 sheet."""
-    out = Image.new("RGBA", (W * 4, H * 2))
+    out = Image.new("RGBA", (W * D * 4, H * D * 2))
     for r, row in enumerate(POSES):
         for c, (bob, legs, tail, blink) in enumerate(row):
             P.bob, P.legs, P.tail, P.blink = bob, legs, tail, blink
             im = Image.new("RGBA", (W * K, H * K))
             draw(ImageDraw.Draw(im))
-            out.alpha_composite(im.resize((W, H), Image.LANCZOS), (c * W, r * H))
+            out.alpha_composite(im.resize((W * D, H * D), Image.LANCZOS), (c * W * D, r * H * D))
     OUT.mkdir(parents=True, exist_ok=True)
     out.save(OUT / f"{name}.png")
 

@@ -6,7 +6,8 @@ canon sheet by tools/cut_island_props.py (project/data/florida_canon.json, "base
 person is that canon body with Florida hair, clothes and props drawn over it at the sheet's
 resolution in the canon line (warm-brown outline #8a5a5a, flat fills with one highlight,
 prompts/STYLE.md 4.3) and the Florida palette (4.4), then supersampled down (LANCZOS).
-Outputs (project/assets/florida/):
+Outputs (project/assets/florida/; frame sizes in world px, the PNG holds them at
+tools/florida_draw.D = 4 texture px per world px, e.g. 32x52 -> 128x208):
   npc_daughter.png / .tres     frame 32x52
   npc_stable_friend.png / .tres frame 32x52   (Hannah, cast id stable_friend)
   npc_father.png / .tres       frame 36x62
@@ -193,10 +194,11 @@ class Person:
             breath.alpha_composite(im.resize((W, H - round(self.F)), Image.LANCZOS), (0, round(self.F)))
             blink = self.blink(im, v, origin) if v != "back" else im
             rows.append([im, breath, im, blink])
-        out = Image.new("RGBA", (self.FW * 4, self.FH * 3))
+        D = fd.D
+        out = Image.new("RGBA", (self.FW * 4 * D, self.FH * 3 * D))
         for r, frames in enumerate(rows):
             for c, fr in enumerate(frames):
-                out.alpha_composite(fd.finish(fr, self.FW, self.FH), (c * self.FW, r * self.FH))
+                out.alpha_composite(fd.finish(fr, self.FW, self.FH), (c * self.FW * D, r * self.FH * D))
         fd.save(out, self.name)
         fd.write_frames(self.name, self.FW, self.FH,
                         [(f"idle_{v}", r, [0, 1, 2, 3], 3, True) for r, v in enumerate(VIEWS)])
@@ -574,11 +576,11 @@ def mermaid_frame(sway, kick, stream):
 
 def in_water(img, waterline, tint="#58b8dc"):
     """Below the waterline the tail shows through the pool water: blended toward its blue,
-    fading in over three rows."""
+    fading in over three rows (waterline and rows in world px)."""
     px = img.load()
     t = fd.rgb(tint)
-    for y in range(waterline, img.height):
-        k = min(1.0, (y - waterline + 1) / 3) * 0.45
+    for y in range(waterline * fd.D, img.height):
+        k = min(1.0, (y - waterline * fd.D + 1) / (3 * fd.D)) * 0.45
         for x in range(img.width):
             r, g, b, a = px[x, y]
             if a:
@@ -589,10 +591,11 @@ def in_water(img, waterline, tint="#58b8dc"):
 def mermaid():
     rows = [[mermaid_frame(0.2, 0.0, 0.2), mermaid_frame(0.45, 0.3, 0.3), mermaid_frame(0.2, 0.0, 0.2), mermaid_frame(-0.1, 0.2, 0.1)],
             [mermaid_frame(-0.6, 0.0, 0.6), mermaid_frame(0.1, 1.0, 1.0), mermaid_frame(0.7, 0.2, 0.7), mermaid_frame(0.1, 0.8, 0.9)]]
-    out = Image.new("RGBA", (36 * 4, 50 * 2))
+    D = fd.D
+    out = Image.new("RGBA", (36 * 4 * D, 50 * 2 * D))
     for r, frames in enumerate(rows):
         for c, fr in enumerate(frames):
-            out.alpha_composite(fr, (c * 36, r * 50))
+            out.alpha_composite(fr, (c * 36 * D, r * 50 * D))
     fd.save(out, "mermaid")
     fd.write_frames("mermaid", 36, 50, [("idle", 0, [0, 1, 2, 3], 4, True), ("walk", 1, [0, 1, 2, 3], 7, True)])
     return out
