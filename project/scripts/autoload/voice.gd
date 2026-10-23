@@ -1,5 +1,6 @@
 extends Node
-## Voice — procedural "Animalese"-style gibberish speech (Animal Crossing school).
+## Voice — placeholder gibberish voice from the July 4 session. To be replaced by speech with
+## LLM-based impersonated narration (author, 2026-10-23; beads persistint-game-zkk).
 ## Builds a short PCM16 wav at runtime from the text's letters: each letter maps to
 ## a pitched blip; per-character base pitch gives each caste/NPC its own voice.
 ## No models, no assets — pure synthesis, works in HTML5 export.
