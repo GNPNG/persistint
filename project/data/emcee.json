@@ -1,5 +1,20 @@
 {
-  "_note": "DESIGN.md: every celebrity mini-game is introduced by Chelsea Clinton, who explains how empowering and fun this is going to be. intros: mini-game id -> her lines (author's to write).",
+  "_note": "DESIGN.md: every celebrity mini-game is introduced by Chelsea Clinton, who explains how empowering and fun this is going to be. Her lines are her own published words (sources below). intros: mini-game id -> lines; '_default' is used for any game without its own.",
   "emcee": "chelsea",
-  "intros": {}
+  "intros": {
+    "_default": [
+      "Sometimes being a girl isn't easy.",
+      "So, if anyone ever tells you no, if anyone says your voice isn't important or your dreams are too big, remember these women.",
+      "They persisted and so should you.",
+      "Persistence is power.",
+      "It's always better to ask and be told no than to not ask at all."
+    ]
+  },
+  "sources": {
+    "Sometimes being a girl isn't easy.": "She Persisted (Philomel, 2017), opening",
+    "So, if anyone ever tells you no, if anyone says your voice isn't important or your dreams are too big, remember these women.": "She Persisted (2017), closing; goodreads.com/work/quotes/55758109-she-persisted",
+    "They persisted and so should you.": "She Persisted (2017) and She Persisted Around the World (2018), closing",
+    "Persistence is power.": "She Persisted (2017), tagline",
+    "It's always better to ask and be told no than to not ask at all.": "Chelsea Clinton, quoted in Inc. (inc.com/zoe-henry/10-chelsea-clinton-quotes-on-strength-confidence.html)"
+  }
 }

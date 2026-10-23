@@ -64,9 +64,10 @@ func host_name() -> String:
 	return Cast.full(data.get("host", ""))
 
 
-## Chelsea Clinton opens the show with her intro lines for this game (empty until written).
+## Chelsea Clinton opens the show with her lines for this game (or her default lines).
 func _introduce() -> void:
-	var lines: Array = emcee.get("intros", {}).get(GAME_ID, [])
+	var intros: Dictionary = emcee.get("intros", {})
+	var lines: Array = intros.get(GAME_ID, intros.get("_default", []))
 	_say.text = "%s: %s" % [emcee_name(), " ".join(lines)] if not lines.is_empty() else emcee_name()
 	for line: String in lines:
 		Voice.speak(line, 1.1)
