@@ -66,6 +66,7 @@ stand-in there with no code change.
 | `project/assets/ruins/ruins_poster.png` | ruins_poster | `tools/gen_ruins_art.py` | 68x88 still, scale 0.5, feet at bottom centre | - |
 | `project/assets/ruins/ruins_prep_bench.png` | ruins_prep_bench | `tools/gen_ruins_art.py` | 200x80 still, scale 0.5, feet at bottom centre | - |
 | `project/assets/ruins/ruins_puddle.png` | ruins_puddle | `tools/gen_ruins_art.py` | 80x32 still, scale 0.5, feet at bottom centre | - |
+| `project/assets/ruins/ruins_runner.png` | ruins_runner | `tools/gen_ruins_art.py` | 400x44 still, scale 0.5, painted flat on the floor | - |
 | `project/assets/ruins/ruins_sequencer.png` | ruins_sequencer | `tools/gen_ruins_art.py` | 112x92 still, scale 0.5, feet at bottom centre | - |
 | `project/assets/ruins/ruins_server_rack.png` | ruins_server_rack | `tools/gen_ruins_art.py` | 104x172 still, scale 0.5, feet at bottom centre | - |
 | `project/assets/ruins/ruins_slots.png` | ruins_slots | `tools/gen_ruins_art.py` | 168x140 still, scale 0.5, feet at bottom centre | - |
