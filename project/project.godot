@@ -21,6 +21,7 @@ GameClock="*res://scripts/autoload/game_clock.gd"
 Voice="*res://scripts/autoload/voice.gd"
 SceneRouter="*res://scripts/autoload/scene_router.gd"
 Cast="*res://scripts/autoload/cast.gd"
+NameIt="*res://scripts/autoload/name_it.gd"
 DialogueManager="*res://addons/dialogue_manager/dialogue_manager.gd"
 
 [display]

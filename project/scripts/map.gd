@@ -6,6 +6,8 @@ const WARDROBE_SCENE := "res://scenes/ui/wardrobe.tscn"
 
 var _hud_label: Label
 var _wardrobe: CanvasLayer
+var _journal: CanvasLayer
+const JOURNAL_SCRIPT := preload("res://scripts/ui/journal.gd")
 
 
 func _ready() -> void:
@@ -46,6 +48,17 @@ func _update_hud() -> void:
 func _unhandled_key_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and event.keycode == KEY_P:
 		toggle_wardrobe()
+	elif event is InputEventKey and event.pressed and event.keycode == KEY_J:
+		toggle_journal()
+
+
+func toggle_journal() -> void:
+	if _journal and is_instance_valid(_journal):
+		_journal.queue_free()
+		_journal = null
+		return
+	_journal = JOURNAL_SCRIPT.new()
+	add_child(_journal)
 
 
 func toggle_wardrobe() -> void:
