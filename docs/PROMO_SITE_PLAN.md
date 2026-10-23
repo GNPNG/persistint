@@ -2,7 +2,7 @@
 
 Persistint's values and measurements for the generic site plan in [`sops/templates/promo-site-plan.md`](../sops/templates/promo-site-plan.md) (pages, config schema, worker, headers, deploy steps). Checklist: [`docs/RELEASE_CHECKLIST.md`](RELEASE_CHECKLIST.md), items PW-01 to PW-14, SP-04 to SP-07 and PR-08. Written 2026-10-23 against commit 93870ee.
 
-**Domain to confirm:** the request said "persitint.gnpng.org". This file uses **persistint.gnpng.org**. Neither name resolves yet. `dig +short NS gnpng.org` returned `dom.ns.cloudflare.com` and `gwen.ns.cloudflare.com` on 2026-10-23, so the zone is on Cloudflare.
+**Domain:** **persistint.gnpng.org** (confirmed by the author 2026-10-23; "persitint" was a typo). It does not resolve yet. `dig +short NS gnpng.org` returned `dom.ns.cloudflare.com` and `gwen.ns.cloudflare.com` on 2026-10-23, so the zone is on Cloudflare.
 
 ## 1. Per-game values
 
@@ -13,7 +13,7 @@ These become `site/site.config.json` (schema in the template, section 6).
 | `slug` | `persistint` | |
 | `title` | `PERSISTINT` | `project/project.godot` `config/name` |
 | `pitch` | not written | author (decision 9 in the checklist) |
-| `site_host` | `persistint.gnpng.org` (to confirm) | decision 1 |
+| `site_host` | `persistint.gnpng.org` | decision 1 (confirmed 2026-10-23) |
 | `zone` | `gnpng.org` | dig, 2026-10-23 |
 | `worker_name` | `persistint-site` | |
 | `build_bucket` | `persistint-builds` | |
