@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/wardrobe.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/systems/paper_doll.gd" id="2"]
 
 [node name="Wardrobe" type="CanvasLayer"]
 layer = 10
@@ -30,34 +31,7 @@ theme_override_constants/separation = 16
 [node name="Preview" type="Control" parent="Panel/HBox"]
 custom_minimum_size = Vector2(110, 150)
 layout_mode = 2
-
-[node name="Body" type="TextureRect" parent="Panel/HBox/Preview"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Dress" type="TextureRect" parent="Panel/HBox/Preview"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Hair" type="TextureRect" parent="Panel/HBox/Preview"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Accessory" type="TextureRect" parent="Panel/HBox/Preview"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-expand_mode = 1
-stretch_mode = 5
+script = ExtResource("2")
 
 [node name="VBox" type="VBoxContainer" parent="Panel/HBox"]
 layout_mode = 2

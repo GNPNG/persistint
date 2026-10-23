@@ -124,6 +124,28 @@ func _run() -> void:
 		"wreck bridge result written to WorldState")
 	bridge.queue_free()
 
+	# Paper doll: one art set per doll, layers follow the outfit, wardrobe uses it.
+	ws.reset()
+	var doll: Control = preload("res://scripts/systems/paper_doll.gd").new()
+	root.add_child(doll)
+	doll.set_outfit({"body": "body_base", "dress": "dress_teal", "hair": "hair_rose", "accessory": "none"})
+	_check(doll.get_node("Dress").texture != null and doll.get_node("Accessory").texture == null,
+		"paper doll layers follow the outfit")
+	_check(doll.get_node("Body").texture.resource_path.begins_with("res://assets/placeholder/"),
+		"paper doll keeps one art set when canon lacks a part")
+	doll.queue_free()
+	ws.set_flag("outfit_dress", "dress_rose")
+	var wardrobe: CanvasLayer = load("res://scenes/ui/wardrobe.tscn").instantiate()
+	root.add_child(wardrobe)
+	_check(wardrobe.doll.outfit["dress"] == "dress_rose", "wardrobe shows the saved outfit on the paper doll")
+	ws.set_flag("outfit_dress", "dress_robe")
+	ws.set_flag("outfit_hair", "hair_braids")
+	wardrobe._refresh()
+	_check(wardrobe.doll.get_node("Hair").texture.resource_path == "res://assets/canon/hair_braids.png"
+		and wardrobe.doll.get_node("Body").texture.resource_path == "res://assets/canon/body_base.png",
+		"wardrobe draws a canon outfit entirely from canon art")
+	wardrobe.queue_free()
+
 	if had_save:
 		var f := FileAccess.open(ws.SAVE_PATH, FileAccess.WRITE)
 		f.store_string(backup)

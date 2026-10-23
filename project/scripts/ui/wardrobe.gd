@@ -8,7 +8,7 @@ const OUTFITS_PATH := "res://data/outfits.json"
 
 var options: Dictionary = {}  # slot -> Array[String]
 
-@onready var preview_root: Control = $Panel/HBox/Preview
+@onready var doll: PaperDoll = $Panel/HBox/Preview
 
 
 func _ready() -> void:
@@ -37,15 +37,20 @@ func _cycle(slot: String, dir: int) -> void:
 	_refresh()
 
 
+func _defaults() -> Dictionary:
+	var defaults := {"body": "body_base"}
+	for slot: String in options:
+		defaults[slot] = options[slot][0]
+	return defaults
+
+
 func _refresh() -> void:
-	for slot: String in ["body", "dress", "hair", "accessory"]:
-		var tex_rect: TextureRect = preview_root.get_node_or_null(slot.capitalize())
-		if tex_rect == null:
-			continue
-		var item: String = WorldState.get_flag("outfit_%s" % slot,
-			"body_base" if slot == "body" else options.get(slot, ["none"])[0])
-		var path := "res://assets/placeholder/%s.png" % item
-		tex_rect.texture = load(path) if item != "none" and ResourceLoader.exists(path) else null
+	var defaults := _defaults()
+	var outfit := {}
+	for slot: String in PaperDoll.LAYERS:
+		outfit[slot] = WorldState.get_flag("outfit_%s" % slot, defaults.get(slot, "none"))
+	doll.set_outfit(outfit)
+	for slot: String in outfit:
 		var label: Label = $Panel/HBox/VBox.get_node_or_null("%s/Value" % slot.capitalize())
 		if label:
-			label.text = item.trim_prefix("%s_" % slot).capitalize()
+			label.text = String(outfit[slot]).trim_prefix("%s_" % slot).capitalize()
