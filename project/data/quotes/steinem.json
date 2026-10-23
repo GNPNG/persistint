@@ -1,279 +1,431 @@
 {
   "_note": "Gloria Steinem's own words only, each checked against the page in 'url' on 2026-10-23.",
+  "_status": {
+    "claim": "Gloria Steinem died in September 2026 (unverified search claim noted in issue 84u).",
+    "finding": "Confirmed. She died on 2026-09-02 at her home in New York City, aged 92; her foundation announced it on 2026-09-03.",
+    "sources": [
+      "https://www.klcc.org/npr-obituaries/2026-09-03/gloria-steinem-trailblazing-journalist-and-activist-has-died",
+      "https://abc7news.com/story/gloria-steinem-feminist-icon-journalist-dies-92/19784007/",
+      "https://www.nbcnewyork.com/news/local/gloria-steinem-feminist-movement-leader-and-activist-dies-at-92/6543501/"
+    ],
+    "checked": "2026-10-23",
+    "game_content": "No game content changed on the basis of this finding."
+  },
+  "_verification": {
+    "method": "Verbatim check on 2026-10-23: every source page was downloaded as raw HTML/PDF (Wayback Machine snapshot where the live site refuses non-browser requests) and each quote's text was string-matched against the page text, ignoring only quote-mark/dash typography. Aggregator pages (Goodreads, Wikiquote, quote listicles) were also searched for a primary source; quotes found only on aggregators are verified=false.",
+    "fields": "per quote: verified, checked_url (page the wording was matched on), primary_source (when not the listed url), note, was (original text when corrected)",
+    "verified": 22,
+    "unverified": 22,
+    "corrected": 2,
+    "total": 44,
+    "date": "2026-10-23",
+    "rule": "Only quotes with verified=true may be used in game (tests/test_quotes_vv.gd)."
+  },
   "quotes": [
     {
       "text": "The truth will set you free, but first it will piss you off!",
       "source": "Title of her 2019 book; she used the line in speeches by 1998-99",
       "url": "https://msmagazine.com/2026/09/04/gloria-steinem-quotes-feminism-roe-trump/",
       "aggregator": true,
-      "note": "Saying predates Steinem (in circulation by 1990, per Quote Investigator); she popularized it and used it as her 2019 book title."
+      "verified": true,
+      "checked_url": "https://quoteinvestigator.com/2014/09/04/truth-free/",
+      "primary_source": "https://quoteinvestigator.com/2014/09/04/truth-free/",
+      "note": "Saying predates Steinem (in circulation by 1990, per Quote Investigator); she popularized it and used it as her 2019 book title, which the publisher's page prints as 'The Truth Will Set You Free, But First It Will Piss You Off!'. Checked against a transcript/republication, not the original broadcaster or publisher."
     },
     {
       "text": "I'm gonna make a button some day that says, 'The truth will set you free, but it's gonna piss you off first.'",
       "source": "Speech reported in The Pantagraph, Feb 1999",
       "url": "https://quoteinvestigator.com/2014/09/04/truth-free/",
       "aggregator": false,
-      "note": "Wording is the newspaper's report of her speech; saying not originated by Steinem."
+      "verified": true,
+      "checked_url": "https://quoteinvestigator.com/2014/09/04/truth-free/",
+      "note": "Wording is the newspaper's report of her speech; saying not originated by Steinem. Checked against a transcript/republication, not the original broadcaster or publisher."
     },
     {
       "text": "A woman without a man is like a fish without a bicycle.",
       "source": "Campaign button slogan, 1970s",
       "url": "https://quoteinvestigator.com/2016/10/18/fish-bicycle/",
       "aggregator": false,
-      "note": "Widely misattributed to Steinem. She credited Irina Dunn (Australian activist, graffito c.1970); a 1977 Iowa newspaper credited Florynce Kennedy; earlier variants exist."
+      "verified": true,
+      "checked_url": "https://quoteinvestigator.com/2016/10/18/fish-bicycle/",
+      "note": "Widely misattributed to Steinem. She credited Irina Dunn (Australian activist, graffito c.1970); a 1977 Iowa newspaper credited Florynce Kennedy; earlier variants exist. Checked against a transcript/republication, not the original broadcaster or publisher."
     },
     {
       "text": "This is no simple reform.",
       "source": "Address to the Women of America, 10 Jul 1971",
       "url": "https://speakola.com/ideas/gloria-steinem-address-to-women-of-america-1971",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://speakola.com/ideas/gloria-steinem-address-to-women-of-america-1971",
+      "note": "Checked against a transcript/republication, not the original broadcaster or publisher."
     },
     {
       "text": "It really is a revolution.",
       "source": "Address to the Women of America, 10 Jul 1971",
       "url": "https://speakola.com/ideas/gloria-steinem-address-to-women-of-america-1971",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://speakola.com/ideas/gloria-steinem-address-to-women-of-america-1971",
+      "note": "Checked against a transcript/republication, not the original broadcaster or publisher."
     },
     {
       "text": "We are talking about a society in which there will be no roles other than those chosen or those earned.",
       "source": "Address to the Women of America, 10 Jul 1971",
       "url": "https://speakola.com/ideas/gloria-steinem-address-to-women-of-america-1971",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://speakola.com/ideas/gloria-steinem-address-to-women-of-america-1971",
+      "note": "Checked against a transcript/republication, not the original broadcaster or publisher."
     },
     {
       "text": "We have people power and we will use it.",
       "source": "Women's March on Washington speech, 21 Jan 2017",
       "url": "https://speakola.com/political/gloria-steinem-womens-march-washington-2017",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://speakola.com/political/gloria-steinem-womens-march-washington-2017",
+      "note": "Checked against a transcript/republication, not the original broadcaster or publisher."
     },
     {
       "text": "We've elected an impossible president, we're never going home.",
       "source": "Women's March on Washington speech, 21 Jan 2017",
       "url": "https://speakola.com/political/gloria-steinem-womens-march-washington-2017",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://speakola.com/political/gloria-steinem-womens-march-washington-2017",
+      "note": "Checked against a transcript/republication, not the original broadcaster or publisher."
     },
     {
       "text": "God may be in the details, but the goddess is in connections.",
       "source": "Women's March on Washington speech, 21 Jan 2017",
       "url": "https://speakola.com/political/gloria-steinem-womens-march-washington-2017",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://speakola.com/political/gloria-steinem-womens-march-washington-2017",
+      "note": "Checked against a transcript/republication, not the original broadcaster or publisher."
     },
     {
       "text": "If you force Muslims to register, we will all register as Muslims.",
       "source": "Women's March on Washington speech, 21 Jan 2017",
       "url": "https://speakola.com/political/gloria-steinem-womens-march-washington-2017",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://speakola.com/political/gloria-steinem-womens-march-washington-2017",
+      "note": "Checked against a transcript/republication, not the original broadcaster or publisher."
     },
     {
-      "text": "Remember, the Constitution doesn't begin with, 'I, the president.' It begins with, 'We, the people.'",
+      "text": "And remember the constitution does not begin with \"I, the president.\" It begins with \"We, the people.\"",
+      "was": "Remember, the Constitution doesn't begin with, 'I, the president.' It begins with, 'We, the people.'",
       "source": "Women's March on Washington speech, 21 Jan 2017",
       "url": "https://nz.news.yahoo.com/gloria-steinem-15-most-powerful-172518976.html",
-      "aggregator": true
+      "aggregator": true,
+      "verified": true,
+      "checked_url": "https://speakola.com/political/gloria-steinem-womens-march-washington-2017",
+      "primary_source": "https://speakola.com/political/gloria-steinem-womens-march-washington-2017",
+      "note": "Yahoo listicle wording was paraphrased; replaced with the speech transcript wording. Checked against a transcript/republication, not the original broadcaster or publisher."
     },
     {
       "text": "Change is like a house—you can’t build it from the top down, only from the bottom up.",
       "source": "Interview, feminist.com",
       "url": "https://www.feminist.com/resources/artspeech/interviews/timeless-wisdom-from-gloria-steinem.html",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.feminist.com/resources/artspeech/interviews/timeless-wisdom-from-gloria-steinem.html",
+      "note": ""
     },
     {
       "text": "Progress is not automatic—that's what movements are for.",
       "source": "Interview, feminist.com",
       "url": "https://www.feminist.com/resources/artspeech/interviews/timeless-wisdom-from-gloria-steinem.html",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.feminist.com/resources/artspeech/interviews/timeless-wisdom-from-gloria-steinem.html",
+      "note": ""
     },
     {
       "text": "The voting booth is still the only place that a pauper equals a billionaire, and any woman equals any man.",
       "source": "Interview, feminist.com",
       "url": "https://www.feminist.com/resources/artspeech/interviews/timeless-wisdom-from-gloria-steinem.html",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.feminist.com/resources/artspeech/interviews/timeless-wisdom-from-gloria-steinem.html",
+      "note": ""
     },
     {
       "text": "But this is a revolution, not a public relations movement.",
       "source": "Interview, feminist.com",
       "url": "https://www.feminist.com/resources/artspeech/interviews/timeless-wisdom-from-gloria-steinem.html",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.feminist.com/resources/artspeech/interviews/timeless-wisdom-from-gloria-steinem.html",
+      "note": ""
     },
     {
       "text": "I’m skeptical, but optimistic. I’m not pessimistic because I think pessimism defeats you before you start.",
       "source": "Interview, feminist.com",
       "url": "https://www.feminist.com/resources/artspeech/interviews/timeless-wisdom-from-gloria-steinem.html",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.feminist.com/resources/artspeech/interviews/timeless-wisdom-from-gloria-steinem.html",
+      "note": ""
     },
     {
       "text": "We’re on the cusp of something big, something that says we’re a circle, and not hierarchical.",
       "source": "Interview, feminist.com",
       "url": "https://www.feminist.com/resources/artspeech/interviews/timeless-wisdom-from-gloria-steinem.html",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.feminist.com/resources/artspeech/interviews/timeless-wisdom-from-gloria-steinem.html",
+      "note": ""
     },
     {
       "text": "A feminist is anyone who recognizes the equality and full humanity of women and men.",
       "source": "Outrageous Acts and Everyday Rebellions (1983)",
       "url": "https://msmagazine.com/2026/09/04/gloria-steinem-quotes-feminism-roe-trump/",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://msmagazine.com/2026/09/04/gloria-steinem-quotes-feminism-roe-trump/",
+      "note": "Aggregator-only: wording appears on msmagazine.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "We are the women our parents warned us against, and we are proud.",
       "source": "Speech at ERA March, 1978",
       "url": "https://msmagazine.com/2026/09/04/gloria-steinem-quotes-feminism-roe-trump/",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://msmagazine.com/2026/09/04/gloria-steinem-quotes-feminism-roe-trump/",
+      "note": "Aggregator-only: wording appears on msmagazine.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "Women may be the one group that grows more radical with age.",
       "source": "Outrageous Acts and Everyday Rebellions (1983)",
       "url": "https://msmagazine.com/2026/09/04/gloria-steinem-quotes-feminism-roe-trump/",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://msmagazine.com/2026/09/04/gloria-steinem-quotes-feminism-roe-trump/",
+      "note": "Aggregator-only: wording appears on msmagazine.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "Men should think twice before making widowhood woman's only path to power.",
       "source": "Outrageous Acts and Everyday Rebellions (1983)",
       "url": "https://msmagazine.com/2026/09/04/gloria-steinem-quotes-feminism-roe-trump/",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://msmagazine.com/2026/09/04/gloria-steinem-quotes-feminism-roe-trump/",
+      "note": "Aggregator-only: wording appears on msmagazine.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "Many of us have raised our daughters more like our sons, but too few have raised our sons more like our daughters.",
       "source": "Outrageous Acts and Everyday Rebellions (1983)",
       "url": "https://msmagazine.com/2026/09/04/gloria-steinem-quotes-feminism-roe-trump/",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://msmagazine.com/2026/09/04/gloria-steinem-quotes-feminism-roe-trump/",
+      "note": "Aggregator-only: wording appears on msmagazine.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "If feminism means anything, it means taking responsibility for ourselves: for our own lives and actions.",
       "source": "The Trouble With Rich Women (2017)",
       "url": "https://msmagazine.com/2026/09/04/gloria-steinem-quotes-feminism-roe-trump/",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://msmagazine.com/2026/09/04/gloria-steinem-quotes-feminism-roe-trump/",
+      "note": "Aggregator-only: wording appears on msmagazine.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
-      "text": "A liberated woman is one who has sex before marriage and a job after.",
-      "source": "New York magazine, 1969",
+      "text": "Once upon a time -- say, ten or even five years ago -- a Liberated Woman was somebody who had sex before marriage and a job afterward.",
+      "was": "A liberated woman is one who has sex before marriage and a job after.",
+      "source": "'After Black Power, Women's Liberation', New York magazine, 1969-04-07",
       "url": "https://msmagazine.com/2026/09/04/gloria-steinem-quotes-feminism-roe-trump/",
-      "aggregator": true
+      "aggregator": true,
+      "verified": true,
+      "checked_url": "https://nymag.com/news/politics/46802/",
+      "primary_source": "https://nymag.com/news/politics/46802/",
+      "note": "The popular one-liner is a paraphrase; this is the article's own sentence."
     },
     {
       "text": "Revolutions that last don't happen from the top down. They happen from the bottom up.",
       "source": "Interview magazine, 2011",
       "url": "https://msmagazine.com/2026/09/04/gloria-steinem-quotes-feminism-roe-trump/",
-      "aggregator": true
+      "aggregator": true,
+      "verified": true,
+      "checked_url": "https://interviewmagazine.com/culture/gloria-steinem-takes-questions-from-25-formidable-friends-and-fans",
+      "primary_source": "https://interviewmagazine.com/culture/gloria-steinem-takes-questions-from-25-formidable-friends-and-fans",
+      "note": "Interview magazine's own later article quotes her 2011 conversation with Maria Shriver verbatim."
     },
     {
       "text": "Women have always taken power over our own bodies, and we will keep right on.",
       "source": "Associated Press interview, June 2022",
       "url": "https://msmagazine.com/2026/09/04/gloria-steinem-quotes-feminism-roe-trump/",
-      "aggregator": true
+      "aggregator": true,
+      "verified": true,
+      "checked_url": "https://web.archive.org/web/20220811151321/https://www.washingtontimes.com/news/2022/jun/26/a-sucker-punch-some-women-fear-setback-to-hard-won/",
+      "primary_source": "https://www.washingtontimes.com/news/2022/jun/26/a-sucker-punch-some-women-fear-setback-to-hard-won/",
+      "note": "Written by email to the Associated Press after Dobbs (June 2022); AP story as republished by the Washington Times. Live page refuses non-browser fetches (HTTP 406/403); wording checked against the Wayback Machine snapshot of the same URL."
     },
     {
       "text": "Women are becoming the men we wanted to marry. (But too few men are becoming the women they wanted to marry)",
       "source": "Quoted in The Truth Will Set You Free, But First It Will Piss You Off (2019)",
       "url": "https://www.goodreads.com/work/quotes/72309450-the-truth-will-set-you-free-but-first-it-will-piss-you-off-thoughts-o",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.goodreads.com/work/quotes/72309450-the-truth-will-set-you-free-but-first-it-will-piss-you-off-thoughts-o",
+      "note": "Aggregator-only: wording appears on www.goodreads.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "For women, the only alternative to being a feminist is being a masochist.",
       "source": "Quoted in The Truth Will Set You Free, But First It Will Piss You Off (2019)",
       "url": "https://www.goodreads.com/work/quotes/72309450-the-truth-will-set-you-free-but-first-it-will-piss-you-off-thoughts-o",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.goodreads.com/work/quotes/72309450-the-truth-will-set-you-free-but-first-it-will-piss-you-off-thoughts-o",
+      "note": "Aggregator-only: wording appears on www.goodreads.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "So many of us are living out the unlived lives of our mothers.",
       "source": "Quoted in The Truth Will Set You Free, But First It Will Piss You Off (2019)",
       "url": "https://www.goodreads.com/work/quotes/72309450-the-truth-will-set-you-free-but-first-it-will-piss-you-off-thoughts-o",
-      "aggregator": true
+      "aggregator": true,
+      "verified": true,
+      "checked_url": "https://www.penguinrandomhouse.com/books/611353/the-truth-will-set-you-free-but-first-it-will-piss-you-off-by-gloria-steinem/9780593132692",
+      "primary_source": "https://www.penguinrandomhouse.com/books/611353/the-truth-will-set-you-free-but-first-it-will-piss-you-off-by-gloria-steinem/9780593132692",
+      "note": ""
     },
     {
       "text": "Whatever you want to do, just do it. Making a damn fool of yourself is absolutely essential.",
       "source": "Quoted in The Truth Will Set You Free, But First It Will Piss You Off (2019)",
       "url": "https://www.goodreads.com/work/quotes/72309450-the-truth-will-set-you-free-but-first-it-will-piss-you-off-thoughts-o",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.goodreads.com/work/quotes/72309450-the-truth-will-set-you-free-but-first-it-will-piss-you-off-thoughts-o",
+      "note": "Aggregator-only: wording appears on www.goodreads.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "Marriage has worked better for men than for women. The two happiest groups are married men and unmarried women.",
       "source": "Quoted in The Truth Will Set You Free, But First It Will Piss You Off (2019)",
       "url": "https://www.goodreads.com/work/quotes/72309450-the-truth-will-set-you-free-but-first-it-will-piss-you-off-thoughts-o",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.goodreads.com/work/quotes/72309450-the-truth-will-set-you-free-but-first-it-will-piss-you-off-thoughts-o",
+      "note": "Aggregator-only: wording appears on www.goodreads.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "Your daughters are watching you.",
       "source": "Quoted in The Truth Will Set You Free, But First It Will Piss You Off (2019)",
       "url": "https://www.goodreads.com/work/quotes/72309450-the-truth-will-set-you-free-but-first-it-will-piss-you-off-thoughts-o",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.goodreads.com/work/quotes/72309450-the-truth-will-set-you-free-but-first-it-will-piss-you-off-thoughts-o",
+      "note": "Aggregator-only: wording appears on www.goodreads.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "The best thing about self-defense is knowing there is a self worth defending.",
       "source": "Quoted in The Truth Will Set You Free, But First It Will Piss You Off (2019)",
       "url": "https://www.goodreads.com/work/quotes/72309450-the-truth-will-set-you-free-but-first-it-will-piss-you-off-thoughts-o",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.goodreads.com/work/quotes/72309450-the-truth-will-set-you-free-but-first-it-will-piss-you-off-thoughts-o",
+      "note": "Aggregator-only: wording appears on www.goodreads.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "Beware of any motto that glorifies the past. It's code for restoring hierarchy. For example: \"Make America great again.\"",
       "source": "Quoted in The Truth Will Set You Free, But First It Will Piss You Off (2019)",
       "url": "https://www.goodreads.com/work/quotes/72309450-the-truth-will-set-you-free-but-first-it-will-piss-you-off-thoughts-o",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.goodreads.com/work/quotes/72309450-the-truth-will-set-you-free-but-first-it-will-piss-you-off-thoughts-o",
+      "note": "Aggregator-only: wording appears on www.goodreads.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "Women have to learn how to talk as much as we listen. Men have to learn how to listen as much as they talk.",
       "source": "Quoted in The Truth Will Set You Free, But First It Will Piss You Off (2019)",
       "url": "https://www.goodreads.com/work/quotes/72309450-the-truth-will-set-you-free-but-first-it-will-piss-you-off-thoughts-o",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.goodreads.com/work/quotes/72309450-the-truth-will-set-you-free-but-first-it-will-piss-you-off-thoughts-o",
+      "note": "Aggregator-only: wording appears on www.goodreads.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "There is no virtue in being on the same page if it's the wrong page.",
       "source": "Quoted in The Truth Will Set You Free, But First It Will Piss You Off (2019)",
       "url": "https://www.goodreads.com/work/quotes/72309450-the-truth-will-set-you-free-but-first-it-will-piss-you-off-thoughts-o",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.goodreads.com/work/quotes/72309450-the-truth-will-set-you-free-but-first-it-will-piss-you-off-thoughts-o",
+      "note": "Aggregator-only: wording appears on www.goodreads.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "None of us can be liberated if other groups are not.",
       "source": "Vassar College commencement address, 1970",
       "url": "https://www.today.com/life/quotes/gloria-steinem-quotes-rcna595865",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.today.com/life/quotes/gloria-steinem-quotes-rcna595865",
+      "note": "Aggregator-only: wording appears on nz.news.yahoo.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "The future depends entirely on what each of us does every day; a movement is only people moving.",
       "source": "Revolution from Within (1992)",
       "url": "https://www.today.com/life/quotes/gloria-steinem-quotes-rcna595865",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.today.com/life/quotes/gloria-steinem-quotes-rcna595865",
+      "note": "Aggregator-only: wording appears on www.today.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "Once we give up searching for approval we often find it easier to earn respect.",
       "source": "Outrageous Acts and Everyday Rebellions (1983)",
       "url": "https://www.today.com/life/quotes/gloria-steinem-quotes-rcna595865",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.today.com/life/quotes/gloria-steinem-quotes-rcna595865",
+      "note": "Aggregator-only: wording appears on nz.news.yahoo.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "Empathy is the most radical of human emotions.",
       "source": "The Makers",
       "url": "https://www.today.com/life/quotes/gloria-steinem-quotes-rcna595865",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.today.com/life/quotes/gloria-steinem-quotes-rcna595865",
+      "note": "Aggregator-only: wording appears on nz.news.yahoo.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "Feminism isn't called the longest revolution for nothing.",
       "source": "Ms. magazine, 1997",
       "url": "https://www.today.com/life/quotes/gloria-steinem-quotes-rcna595865",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.today.com/life/quotes/gloria-steinem-quotes-rcna595865",
+      "note": "Aggregator-only: wording appears on www.today.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "Don’t think about making women fit the world — think about making the world fit women.",
       "source": "Yale University, 2010",
       "url": "https://www.today.com/life/quotes/gloria-steinem-quotes-rcna595865",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.today.com/life/quotes/gloria-steinem-quotes-rcna595865",
+      "note": "Aggregator-only: wording appears on www.today.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "Power can be taken, but not given. The process of the taking is empowerment in itself.",
       "source": "Outrageous Acts and Everyday Rebellions (1983)",
       "url": "https://nz.news.yahoo.com/gloria-steinem-15-most-powerful-172518976.html",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://nz.news.yahoo.com/gloria-steinem-15-most-powerful-172518976.html",
+      "note": "Aggregator-only: wording appears on nz.news.yahoo.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "We are linked, not ranked.",
       "source": "Steinem catchphrase (source not specified by page)",
       "url": "https://nz.news.yahoo.com/gloria-steinem-15-most-powerful-172518976.html",
-      "aggregator": true
+      "aggregator": true,
+      "verified": true,
+      "checked_url": "https://www.feminist.com/resources/artspeech/interviews/timeless-wisdom-from-gloria-steinem.html",
+      "primary_source": "https://www.feminist.com/resources/artspeech/interviews/timeless-wisdom-from-gloria-steinem.html",
+      "note": ""
     }
-  ],
-  "_verification": {
-    "method": "WebFetch/WebSearch extraction on 2026-10-23 (tool output, not raw page text); wording not character-checked against the original page",
-    "verified": "2026-10-23",
-    "expires": "never for listed source/date; wording re-check required before use of any line",
-    "aggregator_only": 29,
-    "total": 44
-  }
+  ]
 }

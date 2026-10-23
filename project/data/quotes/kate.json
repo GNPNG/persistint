@@ -1,174 +1,258 @@
 {
   "_note": "Captain Kate McCue's own words only, each checked against the page in 'url' on 2026-10-23.",
+  "_verification": {
+    "method": "Verbatim check on 2026-10-23: every source page was downloaded as raw HTML/PDF (Wayback Machine snapshot where the live site refuses non-browser requests) and each quote's text was string-matched against the page text, ignoring only quote-mark/dash typography. Aggregator pages (Goodreads, Wikiquote, quote listicles) were also searched for a primary source; quotes found only on aggregators are verified=false.",
+    "fields": "per quote: verified, checked_url (page the wording was matched on), primary_source (when not the listed url), note, was (original text when corrected)",
+    "verified": 27,
+    "unverified": 0,
+    "corrected": 0,
+    "total": 27,
+    "date": "2026-10-23",
+    "rule": "Only quotes with verified=true may be used in game (tests/test_quotes_vv.gd)."
+  },
   "quotes": [
     {
       "text": "I am the CEO of the ship.",
       "source": "AAA Magazines Q&A with Captain Kate McCue, c. 2020-21",
       "url": "https://www.ace.aaa.com/content/ace-www/en/publications/cruising/captain-kate-mccue-interview.html",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.ace.aaa.com/content/ace-www/en/publications/cruising/captain-kate-mccue-interview.html",
+      "note": ""
     },
     {
       "text": "I use my platform to answer questions and normalize having a woman in this position.",
       "source": "AAA Magazines Q&A with Captain Kate McCue, c. 2020-21",
       "url": "https://www.ace.aaa.com/content/ace-www/en/publications/cruising/captain-kate-mccue-interview.html",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.ace.aaa.com/content/ace-www/en/publications/cruising/captain-kate-mccue-interview.html",
+      "note": ""
     },
     {
       "text": "I believe the more open we are about it, the easier it is going to be for women coming up.",
       "source": "AAA Magazines Q&A with Captain Kate McCue, c. 2020-21",
       "url": "https://www.ace.aaa.com/content/ace-www/en/publications/cruising/captain-kate-mccue-interview.html",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.ace.aaa.com/content/ace-www/en/publications/cruising/captain-kate-mccue-interview.html",
+      "note": ""
     },
     {
       "text": "I would just love to be the captain.",
       "source": "AAA Magazines Q&A with Captain Kate McCue, c. 2020-21",
       "url": "https://www.ace.aaa.com/content/ace-www/en/publications/cruising/captain-kate-mccue-interview.html",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.ace.aaa.com/content/ace-www/en/publications/cruising/captain-kate-mccue-interview.html",
+      "note": ""
     },
     {
       "text": "My name tag only says \"Captain.\"",
       "source": "AAA Magazines Q&A with Captain Kate McCue, c. 2020-21",
       "url": "https://www.ace.aaa.com/content/ace-www/en/publications/cruising/captain-kate-mccue-interview.html",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.ace.aaa.com/content/ace-www/en/publications/cruising/captain-kate-mccue-interview.html",
+      "note": ""
     },
     {
       "text": "Male captains are always addressed as captain.",
       "source": "AAA Magazines Q&A with Captain Kate McCue, c. 2020-21",
       "url": "https://www.ace.aaa.com/content/ace-www/en/publications/cruising/captain-kate-mccue-interview.html",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.ace.aaa.com/content/ace-www/en/publications/cruising/captain-kate-mccue-interview.html",
+      "note": ""
     },
     {
       "text": "I worked hard for the captain title.",
       "source": "AAA Magazines Q&A with Captain Kate McCue, c. 2020-21",
       "url": "https://www.ace.aaa.com/content/ace-www/en/publications/cruising/captain-kate-mccue-interview.html",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.ace.aaa.com/content/ace-www/en/publications/cruising/captain-kate-mccue-interview.html",
+      "note": ""
     },
     {
       "text": "So, I am living the dream now for both of us.",
       "source": "AAA Magazines Q&A with Captain Kate McCue, c. 2020-21",
       "url": "https://www.ace.aaa.com/content/ace-www/en/publications/cruising/captain-kate-mccue-interview.html",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.ace.aaa.com/content/ace-www/en/publications/cruising/captain-kate-mccue-interview.html",
+      "note": ""
     },
     {
       "text": "It is definitely a marathon, not a sprint.",
       "source": "AAA Magazines Q&A with Captain Kate McCue, c. 2020-21",
       "url": "https://www.ace.aaa.com/content/ace-www/en/publications/cruising/captain-kate-mccue-interview.html",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.ace.aaa.com/content/ace-www/en/publications/cruising/captain-kate-mccue-interview.html",
+      "note": ""
     },
     {
       "text": "I want to be able to show a behind-the-scenes view of how things really are on a cruise ship.",
       "source": "AAA Magazines Q&A with Captain Kate McCue, c. 2020-21",
       "url": "https://www.ace.aaa.com/content/ace-www/en/publications/cruising/captain-kate-mccue-interview.html",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.ace.aaa.com/content/ace-www/en/publications/cruising/captain-kate-mccue-interview.html",
+      "note": ""
     },
     {
       "text": "The Captain is like the CEO of the ship.",
       "source": "Wartsila 'Women at the helm: Captain Kate McCue'",
       "url": "https://www.wartsila.com/insights/article/women-at-the-helm-captain-kate-mccue",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.wartsila.com/insights/article/women-at-the-helm-captain-kate-mccue",
+      "note": ""
     },
     {
       "text": "The formula for a woman in the cruise industry to succeed is the same as in any industry.",
       "source": "Wartsila 'Women at the helm: Captain Kate McCue'",
       "url": "https://www.wartsila.com/insights/article/women-at-the-helm-captain-kate-mccue",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.wartsila.com/insights/article/women-at-the-helm-captain-kate-mccue",
+      "note": ""
     },
     {
       "text": "Surround yourself with diversity, be your authentic self, approachable and vulnerable.",
       "source": "Wartsila 'Women at the helm: Captain Kate McCue'",
       "url": "https://www.wartsila.com/insights/article/women-at-the-helm-captain-kate-mccue",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.wartsila.com/insights/article/women-at-the-helm-captain-kate-mccue",
+      "note": ""
     },
     {
       "text": "Be kind, be supportive, and pay it forward.",
       "source": "Wartsila 'Women at the helm: Captain Kate McCue'",
       "url": "https://www.wartsila.com/insights/article/women-at-the-helm-captain-kate-mccue",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.wartsila.com/insights/article/women-at-the-helm-captain-kate-mccue",
+      "note": ""
     },
     {
       "text": "You don't need to follow in anyone else's footsteps.",
       "source": "Wartsila 'Women at the helm: Captain Kate McCue'",
       "url": "https://www.wartsila.com/insights/article/women-at-the-helm-captain-kate-mccue",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.wartsila.com/insights/article/women-at-the-helm-captain-kate-mccue",
+      "note": ""
     },
     {
       "text": "Forge your own path by bringing your unique personalities and perspectives to every job you do.",
       "source": "Wartsila 'Women at the helm: Captain Kate McCue'",
       "url": "https://www.wartsila.com/insights/article/women-at-the-helm-captain-kate-mccue",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.wartsila.com/insights/article/women-at-the-helm-captain-kate-mccue",
+      "note": ""
     },
     {
       "text": "Everyone has a stereotypical idea of a captain and I'm missing some pounds.",
       "source": "CBS This Morning / CBS News, Sept 2015",
       "url": "https://www.cbsnews.com/news/kate-mccue-first-american-woman-to-captain-cruise-ship-celebrity-summit/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.cbsnews.com/news/kate-mccue-first-american-woman-to-captain-cruise-ship-celebrity-summit/",
+      "note": ""
     },
     {
       "text": "I don't have a beard or a parrot but I think when the guests meet me they're pleasantly surprised",
       "source": "CBS This Morning / CBS News, Sept 2015",
       "url": "https://www.cbsnews.com/news/kate-mccue-first-american-woman-to-captain-cruise-ship-celebrity-summit/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.cbsnews.com/news/kate-mccue-first-american-woman-to-captain-cruise-ship-celebrity-summit/",
+      "note": ""
     },
     {
       "text": "Well every sailor has to have a tattoo, right?",
       "source": "CBS This Morning / CBS News, Sept 2015",
       "url": "https://www.cbsnews.com/news/kate-mccue-first-american-woman-to-captain-cruise-ship-celebrity-summit/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.cbsnews.com/news/kate-mccue-first-american-woman-to-captain-cruise-ship-celebrity-summit/",
+      "note": ""
     },
     {
       "text": "This is my anchoring to keep me grounded.",
       "source": "CBS This Morning / CBS News, Sept 2015",
       "url": "https://www.cbsnews.com/news/kate-mccue-first-american-woman-to-captain-cruise-ship-celebrity-summit/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.cbsnews.com/news/kate-mccue-first-american-woman-to-captain-cruise-ship-celebrity-summit/",
+      "note": ""
     },
     {
       "text": "I think this is the greatest job in the world...traveling, meeting all these people, getting paid for it.",
       "source": "CBS This Morning / CBS News, Sept 2015",
       "url": "https://www.cbsnews.com/news/kate-mccue-first-american-woman-to-captain-cruise-ship-celebrity-summit/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.cbsnews.com/news/kate-mccue-first-american-woman-to-captain-cruise-ship-celebrity-summit/",
+      "note": ""
     },
     {
       "text": "Becoming the first female American captain of a cruise ship has been a goal of mine for as long as I can remember,",
       "source": "Celebrity Cruises release, as quoted by Fox News, 2015",
       "url": "https://www.foxnews.com/travel/celebrity-cruises-appoints-first-american-female-captain",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.foxnews.com/travel/celebrity-cruises-appoints-first-american-female-captain",
+      "note": ""
     },
     {
       "text": "Just as with any leadership position, I believe that there shouldn't be a job that you're not willing to do.",
       "source": "ROL Cruise interview with Captain Kate McCue",
       "url": "https://www.rolcruise.co.uk/blog/interview-with-captain-kate-mccue",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.rolcruise.co.uk/blog/interview-with-captain-kate-mccue",
+      "note": ""
     },
     {
       "text": "I would not consider myself special.",
       "source": "Travel with Style interview with Captain Kate McCue",
       "url": "https://travelwith.style/interview-with-captain-kate-mccue/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://travelwith.style/interview-with-captain-kate-mccue/",
+      "note": ""
     },
     {
       "text": "Being a minority because of gender, race, religion, cultural background, sexual orientation etc. is irrelevant.",
       "source": "Travel with Style interview with Captain Kate McCue",
       "url": "https://travelwith.style/interview-with-captain-kate-mccue/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://travelwith.style/interview-with-captain-kate-mccue/",
+      "note": ""
     },
     {
       "text": "Everything falls to a captain.",
       "source": "Travel with Style interview with Captain Kate McCue",
       "url": "https://travelwith.style/interview-with-captain-kate-mccue/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://travelwith.style/interview-with-captain-kate-mccue/",
+      "note": ""
     },
     {
       "text": "Even if the pizza is cold that’s my problem.",
       "source": "Travel with Style interview with Captain Kate McCue",
       "url": "https://travelwith.style/interview-with-captain-kate-mccue/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://travelwith.style/interview-with-captain-kate-mccue/",
+      "note": ""
     }
-  ],
-  "_verification": {
-    "method": "WebFetch/WebSearch extraction on 2026-10-23 (tool output, not raw page text); wording not character-checked against the original page",
-    "verified": "2026-10-23",
-    "expires": "never for listed source/date; wording re-check required before use of any line",
-    "aggregator_only": 0,
-    "total": 27
-  }
+  ]
 }

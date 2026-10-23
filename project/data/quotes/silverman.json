@@ -1,216 +1,321 @@
 {
   "_note": "Sarah Silverman's own words only, each checked against the page in 'url' on 2026-10-23.",
+  "_verification": {
+    "method": "Verbatim check on 2026-10-23: every source page was downloaded as raw HTML/PDF (Wayback Machine snapshot where the live site refuses non-browser requests) and each quote's text was string-matched against the page text, ignoring only quote-mark/dash typography. Aggregator pages (Goodreads, Wikiquote, quote listicles) were also searched for a primary source; quotes found only on aggregators are verified=false.",
+    "fields": "per quote: verified, checked_url (page the wording was matched on), primary_source (when not the listed url), note, was (original text when corrected)",
+    "verified": 5,
+    "unverified": 29,
+    "corrected": 0,
+    "total": 34,
+    "date": "2026-10-23",
+    "rule": "Only quotes with verified=true may be used in game (tests/test_quotes_vv.gd)."
+  },
   "quotes": [
     {
       "text": "Can I just say to the 'Bernie or bust' people, you're being ridiculous.",
       "source": "2016 Democratic National Convention speech, 2016-07-25",
       "url": "https://www.tvguide.com/news/sarah-silverman-dnc-democratic-national-convention-speech-bernie-sanders-or-bust/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.tvguide.com/news/sarah-silverman-dnc-democratic-national-convention-speech-bernie-sanders-or-bust/",
+      "note": ""
     },
     {
       "text": "I will vote for Hillary with gusto",
       "source": "2016 Democratic National Convention speech, 2016-07-25",
       "url": "https://www.mic.com/articles/149743/at-dnc-2016-sarah-silverman-has-a-message-for-bernie-or-bust-you-re-being-ridiculous",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.mic.com/articles/149743/at-dnc-2016-sarah-silverman-has-a-message-for-bernie-or-bust-you-re-being-ridiculous",
+      "note": ""
     },
     {
       "text": "I'm proud to be a part of Bernie's movement",
       "source": "2016 Democratic National Convention speech, 2016-07-25",
       "url": "https://www.mic.com/articles/149743/at-dnc-2016-sarah-silverman-has-a-message-for-bernie-or-bust-you-re-being-ridiculous",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.mic.com/articles/149743/at-dnc-2016-sarah-silverman-has-a-message-for-bernie-or-bust-you-re-being-ridiculous",
+      "note": ""
     },
     {
       "text": "a vital part of that movement is making absolutely sure that Hillary Clinton is our next president of the United States.",
       "source": "2016 Democratic National Convention speech, 2016-07-25",
       "url": "https://www.mic.com/articles/149743/at-dnc-2016-sarah-silverman-has-a-message-for-bernie-or-bust-you-re-being-ridiculous",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.mic.com/articles/149743/at-dnc-2016-sarah-silverman-has-a-message-for-bernie-or-bust-you-re-being-ridiculous",
+      "note": ""
     },
     {
       "text": "It wasn't scripted at all",
       "source": "Interview on the DNC remark, 2016-07-26",
       "url": "https://www.tvguide.com/news/sarah-silverman-dnc-democratic-national-convention-speech-bernie-sanders-or-bust/",
-      "aggregator": false
+      "aggregator": false,
+      "verified": true,
+      "checked_url": "https://www.tvguide.com/news/sarah-silverman-dnc-democratic-national-convention-speech-bernie-sanders-or-bust/",
+      "note": ""
     },
     {
       "text": "I wish people would see me for who I really am – I'm white!",
       "source": "Jesus Is Magic, 2005",
       "url": "https://en.wikiquote.org/wiki/Sarah_Silverman",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://en.wikiquote.org/wiki/Sarah_Silverman",
+      "note": "Aggregator-only: wording appears on en.wikiquote.org (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "If my boyfriend and I ever have a kid, we'll just be honest with it.",
       "source": "Jesus Is Magic, 2005",
       "url": "https://en.wikiquote.org/wiki/Sarah_Silverman",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://en.wikiquote.org/wiki/Sarah_Silverman",
+      "note": "Aggregator-only: wording appears on en.wikiquote.org (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "Jesus is magic, you know, because he turned water to wine",
       "source": "Jesus Is Magic, 2005",
       "url": "https://en.wikiquote.org/wiki/Sarah_Silverman",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://en.wikiquote.org/wiki/Sarah_Silverman",
+      "note": "Aggregator-only: wording appears on en.wikiquote.org (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "When God gives you AIDS – and God does give you AIDS – make lemon-AIDS!",
       "source": "Jesus Is Magic, 2005",
       "url": "https://en.wikiquote.org/wiki/Sarah_Silverman",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://en.wikiquote.org/wiki/Sarah_Silverman",
+      "note": "Aggregator-only: wording appears on en.wikiquote.org (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "I want to get an abortion. But my boyfriend and I are having trouble conceiving.",
       "source": "Jesus Is Magic, 2005",
       "url": "https://en.wikiquote.org/wiki/Sarah_Silverman",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://en.wikiquote.org/wiki/Sarah_Silverman",
+      "note": "Aggregator-only: wording appears on en.wikiquote.org (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "I'm so glad Courtney Love is here; I left my crack in my other purse.",
       "source": "Comedy Central Roast of Pamela Anderson, 2005",
       "url": "https://en.wikiquote.org/wiki/Sarah_Silverman",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://en.wikiquote.org/wiki/Sarah_Silverman",
+      "note": "Aggregator-only: wording appears on en.wikiquote.org (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "You look like my friend Debbie. That's really weird … do you get that a lot?",
       "source": "Early stand-up, 1992",
       "url": "https://en.wikiquote.org/wiki/Sarah_Silverman",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://en.wikiquote.org/wiki/Sarah_Silverman",
+      "note": "Aggregator-only: wording appears on en.wikiquote.org (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "I was driving and got tired and thought this would be a good place to stop.",
       "source": "The Sarah Silverman Program (2007-2010)",
       "url": "https://en.wikiquote.org/wiki/Sarah_Silverman",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://en.wikiquote.org/wiki/Sarah_Silverman",
+      "note": "Aggregator-only: wording appears on en.wikiquote.org (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "This is AIDS. AIDS is as real as an egg.",
       "source": "The Sarah Silverman Program (2007-2010)",
       "url": "https://en.wikiquote.org/wiki/Sarah_Silverman",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://en.wikiquote.org/wiki/Sarah_Silverman",
+      "note": "Aggregator-only: wording appears on en.wikiquote.org (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "I'm afraid of angering Muslims, but not afraid of angering Jews and Christians.",
       "source": "The Bedwetter (2010)",
       "url": "https://en.wikiquote.org/wiki/Sarah_Silverman",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://en.wikiquote.org/wiki/Sarah_Silverman",
+      "note": "Aggregator-only: wording appears on en.wikiquote.org (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "It seems extremely obvious to me, but so many people asked.",
       "source": "The Bedwetter (2010)",
       "url": "https://en.wikiquote.org/wiki/Sarah_Silverman",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://en.wikiquote.org/wiki/Sarah_Silverman",
+      "note": "Aggregator-only: wording appears on en.wikiquote.org (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "Summer camp: the second worst camp for Jews.",
       "source": "The Bedwetter (2010)",
       "url": "https://www.goodreads.com/work/quotes/11141306-the-bedwetter-stories-of-courage-redemption-and-pee",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.goodreads.com/work/quotes/11141306-the-bedwetter-stories-of-courage-redemption-and-pee",
+      "note": "Aggregator-only: wording appears on www.goodreads.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "I am diagnosed with not having enough insanely-addictive drugs coursing through my body.",
       "source": "The Bedwetter (2010)",
       "url": "https://www.goodreads.com/work/quotes/11141306-the-bedwetter-stories-of-courage-redemption-and-pee",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.goodreads.com/work/quotes/11141306-the-bedwetter-stories-of-courage-redemption-and-pee",
+      "note": "Aggregator-only: wording appears on www.goodreads.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "That still feels like the most accurate description - I felt homesick, but I was home.",
       "source": "The Bedwetter (2010)",
       "url": "https://www.goodreads.com/work/quotes/11141306-the-bedwetter-stories-of-courage-redemption-and-pee",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.goodreads.com/work/quotes/11141306-the-bedwetter-stories-of-courage-redemption-and-pee",
+      "note": "Aggregator-only: wording appears on www.goodreads.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "I will always try to be happy.",
       "source": "The Bedwetter (2010)",
       "url": "https://www.goodreads.com/work/quotes/11141306-the-bedwetter-stories-of-courage-redemption-and-pee",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.goodreads.com/work/quotes/11141306-the-bedwetter-stories-of-courage-redemption-and-pee",
+      "note": "Aggregator-only: wording appears on www.goodreads.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "I was paralyzed with fear.",
       "source": "The Bedwetter (2010)",
       "url": "https://www.goodreads.com/work/quotes/11141306-the-bedwetter-stories-of-courage-redemption-and-pee",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.goodreads.com/work/quotes/11141306-the-bedwetter-stories-of-courage-redemption-and-pee",
+      "note": "Aggregator-only: wording appears on www.goodreads.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "I know I'm not funny.",
       "source": "The Bedwetter (2010)",
       "url": "https://www.goodreads.com/work/quotes/11141306-the-bedwetter-stories-of-courage-redemption-and-pee",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.goodreads.com/work/quotes/11141306-the-bedwetter-stories-of-courage-redemption-and-pee",
+      "note": "Aggregator-only: wording appears on www.goodreads.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "If life is a meal, then diaries are the toilets in which we shit out its vile remnants.",
       "source": "The Bedwetter (2010)",
       "url": "https://www.goodreads.com/work/quotes/11141306-the-bedwetter-stories-of-courage-redemption-and-pee",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.goodreads.com/work/quotes/11141306-the-bedwetter-stories-of-courage-redemption-and-pee",
+      "note": "Aggregator-only: wording appears on www.goodreads.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "I'm sympathetic to the nuns' violent impulses.",
       "source": "The Bedwetter (2010)",
       "url": "https://www.goodreads.com/work/quotes/11141306-the-bedwetter-stories-of-courage-redemption-and-pee",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.goodreads.com/work/quotes/11141306-the-bedwetter-stories-of-courage-redemption-and-pee",
+      "note": "Aggregator-only: wording appears on www.goodreads.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "It seems to me that sometimes the worst parents make the best grandparents.",
       "source": "The Bedwetter (2010)",
       "url": "https://www.goodreads.com/work/quotes/11141306-the-bedwetter-stories-of-courage-redemption-and-pee",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.goodreads.com/work/quotes/11141306-the-bedwetter-stories-of-courage-redemption-and-pee",
+      "note": "Aggregator-only: wording appears on www.goodreads.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "Some people need Hell.",
       "source": "The Bedwetter (2010)",
       "url": "https://www.goodreads.com/work/quotes/11141306-the-bedwetter-stories-of-courage-redemption-and-pee",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.goodreads.com/work/quotes/11141306-the-bedwetter-stories-of-courage-redemption-and-pee",
+      "note": "Aggregator-only: wording appears on www.goodreads.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "I'm excited about the next generation!",
       "source": "The Bedwetter (2010)",
       "url": "https://www.goodreads.com/work/quotes/11141306-the-bedwetter-stories-of-courage-redemption-and-pee",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.goodreads.com/work/quotes/11141306-the-bedwetter-stories-of-courage-redemption-and-pee",
+      "note": "Aggregator-only: wording appears on www.goodreads.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "For instance, I wear makeup and high heels on special occasions.",
       "source": "The Bedwetter (2010)",
       "url": "https://www.goodreads.com/work/quotes/11141306-the-bedwetter-stories-of-courage-redemption-and-pee",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.goodreads.com/work/quotes/11141306-the-bedwetter-stories-of-courage-redemption-and-pee",
+      "note": "Aggregator-only: wording appears on www.goodreads.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "I looked up at this train car full of strangers, and my heart soared.",
       "source": "The Bedwetter (2010)",
       "url": "https://www.goodreads.com/work/quotes/11141306-the-bedwetter-stories-of-courage-redemption-and-pee",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.goodreads.com/work/quotes/11141306-the-bedwetter-stories-of-courage-redemption-and-pee",
+      "note": "Aggregator-only: wording appears on www.goodreads.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "Mother Teresa didn't walk around complaining about her thighs -- she had shit to do.",
       "source": "Attributed on Goodreads (source not stated)",
       "url": "https://www.goodreads.com/author/quotes/1923104.Sarah_Silverman?page=2",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.goodreads.com/author/quotes/1923104.Sarah_Silverman?page=2",
+      "note": "Aggregator-only: wording appears on www.goodreads.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "Laughter is us as our best selves.",
       "source": "Attributed on Goodreads (source not stated)",
       "url": "https://www.goodreads.com/author/quotes/1923104.Sarah_Silverman?page=2",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.goodreads.com/author/quotes/1923104.Sarah_Silverman?page=2",
+      "note": "Aggregator-only: wording appears on www.goodreads.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "I don't believe that human beings are naturally evil.",
       "source": "Attributed on Goodreads (source not stated)",
       "url": "https://www.goodreads.com/author/quotes/1923104.Sarah_Silverman?page=2",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.goodreads.com/author/quotes/1923104.Sarah_Silverman?page=2",
+      "note": "Aggregator-only: wording appears on www.goodreads.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "But I think you can make fun of anything as long as it's funny enough.",
       "source": "Attributed on Goodreads (source not stated)",
       "url": "https://www.goodreads.com/author/quotes/1923104.Sarah_Silverman",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.goodreads.com/author/quotes/1923104.Sarah_Silverman",
+      "note": "Aggregator-only: wording appears on www.goodreads.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     },
     {
       "text": "It's not cold in here, you're just dying.",
       "source": "Attributed on Goodreads (source not stated)",
       "url": "https://www.goodreads.com/author/quotes/1923104.Sarah_Silverman",
-      "aggregator": true
+      "aggregator": true,
+      "verified": false,
+      "checked_url": "https://www.goodreads.com/author/quotes/1923104.Sarah_Silverman",
+      "note": "Aggregator-only: wording appears on www.goodreads.com (user-compiled quote page) but no primary source (original book, broadcast transcript, publisher or news report) was found on 2026-10-23. Do not use in game until verified."
     }
-  ],
-  "_verification": {
-    "method": "WebFetch/WebSearch extraction on 2026-10-23 (tool output, not raw page text); wording not character-checked against the original page",
-    "verified": "2026-10-23",
-    "expires": "never for listed source/date; wording re-check required before use of any line",
-    "aggregator_only": 29,
-    "total": 34
-  }
+  ]
 }
