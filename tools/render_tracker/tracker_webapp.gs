@@ -360,7 +360,18 @@ function sheet_(name) {
 }
 
 function checkSecret_(given) {
-  var want = PropertiesService.getScriptProperties().getProperty('TRACKER_SECRET');
+  var props = PropertiesService.getScriptProperties();
+  var want = props.getProperty('TRACKER_SECRET');
+  // First call after deployment: adopt the caller's secret (at least 32 chars) so no secret is
+  // ever written into the script source. Later calls must match it.
+  if (!want && typeof given === 'string' && given.length >= 32) {
+    var lock = LockService.getScriptLock();
+    lock.waitLock(10000);
+    try {
+      want = props.getProperty('TRACKER_SECRET');
+      if (!want) { props.setProperty('TRACKER_SECRET', given); want = given; }
+    } finally { lock.releaseLock(); }
+  }
   return !!want && given === want;
 }
 
