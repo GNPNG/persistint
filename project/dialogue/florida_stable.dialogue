@@ -1,0 +1,31 @@
+~ daughter
+if WorldState.has_flag("fl_met_ponies")
+	Daughter: You're back! They remember you. Look at the ears, that means hello.
+else
+	do WorldState.set_flag("fl_met_ponies", true)
+	if WorldState.has_flag("fl_invited_to_horses")
+		Daughter: You came! Okay. Hat's on, brush is ready. These are the horses!
+	else
+		Daughter: Oh, hi! You found the horses. Well, ponies. They're horses in their hearts.
+	Daughter: That's {{Cast.short("pony_butterscotch")}}, that's {{Cast.short("pony_waffles")}}, and that one's {{Cast.short("pony_daisy")}}. Say hi, everybody.
+Daughter: What do you want to do?
+- How do I brush them?
+	Daughter: Click one and pick the brush. Long strokes, the way the hair goes. Don't push, just let it glide.
+	Daughter: You can do their manes however you like. Braids, curls, a bow, a flower. They don't mind.
+	Daughter: They just like the attention. Same as everybody.
+- Can I ride one?
+	Daughter: Sure! Pick a grown-up one and hop on. They go way faster than walking.
+	Daughter: Hop down whenever you want. They know the way home, even from the beach.
+- Where do the baby ponies come from?
+	Daughter: Two ponies, and then a foal! Dad says every foal gets a little bit from each of them.
+	Daughter: Like how I've got Mom's wrist for skipping stones. And Dad's hat-forgetting.
+	- So the foal looks like the parents?
+		Daughter: Mostly! But sometimes a foal comes out a color neither of them is.
+		Daughter: Dad says it was hiding in there the whole time, waiting its turn. Isn't that the best?
+	- Can I pick what the foal looks like?
+		Daughter: Nope! That's the fun part. You just wait and see who shows up.
+		Daughter: Every one of them is exactly right.
+- I'll just watch for a bit.
+	Daughter: That's allowed. Nobody's in a hurry out here.
+	Daughter: {{Cast.short("pony_waffles")}} likes being watched. She does a little hop when she thinks you're looking.
+=> END

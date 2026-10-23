@@ -1,0 +1,16 @@
+[remap]
+
+importer="dialogue_manager"
+importer_version=15
+type="Resource"
+uid="uid://ce16j8f72l2wi"
+path="res://.godot/imported/florida_stable.dialogue-3e4751f4a3c6ca71c2813876026eaa35.tres"
+
+[deps]
+
+source_file="res://dialogue/florida_stable.dialogue"
+dest_files=["res://.godot/imported/florida_stable.dialogue-3e4751f4a3c6ca71c2813876026eaa35.tres"]
+
+[params]
+
+defaults=true
