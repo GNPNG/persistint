@@ -468,7 +468,7 @@ func _build_village() -> void:
 	_marker("spawn_from_ruins", _px(rx - 1.375, 24.3))  # beside the wreck door, not on it
 	_marker("spawn_from_tropical", _px(34.0, 23.5))
 	_character("res://scenes/player/player.tscn", "Player", _px(19.5, 12.5))
-	_character("res://scenes/npc/npc.tscn", "Initiate", _px(22.5, 12.6), {
+	_character("res://scenes/npc/npc.tscn", "Initiate", _px(20.6, 13.2), {
 		"npc_id": "initiate", "caste": "initiate", "sprite_texture": "npc_initiate",
 		"dialogue_path": "res://dialogue/offering.dialogue", "voice_pitch": 1.25})
 	_character("res://scenes/npc/npc.tscn", "Drone", _px(9.5, 15.5), {
