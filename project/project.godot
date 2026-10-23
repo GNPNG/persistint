@@ -50,3 +50,11 @@ renderer/rendering_method.mobile="gl_compatibility"
 [audio]
 
 general/text_to_speech=true
+
+[dialogue_manager]
+
+runtime/balloon_path="res://scenes/ui/dialogue_balloon.tscn"
+
+[gui]
+
+theme/custom="res://themes/default.tres"

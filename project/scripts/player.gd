@@ -52,10 +52,10 @@ func _on_flag_changed(key: String, _value: Variant) -> void:
 
 func refresh_outfit() -> void:
 	var outfit := {
-		$Body: WorldState.get_flag("outfit_body", "body_base"),
-		$Dress: WorldState.get_flag("outfit_dress", "dress_white"),
-		$Hair: WorldState.get_flag("outfit_hair", "hair_braids"),
-		$Accessory: WorldState.get_flag("outfit_accessory", "none"),
+		$Body: WorldState.get_flag("outfit_body", PaperDoll.DEFAULT_OUTFIT["body"]),
+		$Dress: WorldState.get_flag("outfit_dress", PaperDoll.DEFAULT_OUTFIT["dress"]),
+		$Hair: WorldState.get_flag("outfit_hair", PaperDoll.DEFAULT_OUTFIT["hair"]),
+		$Accessory: WorldState.get_flag("outfit_accessory", PaperDoll.DEFAULT_OUTFIT["accessory"]),
 	}
 	# Same art set for every layer (canon when it has all worn parts, as the wardrobe does).
 	var pattern := PaperDoll.art_dir_for(outfit.values())

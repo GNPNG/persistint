@@ -21,10 +21,10 @@ func float_text(text: String) -> void:
 	l.position = Vector2(-40, -44)
 	l.custom_minimum_size = Vector2(80, 0)
 	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	l.add_theme_font_size_override("font_size", 9)
+	l.add_theme_font_size_override("font_size", 5)
 	l.add_theme_color_override("font_color", Color(0.3, 0.2, 0.3))
 	l.add_theme_color_override("font_outline_color", Color.WHITE)
-	l.add_theme_constant_override("outline_size", 4)
+	l.add_theme_constant_override("outline_size", 2)
 	add_child(l)
 	var tw := create_tween()
 	tw.tween_property(l, "position:y", -64.0, 1.2)

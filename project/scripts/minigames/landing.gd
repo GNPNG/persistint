@@ -76,21 +76,21 @@ func _build_ui() -> void:
 	fog.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(fog)
 	var box := VBoxContainer.new()
-	box.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	box.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE, 6)
 	add_child(box)
 	var captain := Label.new()
 	captain.text = captain_name()
 	box.add_child(captain)
 	_shout = Label.new()
 	_shout.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_shout.add_theme_font_size_override("font_size", 18)
+	_shout.add_theme_font_size_override("font_size", 11)
 	box.add_child(_shout)
 	_timer_bar = ProgressBar.new()
 	_timer_bar.show_percentage = false
-	_timer_bar.custom_minimum_size = Vector2(0, 10)
+	_timer_bar.custom_minimum_size = Vector2(0, 5)
 	box.add_child(_timer_bar)
 	_ship = Control.new()
-	_ship.custom_minimum_size = Vector2(0, 160)
+	_ship.custom_minimum_size = Vector2(0, 90)
 	_ship.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	box.add_child(_ship)
 	for name: String in station_names():
@@ -124,7 +124,7 @@ func go_to(name: String) -> void:
 			continue
 		var b := Button.new()
 		b.text = c["control"]
-		b.custom_minimum_size = Vector2(96, 40)
+		b.custom_minimum_size = Vector2(72, 18)
 		b.disabled = failed.has(name)
 		b.pressed.connect(press.bind(c["control"]))
 		_controls.add_child(b)
@@ -133,6 +133,7 @@ func go_to(name: String) -> void:
 	for t: Dictionary in tasks_at(name):
 		var tb := Button.new()
 		tb.text = t["text"]
+		tb.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		tb.disabled = tasks_done.has(t["id"])
 		tb.pressed.connect(do_task.bind(t["id"]))
 		_tasks.add_child(tb)
