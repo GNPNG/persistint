@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bf68u54s003qn"
-path="res://.godot/imported/PERSISTINT_Novel_World-Building_Overview.png-d234352c4aeaaa5e3cb71637c46b6087.ctex"
+uid="uid://yl14giangol4"
+path="res://.godot/imported/npc_priestess_back.png-56dcbc2946265ed48a90c17e7b5395f4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/canon/PERSISTINT_Novel_World-Building_Overview.png"
-dest_files=["res://.godot/imported/PERSISTINT_Novel_World-Building_Overview.png-d234352c4aeaaa5e3cb71637c46b6087.ctex"]
+source_file="res://assets/canon/npc_priestess_back.png"
+dest_files=["res://.godot/imported/npc_priestess_back.png-56dcbc2946265ed48a90c17e7b5395f4.ctex"]
 
 [params]
 
