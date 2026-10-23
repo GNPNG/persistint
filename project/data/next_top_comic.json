@@ -1,9 +1,7 @@
 {
-  "_note": "Next Top Comic (DESIGN.md): stand-up in Monkey Island insult-sword-fighting structure. A setup is fired at the player; the player answers with a punchline. Every pairing is horrible and unfunny, but the women in the audience think the 'correct' one is hilarious. Like Monkey Island, a punchline the player was beaten with is learned and usable afterwards. pairs: setup -> its 'correct' punchline. wins_needed is an agent placeholder.",
+  "_note": "Next Top Comic (DESIGN.md): stand-up mini-game using the dialogue system in Monkey Island insult-sword-fighting structure (Sarah Silverman). Just horrible unfunny setup / punchline pairings, but the women in the audience think it's hilarious. 'setups' is the set, in order: each is {\"setup\": text, \"punchlines\": [text, ...]}; the player picks a punchline. Content is the author's and ships empty. When the setups run out the set ends and comic_done is written.",
   "title": "Next Top Comic",
   "host": "silverman",
   "return_map": "res://scenes/maps/village.tscn",
-  "wins_needed": 3,
-  "starting_punchlines": [],
-  "pairs": []
+  "setups": []
 }
