@@ -10,6 +10,8 @@ One file per asset: front matter gives the id, the generator and the path the re
 - `image/levels/<level>/` — key art per level
 - `video/ui/`, `video/levels/<level>/` — cinematics and transitions (Gemini Veo)
 
+To render through the Gemini API instead of the web UI: `python3 tools/render_all_assets.py --status | --export-queue | --type image|video|music|all [--sync]` (needs GEMINI_API_KEY and `pip install google-genai`). `--export-queue` writes `prompts/QUEUE.md`, every missing prompt in one copy-paste file.
+
 Levels: island, temple, ruins, florida, cruise. Style for everything: kawaii pixel art over something unsettling;
 Florida is innocent play, the cruise is judged performance, the island is ritualized control.
 
