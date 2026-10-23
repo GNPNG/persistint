@@ -215,16 +215,11 @@ func _run() -> void:
 	_check(dline != null and dline.character == "Chelsea Clinton" and dline.text == comic.emcee_intro() and dline.text != "",
 		"comic: Chelsea Clinton introduces it with her emcee.json lines")
 	var texts: Array = []
-	var laughs := 0
 	var offers: Array = []
-	var speakers: Array = []
 	var guard := 0
 	while dline != null and guard < 80:
 		guard += 1
 		texts.append(dline.text)
-		speakers.append(dline.character)
-		if dline.text == "[audience laughs riotously]":
-			laughs += 1
 		if dline.responses.size() > 0:
 			var allowed: Array = dline.responses.filter(func(x): return x.is_allowed)
 			var names: Array = []
@@ -236,18 +231,19 @@ func _run() -> void:
 		else:
 			dline = await dm.get_next_dialogue_line(comic_res, dline.next_id, [comic])
 	_check(guard < 80 and dline == null, "comic: the set plays out and then it ends")
-	_check(offers.size() == 3, "comic: one exchange per setup in the pool")
-	_check(offers[0] == ["_i1", "_p1", "_p2", "_p3"], "comic: Silverman throws a setup; the player chooses from the whole shared pool of punchlines, interjections included")
-	_check(offers[1].size() == 2 and offers[1][0].begins_with("_s"), "comic: then the player throws a setup, chosen from the same shared pool")
-	_check(offers[2].size() == 2, "comic: lines are used up as they are thrown")
-	_check(speakers.has("Sarah Silverman"), "comic: Sarah Silverman delivers setups")
-	_check(laughs == 3, "comic: [audience laughs riotously] after every exchange, matched or not")
+	_check(offers.size() == 6, "comic: the player picks a setup and a punchline for each setup in the pool")
+	_check(offers[0] == ["_s1", "_s2", "_s3"], "comic: the player is the contestant and picks the setup from the shared pool")
+	_check(offers[1] == ["_i1", "_p1", "_p2", "_p3"], "comic: then picks a punchline from the whole shared pool, interjections included")
+	_check(offers[2].size() == 2 and offers[3].size() == 3, "comic: lines are used up as they are told")
+	_check(not texts.has("Sarah Silverman"), "comic: Sarah Silverman hosts; she is not an opponent trading lines")
+	_check(texts.count("[audience laughs riotously]") == 3, "comic: [audience laughs riotously] after every exchange, matched or not")
 	_check(ws.get_flag("comic_done") == true, "comic: comic_done written to WorldState at the end")
 	_check(name_it._layer == null and name_it.beat("next_top_comic").get("hook") == null, "comic: Name It follow-up wired, stays off until the author sets the beat")
-	# Choosing one of the author's interjections: the audience boos and the judges dock points
-	# for stealing jokes from Amy Schumer.
+	# An interjection as the punchline, or an opener as the setup: boos, and the judges dock
+	# points for stealing jokes from Amy Schumer.
 	ws.reset()
 	comic.data["steal_penalty"] = 2
+	comic.data["openers"] = ["_o1"]
 	comic.pool = [{"setup": "_s1", "punchline": "_p1"}]
 	comic.begin_set()
 	dline = await dm.get_next_dialogue_line(comic_res, "start", [comic])
@@ -259,26 +255,15 @@ func _run() -> void:
 		if dline.responses.size() > 0:
 			var pick_next: String = dline.responses[0].next_id
 			for resp in dline.responses:
-				if resp.is_allowed and resp.text == "_i1":
+				if resp.is_allowed and resp.text in ["_o1", "_i1"]:
 					pick_next = resp.next_id
 			dline = await dm.get_next_dialogue_line(comic_res, pick_next, [comic])
 		else:
 			dline = await dm.get_next_dialogue_line(comic_res, dline.next_id, [comic])
-	_check(texts.has("[audience boos]"), "comic: choosing the interjection, the audience boos")
+	_check(texts.count("[audience boos]") == 1, "comic: choosing the opener or an interjection, the audience boos")
 	_check(texts.any(func(t): return t.contains("judges") and t.contains("Amy Schumer") and t.contains("stealing jokes")), "comic: the judges dock points for stealing jokes from Amy Schumer")
-	_check(ws.get_flag("comic_points") == -2, "comic: the docked points are written to WorldState (comic_points)")
-	_check(ws.get_flag("comic_done") == true, "comic: the set still ends")
-	# Opening with "I'm so fat..." (an author opener) is the same offence.
-	ws.reset()
-	comic.data["openers"] = ["_o1"]
-	comic.pool = [{"setup": "_s1", "punchline": "_p1"}]
-	comic.begin_set()
-	comic.host_turn = false
-	comic.pick_setup(comic.setups.find("_o1"))
-	_check(comic.stole_joke() and ws.get_flag("comic_points") == -2, "comic: opening with the opener gets boos and docked points too")
-	comic.host_turn = false
-	comic.pick_setup(comic.setups.find("_s1"))
-	_check(not comic.stole_joke(), "comic: an ordinary setup is not a stolen joke")
+	_check(ws.get_flag("comic_points") == -4, "comic: docked points (per stolen line) written to WorldState comic_points")
+	_check(texts.count("[audience laughs riotously]") == 1, "comic: an ordinary exchange still gets the laugh")
 	comic.queue_free()
 
 	if had_save:

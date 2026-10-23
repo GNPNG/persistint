@@ -1,12 +1,11 @@
 extends Control
-## Next Top Comic — stand-up on the dialogue system in Monkey Island insult-sword-fighting
-## structure (DESIGN.md §2), hosted by Sarah Silverman, introduced by Chelsea Clinton.
-## Setups and punchlines from Amy Schumer, Sarah Silverman and Hannah Gadsby are mixed into
-## one shared pool (data/quotes/<id>.json "jokes"); Silverman and the player draw from the same
-## lines, fully randomized, so a pairing that happens to fit doesn't matter. Silverman throws a
-## setup and the player picks a punchline; then the player throws a setup and Silverman answers.
-## The women in the audience laugh after every exchange. Lines are used up as they are thrown;
-## Choosing an interjection or opener instead gets boos and docked points. When the setups run out the set ends. Also in the punchline pool: data "interjections".
+## America's Next Top Comic — stand-up on the dialogue system in Monkey Island insult-sword-fighting
+## structure (DESIGN.md §2). Sarah Silverman hosts; Chelsea Clinton introduces it. The player is
+## the contestant: each exchange they pick a setup, then a punchline, from one shared pool of
+## lines (Amy Schumer, Sarah Silverman, Hannah Gadsby: data/quotes/<id>.json "jokes"), fully
+## randomized, so a pairing that happens to fit doesn't matter. The women in the audience laugh
+## after every exchange. Picking an interjection or opener instead gets boos and docked points.
+## Lines are used up as they are told; when the setups run out the set ends.
 ## The conversation is dialogue/next_top_comic.dialogue; this node is its game state.
 ## After the set, the Name It beat follows. Results go to WorldState: comic_done, comic_points.
 
@@ -23,9 +22,6 @@ var autostart := true
 var pool: Array = []  # [{setup, punchline, by, source, url}]
 var setups: Array = []
 var punchlines: Array = []
-var host_turn := true
-var current := ""
-var answer := ""
 var picks: Array = []
 var stole := false
 
@@ -64,26 +60,11 @@ func begin_set() -> void:
 	punchlines = pool.map(func(j: Dictionary) -> String: return j["punchline"])
 	punchlines.append_array(data.get("interjections", []))
 	setups.append_array(data.get("openers", []))
-	host_turn = true
 	picks = []
 
 
 func set_done() -> bool:
 	return setups.is_empty()
-
-
-func player_turn() -> bool:
-	return not host_turn
-
-
-func current_setup() -> String:
-	return current
-
-
-## Silverman throws a random setup.
-func deliver_setup() -> void:
-	current = setups.pop_at(randi() % setups.size())
-	Voice.speak(current, 1.2)
 
 
 func punchline(slot: int) -> String:
@@ -108,18 +89,15 @@ func pick(slot: int) -> void:
 	_judge(line, data.get("interjections", []))
 
 
-## The player throws a setup; Silverman answers with a random punchline.
 func pick_setup(slot: int) -> void:
-	current = setups.pop_at(slot)
-	_judge(current, data.get("openers", []))
-	answer = punchlines.pop_at(randi() % punchlines.size())
-	Voice.speak(answer, 1.2)
+	var line: String = setups.pop_at(slot)
+	_judge(line, data.get("openers", []))
 
 
 ## The player's own choice of an interjection or opener is stealing from Amy Schumer.
 func _judge(line: String, stolen: Array) -> void:
-	stole = stolen.has(line)
-	if stole:
+	if stolen.has(line):
+		stole = true
 		WorldState.set_flag("comic_points", int(WorldState.get_flag("comic_points", 0)) - int(data.get("steal_penalty", 1)))
 
 
@@ -136,10 +114,6 @@ func judges_dock() -> String:
 	return "[judges dock you points for stealing jokes from %s]" % Cast.full("schumer")
 
 
-func host_punchline() -> String:
-	return answer
-
-
 ## The women in the audience think it's hilarious, whatever was said.
 func audience_laugh() -> String:
 	Voice.speak("hahaha", 1.6)
@@ -147,7 +121,7 @@ func audience_laugh() -> String:
 
 
 func next_turn() -> void:
-	host_turn = not host_turn
+	stole = false
 
 
 func finish() -> void:
