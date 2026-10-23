@@ -354,8 +354,9 @@ func _build_village() -> void:
 	# ---- Exit points for other areas. ----
 	_door("Exit_Ruins", _px(rx + 0.5, 24.3), {
 		"target_scene": "res://scenes/ruins/ruins_wreck.tscn", "target_spawn": "spawn_default"})
-	var cruise := _door("Exit_Cruise", _px(pr[0] - 2.5, pr[1] + 0.5), {"locked": true})
-	cruise.set_meta("wire_to", "Cruise flashback world (unlocked by Forbidden Knowledge)")
+	# The island chapter ends here: time-jump card, then the cruise chapter (data/chapters.json).
+	_door("Exit_Cruise", _px(pr[0] - 2.5, pr[1] + 0.5), {
+		"target_scene": "res://scenes/chapters/chapter_end.tscn"})
 	_door("Exit_Tropical", _px(35.6, 23.5), {
 		"target_scene": "res://scenes/florida/beach.tscn", "target_spawn": "spawn_default"})
 	_save("res://scenes/maps/village.tscn")
