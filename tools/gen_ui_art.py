@@ -9,20 +9,28 @@ Inputs:  project/assets/canon/{prop_ship,prop_bunker,prop_pillar_orb,
 Outputs (all static, no animation frames):
   project/assets/ui/chrome/<id>.png     theme chrome, read by project/themes/default.tres as
                                         StyleBoxTexture 9-slices (margins listed in CHROME below)
-  project/assets/ui/backdrops/<id>.png  640x360 screen backdrops: talk_show_set (The Interview),
+  project/assets/ui/backdrops/<id>.png  2560x1440 screen backdrops: talk_show_set (The Interview),
                                         comedy_stage (Next Top Comic), runway (Hottest of the HOT),
                                         ship_cabin (get-ready chains), fog_sea (The Landing),
-                                        temple_altar (ritual puzzle); ship_cutaway (600x150) is the
+                                        temple_altar (ritual puzzle); ship_cutaway (2400x600) is the
                                         Landing's station map
-  project/assets/ui/title/title_screen_plain.png
+  project/assets/ui/title/title_screen_plain.png              (2560x1440)
       stand-in for prompts/image/ui/title/title_screen_plain.md (the main menu background)
-  project/assets/ui/chapter_cards/chapter_card_before_the_wreck.png
+  project/assets/ui/chapter_cards/chapter_card_before_the_wreck.png  (2560x1440)
       stand-in for prompts/image/ui/chapter_cards/chapter_card_before_the_wreck.md
 A Gemini render synced to either stand-in path by tools/sync_rendered_assets.py replaces it with
 no code change (the scenes load whatever PNG is at that path, scaled to cover the screen).
 
 Style: prompts/STYLE.md 4.3/4.4 -- warm-brown outline #8a5a5a, cream #fdf6e3, flat pastel fills
-with one highlight. Everything is drawn at K x size and downscaled (LANCZOS); noise uses fixed seeds.
+with one highlight. Noise uses fixed seeds.
+
+Resolution: shapes are laid out in logical units of the 640x360 viewport (project.godot
+display/window/size). Chrome is written at 1 px per unit, because a StyleBoxTexture draws its
+9-slice margins at texture size and the theme keeps the 9 px scale. Backdrops and the Gemini
+stand-ins are written at O = 4 px per unit (4x their on-screen size, 2560x1440) and drawn at
+K = 2 x O before the LANCZOS downscale; the scenes cover-scale whatever texture is there. Canon
+props are stamped at a height in units (canon(name, height)), so they keep their on-screen size
+whatever resolution the cut tools write them at.
 """
 import random
 from pathlib import Path
@@ -32,7 +40,15 @@ from PIL import Image, ImageDraw, ImageFilter
 ROOT = Path(__file__).resolve().parent.parent
 ASSETS = ROOT / "project/assets"
 CANON = ASSETS / "canon"
-K = 4
+K = 4          # canvas px per logical unit while drawing (set by use_scale)
+O = 1          # output px per logical unit (set by use_scale)
+CHROME_SCALE = (4, 1)
+BACKDROP_SCALE = (8, 4)
+
+
+def use_scale(k_o):
+    global K, O
+    K, O = k_o
 
 INK = "#8a5a5a"
 CREAM = "#fdf6e3"
@@ -66,7 +82,8 @@ def canvas(w, h, bg=(0, 0, 0, 0)):
 
 
 def down(im, w, h):
-    return im.resize((w, h), Image.LANCZOS)
+    """The K-scale canvas for a w x h (units) image, resampled to the output size."""
+    return im.resize((round(w * O), round(h * O)), Image.LANCZOS)
 
 
 def save(im, rel):
@@ -109,7 +126,7 @@ def sparkle(d, x, y, r, fill=SPARK, ink=SPARK_EDGE):
 
 def vgrad(w, h, stops):
     """Vertical gradient image (w x h, real pixels) through [(t, hex), ...]."""
-    im = Image.new("RGBA", (w, h))
+    im = Image.new("RGBA", (1, h))
     px = im.load()
     cols = [(t, tuple(int(c[i:i + 2], 16) for i in (1, 3, 5))) for t, c in stops]
     for y in range(h):
@@ -121,21 +138,21 @@ def vgrad(w, h, stops):
                 break
         else:
             c = cols[-1][1]
-        for x in range(w):
-            px[x, y] = c + (255,)
-    return im
+        px[0, y] = c + (255,)
+    return im.resize((w, h), Image.NEAREST)
 
 
-def canon(name, scale=1.0):
+def canon(name, height):
+    """A canon cut resized to height units (O px per unit) at its own aspect."""
     im = Image.open(CANON / f"{name}.png").convert("RGBA")
-    if scale != 1.0:
-        im = im.resize((max(1, round(im.width * scale)), max(1, round(im.height * scale))), Image.LANCZOS)
-    return im
+    h = max(1, round(height * O))
+    w = max(1, round(im.width * h / im.height))
+    return im.resize((w, h), Image.LANCZOS)
 
 
 def stamp(dst, src, x, y):
-    """Paste src with its bottom centre at (x, y) (real pixels)."""
-    dst.alpha_composite(src, (int(x - src.width / 2), int(y - src.height)))
+    """Paste src (output px) on an output image with its bottom centre at (x, y) (units)."""
+    dst.alpha_composite(src, (int(x * O - src.width / 2), int(y * O - src.height)))
 
 
 def face(d, x, y, s=1.0):
@@ -276,7 +293,7 @@ def chrome_altar_tile(fill, selected=False):
     return down(im, w, h)
 
 
-# ---------------------------------------------------------------- backdrops (640x360)
+# ---------------------------------------------------------------- backdrops (640x360 units)
 
 W, H = 640, 360
 
@@ -320,7 +337,7 @@ def spotlight(im, x, top, bottom, spread, alpha=60):
     d.polygon([((x - 8) * K, top * K), ((x + 8) * K, top * K), ((x + spread) * K, bottom * K), ((x - spread) * K, bottom * K)],
               fill=(255, 250, 220, alpha))
     lay = lay.filter(ImageFilter.GaussianBlur(6 * K))
-    im.alpha_composite(lay)
+    im.alpha_composite(down(lay, W, H))
 
 
 def audience(d, y, rng, count, cols=("#7a5a8a", "#8a6a9a", "#6a5080")):
@@ -442,7 +459,7 @@ def comedy_stage():
     curtains(d, "#e86a92", "#d05a80", 80)
     audience(d, 300, rng, 9)
     out = down(im, W, H)
-    spotlight(out, 320, 0, 236, 90, 70)
+    spotlight(out, 320, 0, 236, 90, 40)
     return out
 
 
@@ -601,7 +618,7 @@ def temple_altar():
         ell(d, cx - 3.5, 214, cx + 3.5, 226, "#ffe27a", SPARK_EDGE, .5)
     out = down(im, W, H)
     for x in (60, 580):
-        stamp(out, canon("prop_pillar_orb", 1.25), x, 262)
+        stamp(out, canon("prop_pillar_orb", 80), x, 262)
     sp, s = canvas(W, H)
     for _ in range(16):
         sparkle(s, rng.uniform(20, W - 20), rng.uniform(30, 240), rng.uniform(2, 4))
@@ -630,17 +647,17 @@ def title_screen_plain():
         x, y = rng.uniform(100, 540), rng.uniform(270, 350)
         ell(d, x - 3, y - 2, x + 3, y + 2, LEAF)
     out = down(im, W, H)
-    stamp(out, canon("prop_ship", .8), 520, 300)
-    stamp(out, canon("prop_bunker", .55), 150, 300)
-    stamp(out, canon("prop_bunker", .45), 250, 290)
+    stamp(out, canon("prop_ship", 120), 520, 300)
+    stamp(out, canon("prop_bunker", 66), 150, 300)
+    stamp(out, canon("prop_bunker", 54), 250, 290)
     for i, (x, y) in enumerate(((80, 316), (330, 300), (400, 330), (210, 340), (300, 352), (110, 356))):
-        stamp(out, canon("deco_tree_" + "abc"[i % 3]), x, y)
+        stamp(out, canon("deco_tree_" + "abc"[i % 3], 52), x, y)
     for x, y in ((180, 330), (360, 350), (440, 352), (260, 356)):
-        stamp(out, canon("deco_flowers"), x, y)
+        stamp(out, canon("deco_flowers", 22), x, y)
     for _ in range(9):
-        stamp(out, canon("deco_heart"), rng.uniform(40, 600), rng.uniform(30, 190))
+        stamp(out, canon("deco_heart", 14), rng.uniform(40, 600), rng.uniform(30, 190))
     for _ in range(14):
-        stamp(out, canon("deco_sparkle"), rng.uniform(20, 620), rng.uniform(20, 220))
+        stamp(out, canon("deco_sparkle", 14), rng.uniform(20, 620), rng.uniform(20, 220))
     return out
 
 
@@ -702,9 +719,9 @@ def chapter_card():
     out = down(im, W, H)
     # film grain, VHS lines and a vignette
     px = out.load()
-    for y in range(H):
-        line = -10 if y % 3 == 0 else 0
-        for x in range(W):
+    for y in range(out.height):
+        line = -10 if (y // O) % 3 == 0 else 0                              # one VHS line per 3 units
+        for x in range(out.width):
             r, g, b, a = px[x, y]
             n = rng.randint(-9, 9) + line
             px[x, y] = (max(0, min(255, r + n)), max(0, min(255, g + n)), max(0, min(255, b + n)), a)
@@ -740,8 +757,10 @@ CHROME = {
 }
 
 if __name__ == "__main__":
+    use_scale(CHROME_SCALE)
     for cid, (fn, _m) in CHROME.items():
         save(fn(), f"ui/chrome/{cid}.png")
+    use_scale(BACKDROP_SCALE)
     save(talk_show_set(), "ui/backdrops/talk_show_set.png")
     save(comedy_stage(), "ui/backdrops/comedy_stage.png")
     save(runway(), "ui/backdrops/runway.png")
