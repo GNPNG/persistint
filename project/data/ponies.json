@@ -1,0 +1,87 @@
+{
+	"_note": "Florida pony stable (DESIGN.md section 3): groom (the paper-doll makeover on a pony), ride (mounted click-to-move, faster), foals (coat and mane traits mix, genetics played straight and joyful). Pure play: no scoring, nothing can be done wrong. Genes: each pony carries two alleles per gene; 'dominance' lists alleles strongest first and the strongest allele of the pair is the one you see. A foal gets one allele per gene from each parent, picked at random. 'cast' and 'foal_names' are cast ids in data/cast.json (shown through Cast.short). The herd lives in WorldState flag fl_ponies; the pony being ridden in fl_riding. Art: tools/gen_pony_sprites.py writes assets/placeholder/pony_*.png from these colours.",
+	"genes": {
+		"coat": {
+			"label": "coat",
+			"dominance": ["honey", "peach", "lilac", "mint", "cloud"],
+			"alleles": {
+				"honey": {"label": "honey", "color": "#f3c98b"},
+				"peach": {"label": "peach", "color": "#ffc4a8"},
+				"lilac": {"label": "lilac", "color": "#d9c2f0"},
+				"mint": {"label": "mint", "color": "#bfead2"},
+				"cloud": {"label": "cloud-white", "color": "#f7f3ee"}
+			}
+		},
+		"mane": {
+			"label": "mane",
+			"dominance": ["rose", "sunshine", "sky", "lavender"],
+			"alleles": {
+				"rose": {"label": "rose", "color": "#ff9ad0"},
+				"sunshine": {"label": "sunshine", "color": "#ffe27a"},
+				"sky": {"label": "sky-blue", "color": "#9fd4f2"},
+				"lavender": {"label": "lavender", "color": "#b89ae0"}
+			}
+		},
+		"spots": {
+			"label": "spots",
+			"dominance": ["dappled", "plain"],
+			"alleles": {
+				"dappled": {"label": "dappled"},
+				"plain": {"label": "plain"}
+			}
+		}
+	},
+	"groom": {
+		"mane_style": ["flowing", "braids", "curly"],
+		"accessory": ["none", "bow", "flower_crown", "hibiscus", "blanket"]
+	},
+	"groom_labels": {
+		"flowing": "Flowing",
+		"braids": "Braids",
+		"curly": "Curls",
+		"none": "Nothing",
+		"bow": "Bow",
+		"flower_crown": "Flower crown",
+		"hibiscus": "Hibiscus",
+		"blanket": "Saddle blanket"
+	},
+	"ride_speed_multiplier": 1.8,
+	"foal_grow_days": 2,
+	"pitch": 1.15,
+	"starters": [
+		{
+			"cast": "pony_butterscotch",
+			"genes": {"coat": ["honey", "cloud"], "mane": ["rose", "sky"], "spots": ["plain", "plain"]},
+			"groom": {"mane_style": "flowing", "accessory": "none"}
+		},
+		{
+			"cast": "pony_waffles",
+			"genes": {"coat": ["peach", "lilac"], "mane": ["sunshine", "lavender"], "spots": ["dappled", "plain"]},
+			"groom": {"mane_style": "curly", "accessory": "none"}
+		},
+		{
+			"cast": "pony_daisy",
+			"genes": {"coat": ["mint", "cloud"], "mane": ["sky", "lavender"], "spots": ["plain", "plain"]},
+			"groom": {"mane_style": "braids", "accessory": "bow"}
+		}
+	],
+	"foal_names": [
+		"pony_pudding", "pony_noodle", "pony_sprinkles", "pony_toffee", "pony_jellybean", "pony_marigold",
+		"pony_muffin", "pony_peaches", "pony_buttons", "pony_cricket", "pony_bean", "pony_dumpling"
+	],
+	"stalls": [
+		[180, 260], [320, 260], [640, 260], [780, 260],
+		[180, 340], [320, 340], [480, 330], [640, 340], [780, 340],
+		[220, 420], [360, 420], [500, 430], [640, 420], [760, 470], [300, 480]
+	],
+	"lines": {
+		"hello": ["Hi! Hi! Oh, hi!", "Did you bring the brush? You brought the brush!", "Today smells like hay and sunshine."],
+		"brush": ["Ooh, right there. Right there.", "Long strokes, the way the hair goes. Perfect.", "I feel so shiny I could sparkle. Oh, I am sparkling!", "Brushing is the best part of the day. Except all the other parts."],
+		"groom": ["New look! I love it already.", "Do I look like a wave in bloom? I feel like one.", "Braids, curls, bows, whatever. I'm wonderful in all of them.", "Everybody's going to say hi to me now."],
+		"ride": ["Hop on! Hold on! Here we go!", "Clip-clop! Clip-clop! Faster clip-clop!", "Wheee! The wind is in my mane!"],
+		"dismount": ["That was the best ride ever. Again later?", "Back home. Hay o'clock."],
+		"foal": ["A foal! A tiny, wobbly, perfect foal!", "Look! A little of each of us, and something all their own.", "Welcome to the stable, little one. There's hay for everybody."],
+		"full": ["Every stall is full of happy ponies! Come brush the new ones."],
+		"foal_ride": ["I'm too little to ride yet! But I'd love a brushing."]
+	}
+}
