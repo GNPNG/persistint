@@ -21,6 +21,15 @@
       ],
       "hook": null,
       "answer": null
+    },
+    "hottest_verdict": {
+      "speaker": "tyra",
+      "lines": [
+        "who did your hair?",
+        "so brave to wear that"
+      ],
+      "hook": null,
+      "answer": null
     }
   }
 }
