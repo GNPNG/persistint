@@ -4,6 +4,19 @@ extends SceneTree
 ##   godot --path project -s tools/screenshot_scenes.gd -- <out_dir> [prefix] [names]
 ## <names> is an optional comma-separated list of shot names (first column of SHOTS) to take;
 ## without it every shot is taken.
+## The run never touches the player's save: WorldState is pointed at <out_dir>/save.json and
+## seeded with a fixed state (SEED) so every run shoots the same thing.
+
+## Island chapter, two pieces recovered (the Landing flashback unlocked and active for its
+## card), one tactic named, so the journal, chapter card and flashback card all have content.
+const SEED := {
+	"chapter": "island",
+	"_clock": {"day": 4, "phase_index": 0},
+	"forbidden_knowledge": ["fk_wreck_2", "fk_corridor_1"],
+	"journal": {"negging": ["The Covenant loves an easy girl."]},
+	"flashback_active": {"id": "landing", "chapter": "island",
+		"origin": {"scene": "res://scenes/maps/village.tscn", "spawn": "spawn_default"}},
+}
 
 const SHOTS := [
 	["main_menu", "res://scenes/ui/main_menu.tscn", ""],
@@ -46,6 +59,11 @@ func _run() -> void:
 	var prefix: String = args[1] if args.size() > 1 else ""
 	var only: PackedStringArray = args[2].split(",", false) if args.size() > 2 else PackedStringArray()
 	DirAccess.make_dir_recursive_absolute(out_dir)
+	var ws := root.get_node("WorldState")
+	ws.SAVE_PATH = out_dir.path_join("save.json")
+	ws.flags = SEED.duplicate(true)
+	ws.save()
+	root.get_node("GameClock").restore()
 	await _wait(5)
 	for shot: Array in SHOTS:
 		if not only.is_empty() and not only.has(shot[0]):
