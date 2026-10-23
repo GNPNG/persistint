@@ -54,6 +54,12 @@ func speak(text: String, pitch := 1.0, speaker := "") -> void:
 
 
 func _voice_for(speaker: String) -> String:
+	# Browsers load speech-synthesis voices asynchronously, so the list read in _ready() is
+	# often empty in the HTML5 build; ask again until voices arrive.
+	if _voices.is_empty():
+		_voices = DisplayServer.tts_get_voices_for_language("en")
+	if _voices.is_empty():
+		_voices = Array(DisplayServer.tts_get_voices()).map(func(v: Dictionary) -> String: return v["id"])
 	if _voices.is_empty():
 		return ""
 	if not _speaker_voice.has(speaker):

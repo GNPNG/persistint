@@ -31,9 +31,549 @@
   },
   {
     "speaker": "First Mate",
+    "text": "Recalibrate the Helm Gyroscope!",
+    "key": "1db39f855826f6507c36fcedca70c0b6",
+    "clip": "res://audio/voice/1db39f855826f6507c36fcedca70c0b6.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Sound the Fog Horn!",
+    "key": "3afb5e49eb005fd280995111726d706c",
+    "clip": "res://audio/voice/3afb5e49eb005fd280995111726d706c.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Reaffirm the Autopilot Affirmation Panel!",
+    "key": "70ef9d1af807c517bd384552a8b4dcf7",
+    "clip": "res://audio/voice/70ef9d1af807c517bd384552a8b4dcf7.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Rotate the Chart Table Crayons!",
+    "key": "fca03f4748358aca14160b91c3cd412a",
+    "clip": "res://audio/voice/fca03f4748358aca14160b91c3cd412a.wav"
+  },
+  {
+    "speaker": "First Mate",
     "text": "Align the Promenade Stabilizers!",
     "key": "f192a3821259c3f8840751ec05d82d2e",
     "clip": "res://audio/voice/f192a3821259c3f8840751ec05d82d2e.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Level the Deck Chair Gyro!",
+    "key": "956dae68039003e899f0682446908dd1",
+    "clip": "res://audio/voice/956dae68039003e899f0682446908dd1.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Tension the Parasol Tensioner!",
+    "key": "58e61b34001dede4bc13e601982cfdc6",
+    "clip": "res://audio/voice/58e61b34001dede4bc13e601982cfdc6.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Prime the Shuffleboard Thruster!",
+    "key": "1763666812dc3f06ae6790a235ac024c",
+    "clip": "res://audio/voice/1763666812dc3f06ae6790a235ac024c.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Balance the Chandelier Counterweight!",
+    "key": "bbe53874386e8b0ee57045a1525fa057",
+    "clip": "res://audio/voice/bbe53874386e8b0ee57045a1525fa057.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Polish the Grand Staircase Flux Rail!",
+    "key": "7ff507dbed4ffadb99f66c0e4327159c",
+    "clip": "res://audio/voice/7ff507dbed4ffadb99f66c0e4327159c.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Engage the Panel Discussion Dampener!",
+    "key": "4285658dee6e2f40b776a740effbe053",
+    "clip": "res://audio/voice/4285658dee6e2f40b776a740effbe053.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Close the Champagne Fountain Valve!",
+    "key": "be09dd448e2681422f6a2a4498571751",
+    "clip": "res://audio/voice/be09dd448e2681422f6a2a4498571751.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Throttle the Wave Pool!",
+    "key": "4d7bc9b43e49c1c297682d2ee54ffa24",
+    "clip": "res://audio/voice/4d7bc9b43e49c1c297682d2ee54ffa24.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Ionize the Sunscreen Dispenser!",
+    "key": "d7477d4114914bee0cc9fa2c8db72eab",
+    "clip": "res://audio/voice/d7477d4114914bee0cc9fa2c8db72eab.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Chill the Poolside Bar Intercooler!",
+    "key": "a1ee77a24f6a30754f9b10d2bf7aeb78",
+    "clip": "res://audio/voice/a1ee77a24f6a30754f9b10d2bf7aeb78.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Fold the Towel Reactor!",
+    "key": "2e7b189849432dd73748dc991138ab42",
+    "clip": "res://audio/voice/2e7b189849432dd73748dc991138ab42.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Regulate the Hot Stone Regulator!",
+    "key": "a0a389868d4569b9c3f7486b1dc78147",
+    "clip": "res://audio/voice/a0a389868d4569b9c3f7486b1dc78147.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Charge the Eucalyptus Flux Capacitor!",
+    "key": "edf9dc890e709fcec9e9abc59d45a0bd",
+    "clip": "res://audio/voice/edf9dc890e709fcec9e9abc59d45a0bd.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Seal the Mud Wrap Pressure Seal!",
+    "key": "357a276a2185d40f2a2d58d69bef3656",
+    "clip": "res://audio/voice/357a276a2185d40f2a2d58d69bef3656.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Strike the Gong of Calm!",
+    "key": "1d73839c1e99066d60afc40dfa485526",
+    "clip": "res://audio/voice/1d73839c1e99066d60afc40dfa485526.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Shake the Snow Globe Gyroscope!",
+    "key": "e9c024aea6951f6ef8522b6f58e6fb46",
+    "clip": "res://audio/voice/e9c024aea6951f6ef8522b6f58e6fb46.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Discharge the Souvenir Mug Capacitor!",
+    "key": "95829f5a818cddc1a4b26467b4b4e825",
+    "clip": "res://audio/voice/95829f5a818cddc1a4b26467b4b4e825.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Unlock the Bestseller Rack!",
+    "key": "a696d7ef376f4cef0c3def2b5683c57e",
+    "clip": "res://audio/voice/a696d7ef376f4cef0c3def2b5683c57e.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Stamp the Postcard Beacon!",
+    "key": "0f3064c79b032f33e735f8de6320f973",
+    "clip": "res://audio/voice/0f3064c79b032f33e735f8de6320f973.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Release the Soufflé Pressure Valve!",
+    "key": "80965ca2c82fee9d5ef9a07dcec964f1",
+    "clip": "res://audio/voice/80965ca2c82fee9d5ef9a07dcec964f1.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Refill the Brunch Buffer!",
+    "key": "880c754cf9217a617d05f4845219b440",
+    "clip": "res://audio/voice/880c754cf9217a617d05f4845219b440.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Prime the Oat Milk Reservoir!",
+    "key": "f9436b86d698b39c646092ff5d88e0b1",
+    "clip": "res://audio/voice/f9436b86d698b39c646092ff5d88e0b1.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Ratchet the Walk-in Chiller!",
+    "key": "0f8912159c3ceeeb765bc0f4b3c398ad",
+    "clip": "res://audio/voice/0f8912159c3ceeeb765bc0f4b3c398ad.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Pull the Emergency Reboot Lever!",
+    "key": "c079db75207dc4f03375b555167ed925",
+    "clip": "res://audio/voice/c079db75207dc4f03375b555167ed925.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Turn the Backup Warp Knob!",
+    "key": "87d9937b53b58acec9cdcbcee7205fdc",
+    "clip": "res://audio/voice/87d9937b53b58acec9cdcbcee7205fdc.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Optimize the Bilge Optimizer!",
+    "key": "d115eeb2ca5d5922bee51cc78e58ac40",
+    "clip": "res://audio/voice/d115eeb2ca5d5922bee51cc78e58ac40.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Reassure the EMP Recovery Hamster!",
+    "key": "688f7498537c415b038e8c5446ba11c9",
+    "clip": "res://audio/voice/688f7498537c415b038e8c5446ba11c9.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Spin the Helm Gyroscope counterclockwise, gently, with kindness!",
+    "key": "9c8254d2a1597c776ca87138e669063c",
+    "clip": "res://audio/voice/9c8254d2a1597c776ca87138e669063c.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Whisper into the Fog Horn!",
+    "key": "18616400b9cea6a29d61409bd2fb0c13",
+    "clip": "res://audio/voice/18616400b9cea6a29d61409bd2fb0c13.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Tell the Chart Table Crayons they are doing their best!",
+    "key": "3ad70aa7ead3427e8751f3fba8752aec",
+    "clip": "res://audio/voice/3ad70aa7ead3427e8751f3fba8752aec.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Realign the Promenade Stabilizers, but warmly!",
+    "key": "b3cfeb09566ad0c4349f3d1bf330bc80",
+    "clip": "res://audio/voice/b3cfeb09566ad0c4349f3d1bf330bc80.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Loosen the Parasol Tensioner, it has been through a lot!",
+    "key": "309c79b03b23470d0171e3750f50d5c7",
+    "clip": "res://audio/voice/309c79b03b23470d0171e3750f50d5c7.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Counterweight the Chandelier before it starts talking!",
+    "key": "0038a4dd4d8151b99cc06a001bc9032b",
+    "clip": "res://audio/voice/0038a4dd4d8151b99cc06a001bc9032b.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Open the Champagne Fountain Valve, then close it, then reflect!",
+    "key": "adc033e3f989cf5d64eafb960a0c2f0e",
+    "clip": "res://audio/voice/adc033e3f989cf5d64eafb960a0c2f0e.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Fold the Towel Reactor into thirds, hospital corners!",
+    "key": "96ff5681f332fce41aae910bac3ab6b0",
+    "clip": "res://audio/voice/96ff5681f332fce41aae910bac3ab6b0.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Calm the Wave Pool Throttle, it is only a pool!",
+    "key": "9a6610860af3711b3f160a5ac63608f3",
+    "clip": "res://audio/voice/9a6610860af3711b3f160a5ac63608f3.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Strike the Gong of Calm. No, not like that. Like that!",
+    "key": "f0e42979725529642c52c666fdd2189c",
+    "clip": "res://audio/voice/f0e42979725529642c52c666fdd2189c.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Cool the Hot Stone Regulator and affirm its boundaries!",
+    "key": "6e6c44f868f32cee5d77912f7776d174",
+    "clip": "res://audio/voice/6e6c44f868f32cee5d77912f7776d174.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Wish the Postcard Beacon were here!",
+    "key": "71ae7564d36feccaa4ff80b27f7d03bf",
+    "clip": "res://audio/voice/71ae7564d36feccaa4ff80b27f7d03bf.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Shake the Snow Globe Gyroscope until it is a blizzard!",
+    "key": "debeb3fed09b34ec1dba2c51a8cd785d",
+    "clip": "res://audio/voice/debeb3fed09b34ec1dba2c51a8cd785d.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Bottomless the Brunch Buffer!",
+    "key": "29f0661a149b7a581466f851cec53df9",
+    "clip": "res://audio/voice/29f0661a149b7a581466f851cec53df9.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Do not open the Soufflé Pressure Valve; open it!",
+    "key": "8252b76f24a137188070c7b2599bf522",
+    "clip": "res://audio/voice/8252b76f24a137188070c7b2599bf522.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Synergize the Bilge Optimizer!",
+    "key": "4f9add6cea57c9470a3f53ecbcde74a6",
+    "clip": "res://audio/voice/4f9add6cea57c9470a3f53ecbcde74a6.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Pull the Emergency Reboot Lever and then pull it back!",
+    "key": "8ef2005b6b3ed76167fadc948e6cbcb8",
+    "clip": "res://audio/voice/8ef2005b6b3ed76167fadc948e6cbcb8.wav"
+  },
+  {
+    "speaker": "First Mate",
+    "text": "Turn the Backup Warp Knob to eleven (it only goes to ten)!",
+    "key": "49f4a9479102be5ab47d0e314bc98d09",
+    "clip": "res://audio/voice/49f4a9479102be5ab47d0e314bc98d09.wav"
+  },
+  {
+    "speaker": "Father",
+    "text": "Back again. Good. The tide's kind this afternoon.",
+    "key": "729a8a9e68e31b9178180d81bf24e945",
+    "clip": "res://audio/voice/729a8a9e68e31b9178180d81bf24e945.wav"
+  },
+  {
+    "speaker": "Father",
+    "text": "Well, hello there. We don't get many visitors out past the mangroves.",
+    "key": "2f468f31abdcebbe9e238633f1577dc1",
+    "clip": "res://audio/voice/2f468f31abdcebbe9e238633f1577dc1.wav"
+  },
+  {
+    "speaker": "Father",
+    "text": "I'm a fisherman, mostly. Or something close to it. The boat does the real work.",
+    "key": "4bb5ff154e7ecc34e9d4621a29ede0ff",
+    "clip": "res://audio/voice/4bb5ff154e7ecc34e9d4621a29ede0ff.wav"
+  },
+  {
+    "speaker": "Father",
+    "text": "You can try the stones if you like. Flat ones skip best.",
+    "key": "a5a9148139c5cb2c4c2a8862e373d9f4",
+    "clip": "res://audio/voice/a5a9148139c5cb2c4c2a8862e373d9f4.wav"
+  },
+  {
+    "speaker": "Father",
+    "text": "Low and sideways, from the wrist. Don't throw it, let it go.",
+    "key": "d19b40cbcf0718e1c0c2a8b0e07ab17b",
+    "clip": "res://audio/voice/d19b40cbcf0718e1c0c2a8b0e07ab17b.wav"
+  },
+  {
+    "speaker": "Father",
+    "text": "There. Three skips. Don't tell anyone I counted.",
+    "key": "dfa271cb9d2116b49c24e95bdf333b23",
+    "clip": "res://audio/voice/dfa271cb9d2116b49c24e95bdf333b23.wav"
+  },
+  {
+    "speaker": "Father",
+    "text": "Her mother, actually. She could get seven out of a flat stone, and she never once let me forget it.",
+    "key": "5752f0624bc812c546f543e21e1c3f93",
+    "clip": "res://audio/voice/5752f0624bc812c546f543e21e1c3f93.wav"
+  },
+  {
+    "speaker": "Father",
+    "text": "It's all right. It's a good thing to remember.",
+    "key": "221d37132e064a8361e9a723f976dffb",
+    "clip": "res://audio/voice/221d37132e064a8361e9a723f976dffb.wav"
+  },
+  {
+    "speaker": "Father",
+    "text": "My daughter has her wrist.",
+    "key": "75bba34168499674a303abc1eb6183f1",
+    "clip": "res://audio/voice/75bba34168499674a303abc1eb6183f1.wav"
+  },
+  {
+    "speaker": "Father",
+    "text": "That's allowed. The beach isn't going anywhere.",
+    "key": "d548c44661abbdef05b6777c129b5b2d",
+    "clip": "res://audio/voice/d548c44661abbdef05b6777c129b5b2d.wav"
+  },
+  {
+    "speaker": "Father",
+    "text": "There's lemonade up at the house when you want it. Key lime, from our own tree.",
+    "key": "6bb751af4c3898b645fd2dc4e7641358",
+    "clip": "res://audio/voice/6bb751af4c3898b645fd2dc4e7641358.wav"
+  },
+  {
+    "speaker": "Daughter",
+    "text": "Come on! They haven't had their brushing yet.",
+    "key": "3e7584f46f7d70bb5462b18d8a7aba80",
+    "clip": "res://audio/voice/3e7584f46f7d70bb5462b18d8a7aba80.wav"
+  },
+  {
+    "speaker": "Daughter",
+    "text": "Hi! I've got two hundred stones in this bucket and I'm only allowed to keep fifty.",
+    "key": "935ab4c5d6abed047cfaa1230093d673",
+    "clip": "res://audio/voice/935ab4c5d6abed047cfaa1230093d673.wav"
+  },
+  {
+    "speaker": "Daughter",
+    "text": "Dad says I'm a collector, not a hoarder. I think that's just a nicer word.",
+    "key": "fae91eb47b5444e7a0384e0abcac886b",
+    "clip": "res://audio/voice/fae91eb47b5444e7a0384e0abcac886b.wav"
+  },
+  {
+    "speaker": "Daughter",
+    "text": "The grey ones with a white stripe all the way around. Those are lucky.",
+    "key": "126fab31acb67a7834f4b5954b5a3764",
+    "clip": "res://audio/voice/126fab31acb67a7834f4b5954b5a3764.wav"
+  },
+  {
+    "speaker": "Daughter",
+    "text": "You can have one. I've got four more.",
+    "key": "2788517624b180ca13f2ccbb6d0567e2",
+    "clip": "res://audio/voice/2788517624b180ca13f2ccbb6d0567e2.wav"
+  },
+  {
+    "speaker": "Daughter",
+    "text": "Dolphins, if you wait. Crabs, always. A pelican who thinks he owns the dock.",
+    "key": "95f9964c8c550c595d86971c3549fe28",
+    "clip": "res://audio/voice/95f9964c8c550c595d86971c3549fe28.wav"
+  },
+  {
+    "speaker": "Daughter",
+    "text": "And the horses, out back of the house. Do you like horses?",
+    "key": "b760049339c0642ab94332ece8735b5b",
+    "clip": "res://audio/voice/b760049339c0642ab94332ece8735b5b.wav"
+  },
+  {
+    "speaker": "Daughter",
+    "text": "Then you have to come see them! Wait. Hat.",
+    "key": "9ae20c4cd15607e977f959a88387b5f9",
+    "clip": "res://audio/voice/9ae20c4cd15607e977f959a88387b5f9.wav"
+  },
+  {
+    "speaker": "Daughter",
+    "text": "Okay, got my hat. And my brush. Let's go!",
+    "key": "6dda49ab7c24c441938bec988e61bbf9",
+    "clip": "res://audio/voice/6dda49ab7c24c441938bec988e61bbf9.wav"
+  },
+  {
+    "speaker": "Daughter",
+    "text": "Oh, that's the best! They'll just stand there and let you be new.",
+    "key": "80fd7fbbc17e3168b2937eb68f80161e",
+    "clip": "res://audio/voice/80fd7fbbc17e3168b2937eb68f80161e.wav"
+  },
+  {
+    "speaker": "Daughter",
+    "text": "Wait, hat. Okay. This way!",
+    "key": "e2a569c5d42fec33ae2d045edcfae634",
+    "clip": "res://audio/voice/e2a569c5d42fec33ae2d045edcfae634.wav"
+  },
+  {
+    "speaker": "Daughter",
+    "text": "Okay! I'll be here. They'll be there. Nobody's in a hurry.",
+    "key": "5eadbe7f6b12cb925af8ad5c05d6ce6e",
+    "clip": "res://audio/voice/5eadbe7f6b12cb925af8ad5c05d6ce6e.wav"
+  },
+  {
+    "speaker": "Daughter",
+    "text": "You're back! They remember you. Look at the ears, that means hello.",
+    "key": "d81e3adc96d0055cd46238d67f50dbfb",
+    "clip": "res://audio/voice/d81e3adc96d0055cd46238d67f50dbfb.wav"
+  },
+  {
+    "speaker": "Daughter",
+    "text": "You came! Okay. Hat's on, brush is ready. These are the horses!",
+    "key": "5c224d16685edd03d75506a10a716502",
+    "clip": "res://audio/voice/5c224d16685edd03d75506a10a716502.wav"
+  },
+  {
+    "speaker": "Daughter",
+    "text": "Oh, hi! You found the horses. Well, ponies. They're horses in their hearts.",
+    "key": "aad3fe5a62e2ea26b332ca53b6611a0e",
+    "clip": "res://audio/voice/aad3fe5a62e2ea26b332ca53b6611a0e.wav"
+  },
+  {
+    "speaker": "Daughter",
+    "text": "That's {{Cast.short(\"pony_butterscotch\")}}, that's {{Cast.short(\"pony_waffles\")}}, and that one's {{Cast.short(\"pony_daisy\")}}. Say hi, everybody.",
+    "key": "ae4231c0b942b761e92f1a24b468db37",
+    "clip": "res://audio/voice/ae4231c0b942b761e92f1a24b468db37.wav"
+  },
+  {
+    "speaker": "Daughter",
+    "text": "What do you want to do?",
+    "key": "63232cad4cbcb3df5245ab398eee8f3f",
+    "clip": "res://audio/voice/63232cad4cbcb3df5245ab398eee8f3f.wav"
+  },
+  {
+    "speaker": "Daughter",
+    "text": "Click one and pick the brush. Long strokes, the way the hair goes. Don't push, just let it glide.",
+    "key": "4d695a8fd7eed3b9a906f6a9e3bd1ae1",
+    "clip": "res://audio/voice/4d695a8fd7eed3b9a906f6a9e3bd1ae1.wav"
+  },
+  {
+    "speaker": "Daughter",
+    "text": "You can do their manes however you like. Braids, curls, a bow, a flower. They don't mind.",
+    "key": "c8faa1deb2ccf6f6304c39a9c6caf439",
+    "clip": "res://audio/voice/c8faa1deb2ccf6f6304c39a9c6caf439.wav"
+  },
+  {
+    "speaker": "Daughter",
+    "text": "They just like the attention. Same as everybody.",
+    "key": "ece4e96eb7df82f78300334416fd80a2",
+    "clip": "res://audio/voice/ece4e96eb7df82f78300334416fd80a2.wav"
+  },
+  {
+    "speaker": "Daughter",
+    "text": "Sure! Pick a grown-up one and hop on. They go way faster than walking.",
+    "key": "e6be2fd36d0b461ece2d58789d3136c5",
+    "clip": "res://audio/voice/e6be2fd36d0b461ece2d58789d3136c5.wav"
+  },
+  {
+    "speaker": "Daughter",
+    "text": "Hop down whenever you want. They know the way home, even from the beach.",
+    "key": "c3a45b76693714e7c8fce3e9de829be8",
+    "clip": "res://audio/voice/c3a45b76693714e7c8fce3e9de829be8.wav"
+  },
+  {
+    "speaker": "Daughter",
+    "text": "Two ponies, and then a foal! Dad says every foal gets a little bit from each of them.",
+    "key": "45f380972e0ab32f9bef11b32cee4d64",
+    "clip": "res://audio/voice/45f380972e0ab32f9bef11b32cee4d64.wav"
+  },
+  {
+    "speaker": "Daughter",
+    "text": "Like how I've got Mom's wrist for skipping stones. And Dad's hat-forgetting.",
+    "key": "77303fb2158a5309f7f2f314254e8f41",
+    "clip": "res://audio/voice/77303fb2158a5309f7f2f314254e8f41.wav"
+  },
+  {
+    "speaker": "Daughter",
+    "text": "Mostly! But sometimes a foal comes out a color neither of them is.",
+    "key": "86ae360c02ff67fd8b0185b9702b3c05",
+    "clip": "res://audio/voice/86ae360c02ff67fd8b0185b9702b3c05.wav"
+  },
+  {
+    "speaker": "Daughter",
+    "text": "Dad says it was hiding in there the whole time, waiting its turn. Isn't that the best?",
+    "key": "1a7b75ba532851c3b4c14e070ea1e257",
+    "clip": "res://audio/voice/1a7b75ba532851c3b4c14e070ea1e257.wav"
+  },
+  {
+    "speaker": "Daughter",
+    "text": "Nope! That's the fun part. You just wait and see who shows up.",
+    "key": "b70b92547a7c7f89fd8002d068d624ba",
+    "clip": "res://audio/voice/b70b92547a7c7f89fd8002d068d624ba.wav"
+  },
+  {
+    "speaker": "Daughter",
+    "text": "Every one of them is exactly right.",
+    "key": "b23319cbfc495cb13c19ea2a28038987",
+    "clip": "res://audio/voice/b23319cbfc495cb13c19ea2a28038987.wav"
+  },
+  {
+    "speaker": "Daughter",
+    "text": "That's allowed. Nobody's in a hurry out here.",
+    "key": "efb7168b897af5aca85395db3b5747ee",
+    "clip": "res://audio/voice/efb7168b897af5aca85395db3b5747ee.wav"
+  },
+  {
+    "speaker": "Daughter",
+    "text": "{{Cast.short(\"pony_waffles\")}} likes being watched. She does a little hop when she thinks you're looking.",
+    "key": "d60303d282ffd097ef4f64b21977974a",
+    "clip": "res://audio/voice/d60303d282ffd097ef4f64b21977974a.wav"
   },
   {
     "speaker": "Gloria",
