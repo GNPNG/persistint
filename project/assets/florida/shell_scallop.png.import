@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cp0qin75aqj2j"
-path="res://.godot/imported/plot_empty.png-b0951ca834678e58743f84d1d79d4f45.ctex"
+uid="uid://du2pp16kw4akh"
+path="res://.godot/imported/shell_scallop.png-c2f6382a3dd6a7dc0534d3d5e80b344e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/placeholder/plot_empty.png"
-dest_files=["res://.godot/imported/plot_empty.png-b0951ca834678e58743f84d1d79d4f45.ctex"]
+source_file="res://assets/florida/shell_scallop.png"
+dest_files=["res://.godot/imported/shell_scallop.png-c2f6382a3dd6a7dc0534d3d5e80b344e.ctex"]
 
 [params]
 
