@@ -27,5 +27,9 @@
 	"kate": {
 		"name": "Cap'n Kate",
 		"short": "Kate"
+	},
+	"silverman": {
+		"name": "Sarah Silverman",
+		"short": "Sarah"
 	}
 }
