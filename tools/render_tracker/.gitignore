@@ -1,0 +1,4 @@
+# Local deployment state written by deploy.mjs: never commit.
+tracker_secret.local.gs
+.clasp.json
+deploy.local.json

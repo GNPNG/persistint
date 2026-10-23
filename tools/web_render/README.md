@@ -25,6 +25,74 @@ the on-page `<img>` is a downscaled preview, and a track can be shown as a `<vid
 art, so neither is ever saved as the final file. If the download button breaks, fix its selector
 or use `--assist`.
 
+## Unattended runs with the render tracker (recommended)
+
+The author's Google Sheet (the render tracker) is the work queue and the log. It has one tab per
+kind, an Attempts log and a Quotas tab (Daily Cap, Min Gap, Cooldown After Quota, Max Retries,
+Retry Backoff). The renderer reads it and writes to it through the Apps Script web app in
+`tools/render_tracker/`. After a one-time setup, a run needs no input at all:
+
+```bash
+node tools/web_render/render.mjs --login               # once: sign in to Google in the automation profile
+node tools/render_tracker/deploy.mjs login             # once: sign clasp in
+node tools/render_tracker/deploy.mjs                   # once: deploy, writes trackerUrl/trackerSecret
+node tools/web_render/render.mjs --render              # every time: render until nothing is eligible
+```
+
+`tools/render_tracker/DEPLOY.md` covers the deployment in detail. When `trackerUrl` and
+`trackerSecret` are set in `config.local.json` (or `WEB_RENDER_TRACKER_URL` /
+`WEB_RENDER_TRACKER_SECRET`), `--render` runs in **tracker mode**. `--tracker` asks for it
+explicitly, and `--local` ignores the tracker. In tracker mode:
+
+- **What gets rendered.** The sheet's eligible rows: `Pending`, `Failed` or `Quota` rows whose
+  Next Eligible time has passed, and `Rendering` rows left over from a run that was killed more
+  than two hours ago. `--kind` and `--only` narrow the selection.
+- **Prompt text.** It comes from `prompts/`, never from the sheet. If the sheet's prompt
+  differs, the repo prompt is used and the difference is noted in the row's Notes and in the
+  Attempts log.
+- **Each asset.** It gets `attempt_start` (Status `Rendering`, Attempts + 1) and then
+  `attempt_end` with one outcome:
+
+  | outcome | when | sheet result |
+  |---|---|---|
+  | `done` | saved at the drop | `Done`, Rendered File |
+  | `quota` | a usage-limit notice (`steps.limitNotice`), or a reply with no media that matches `outcomeText.quota` | `Quota`; the kind cools down for Cooldown After Quota. **That kind stops for this run**, the others go on |
+  | `refused` | a reply with no media that matches `outcomeText.refused` (policy, "can't generate") | `Needs prompt edit`, not retried |
+  | `timeout` | no result or download in time, or a page-load timeout | `Failed`, retried |
+  | `selector` | a step's selectors matched nothing | `Failed`, retried |
+  | `failed` | anything else, including a reply with no media and no known phrase (for example a signed-out page) | `Failed`, retried |
+  | `skipped` | no prompt file for the row's id, or the capture is waiting for `--convert` | `Skipped` |
+
+  Retries use Retry Backoff × 2^(failures − 1), up to Max Retries. If the drop file already
+  exists (and `--force` is not given), the row is marked `done` without generating anything.
+  That still counts toward Daily Cap and starts the Min Gap, because the sheet counts every
+  `done` attempt.
+- **Throttling.** Min Gap is kept between two renders of the same kind. A kind is skipped once
+  Remaining Today reaches 0, and while its quota cooldown runs. Kinds take turns. The queue is
+  polled again after every asset.
+- **Waiting and stopping.** When nothing is eligible, the run waits if the next eligible time
+  (a min gap or a retry) is within `trackerMaxWaitSec` (default 1800 s). Otherwise it exits and
+  prints when the next asset becomes eligible, so you can start it again then (for example from
+  cron).
+- **Limits.** `--limit N` caps one run. `maxPerRun` and `--delay` apply only in local mode: in
+  tracker mode the sheet's Daily Cap and Min Gap govern. `--pause-on-error` waits for you, so
+  leave it off for unattended runs.
+- **Ctrl-C.** Once stops after the current asset. Twice reports the current asset as `failed`
+  (interrupted), so it is retried, and quits.
+- **Logs.** Every attempt is also appended to `runs/attempts.jsonl`, and the run summary is
+  written to `runs/<run id>.json`.
+- **Checks without a browser.** `--queue` prints each kind's state and its eligible rows.
+  `--render --dry-run` lists what would be rendered, with the final prompt text, and writes
+  nothing.
+
+The secret is sent only to the tracker URL, which must be https. It never appears in output,
+error messages or run logs.
+
+Without a tracker, `--render` works as before (local mode, below). It appends each attempt to
+`runs/attempts.jsonl`, with the same fields as the sheet's Attempts tab: `timestamp, asset_id,
+kind, attempt, started, ended, duration_s, outcome, error, surface, debug_dir, run_id, file,
+note`.
+
 ## Setup
 
 ```bash
@@ -146,7 +214,8 @@ node tools/web_render/render.mjs --convert                        # ffmpeg-conve
   (`steps.limitNotice`) fails the asset and stops the run.
 
 `config.local.json` (gitignored) can override any of `chrome`, `profileDir`, `browserURL`,
-`downloadDir`, `downloadDirBrowser`, `delaySec`, `maxPerRun` and `launchTimeoutSec`. For example:
+`downloadDir`, `downloadDirBrowser`, `delaySec`, `maxPerRun`, `launchTimeoutSec`, `trackerUrl`,
+`trackerSecret` and `trackerMaxWaitSec`. `WEB_RENDER_CONFIG` points to another file. For example:
 
 ```json
 { "delaySec": 120, "maxPerRun": 20, "chrome": "/usr/bin/google-chrome-stable" }
@@ -246,7 +315,10 @@ selectors from the debug output.
 cd tools/web_render
 npm test             # no browser: parser parity with render_all_assets.py on all 45 prompts,
                      # selectors.json validation, drop extensions, format sniffing, unknown-format
-                     # refusal, CONVERT status, option validation, profile checks, HTML redaction
+                     # refusal, CONVERT status, option validation, profile checks, HTML redaction;
+                     # tracker mode against a local mock of the web app (tests/mock_tracker.mjs):
+                     # queue polling, min gap, daily cap, quota stop, retries, outcome mapping,
+                     # https-only, secret never printed, JSONL fallback, the CLI
 DISPLAY=:0 npm run smoke   # headful Chrome against tests/fixtures/fake_gemini.html
 ```
 
