@@ -52,5 +52,5 @@ target_scene = "res://scenes/minigames/ritual_puzzle.tscn"
 
 [node name="RuinsDoor" parent="." instance=ExtResource("5")]
 position = Vector2(140, 220)
-locked = true
-locked_bark = "Sealed since the Before. The Covenant says there is nothing inside. The lock says otherwise."
+target_scene = "res://scenes/ruins/ruins_wreck.tscn"
+target_spawn = "spawn_default"
