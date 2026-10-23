@@ -1,5 +1,7 @@
 # Asset prompts
 
+Start with `STYLE.md` (master visual + audio style, with the preambles to paste before each prompt).
+
 One file per asset: front matter gives the id, the generator and the path the result goes to in the game.
 
 - `audio/music/<level>/` — looping area music (Gemini Lyria, MP3)
