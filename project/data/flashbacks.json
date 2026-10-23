@@ -1,0 +1,58 @@
+{
+	"_note": "Cruise flashbacks (DESIGN.md §2: discovered Forbidden Knowledge unlocks flashback chapters aboard the pre-wreck cruise). Each flashback is unlocked when every piece id in 'requires' (data/ruins.json 'knowledge') has been recovered; the Journal (J) lists them and plays an unlocked one. Playing one goes through the chapter system (scripts/chapters/flashbacks.gd): the current player flags (data/chapters.json 'player_flags') are archived under 'flashback_archive' and cleared, so the island character doesn't carry over, 'chapter' becomes 'chapter' below for the episode, then 'card' is shown and 'entry_scene' starts. When the episode's last mini-game ends, the archived character, the chapter and the location the flashback was started from are restored (rooms in the ruins come back at spawn_default). Order follows Story Structure: Camera 1, the Landing, opens the book (opening scene: a ship in fog, systems failing, the first mate yelling for the captain), so it comes first and is prologue-capable; the Camera 2 cruise episodes follow in escalation order ('As the timeline progresses, the behaviour escalates. The entitlement gets louder. The men on crew get treated worse.'). The source does not order Hottest of the HOT against Next Top Comic; the flagship comes first. The piece-to-episode mapping and the card text are written in the sources' voice (Story Structure Camera 1 and 2, L189-201; the island end card). Names in card text are cast ids written as {cast_id}, filled from data/cast.json. The Interview is not a flashback: it is the cruise chapter's own entry after the island ends on Exit_Cruise.",
+	"chapter": "cruise",
+	"flashbacks": [
+		{
+			"id": "landing",
+			"order": 1,
+			"prologue": true,
+			"title": "The Landing",
+			"entry_scene": "res://scenes/minigames/landing.tscn",
+			"requires": ["fk_wreck_2", "fk_corridor_1"],
+			"why": "A receipt from the day the gift shop was still open, and a tide table for an island nobody on board could see yet.",
+			"card": {
+				"heading": "The Landing",
+				"lines": [
+					"Fog. A ship coming in toward an island nobody on board can see yet.",
+					"The lights went out somewhere behind this moment. {kate} isn't exploring. She is trying not to crash a dead ship.",
+					"Systems failing. Chaos on deck. The first mate yelling for the captain."
+				],
+				"prompt": "Take your station"
+			}
+		},
+		{
+			"id": "hottest_of_the_hot",
+			"order": 2,
+			"title": "Hottest of the HOT",
+			"entry_scene": "res://scenes/minigames/hottest_chains.tscn",
+			"requires": ["fk_wreck_1", "fk_corridor_2"],
+			"why": "A book judged by its back cover, and a device that only tells you how hot a thing is.",
+			"card": {
+				"heading": "Hottest of the HOT",
+				"lines": [
+					"Before the fog there was champagne, panels on motherhood, and an open bar. Every scene of it empowering.",
+					"Tonight {tyra} is judging and {chelsea} will explain how much fun it is. Get ready across the ship first. The makeover is done to you.",
+					"The same behaviour as the island, just with better lighting."
+				],
+				"prompt": "Get ready"
+			}
+		},
+		{
+			"id": "next_top_comic",
+			"order": 3,
+			"title": "Next Top Comic",
+			"entry_scene": "res://scenes/minigames/next_top_comic.tscn",
+			"requires": ["fk_core_1", "fk_bunker_1"],
+			"why": "A calendar that counts days and a chart that shows the rites held at the wrong end of the page. Comedy is timing. So is the rest of it.",
+			"card": {
+				"heading": "Next Top Comic",
+				"lines": [
+					"Later in the voyage. The entitlement is louder now, and the men on crew are treated worse.",
+					"{silverman} has the mic. The setups are terrible. The women in the audience think they are hilarious.",
+					"Pick your punchline. Whatever you pick, they will laugh, and it will feel like being seen."
+				],
+				"prompt": "Step up to the mic"
+			}
+		}
+	]
+}

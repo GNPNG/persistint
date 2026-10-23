@@ -8,6 +8,7 @@ extends Control
 ## landing_failed (stations whose systems failed), landing_tasks_done (crew task ids done).
 
 const DATA_PATH := "res://data/landing.json"
+const Flashbacks := preload("res://scripts/chapters/flashbacks.gd")
 
 var data: Dictionary = {}
 var queue: Array = []
@@ -200,6 +201,15 @@ func _finish() -> void:
 	WorldState.set_flag("landing_tasks_done", tasks_done.duplicate())
 	var back := Button.new()
 	back.text = "OK"
-	back.pressed.connect(func() -> void:
-		SceneRouter.goto_map(data.get("return_map", "res://scenes/maps/village.tscn")))
+	back.pressed.connect(go_back)
 	_controls.get_parent().add_child(back)
+
+
+## Where OK goes: back to where a cruise flashback was started from, otherwise return_map.
+func return_target() -> Dictionary:
+	return Flashbacks.return_target(data.get("return_map", "res://scenes/maps/village.tscn"))
+
+
+func go_back() -> void:
+	var to := Flashbacks.leave(data.get("return_map", "res://scenes/maps/village.tscn"))
+	SceneRouter.goto_map(to["scene"], to["spawn"])

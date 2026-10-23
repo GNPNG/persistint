@@ -1,8 +1,10 @@
 extends Area2D
 ## KnowledgePickup — a piece of Forbidden Knowledge lying in the ruins. Click to walk
 ## over and recover it (ForbiddenKnowledge.recover); gone from the map once recovered.
+## Says so when the piece completes a cruise flashback (data/flashbacks.json).
 
 const ForbiddenKnowledge := preload("res://scripts/ruins/forbidden_knowledge.gd")
+const Flashbacks := preload("res://scripts/chapters/flashbacks.gd")
 
 @export var piece_id := ""
 
@@ -43,6 +45,8 @@ func interact() -> void:
 	label.text = "Forbidden Knowledge recovered." if title == "" else "Recovered: %s" % title
 	if text != "":
 		label.text += "\n" + text
+	for id: String in Flashbacks.opened_by(piece_id):
+		label.text += "\nA memory of the cruise opens: %s (J: Journal)" % Flashbacks.flashback(id).get("title", id)
 	label.show()
 	_recovered = true
 	queue_redraw()

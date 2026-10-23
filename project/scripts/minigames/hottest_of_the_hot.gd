@@ -10,6 +10,7 @@ const EMCEE_PATH := "res://data/emcee.json"
 const OUTFITS_PATH := "res://data/outfits.json"
 const PAPER_DOLL := preload("res://scripts/systems/paper_doll.gd")
 const GAME_ID := "hottest_of_the_hot"
+const Flashbacks := preload("res://scripts/chapters/flashbacks.gd")
 
 var data: Dictionary = {}
 var emcee: Dictionary = {}
@@ -95,10 +96,19 @@ func walk() -> String:
 	NameIt.start("hottest_verdict")
 	var back := Button.new()
 	back.text = "OK"
-	back.pressed.connect(func() -> void:
-		SceneRouter.goto_map(data.get("return_map", "res://scenes/maps/village.tscn")))
+	back.pressed.connect(go_back)
 	_box.add_child(back)
 	return verdict
+
+
+## Where OK goes: back to where a cruise flashback was started from, otherwise return_map.
+func return_target() -> Dictionary:
+	return Flashbacks.return_target(data.get("return_map", "res://scenes/maps/village.tscn"))
+
+
+func go_back() -> void:
+	var to := Flashbacks.leave(data.get("return_map", "res://scenes/maps/village.tscn"))
+	SceneRouter.goto_map(to["scene"], to["spawn"])
 
 
 func _load(path: String) -> Dictionary:
