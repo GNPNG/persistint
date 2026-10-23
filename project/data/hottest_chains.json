@@ -1,7 +1,162 @@
 {
-  "_note": "DESIGN.md: Hottest of the HOT makeover / hair-salon / get-ready-for-the-fashion-show chains, Day of the Tentacle-style chained tasks across the ship. Task and station text is not in the design doc, so it ships empty (content needed from author). A task: {id, station, text, needs: [item ids held], requires: [task ids done], gives: item id, outfit: {slot: part_id} applied to the paper doll}. Stations are the places aboard the ship the tasks happen in. When every task is done the passenger can go on to the show.",
+  "_note": "DESIGN.md: Hottest of the HOT makeover / hair-salon / get-ready-for-the-fashion-show chains, Day of the Tentacle-style chained tasks across the ship, with the judged, passive-aggressive framing (control dressed as care; Story Structure Camera 2). Station and task text is written for the game in the sources' voice (no source text exists for the salon). A task: {id, station, text, needs: [item ids held and consumed], requires: [task ids done], gives: item id, outfit: {slot: part_id} applied to the paper doll}. items maps item id to its display name. When every task is done the passenger goes on to the show.",
   "show_scene": "res://scenes/minigames/hottest_of_the_hot.tscn",
   "return_map": "res://scenes/maps/village.tscn",
-  "stations": [],
-  "tasks": []
+  "stations": [
+    "Stateroom",
+    "Purser's Desk",
+    "Gift Shop",
+    "Laundry",
+    "Glow Lounge",
+    "Lido Deck",
+    "Atrium Runway"
+  ],
+  "tasks": [
+    {
+      "id": "envelope",
+      "station": "Stateroom",
+      "text": "Open the envelope under your door: the Hottest of the HOT call sheet, with a note that says 'We only want you to feel your best (we noticed)'.",
+      "gives": "call_sheet"
+    },
+    {
+      "id": "robe",
+      "station": "Stateroom",
+      "text": "Put on the complimentary robe. It is one size, which is fine, for most.",
+      "requires": [
+        "envelope"
+      ],
+      "outfit": {
+        "dress": "dress_robe"
+      }
+    },
+    {
+      "id": "mirror",
+      "station": "Stateroom",
+      "text": "Stand at the mirror the stewards hung a little too low. Find something about yourself that's positive and celebrate it. They will be along to help with the rest.",
+      "requires": [
+        "robe"
+      ]
+    },
+    {
+      "id": "book_salon",
+      "station": "Purser's Desk",
+      "text": "Show the purser your call sheet. She finds you a Glow Lounge appointment: 'a cancellation, you're so lucky, honestly, you looked like you needed it'.",
+      "needs": [
+        "call_sheet"
+      ],
+      "requires": [
+        "envelope"
+      ],
+      "gives": "appointment_card"
+    },
+    {
+      "id": "claim",
+      "station": "Purser's Desk",
+      "text": "Ask for your dress. The purser writes you a laundry claim tag and tells you, kindly, that white is a very confident choice.",
+      "requires": [
+        "book_salon"
+      ],
+      "gives": "claim_tag"
+    },
+    {
+      "id": "ribbon",
+      "station": "Gift Shop",
+      "text": "Choose a ribbon from the 'Be a Bigger Yourself' display. The clerk says the red one is very brave and would really draw the eye away.",
+      "gives": "ribbon"
+    },
+    {
+      "id": "press",
+      "station": "Laundry",
+      "text": "Hand over your claim tag. The attendant presses the white dress and pins on a card: 'size not final'.",
+      "needs": [
+        "claim_tag"
+      ],
+      "requires": [
+        "claim"
+      ],
+      "gives": "garment_bag"
+    },
+    {
+      "id": "cut",
+      "station": "Glow Lounge",
+      "text": "Take the chair. The stylist asks, with real concern, who has been doing your hair. A trim, just to make it more manageable.",
+      "needs": [
+        "appointment_card"
+      ],
+      "requires": [
+        "mirror",
+        "book_salon"
+      ],
+      "outfit": {
+        "hair": "hair_short"
+      },
+      "gives": "stylist_note"
+    },
+    {
+      "id": "style",
+      "station": "Glow Lounge",
+      "text": "Let her put your hair up with the ribbon. 'A braid hides so much. It's a compliment, hold still.'",
+      "needs": [
+        "ribbon",
+        "stylist_note"
+      ],
+      "requires": [
+        "cut"
+      ],
+      "outfit": {
+        "hair": "hair_braids"
+      },
+      "gives": "salon_stamp"
+    },
+    {
+      "id": "dress",
+      "station": "Stateroom",
+      "text": "Change into the white dress. It fits the way these things fit when someone else chose the size.",
+      "needs": [
+        "garment_bag"
+      ],
+      "requires": [
+        "style"
+      ],
+      "outfit": {
+        "dress": "dress_white"
+      }
+    },
+    {
+      "id": "warm_up",
+      "station": "Lido Deck",
+      "text": "Join the warm-up on the Lido. Everyone is rooting for you, and one by one they tell you so, and sign your card.",
+      "requires": [
+        "dress"
+      ],
+      "gives": "warm_up_card"
+    },
+    {
+      "id": "number",
+      "station": "Atrium Runway",
+      "text": "Give the stage manager your stamp and your card. She pins your runway number on with the bow, so nobody looks at anything else.",
+      "needs": [
+        "salon_stamp",
+        "warm_up_card"
+      ],
+      "requires": [
+        "warm_up"
+      ],
+      "outfit": {
+        "accessory": "acc_bow"
+      },
+      "gives": "runway_number"
+    }
+  ],
+  "items": {
+    "call_sheet": "Hottest of the HOT call sheet",
+    "appointment_card": "Glow Lounge appointment card ('we squeezed you in')",
+    "claim_tag": "Laundry claim tag",
+    "garment_bag": "Pressed white dress in a garment bag",
+    "ribbon": "Very Brave hair ribbon",
+    "stylist_note": "Stylist's note (folded, not for you)",
+    "salon_stamp": "Glow Lounge 'You're Done!' stamp",
+    "warm_up_card": "Lido warm-up card, signed by everyone who is rooting for you",
+    "runway_number": "Runway number, pinned where it can't be missed"
+  }
 }
