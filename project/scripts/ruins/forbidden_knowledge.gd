@@ -41,3 +41,15 @@ static func recover(piece_id: String) -> bool:
 	list.append(piece_id)
 	_ws().set_flag(FLAG, list)
 	return true
+
+
+## Piece text with {cast_id} tokens replaced by that person's name from data/cast.json,
+## so names in ruins.json are spelled only in the cast file.
+static func fill(text: String) -> String:
+	var cast := (Engine.get_main_loop() as SceneTree).root.get_node_or_null("/root/Cast")
+	if cast == null:
+		return text
+	var re := RegEx.create_from_string("\\{([a-z_]+)\\}")
+	for m in re.search_all(text):
+		text = text.replace(m.get_string(), cast.full(m.get_string(1)))
+	return text

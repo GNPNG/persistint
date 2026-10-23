@@ -1,10 +1,13 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="Script" path="res://scripts/map.gd" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="3"]
 [ext_resource type="PackedScene" path="res://scenes/maps/door.tscn" id="5"]
 [ext_resource type="PackedScene" path="res://scenes/ruins/knowledge_pickup.tscn" id="6"]
 [ext_resource type="Script" path="res://scripts/ruins/ruins_decor.gd" id="7"]
+[ext_resource type="PackedScene" path="res://scenes/ruins/zombie_child.tscn" id="8"]
+[ext_resource type="PackedScene" path="res://scenes/ruins/polar_cub.tscn" id="9"]
+[ext_resource type="Script" path="res://scripts/ruins/clone_lab.gd" id="10"]
 
 [sub_resource type="NavigationPolygon" id="navpoly"]
 vertices = PackedVector2Array(60, 130, 900, 130, 900, 500, 60, 500)
@@ -55,3 +58,55 @@ piece_id = "fk_lab_1"
 [node name="Piece2" parent="." instance=ExtResource("6")]
 position = Vector2(620, 440)
 piece_id = "fk_lab_2"
+
+[node name="CloneLab" type="Node2D" parent="."]
+script = ExtResource("10")
+
+[node name="ZombieEpstein7" parent="." instance=ExtResource("8")]
+position = Vector2(300, 380)
+original = "epstein"
+batch = 7
+wander = Rect2(140, 320, 320, 150)
+
+[node name="ZombieEpstein4" parent="." instance=ExtResource("8")]
+position = Vector2(520, 400)
+original = "epstein"
+batch = 4
+wander = Rect2(300, 350, 400, 130)
+
+[node name="ZombieBillClinton2" parent="." instance=ExtResource("8")]
+position = Vector2(600, 300)
+original = "bill_clinton"
+batch = 2
+wander = Rect2(480, 240, 300, 200)
+
+[node name="ZombieHillaryClinton3" parent="." instance=ExtResource("8")]
+position = Vector2(350, 280)
+original = "hillary_clinton"
+batch = 3
+wander = Rect2(200, 220, 400, 120)
+
+[node name="ZombieBillGates5" parent="." instance=ExtResource("8")]
+position = Vector2(700, 430)
+original = "bill_gates"
+batch = 5
+wander = Rect2(520, 380, 320, 100)
+
+[node name="Cub1" parent="." instance=ExtResource("9")]
+position = Vector2(200, 450)
+batch = 1
+wander = Rect2(120, 400, 300, 90)
+
+[node name="Cub2" parent="." instance=ExtResource("9")]
+position = Vector2(480, 380)
+batch = 1
+wander = Rect2(400, 300, 300, 180)
+
+[node name="Cub3" parent="." instance=ExtResource("9")]
+position = Vector2(760, 320)
+batch = 1
+wander = Rect2(600, 250, 250, 200)
+
+[node name="Piece3" parent="." instance=ExtResource("6")]
+position = Vector2(820, 460)
+piece_id = "fk_lab_3"
