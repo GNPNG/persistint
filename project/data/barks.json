@@ -1,20 +1,20 @@
 {
-	"maren": [
+	"initiate": [
 		{ "if": { "refused_offering": true }, "text": "You just... said no. Politely. I keep thinking about it." },
 		{ "if": { "questioned_ritual": true }, "text": "I asked 'why' out loud today. The sky did not fall." },
 		{ "if": { "offering_delivered": true }, "text": "The Priestess logged your offering. You're 'seen' now!" },
 		{ "text": "The Fourteenth approaches! Everyone contributes. Everyone." }
 	],
-	"ondine": [
+	"priestess": [
 		{ "if": { "offering_delivered": true }, "text": "The obedient simply glow, don't you think?" },
 		{ "if": { "refused_offering": true }, "text": "'No thank you.' What a fascinating phrase." },
 		{ "text": "Stand straighter, dear. The icons are watching." }
 	],
-	"pip": [
+	"drone": [
 		{ "if": { "offering_delivered": true }, "text": "Extra weeding today. Festival greens for the Fourteenth." },
 		{ "text": "The tomatoes listen better than anyone on this island." }
 	],
-	"vess": [
+	"barren": [
 		{ "if": { "refused_offering": true }, "text": "Heard you refused. Sweetly, even. There's more of us than you'd think." },
 		{ "if": { "puzzle_ritual_done": true }, "text": "You arranged their little icons? The water still doesn't care." },
 		{ "text": "Water doesn't care what the Calendar says. Neither do I, much." }

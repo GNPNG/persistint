@@ -1,18 +1,18 @@
 {
 	"_note": "Names chosen by the author (2026-10-23): Gloria, Betty, Susan, Bruce. Real-world names: this is our world, decades on. The game, dialogue and barks read names only from here.",
-	"maren": {
+	"initiate": {
 		"name": "Gloria",
 		"short": "Gloria"
 	},
-	"ondine": {
+	"priestess": {
 		"name": "Priestess Betty",
 		"short": "Betty"
 	},
-	"pip": {
+	"drone": {
 		"name": "Bruce",
 		"short": "Bruce"
 	},
-	"vess": {
+	"barren": {
 		"name": "Susan",
 		"short": "Susan"
 	},

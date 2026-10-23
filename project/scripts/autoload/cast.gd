@@ -1,6 +1,6 @@
 extends Node
 ## Cast — character names from data/cast.json, the only place names are spelled.
-## Dialogue uses {{Cast.full("maren")}} / {{Cast.short("maren")}}; NPCs look up by npc_id.
+## Dialogue uses {{Cast.full("initiate")}} / {{Cast.short("initiate")}}; NPCs look up by npc_id.
 
 const CAST_PATH := "res://data/cast.json"
 

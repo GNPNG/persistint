@@ -6,7 +6,7 @@ extends SceneTree
 ## The player's real save (user://save.json) is backed up and restored.
 
 const BARKS_PATH := "res://data/barks.json"
-const NPCS := ["maren", "ondine", "pip", "vess"]
+const NPCS := ["initiate", "priestess", "drone", "barren"]
 
 var _barks: Dictionary = {}
 var _failures := 0
@@ -53,9 +53,9 @@ func _run() -> void:
 				"%s: flag %s survives save/load" % [name, key])
 
 	_check(results["accept_deliver"] != results["refuse"], "barks differ: accept vs refuse")
-	_check(results["question_deliver"]["maren"] != results["accept_deliver"]["maren"]
+	_check(results["question_deliver"]["initiate"] != results["accept_deliver"]["initiate"]
 		or results["question_deliver"] != results["refuse"], "barks differ: question branch")
-	_check(results["accept_deliver"]["vess"].contains("icons"), "puzzle result referenced by Vess")
+	_check(results["accept_deliver"]["barren"].contains("icons"), "puzzle result referenced by the barren NPC")
 
 	# Clock and location survive save/load; New Game resets the clock.
 	var clock: Node = root.get_node("/root/GameClock")
@@ -80,15 +80,15 @@ func _run() -> void:
 	# Names come only from data/cast.json, including dialogue speaker names.
 	var cast: Node = root.get_node("/root/Cast")
 	var cast_data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/cast.json"))
-	_check(cast.full("ondine") == cast_data["ondine"]["name"], "Cast.full reads cast.json")
+	_check(cast.full("priestess") == cast_data["priestess"]["name"], "Cast.full reads cast.json")
 	var dm: Node = root.get_node("/root/DialogueManager")
 	ws.reset()
 	var line = await dm.get_next_dialogue_line(load("res://dialogue/priestess.dialogue"), "start")
-	_check(line != null and line.character == cast_data["ondine"]["name"],
+	_check(line != null and line.character == cast_data["priestess"]["name"],
 		"dialogue speaker resolves from cast.json (got %s)" % (line.character if line else "null"))
 	ws.reset()
 	line = await dm.get_next_dialogue_line(load("res://dialogue/offering.dialogue"), "start")
-	_check(line != null and line.character == cast_data["maren"]["name"],
+	_check(line != null and line.character == cast_data["initiate"]["name"],
 		"offering speaker resolves from cast.json (got %s)" % (line.character if line else "null"))
 
 	# Name It: wrong answers are rejected; the right hook + tactic lands in the journal.

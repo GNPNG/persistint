@@ -1,28 +1,28 @@
 ~ start
 if WorldState.has_flag("offering_delivered")
-	{{Cast.full("maren")}}: The Priestess smiled at the offering. I am... relieved.
+	{{Cast.full("initiate")}}: The Priestess smiled at the offering. I am... relieved.
 	=> END
 elif WorldState.has_flag("refused_offering")
-	{{Cast.full("maren")}}: You really didn't take it. And nothing terrible happened.
-	{{Cast.full("maren")}}: Yet. Probably. I mean— have a lovely cycle!
+	{{Cast.full("initiate")}}: You really didn't take it. And nothing terrible happened.
+	{{Cast.full("initiate")}}: Yet. Probably. I mean— have a lovely cycle!
 	=> END
 elif WorldState.has_flag("quest_offering_accepted")
-	{{Cast.full("maren")}}: The offering! {{Cast.full("ondine")}} is waiting in the Temple.
+	{{Cast.full("initiate")}}: The offering! {{Cast.full("priestess")}} is waiting in the Temple.
 	=> END
-{{Cast.full("maren")}}: Oh! You're the new arrival. The Festival of the Fourteenth is coming.
-{{Cast.full("maren")}}: Would you carry this offering to {{Cast.full("ondine")}}? Everyone contributes.
-{{Cast.full("maren")}}: Everyone.
+{{Cast.full("initiate")}}: Oh! You're the new arrival. The Festival of the Fourteenth is coming.
+{{Cast.full("initiate")}}: Would you carry this offering to {{Cast.full("priestess")}}? Everyone contributes.
+{{Cast.full("initiate")}}: Everyone.
 - Of course.
-	{{Cast.full("maren")}}: You're a good one. They notice that, you know.
+	{{Cast.full("initiate")}}: You're a good one. They notice that, you know.
 	do WorldState.set_flag("quest_offering_accepted", true)
 - Why does everyone have to contribute?
-	{{Cast.full("maren")}}: Because... because that's how it's always been?
-	{{Cast.full("maren")}}: Huh. No one's ever actually asked me that before.
-	{{Cast.full("maren")}}: Take it anyway — but that was a good question.
+	{{Cast.full("initiate")}}: Because... because that's how it's always been?
+	{{Cast.full("initiate")}}: Huh. No one's ever actually asked me that before.
+	{{Cast.full("initiate")}}: Take it anyway — but that was a good question.
 	do WorldState.set_flag("questioned_ritual", true)
 	do WorldState.set_flag("quest_offering_accepted", true)
 - No, thank you.
-	{{Cast.full("maren")}}: You can... say that? Just like that?
-	{{Cast.full("maren")}}: "No, thank you." Hm. It didn't even thunder.
+	{{Cast.full("initiate")}}: You can... say that? Just like that?
+	{{Cast.full("initiate")}}: "No, thank you." Hm. It didn't even thunder.
 	do WorldState.set_flag("refused_offering", true)
 => END
