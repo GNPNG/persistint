@@ -57,6 +57,8 @@ func _load_art() -> void:
 			rig = AnimatedSprite2D.new()
 			rig.name = "Rig"
 			rig.sprite_frames = load(frames_path)
+			# Sheets drawn above world resolution say how far to scale down (tools/florida_draw.py).
+			rig.scale = Vector2.ONE * float(rig.sprite_frames.get_meta(&"display_scale", 1.0))
 			add_child(rig)
 			move_child(rig, $Sprite2D.get_index())
 			$Sprite2D.hide()

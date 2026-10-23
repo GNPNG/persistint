@@ -4,8 +4,10 @@ Usage: python3 -I tools/gen_florida_critters.py
 The canon sheets have no animals of the Keys, so these are drawn in the canon sticker look of
 prompts/STYLE.md 4.3: warm-brown outline #8a5a5a, flat fills with one highlight, dot eyes with a
 catch-light, pink blush, a small smile; Florida colours from 4.4 (coral, sea blue, foam).
-Drawn at 8x and LANCZOS-resized. Deterministic: no randomness.
-Outputs (project/assets/florida/), each a PNG sheet and a SpriteFrames .tres over it:
+Drawn at 8x world size and LANCZOS-resized to tools/florida_draw.D = 4 texture px per world
+px. Deterministic: no randomness.
+Outputs (project/assets/florida/), each a PNG sheet and a SpriteFrames .tres over it (frame
+sizes in world px; the PNG frames are 4x that, e.g. crab 96x72):
   crab.png     frame 24x18  row 0 idle (claws snip: 4 frames, 4 fps)
                             row 1 walk (sideways scuttle: 4 frames, 8 fps)
   gull.png     frame 24x24  row 0 idle (look about, peck: 4 frames, 3 fps)
@@ -27,12 +29,13 @@ K = 8
 
 def sheet(name, fw, fh, rows, fps):
     from PIL import Image
-    out = Image.new("RGBA", (fw * 4, fh * len(rows)))
+    D = fd.D
+    out = Image.new("RGBA", (fw * 4 * D, fh * len(rows) * D))
     for r, frames in enumerate(rows):
         for c, draw in enumerate(frames):
             im, p = fd.canvas(fw, fh, K)
             draw(p)
-            out.alpha_composite(fd.finish(im, fw, fh), (c * fw, r * fh))
+            out.alpha_composite(fd.finish(im, fw, fh), (c * fw * D, r * fh * D))
     fd.save(out, name)
     names = ["idle", "walk"]
     fd.write_frames(name, fw, fh, [(names[r], r, [0, 1, 2, 3], fps[r], True) for r in range(len(rows))])
@@ -181,11 +184,10 @@ def dolphin(arc=0.0, tail=0.0, splash=0.0, rise=0.0):
 
 
 def submerge(img, waterline, tint="#7fc0e0"):
-    """Below the waterline the critter shows through the water: tinted and paler."""
-    from PIL import Image
+    """Below the waterline (world px) the critter shows through the water: tinted and paler."""
     px = img.load()
     t = fd.rgb(tint)
-    for y in range(waterline, img.height):
+    for y in range(waterline * fd.D, img.height):
         for x in range(img.width):
             r, g, b, a = px[x, y]
             if a:
@@ -206,7 +208,8 @@ def main():
     print("gull", sheet("gull", 24, 24, gull_rows, [3, 8]).size)
 
     from PIL import Image
-    out = Image.new("RGBA", (48 * 4, 32 * 2))
+    D = fd.D
+    out = Image.new("RGBA", (48 * 4 * D, 32 * 2 * D))
     rows = [
         [dolphin(0, 0), dolphin(0.15, 0.6, 0, 0.6), dolphin(0, 0), dolphin(-0.15, -0.6, 0, -0.4)],
         [dolphin(-0.6, -1, 0.3, -1.5), dolphin(0.2, 0.5, 0.8, 1.5), dolphin(0.9, 1, 1.0, 3.2), dolphin(0.3, -0.5, 0.5, 1.0)],
@@ -216,7 +219,7 @@ def main():
             im, p = fd.canvas(48, 32, K)
             draw(p)
             small = fd.finish(im, 48, 32)
-            out.alpha_composite(submerge(small, 26), (c * 48, r * 32))
+            out.alpha_composite(submerge(small, 26), (c * 48 * D, r * 32 * D))
     fd.save(out, "dolphin")
     fd.write_frames("dolphin", 48, 32, [("idle", 0, [0, 1, 2, 3], 4, True), ("walk", 1, [0, 1, 2, 3], 6, True)])
     print("dolphin", out.size)

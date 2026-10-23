@@ -20,6 +20,7 @@ func _ready() -> void:
 	var path := "res://assets/florida/%s.tres" % (sprite_frames if sprite_frames != "" else kind)
 	if ResourceLoader.exists(path):
 		sprite.sprite_frames = load(path)
+		sprite.scale = Vector2.ONE * float(sprite.sprite_frames.get_meta(&"display_scale", 1.0))
 		sprite.play("idle")
 		sprite.frame = randi() % sprite.sprite_frames.get_frame_count("idle")
 	bubble.hide()
