@@ -13,6 +13,7 @@ outlines = [PackedVector2Array(60, 210, 900, 210, 900, 520, 60, 520)]
 
 [node name="Stable" type="Node2D"]
 script = ExtResource("1")
+map_size = Vector2(960, 540)
 
 [node name="Background" type="Sprite2D" parent="."]
 texture = ExtResource("2")
