@@ -15,6 +15,22 @@ var phase_index := 0
 var _elapsed := 0.0
 
 
+func _ready() -> void:
+	restore()
+
+
+## Load day/phase from the WorldState save; no saved clock means Day 1 morning.
+func restore() -> void:
+	var saved: Variant = WorldState.get_flag("_clock")
+	if saved is Dictionary:
+		day = int(saved.get("day", 1))
+		phase_index = int(saved.get("phase_index", 0)) % PHASES.size()
+	else:
+		day = 1
+		phase_index = 0
+	_elapsed = 0.0
+
+
 func _process(delta: float) -> void:
 	_elapsed += delta
 	if _elapsed >= SECONDS_PER_PHASE:
@@ -28,6 +44,7 @@ func _advance_phase() -> void:
 		phase_index = 0
 		day += 1
 		day_changed.emit(day)
+	WorldState.set_flag("_clock", {"day": day, "phase_index": phase_index})
 	phase_changed.emit(phase())
 
 

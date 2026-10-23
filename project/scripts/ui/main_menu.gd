@@ -11,9 +11,14 @@ func _ready() -> void:
 
 
 func _on_begin() -> void:
-	SceneRouter.goto_map(FIRST_MAP, "spawn_default")
+	var loc: Variant = WorldState.get_flag("_location")
+	if loc is Dictionary and ResourceLoader.exists(loc.get("scene", "")):
+		SceneRouter.goto_map(loc["scene"], loc.get("spawn", "spawn_default"))
+	else:
+		SceneRouter.goto_map(FIRST_MAP, "spawn_default")
 
 
 func _on_new_game() -> void:
 	WorldState.reset()
+	GameClock.restore()
 	SceneRouter.goto_map(FIRST_MAP, "spawn_default")
