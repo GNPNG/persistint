@@ -51,16 +51,19 @@ func _on_flag_changed(key: String, _value: Variant) -> void:
 
 
 func refresh_outfit() -> void:
-	_set_layer($Body, WorldState.get_flag("outfit_body", "body_base"))
-	_set_layer($Dress, WorldState.get_flag("outfit_dress", "dress_teal"))
-	_set_layer($Hair, WorldState.get_flag("outfit_hair", "hair_rose"))
-	_set_layer($Accessory, WorldState.get_flag("outfit_accessory", "none"))
-
-
-func _set_layer(sprite: Sprite2D, item: String) -> void:
-	if item == "none" or item.is_empty():
-		sprite.texture = null
-		return
-	var path := "res://assets/placeholder/%s.png" % item
-	if ResourceLoader.exists(path):
-		sprite.texture = load(path)
+	var outfit := {
+		$Body: WorldState.get_flag("outfit_body", "body_base"),
+		$Dress: WorldState.get_flag("outfit_dress", "dress_white"),
+		$Hair: WorldState.get_flag("outfit_hair", "hair_braids"),
+		$Accessory: WorldState.get_flag("outfit_accessory", "none"),
+	}
+	# Same art set for every layer (canon when it has all worn parts, as the wardrobe does).
+	var pattern := PaperDoll.art_dir_for(outfit.values())
+	for sprite: Sprite2D in outfit:
+		var item: String = outfit[sprite]
+		var path := pattern % item
+		sprite.texture = load(path) if item != "none" and ResourceLoader.exists(path) else null
+		# Scale the doll to 48 px tall (NPC height) with its feet on the collision circle.
+		var h := float(sprite.texture.get_height()) if sprite.texture else 48.0
+		sprite.scale = Vector2.ONE * (48.0 / h)
+		sprite.position = Vector2(0, -8)

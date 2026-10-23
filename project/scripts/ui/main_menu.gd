@@ -1,5 +1,5 @@
 extends Control
-## Main menu — Begin (continue save) / New Game (fresh flags).
+## Main menu — New Game (fresh flags); Continue only when there is a save to continue.
 
 const FIRST_MAP := "res://scenes/maps/village.tscn"
 
@@ -7,6 +7,7 @@ const FIRST_MAP := "res://scenes/maps/village.tscn"
 func _ready() -> void:
 	$Center/VBox/BeginButton.pressed.connect(_on_begin)
 	$Center/VBox/NewButton.pressed.connect(_on_new_game)
+	$Center/VBox/BeginButton.visible = WorldState.get_flag("_location") is Dictionary
 
 
 func _on_begin() -> void:
