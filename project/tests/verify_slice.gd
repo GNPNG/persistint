@@ -242,7 +242,7 @@ func _run() -> void:
 
 func _bark(ws: Node, npc: String) -> String:
 	for entry: Dictionary in _barks.get(npc, []):
-		if ws.matches(entry.get("if", {})):
+		if ws.matches(entry.get("if", {})) and root.get_node("/root/GameClock").matches_when(entry.get("when", {})):
 			return entry.get("text", "")
 	return "..."
 
