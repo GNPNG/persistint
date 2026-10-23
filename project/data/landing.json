@@ -1,24 +1,401 @@
 {
-  "_note": "The Landing (DESIGN.md: Spaceteam-style coordinated-panic bridge game as the ship comes down, Among Us-flavored crew tasks around the ship; prologue-capable). Story Structure, Camera 1 / opening scene: the dead cruise ship (EMP) drifts through fog toward the island; Cap'n Kate is trying not to crash a dead ship; systems failing, chaos on deck, the first mate yelling for the captain. Each command names the station around the ship and the control there. Commands come only from the design doc; add more here. seconds_per_command is an agent placeholder. stations: the ship layout (pos = x,y fractions of the ship plan); each station's crew tasks are {id,text} entries, empty until the author supplies them.",
+  "_note": "The Landing (DESIGN.md: Spaceteam-style coordinated-panic bridge game as the ship comes down, Among Us-flavored crew tasks around the ship; prologue-capable). Story Structure, Camera 1 / opening scene: the dead cruise ship (EMP) drifts through fog toward the island; Cap'n Kate (based on Kate McCue) is trying not to crash a dead ship; systems failing, chaos on deck, the first mate yelling for the captain. Each command names the station around the ship and the control there. Stations are the ship plan (pos = x,y fractions); their crew tasks are social-impostor tasks (look busy, take credit, borrow authority) with no violence. Props follow Story Structure: gift shop books, celebrity cabins, champagne. Station names, controls and tasks are written for the game; the sources name no stations.",
   "captain": "kate",
   "first_mate": "First Mate",
-  "seconds_per_command": 6.0,
+  "seconds_per_command": 8.0,
   "return_map": "res://scenes/maps/village.tscn",
   "commands": [
+    {
+      "station": "Bridge",
+      "control": "Helm Gyroscope",
+      "text": "Recalibrate the Helm Gyroscope!"
+    },
+    {
+      "station": "Bridge",
+      "control": "Fog Horn",
+      "text": "Sound the Fog Horn!"
+    },
+    {
+      "station": "Bridge",
+      "control": "Autopilot Affirmation Panel",
+      "text": "Reaffirm the Autopilot Affirmation Panel!"
+    },
+    {
+      "station": "Bridge",
+      "control": "Chart Table Crayons",
+      "text": "Rotate the Chart Table Crayons!"
+    },
     {
       "station": "Promenade",
       "control": "Promenade Stabilizers",
       "text": "Align the Promenade Stabilizers!"
+    },
+    {
+      "station": "Promenade",
+      "control": "Deck Chair Gyro",
+      "text": "Level the Deck Chair Gyro!"
+    },
+    {
+      "station": "Promenade",
+      "control": "Parasol Tensioner",
+      "text": "Tension the Parasol Tensioner!"
+    },
+    {
+      "station": "Promenade",
+      "control": "Shuffleboard Thruster",
+      "text": "Prime the Shuffleboard Thruster!"
+    },
+    {
+      "station": "Atrium",
+      "control": "Chandelier Counterweight",
+      "text": "Balance the Chandelier Counterweight!"
+    },
+    {
+      "station": "Atrium",
+      "control": "Grand Staircase Flux Rail",
+      "text": "Polish the Grand Staircase Flux Rail!"
+    },
+    {
+      "station": "Atrium",
+      "control": "Panel Discussion Dampener",
+      "text": "Engage the Panel Discussion Dampener!"
+    },
+    {
+      "station": "Atrium",
+      "control": "Champagne Fountain Valve",
+      "text": "Close the Champagne Fountain Valve!"
+    },
+    {
+      "station": "Lido Deck",
+      "control": "Wave Pool Throttle",
+      "text": "Throttle the Wave Pool!"
+    },
+    {
+      "station": "Lido Deck",
+      "control": "Sunscreen Ionizer",
+      "text": "Ionize the Sunscreen Dispenser!"
+    },
+    {
+      "station": "Lido Deck",
+      "control": "Poolside Bar Intercooler",
+      "text": "Chill the Poolside Bar Intercooler!"
+    },
+    {
+      "station": "Lido Deck",
+      "control": "Towel Reactor",
+      "text": "Fold the Towel Reactor!"
+    },
+    {
+      "station": "Spa",
+      "control": "Hot Stone Regulator",
+      "text": "Regulate the Hot Stone Regulator!"
+    },
+    {
+      "station": "Spa",
+      "control": "Eucalyptus Flux Capacitor",
+      "text": "Charge the Eucalyptus Flux Capacitor!"
+    },
+    {
+      "station": "Spa",
+      "control": "Mud Wrap Pressure Seal",
+      "text": "Seal the Mud Wrap Pressure Seal!"
+    },
+    {
+      "station": "Spa",
+      "control": "Gong of Calm",
+      "text": "Strike the Gong of Calm!"
+    },
+    {
+      "station": "Gift Shop",
+      "control": "Snow Globe Gyroscope",
+      "text": "Shake the Snow Globe Gyroscope!"
+    },
+    {
+      "station": "Gift Shop",
+      "control": "Souvenir Mug Capacitor",
+      "text": "Discharge the Souvenir Mug Capacitor!"
+    },
+    {
+      "station": "Gift Shop",
+      "control": "Bestseller Rack Lock",
+      "text": "Unlock the Bestseller Rack!"
+    },
+    {
+      "station": "Gift Shop",
+      "control": "Postcard Beacon",
+      "text": "Stamp the Postcard Beacon!"
+    },
+    {
+      "station": "Galley",
+      "control": "Soufflé Pressure Valve",
+      "text": "Release the Soufflé Pressure Valve!"
+    },
+    {
+      "station": "Galley",
+      "control": "Brunch Buffer",
+      "text": "Refill the Brunch Buffer!"
+    },
+    {
+      "station": "Galley",
+      "control": "Oat Milk Reservoir",
+      "text": "Prime the Oat Milk Reservoir!"
+    },
+    {
+      "station": "Galley",
+      "control": "Walk-in Chiller Ratchet",
+      "text": "Ratchet the Walk-in Chiller!"
+    },
+    {
+      "station": "Engine Room",
+      "control": "Emergency Reboot Lever",
+      "text": "Pull the Emergency Reboot Lever!"
+    },
+    {
+      "station": "Engine Room",
+      "control": "Backup Warp Knob",
+      "text": "Turn the Backup Warp Knob!"
+    },
+    {
+      "station": "Engine Room",
+      "control": "Bilge Optimizer",
+      "text": "Optimize the Bilge Optimizer!"
+    },
+    {
+      "station": "Engine Room",
+      "control": "EMP Recovery Hamster",
+      "text": "Reassure the EMP Recovery Hamster!"
+    },
+    {
+      "station": "Bridge",
+      "control": "Helm Gyroscope",
+      "text": "Spin the Helm Gyroscope counterclockwise, gently, with kindness!"
+    },
+    {
+      "station": "Bridge",
+      "control": "Fog Horn",
+      "text": "Whisper into the Fog Horn!"
+    },
+    {
+      "station": "Bridge",
+      "control": "Chart Table Crayons",
+      "text": "Tell the Chart Table Crayons they are doing their best!"
+    },
+    {
+      "station": "Promenade",
+      "control": "Promenade Stabilizers",
+      "text": "Realign the Promenade Stabilizers, but warmly!"
+    },
+    {
+      "station": "Promenade",
+      "control": "Parasol Tensioner",
+      "text": "Loosen the Parasol Tensioner, it has been through a lot!"
+    },
+    {
+      "station": "Atrium",
+      "control": "Chandelier Counterweight",
+      "text": "Counterweight the Chandelier before it starts talking!"
+    },
+    {
+      "station": "Atrium",
+      "control": "Champagne Fountain Valve",
+      "text": "Open the Champagne Fountain Valve, then close it, then reflect!"
+    },
+    {
+      "station": "Lido Deck",
+      "control": "Towel Reactor",
+      "text": "Fold the Towel Reactor into thirds, hospital corners!"
+    },
+    {
+      "station": "Lido Deck",
+      "control": "Wave Pool Throttle",
+      "text": "Calm the Wave Pool Throttle, it is only a pool!"
+    },
+    {
+      "station": "Spa",
+      "control": "Gong of Calm",
+      "text": "Strike the Gong of Calm. No, not like that. Like that!"
+    },
+    {
+      "station": "Spa",
+      "control": "Hot Stone Regulator",
+      "text": "Cool the Hot Stone Regulator and affirm its boundaries!"
+    },
+    {
+      "station": "Gift Shop",
+      "control": "Postcard Beacon",
+      "text": "Wish the Postcard Beacon were here!"
+    },
+    {
+      "station": "Gift Shop",
+      "control": "Snow Globe Gyroscope",
+      "text": "Shake the Snow Globe Gyroscope until it is a blizzard!"
+    },
+    {
+      "station": "Galley",
+      "control": "Brunch Buffer",
+      "text": "Bottomless the Brunch Buffer!"
+    },
+    {
+      "station": "Galley",
+      "control": "Soufflé Pressure Valve",
+      "text": "Do not open the Soufflé Pressure Valve; open it!"
+    },
+    {
+      "station": "Engine Room",
+      "control": "Bilge Optimizer",
+      "text": "Synergize the Bilge Optimizer!"
+    },
+    {
+      "station": "Engine Room",
+      "control": "Emergency Reboot Lever",
+      "text": "Pull the Emergency Reboot Lever and then pull it back!"
+    },
+    {
+      "station": "Engine Room",
+      "control": "Backup Warp Knob",
+      "text": "Turn the Backup Warp Knob to eleven (it only goes to ten)!"
     }
   ],
   "stations": [
     {
+      "name": "Bridge",
+      "pos": [
+        0.82,
+        0.18
+      ],
+      "tasks": [
+        {
+          "id": "bridge_hold_the_con",
+          "text": "Stand beside the helm looking like you were told to"
+        },
+        {
+          "id": "bridge_nod_at_chart",
+          "text": "Nod gravely at the chart as if it agreed with you"
+        }
+      ]
+    },
+    {
       "name": "Promenade",
       "pos": [
         0.5,
-        0.5
+        0.3
       ],
-      "tasks": []
+      "tasks": [
+        {
+          "id": "promenade_stack_chairs",
+          "text": "Stack the deck chairs and say it is a safety drill"
+        },
+        {
+          "id": "promenade_wave_at_fog",
+          "text": "Wave at the fog so it knows we are friendly"
+        }
+      ]
+    },
+    {
+      "name": "Atrium",
+      "pos": [
+        0.5,
+        0.55
+      ],
+      "tasks": [
+        {
+          "id": "atrium_ask_who_assigned",
+          "text": "Ask loudly who assigned this task, then do it anyway"
+        },
+        {
+          "id": "atrium_take_the_credit",
+          "text": "Be photographed beside someone else's finished task"
+        },
+        {
+          "id": "atrium_hold_the_panel",
+          "text": "Moderate an impromptu panel on the crisis, topic: your feelings"
+        }
+      ]
+    },
+    {
+      "name": "Lido Deck",
+      "pos": [
+        0.5,
+        0.85
+      ],
+      "tasks": [
+        {
+          "id": "lido_count_towels",
+          "text": "Count the towels twice and announce a shortage"
+        },
+        {
+          "id": "lido_float_idea",
+          "text": "Float a new idea in the pool, then leave before it is discussed"
+        }
+      ]
+    },
+    {
+      "name": "Spa",
+      "pos": [
+        0.2,
+        0.62
+      ],
+      "tasks": [
+        {
+          "id": "spa_breathe_in",
+          "text": "Breathe in deeply, together, with everyone who is panicking"
+        },
+        {
+          "id": "spa_offer_tea",
+          "text": "Offer a stranger herbal tea and ask how she is really feeling"
+        }
+      ]
+    },
+    {
+      "name": "Gift Shop",
+      "pos": [
+        0.15,
+        0.35
+      ],
+      "tasks": [
+        {
+          "id": "gift_restock_books",
+          "text": "Restock the bestsellers shelf, spines facing outward"
+        },
+        {
+          "id": "gift_sign_a_book",
+          "text": "Sign a copy of a book you did not write, with feeling"
+        }
+      ]
+    },
+    {
+      "name": "Galley",
+      "pos": [
+        0.78,
+        0.65
+      ],
+      "tasks": [
+        {
+          "id": "galley_taste_test",
+          "text": "Taste the soup and say 'needs more of a narrative'"
+        },
+        {
+          "id": "galley_label_leftovers",
+          "text": "Label the leftovers with someone else's name"
+        }
+      ]
+    },
+    {
+      "name": "Engine Room",
+      "pos": [
+        0.88,
+        0.9
+      ],
+      "tasks": [
+        {
+          "id": "engine_look_busy",
+          "text": "Kneel by the engine with a wrench, quietly holding it upside down"
+        },
+        {
+          "id": "engine_blame_the_fog",
+          "text": "Mutter that this would never happen in a better-run fog"
+        }
+      ]
     }
   ]
 }
