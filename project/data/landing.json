@@ -1,0 +1,13 @@
+{
+  "_note": "The Landing (DESIGN.md: Spaceteam-style coordinated-panic bridge game as the ship comes down; prologue-capable). Commands come only from the design doc; add more here. seconds_per_command, hull and rounds are agent placeholders, not from the design.",
+  "seconds_per_command": 6.0,
+  "hull": 3,
+  "rounds": 8,
+  "return_map": "res://scenes/maps/village.tscn",
+  "commands": [
+    {
+      "control": "Promenade Stabilizers",
+      "text": "Align the Promenade Stabilizers!"
+    }
+  ]
+}

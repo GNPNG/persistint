@@ -109,6 +109,21 @@ func _run() -> void:
 	name_it.start("priestess_easy_girl")
 	_check(name_it._layer == null, "a beat with no author-set answer stays off")
 
+	# The Landing: right control scores, wrong control costs hull, result lands in WorldState.
+	ws.reset()
+	var landing: Control = load("res://scenes/minigames/landing.tscn").instantiate()
+	root.add_child(landing)
+	var hull_start: int = landing.hull
+	landing._on_control(landing.current["control"])
+	_check(landing.score == 1, "landing: matching control scores")
+	landing._on_control("__wrong__")
+	_check(landing.hull == hull_start - 1, "landing: wrong control costs hull")
+	while landing.running:
+		landing._on_control(landing.current["control"])
+	_check(ws.get_flag("landing_done") == true and ws.get_flag("landing_score") == landing.score,
+		"landing result written to WorldState")
+	landing.queue_free()
+
 	# Paper doll: one art set per doll, layers follow the outfit, wardrobe uses it.
 	ws.reset()
 	var doll: Control = preload("res://scripts/systems/paper_doll.gd").new()
