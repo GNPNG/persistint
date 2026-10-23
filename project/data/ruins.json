@@ -1,14 +1,607 @@
 {
+	"_note": "Room titles, ambient lines, props and Forbidden Knowledge text are adapted from Story Structure: the repurposed bunker and clone lab (L88-95), the Great Biological Misreading (L70-78), banned counting and measuring (L126, L428). The bunker/clone-lab rooms, props and cat stickers are author-directed additions written in the sources' voice.",
 	"rooms": {
-		"wreck": { "scene": "res://scenes/ruins/ruins_wreck.tscn", "title": "" },
-		"corridor": { "scene": "res://scenes/ruins/ruins_corridor.tscn", "title": "" },
-		"core": { "scene": "res://scenes/ruins/ruins_core.tscn", "title": "" }
+		"wreck": {
+			"scene": "res://scenes/ruins/ruins_wreck.tscn",
+			"title": "The Promenade Deck (Sideways)",
+			"ambient": [
+				"The deck tilts a few degrees from where the floor ought to be. The shrine-keepers have decided that is the direction of prayer.",
+				"A deck chair is still arranged to face a sunset that stopped being scheduled.",
+				"Something drips in rhythm. Somebody once decided it was a chant.",
+				"The gift-shop awning says SOUVENIRS in letters the Covenant calls scripture and cannot read."
+			],
+			"props": [
+				{
+					"x": 80,
+					"y": 150,
+					"w": 150,
+					"h": 70,
+					"color": [
+						0.93,
+						0.62,
+						0.74
+					],
+					"text": "GIFT SHOP (sacked)"
+				},
+				{
+					"x": 280,
+					"y": 300,
+					"w": 90,
+					"h": 40,
+					"color": [
+						0.9,
+						0.85,
+						0.7
+					],
+					"text": "deck chairs"
+				},
+				{
+					"x": 420,
+					"y": 150,
+					"w": 110,
+					"h": 60,
+					"color": [
+						0.55,
+						0.74,
+						0.9
+					],
+					"text": "melted ice swan"
+				},
+				{
+					"x": 640,
+					"y": 170,
+					"w": 120,
+					"h": 80,
+					"color": [
+						0.62,
+						0.55,
+						0.82
+					],
+					"text": "slot machines, tilted"
+				},
+				{
+					"x": 700,
+					"y": 380,
+					"w": 130,
+					"h": 60,
+					"color": [
+						0.62,
+						0.4,
+						0.36
+					],
+					"text": "lifeboat, stencilled LIFEBOAT 7"
+				},
+				{
+					"x": 120,
+					"y": 400,
+					"w": 100,
+					"h": 50,
+					"color": [
+						0.55,
+						0.82,
+						0.7
+					],
+					"text": "buffet, reverent"
+				}
+			]
+		},
+		"corridor": {
+			"scene": "res://scenes/ruins/ruins_corridor.tscn",
+			"title": "The Service Spine",
+			"ambient": [
+				"Pipes run along the ceiling, painted with a pale red stripe by someone who believed it was meant to be blood.",
+				"A sign blinks without power: ALIGN THE PROMENADE STABILIZERS. Nobody knows what it asks of them.",
+				"The walls are hung with portraits painted from memory. Every pair of eyes is slightly too large and slightly too kind.",
+				"A trolley of folded towels waits outside a door. It has waited for decades. It is very patient."
+			],
+			"props": [
+				{
+					"x": 150,
+					"y": 140,
+					"w": 300,
+					"h": 22,
+					"color": [
+						0.3,
+						0.33,
+						0.4
+					],
+					"text": "pipes"
+				},
+				{
+					"x": 520,
+					"y": 140,
+					"w": 260,
+					"h": 22,
+					"color": [
+						0.93,
+						0.62,
+						0.74
+					],
+					"text": "painted red stripe"
+				},
+				{
+					"x": 380,
+					"y": 260,
+					"w": 90,
+					"h": 70,
+					"color": [
+						0.55,
+						0.74,
+						0.9
+					],
+					"text": "portrait: a smiling woman, huge-eyed"
+				},
+				{
+					"x": 200,
+					"y": 420,
+					"w": 110,
+					"h": 45,
+					"color": [
+						0.55,
+						0.82,
+						0.7
+					],
+					"text": "towel trolley"
+				},
+				{
+					"x": 720,
+					"y": 300,
+					"w": 120,
+					"h": 60,
+					"color": [
+						0.62,
+						0.55,
+						0.82
+					],
+					"text": "vending machine, offering"
+				},
+				{
+					"x": 450,
+					"y": 470,
+					"w": 160,
+					"h": 24,
+					"color": [
+						0.62,
+						0.4,
+						0.36
+					],
+					"text": "CREW ONLY, scratched out"
+				}
+			]
+		},
+		"core": {
+			"scene": "res://scenes/ruins/ruins_core.tscn",
+			"title": "The Reliquary Core",
+			"ambient": [
+				"Racks of old machines hum at a pitch the Priestesses call the Voice of the Gate. It is a cooling fan.",
+				"Candles stand on every ledge. The wax has run into the vents. Nobody sees why that might matter.",
+				"A big O is stamped on the wall in pink. Beneath it, an arrow points down. It was painted over twice and the arrow came back.",
+				"Cables are braided and tied with ribbons. The ribbons are sacred. The cables are just cables."
+			],
+			"props": [
+				{
+					"x": 300,
+					"y": 150,
+					"w": 120,
+					"h": 90,
+					"color": [
+						0.3,
+						0.33,
+						0.4
+					],
+					"text": "server racks, humming"
+				},
+				{
+					"x": 540,
+					"y": 150,
+					"w": 120,
+					"h": 90,
+					"color": [
+						0.3,
+						0.33,
+						0.4
+					],
+					"text": "server racks, humming"
+				},
+				{
+					"x": 400,
+					"y": 280,
+					"w": 160,
+					"h": 70,
+					"color": [
+						0.93,
+						0.62,
+						0.74
+					],
+					"text": "altar built on a control desk"
+				},
+				{
+					"x": 180,
+					"y": 380,
+					"w": 100,
+					"h": 50,
+					"color": [
+						0.9,
+						0.85,
+						0.7
+					],
+					"text": "candle forest"
+				},
+				{
+					"x": 700,
+					"y": 380,
+					"w": 110,
+					"h": 55,
+					"color": [
+						0.62,
+						0.55,
+						0.82
+					],
+					"text": "Seal of the O (stencil)"
+				},
+				{
+					"x": 430,
+					"y": 470,
+					"w": 100,
+					"h": 22,
+					"color": [
+						0.62,
+						0.4,
+						0.36
+					],
+					"text": "hatch, stencilled DOWN"
+				}
+			]
+		},
+		"bunker_lift": {
+			"scene": "res://scenes/ruins/ruins_bunker_lift.tscn",
+			"title": "The Descent Hatch",
+			"ambient": [
+				"The lift cage is held open by a mop bucket. Pastel hazard stripes climb the shaft wall: pink, mint, pink, mint.",
+				"A voice recording tried to speak once, in the wall. The wall now only clicks, politely.",
+				"The air smells of cold metal and very old strawberry cleaning fluid.",
+				"A sign says AUTHORISED STAFF ONLY. A smaller sign beneath says PLEASE KNOCK. Nobody knocked."
+			],
+			"props": [
+				{
+					"x": 80,
+					"y": 200,
+					"w": 150,
+					"h": 160,
+					"color": [
+						0.3,
+						0.33,
+						0.4
+					],
+					"text": "lift cage, propped open"
+				},
+				{
+					"x": 300,
+					"y": 180,
+					"w": 200,
+					"h": 28,
+					"color": [
+						0.93,
+						0.62,
+						0.74
+					],
+					"text": "hazard stripes"
+				},
+				{
+					"x": 300,
+					"y": 214,
+					"w": 200,
+					"h": 28,
+					"color": [
+						0.55,
+						0.82,
+						0.7
+					],
+					"text": ""
+				},
+				{
+					"x": 580,
+					"y": 160,
+					"w": 120,
+					"h": 70,
+					"color": [
+						0.55,
+						0.74,
+						0.9
+					],
+					"text": "intercom, clicking"
+				},
+				{
+					"x": 560,
+					"y": 330,
+					"w": 170,
+					"h": 60,
+					"color": [
+						0.9,
+						0.85,
+						0.7
+					],
+					"text": "coat hooks (cloaks of the dead)"
+				},
+				{
+					"x": 380,
+					"y": 400,
+					"w": 100,
+					"h": 50,
+					"color": [
+						0.62,
+						0.55,
+						0.82
+					],
+					"text": "mop bucket"
+				}
+			]
+		},
+		"clone_hall": {
+			"scene": "res://scenes/ruins/ruins_clone_hall.tscn",
+			"title": "The Hall of Tanks",
+			"ambient": [
+				"Rows of glass tanks stand in the dim, filled with pink fluid and a few bubbles that rise as if on cue. They are empty. It is still a holy sight.",
+				"A rubber duck floats in the third tank. The Covenant has a rite for it.",
+				"The incubators hold their temperature out of habit. Something in the wall keeps count, and nobody has told it to stop.",
+				"Every machine has a sticker of a cat with a lab coat. The stickers outlasted the funding."
+			],
+			"props": [
+				{
+					"x": 100,
+					"y": 150,
+					"w": 70,
+					"h": 160,
+					"color": [
+						0.93,
+						0.62,
+						0.74
+					],
+					"text": "tank 1 (pink, empty)"
+				},
+				{
+					"x": 200,
+					"y": 150,
+					"w": 70,
+					"h": 160,
+					"color": [
+						0.93,
+						0.62,
+						0.74
+					],
+					"text": "tank 2"
+				},
+				{
+					"x": 300,
+					"y": 150,
+					"w": 70,
+					"h": 160,
+					"color": [
+						0.93,
+						0.62,
+						0.74
+					],
+					"text": "tank 3 (duck)"
+				},
+				{
+					"x": 400,
+					"y": 150,
+					"w": 70,
+					"h": 160,
+					"color": [
+						0.93,
+						0.62,
+						0.74
+					],
+					"text": "tank 4"
+				},
+				{
+					"x": 560,
+					"y": 150,
+					"w": 130,
+					"h": 70,
+					"color": [
+						0.55,
+						0.82,
+						0.7
+					],
+					"text": "incubators, warm"
+				},
+				{
+					"x": 730,
+					"y": 150,
+					"w": 110,
+					"h": 70,
+					"color": [
+						0.55,
+						0.74,
+						0.9
+					],
+					"text": "sequencer, cat sticker"
+				},
+				{
+					"x": 560,
+					"y": 330,
+					"w": 120,
+					"h": 60,
+					"color": [
+						0.62,
+						0.55,
+						0.82
+					],
+					"text": "centrifuge, mid-spin forever"
+				},
+				{
+					"x": 120,
+					"y": 400,
+					"w": 200,
+					"h": 50,
+					"color": [
+						0.9,
+						0.85,
+						0.7
+					],
+					"text": "prep benches, sterile, dusty"
+				},
+				{
+					"x": 740,
+					"y": 330,
+					"w": 100,
+					"h": 90,
+					"color": [
+						0.3,
+						0.33,
+						0.4
+					],
+					"text": "freezer, humming"
+				}
+			]
+		},
+		"records": {
+			"scene": "res://scenes/ruins/ruins_records.tscn",
+			"title": "The Quiet Archive",
+			"ambient": [
+				"Shelves of binders line the walls. Each spine has a label in careful, tiny print. Nobody has opened one in a generation.",
+				"A desk lamp is switched on. It has been on for decades. Somebody must have meant to come back.",
+				"A filing cabinet drawer is labelled MISC. It contains more than miscellany.",
+				"The carpet is cream and untouched. The archivist in you wants to take your shoes off."
+			],
+			"props": [
+				{
+					"x": 100,
+					"y": 150,
+					"w": 180,
+					"h": 120,
+					"color": [
+						0.9,
+						0.85,
+						0.7
+					],
+					"text": "binders, spines in tiny print"
+				},
+				{
+					"x": 340,
+					"y": 150,
+					"w": 180,
+					"h": 120,
+					"color": [
+						0.9,
+						0.85,
+						0.7
+					],
+					"text": "binders, by year"
+				},
+				{
+					"x": 580,
+					"y": 150,
+					"w": 180,
+					"h": 120,
+					"color": [
+						0.9,
+						0.85,
+						0.7
+					],
+					"text": "binders, cross-referenced"
+				},
+				{
+					"x": 380,
+					"y": 330,
+					"w": 150,
+					"h": 60,
+					"color": [
+						0.62,
+						0.55,
+						0.82
+					],
+					"text": "desk, lamp on"
+				},
+				{
+					"x": 120,
+					"y": 330,
+					"w": 120,
+					"h": 70,
+					"color": [
+						0.55,
+						0.82,
+						0.7
+					],
+					"text": "filing cabinets"
+				},
+				{
+					"x": 700,
+					"y": 330,
+					"w": 110,
+					"h": 70,
+					"color": [
+						0.93,
+						0.62,
+						0.74
+					],
+					"text": "stationery, labelled"
+				}
+			]
+		}
 	},
 	"knowledge": [
-		{ "id": "fk_wreck_1", "room": "wreck", "title": "", "text": "" },
-		{ "id": "fk_wreck_2", "room": "wreck", "title": "", "text": "" },
-		{ "id": "fk_corridor_1", "room": "corridor", "title": "", "text": "" },
-		{ "id": "fk_corridor_2", "room": "corridor", "title": "", "text": "" },
-		{ "id": "fk_core_1", "room": "core", "title": "", "text": "" }
+		{
+			"id": "fk_wreck_1",
+			"room": "wreck",
+			"title": "A Gift-Shop Paperback",
+			"text": "Its spine has never been cracked. Whoever carried it read the back-cover reviews and stopped. The Covenant calls this a way of reading."
+		},
+		{
+			"id": "fk_wreck_2",
+			"room": "wreck",
+			"title": "A Gift-Shop Receipt",
+			"text": "Tucked inside a book of soup-for-the-soul platitudes: three items, a total, a tax. Someone counted everything once, and it was ordinary."
+		},
+		{
+			"id": "fk_corridor_1",
+			"room": "corridor",
+			"title": "A Tide Table",
+			"text": "Laminated, with a little moon at the top. High tide follows the moon, not the blood. Whoever printed it did not ask permission to know."
+		},
+		{
+			"id": "fk_corridor_2",
+			"room": "corridor",
+			"title": "A Glass Thermometer",
+			"text": "A device of domination, the Priestesses say. It only tells you how warm a thing is. Nothing else about it is sinister, which is the trouble."
+		},
+		{
+			"id": "fk_core_1",
+			"room": "core",
+			"title": "A Wall Calendar",
+			"text": "Squares all the same size, none of them red. Days were counted before blood was, and they did not drift."
+		},
+		{
+			"id": "fk_bunker_1",
+			"room": "bunker_lift",
+			"title": "A Cycle Chart",
+			"text": "Pinned inside the lift cage. One bar marks the fertile window, about five days, roughly two weeks before the next period. The rites are held at the far end of the page."
+		},
+		{
+			"id": "fk_lab_1",
+			"room": "clone_hall",
+			"title": "A Tank Label",
+			"text": "Reads: handle fresh, do not sedate, do not heat. Whatever is done to the drones before the rites, this tank has opinions about it. Two mistakes at once, blamed on devotion."
+		},
+		{
+			"id": "fk_lab_2",
+			"room": "clone_hall",
+			"title": "The Procedure on the Wall",
+			"text": "Step one: a single cell. Step two: a warm jar. Step three: wait. Nobody in this room was ever called by a womb, and the cat sticker doesn't mind."
+		},
+		{
+			"id": "fk_records_1",
+			"room": "records",
+			"title": "The Conception Ledger",
+			"text": "Conceptions logged by cycle day. They cluster around day fourteen and almost never on day one. The rites are held on day one. Birth rates decline. The Covenant concludes the Gate wants more devotion."
+		},
+		{
+			"id": "fk_records_2",
+			"room": "records",
+			"title": "The Bunker's Mission Statement",
+			"text": "Built to make more people, in comfort, for the future. The island learned instead to make fewer, with ceremony, for the past. A tidy summary, in 12-point font."
+		}
 	]
 }

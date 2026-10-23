@@ -2,7 +2,7 @@ extends RefCounted
 ## ForbiddenKnowledge — the recovered-pieces list (DESIGN.md "Forbidden Knowledge").
 ## WorldState "forbidden_knowledge" is an Array of piece ids, in recovery order; later
 ## systems (cruise flashback unlocks) read it with has()/all(). Pieces are defined in
-## data/ruins.json ("knowledge"); title/text are author content and may still be empty.
+## data/ruins.json ("knowledge"); title/text and room dressing are filled from the sources.
 
 const DATA_PATH := "res://data/ruins.json"
 const FLAG := "forbidden_knowledge"
