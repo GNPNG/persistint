@@ -12,3 +12,7 @@ exports/
 
 # Voice reference recordings (source audio, not shipped)
 art/voice_refs/*.wav
+
+# tools/web_render: unidentified captures (may be a sign-in/error page) and ffmpeg temp inputs
+prompts/**/*.unknown
+prompts/**/*.src.*
