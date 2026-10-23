@@ -6,7 +6,7 @@ import path from 'node:path';
 import readline from 'node:readline';
 import { fill, SettingsError } from './config.mjs';
 import { WEB_RENDER_DIR } from './tasks.mjs';
-import { saveToDrop, extFromMime, windowsToWsl, wslToWindows } from './media.mjs';
+import { saveToDrop, extFromMime, windowsToWsl, wslToWindows, checkImage, sniffExt } from './media.mjs';
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 export const DEBUG_DIR = path.join(WEB_RENDER_DIR, 'debug');
@@ -186,7 +186,17 @@ export async function runSteps(session, steps, name, ctx = {}) {
             handle = ctx.resultHandle;
             if (!handle) throw new StepError(label, 'no result element to act on');
           } else {
-            ({ handle } = await find(page, st.selectors, { timeoutMs: st.timeoutMs ?? ctx.stepMs ?? 20_000, vars: ctx.vars, log, step: label, rehover: hovered }));
+            try {
+              ({ handle } = await find(page, st.selectors, { timeoutMs: st.timeoutMs ?? ctx.stepMs ?? 20_000, vars: ctx.vars, log, step: label, rehover: hovered }));
+            } catch (e) {
+              // orPress: when the control is not there, press a key instead (Enter to send,
+              // Escape to close a menu that has no matching item) and carry on.
+              if (!st.orPress) throw e;
+              log(`    (${label}: not found; pressing ${st.orPress} instead)`);
+              await page.keyboard.press(st.orPress);
+              if (st.afterMs) await sleep(st.afterMs);
+              continue;
+            }
           }
           if (st.action === 'click') { await handle.scrollIntoView().catch(() => {}); await handle.click(); hovered = null; }
           else if (st.action === 'hover') { await handle.scrollIntoView().catch(() => {}); await handle.hover(); hovered = handle; }
@@ -209,11 +219,23 @@ export async function insertText(session, selectors, text, ctx = {}) {
   // execCommand('insertText') goes through the browser's own editing path, so editors like
   // Quill update their model (synthetic input events and element.value = ... do not).
   const ok = await handle.evaluate((el, t) => {
+    const isField = el.tagName === 'TEXTAREA' || el.tagName === 'INPUT';
+    const read = () => (isField ? el.value : el.innerText).replace(/\s+/g, ' ');
+    const want = t.slice(0, 60).replace(/\s+/g, ' ');
     el.focus();
-    document.execCommand('selectAll', false, null);
+    if (isField) el.select(); else document.execCommand('selectAll', false, null);
     document.execCommand('insertText', false, t);
-    const got = 'value' in el && el.tagName !== 'DIV' ? el.value : el.innerText;
-    return got.replace(/\s+/g, ' ').includes(t.slice(0, 60).replace(/\s+/g, ' '));
+    if (read().includes(want)) return true;
+    if (isField) {
+      // A framework-controlled <textarea>: set the value through the native setter so the
+      // framework sees the change, then fire input/change.
+      const proto = el.tagName === 'TEXTAREA' ? HTMLTextAreaElement.prototype : HTMLInputElement.prototype;
+      Object.getOwnPropertyDescriptor(proto, 'value').set.call(el, t);
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+      return read().includes(want);
+    }
+    return false;
   }, text);
   if (!ok) {
     log('    (execCommand insert did not take; typing instead)');
@@ -412,6 +434,37 @@ export async function manualCapture(session, surface, baseline, message) {
   return null;
 }
 
+// ------------------------------------------------------------------ page ready
+
+/**
+ * After opening the surface: let the network settle, then wait until the prompt box (steps.input)
+ * is visible, i.e. the app has hydrated. The static shell Gemini serves first has a plain
+ * "Ask Gemini" box and none of the real controls, so acting before this point fails.
+ * A Google "unusual traffic" / reCAPTCHA page (steps.blocked) stops the run: it needs a human.
+ */
+export async function waitReady(session, surface, ctx = {}) {
+  const { page } = session;
+  const st = surface.steps;
+  await page.waitForNetworkIdle({ idleTime: 1000, timeout: 15_000 }).catch(() => {});
+  const deadline = Date.now() + (surface.timeouts?.readyMs ?? 60_000);
+  do {
+    const blockedSel = await anyVisible(page, st.blocked);
+    if (blockedSel) {
+      const e = new StepError('ready', `Google is showing a check page (${blockedSel}), e.g. "unusual traffic" with a reCAPTCHA. ` +
+        'Solve it by hand in the dedicated profile (node inspect.mjs --keep 300), then run again.');
+      e.abortRun = true;
+      throw e;
+    }
+    for (const sel of st.input) {
+      let hs = [];
+      try { hs = await page.$$(fill(sel, ctx.vars || {})); } catch { continue; }
+      for (const h of hs) if (await isVisible(h)) return sel;
+    }
+    await sleep(1000);
+  } while (Date.now() < deadline);
+  throw new StepError('ready', `the prompt box never appeared (page not hydrated?): ${st.input.join(' | ')}`);
+}
+
 // ------------------------------------------------------------------ one asset
 
 /**
@@ -429,7 +482,8 @@ export async function renderOnSurface(session, surface, task, prompt, opts = {})
   try {
     await session.newPage();
     await session.goto(surface.url);
-    await runSteps(session, st.open, 'open', ctx);
+    step = 'ready'; await waitReady(session, surface, ctx);
+    step = 'open'; await runSteps(session, st.open, 'open', ctx);
     step = 'mode'; await runSteps(session, st.mode, 'mode', ctx);
     step = 'options'; await runSteps(session, st.options, 'options', ctx);
     step = 'input'; await insertText(session, st.input, prompt, ctx);
@@ -439,7 +493,7 @@ export async function renderOnSurface(session, surface, task, prompt, opts = {})
       const got = await manualCapture(session, surface, baseline,
         `  [assist] Prompt is in the box. Check the settings, click send, wait, then press Enter (or click the download button).`);
       if (!got) return { skipped: true };
-      return finish(task, got, log);
+      return await finish(session, task, got, surface);
     }
     step = 'submit'; await runSteps(session, st.submit, 'submit', ctx);
     step = 'wait';
@@ -448,7 +502,7 @@ export async function renderOnSurface(session, surface, task, prompt, opts = {})
     await waitForResult(session, surface, baseline, gms, respBaseline);
     step = 'capture';
     const got = await capture(session, surface, ctx);
-    return finish(task, got, log);
+    return await finish(session, task, got, surface);
   } catch (e) {
     if (!e.step) e.step = step;
     const dir = await session.dumpDebug(task.id, e).catch(() => null);
@@ -457,14 +511,40 @@ export async function renderOnSurface(session, surface, task, prompt, opts = {})
     if (opts.pauseOnError && session.page && !session.page.isClosed()) {
       const got = await manualCapture(session, surface, baseline,
         '  [pause-on-error] Fix it by hand in the browser window (send the prompt, wait for the result).');
-      if (got) return finish(task, got, log);
+      if (got) return await finish(session, task, got, surface);
     }
     e.debugDir = dir;
     throw e;
   }
 }
 
-function finish(task, got, log) {
+/** Re-encode image bytes as PNG in the page (no ffmpeg needed): JPEG/WebP download -> .png drop. */
+export async function toPngInPage(page, buf) {
+  const b64 = await page.evaluate(async (data) => {
+    const bin = Uint8Array.from(atob(data), (c) => c.charCodeAt(0));
+    const bmp = await createImageBitmap(new Blob([bin]));
+    const c = new OffscreenCanvas(bmp.width, bmp.height);
+    c.getContext('2d').drawImage(bmp, 0, 0);
+    const out = new Uint8Array(await (await c.convertToBlob({ type: 'image/png' })).arrayBuffer());
+    let s = '';
+    for (let i = 0; i < out.length; i += 0x8000) s += String.fromCharCode(...out.subarray(i, i + 0x8000));
+    return btoa(s);
+  }, buf.toString('base64'));
+  return Buffer.from(b64, 'base64');
+}
+
+async function finish(session, task, got, surface = {}) {
+  const log = session.log;
+  if (task.kind === 'image') {
+    const problems = checkImage(got.buf, task.aspect, surface.verify ?? {});
+    if (problems.length) throw new StepError('verify', `captured image rejected: ${problems.join('; ')}`);
+    const want = path.extname(task.drop_abs).toLowerCase();
+    const have = sniffExt(got.buf);
+    if (want === '.png' && have !== '.png' && session.page && !session.page.isClosed()) {
+      got = { ...got, buf: await toPngInPage(session.page, got.buf), mime: 'image/png' };
+      log(`    re-encoded ${have} -> .png in the browser`);
+    }
+  }
   const saved = saveToDrop(got.buf, task.drop_abs, { log, mime: got.mime });
   const mimeExt = extFromMime(got.mime);
   log(`  -> ${task.drop} (${got.buf.length} bytes via ${got.route}${mimeExt ? `, ${got.mime}` : ''})`);

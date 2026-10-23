@@ -11,12 +11,16 @@ test compares the two parsers on every file under `prompts/`.
 
 | Kind | Default surface | File |
 |---|---|---|
-| image (16) | Gemini app, Tools > Create images. The aspect ratio is stated in the prompt (the app has no ratio control). | `.png` via "Download full size" (download button only) |
+| image (16) | Gemini app: the prompt is sent as "Create an image: ..." (the + menu's image item is picked when it exists). The aspect ratio is stated in the prompt (the app has no ratio control). | `.png` via "Download full size" (download button only) |
 | video (9) | Gemini app, Tools > Create video. Each clip gets a new chat. | `.mp4` via Share > Download video, else the `<video>` src |
 | music (20) | Gemini app, Tools > Create music | `.mp3` via Download > Audio only (download button only) |
 
-Prompts are pasted as they are in `prompts/` (no prefix). Only the ratio is appended when a
-prompt does not state one. Images and music are taken only from the page's download button:
+Prompts are pasted as they are in `prompts/`, except that image prompts get the prefix
+"Create an image:" (Gemini's image tool triggers on prompts that start with create, generate or
+draw). Only the ratio is appended when a prompt does not state one. A downloaded image is checked
+before it is saved: real PNG/JPEG/WebP bytes, at least 512 px on its short side and within 12% of
+the asset's ratio (`verify` in a surface overrides `minBytes` / `minSide` / `tolerance`). A
+JPEG or WebP download is re-encoded to PNG in the browser. Images and music are taken only from the page's download button:
 the on-page `<img>` is a downscaled preview, and a track can be shown as a `<video>` with cover
 art, so neither is ever saved as the final file. If the download button breaks, fix its selector
 or use `--assist`.
@@ -164,6 +168,27 @@ carry account details. `page.html` has every `<script>` body, known token fields
 addresses removed before it is written, but it can still contain your name and chat titles.
 `debug/` is gitignored. Delete the folders when you are done with them.
 
+Gemini first serves a static shell (a plain "Ask Gemini" box with a + and a mic, no other
+controls) and replaces it with the real app a few seconds later. Every render waits until
+`steps.input` is visible (up to `timeouts.readyMs`, default 60 s) before acting. If Google shows
+its "unusual traffic" reCAPTCHA page instead (`steps.blocked`), the run stops: solve it by hand
+with `node inspect.mjs --keep 300` and try again later. Launching Chrome many times in a few
+minutes can trigger that page.
+
+**`inspect.mjs`** looks at a live surface without generating anything. It opens the surface on
+the dedicated profile, waits for the app to load, and writes the accessibility tree, every
+button / input / menu item (aria-label, text, data-test-id, icon), a redacted HTML copy and a
+screenshot to `debug/inspect-<time>/`. Actions run in order and each one writes a new snapshot:
+
+```bash
+node tools/web_render/inspect.mjs                                     # gemini_image surface
+node tools/web_render/inspect.mjs --click "::-p-aria(Upload & tools)" # what is in the + menu
+node tools/web_render/inspect.mjs --do "type:a red apple" --keep 30   # send button appears; nothing is sent
+```
+
+`--do` takes `click:SELECTOR`, `hover:SELECTOR`, `press:KEY` and `type:TEXT`. Nothing is sent
+unless you add `--do press:Enter`, which spends a generation.
+
 To fix a selector:
 
 1. Run the asset with `--render --only <id> --pause-on-error`. The window stays open at the
@@ -188,7 +213,9 @@ notice), and `download` (steps). Download controls are scoped under `model-respo
 menu overlay (`.cdk-overlay-container`) so they cannot hit the conversation's own Share or
 Download buttons.
 A step is `{ "action": "click" | "hover" | "waitFor" | "press" | "sleep" | "goto", "selectors":
-[...], "optional": true, "timeoutMs": 3000, "afterMs": 500, "note": "..." }`.
+[...], "optional": true, "timeoutMs": 3000, "afterMs": 500, "orPress": "Escape", "note": "..." }`.
+`orPress` presses that key instead when no selector matches (Enter to send, Escape to close a
+menu without the wanted item) and carries on. `blocked` lists selectors for a Google check page.
 `"target": "result"` acts on the newest result instead of a selector. `capture` sets the order
 in which the routes are tried. `download` clicks the page's download control and collects the
 file through Chrome's download events. `src` fetches the result element's `src` inside the page

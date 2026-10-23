@@ -13,6 +13,8 @@
       "_note": "Gemini app, Tools > Create images (Nano Banana). No aspect control in the UI, so the ratio is put in the prompt when the prompt does not already state one.",
       "aspectInPrompt": true,
       "promptSuffix": "{aspect} aspect ratio.",
+      "promptPrefix": "Create an image:",
+      "_promptPrefix": "Gemini's image tool triggers on prompts that start with create/generate/draw, so the prefix works even when the + menu has no image item.",
       "resultMinSize": 256,
       "capture": ["download"],
       "_capture": "download only: the on-page <img> is a downscaled preview, so it must never be saved as the final PNG. If Download full size breaks, fix its selector or use --assist / --pause-on-error.",
@@ -23,15 +25,17 @@
             "selectors": ["::-p-aria(Close)", "::-p-aria(Dismiss)", "::-p-aria(No thanks)"] }
         ],
         "mode": [
-          { "action": "click", "note": "open the Tools menu", "afterMs": 800,
-            "selectors": ["button[data-test-id='toolbox-trigger']", "button.toolbox-drawer-button", "::-p-aria(Tools)", "::-p-aria(Upload & tools)"] },
-          { "action": "click", "note": "pick Create images", "afterMs": 800,
-            "selectors": [".cdk-overlay-container button.mat-mdc-list-item ::-p-text(Create image)", "::-p-aria(Create images)", "::-p-text(Create images)", "::-p-text(Create image)"] }
+          { "action": "click", "note": "open the Upload & tools (+) menu", "afterMs": 800,
+            "selectors": ["input-area-v2 ::-p-aria(Upload & tools)", "::-p-aria(Upload & tools)", "button[data-test-id='toolbox-trigger']", "::-p-aria(Tools)"] },
+          { "action": "click", "note": "pick the image tool if the menu has one, else close the menu (the prompt prefix asks for an image)", "afterMs": 800,
+            "timeoutMs": 5000, "orPress": "Escape",
+            "selectors": [".cdk-overlay-container ::-p-text(Create image)", ".cdk-overlay-container ::-p-aria(Create images)", ".cdk-overlay-container ::-p-text(Images)", ".cdk-overlay-container ::-p-aria(Images)"] }
         ],
         "options": [],
-        "input": [".ql-editor[contenteditable='true']", "rich-textarea [contenteditable='true']", "::-p-aria(Enter a prompt here)", "div[contenteditable='true'][role='textbox']"],
+        "input": ["rich-textarea .ql-editor[contenteditable='true']", "::-p-aria(Enter a prompt for Gemini)", ".ql-editor[contenteditable='true']", "div[contenteditable='true'][role='textbox']", "textarea:not([placeholder='Ask Gemini'])"],
+        "blocked": ["iframe[title='reCAPTCHA']", "::-p-text(unusual traffic)", "::-p-text(Why did this happen?)"],
         "submit": [
-          { "action": "click", "note": "send",
+          { "action": "click", "note": "send (Enter if the send button is not found)", "orPress": "Enter",
             "selectors": ["::-p-aria(Send message)", "button.send-button", "button[aria-label*='Send']", "::-p-aria(Submit)"] }
         ],
         "busy": ["::-p-aria(Stop response)", "button[aria-label*='Stop']"],
@@ -61,8 +65,8 @@
             "selectors": ["::-p-aria(Close)", "::-p-aria(Dismiss)", "::-p-aria(No thanks)"] }
         ],
         "mode": [
-          { "action": "click", "note": "open the Tools menu", "afterMs": 800,
-            "selectors": ["button[data-test-id='toolbox-trigger']", "button.toolbox-drawer-button", "::-p-aria(Tools)", "::-p-aria(Upload & tools)"] },
+          { "action": "click", "note": "open the Upload & tools (+) menu", "afterMs": 800,
+            "selectors": ["input-area-v2 ::-p-aria(Upload & tools)", "::-p-aria(Upload & tools)", "button[data-test-id='toolbox-trigger']", "::-p-aria(Tools)"] },
           { "action": "click", "note": "pick Create video", "afterMs": 800,
             "selectors": [".cdk-overlay-container button.mat-mdc-list-item ::-p-text(Create video)", "::-p-aria(Create videos)", "::-p-aria(Create video)", "::-p-text(Create video)"] }
         ],
@@ -72,9 +76,10 @@
           { "action": "click", "optional": true, "timeoutMs": 3000, "note": "pick {aspect}",
             "selectors": [".cdk-overlay-container ::-p-text({aspect})", "::-p-aria({aspect})"] }
         ],
-        "input": [".ql-editor[contenteditable='true']", "rich-textarea [contenteditable='true']", "::-p-aria(Enter a prompt here)", "div[contenteditable='true'][role='textbox']"],
+        "input": ["rich-textarea .ql-editor[contenteditable='true']", "::-p-aria(Enter a prompt for Gemini)", ".ql-editor[contenteditable='true']", "div[contenteditable='true'][role='textbox']", "textarea:not([placeholder='Ask Gemini'])"],
+        "blocked": ["iframe[title='reCAPTCHA']", "::-p-text(unusual traffic)", "::-p-text(Why did this happen?)"],
         "submit": [
-          { "action": "click", "note": "send",
+          { "action": "click", "note": "send (Enter if the send button is not found)", "orPress": "Enter",
             "selectors": ["::-p-aria(Send message)", "button.send-button", "button[aria-label*='Send']", "::-p-aria(Submit)"] }
         ],
         "busy": ["::-p-aria(Stop response)", "button[aria-label*='Stop']", "model-response [role='progressbar']", "model-response mat-progress-bar", "model-response mat-progress-spinner"],
@@ -106,15 +111,16 @@
             "selectors": ["::-p-aria(Close)", "::-p-aria(Dismiss)", "::-p-aria(No thanks)"] }
         ],
         "mode": [
-          { "action": "click", "note": "open the Tools menu", "afterMs": 800,
-            "selectors": ["button[data-test-id='toolbox-trigger']", "button.toolbox-drawer-button", "::-p-aria(Upload & tools)", "::-p-aria(Tools)"] },
+          { "action": "click", "note": "open the Upload & tools (+) menu", "afterMs": 800,
+            "selectors": ["input-area-v2 ::-p-aria(Upload & tools)", "::-p-aria(Upload & tools)", "button[data-test-id='toolbox-trigger']", "::-p-aria(Tools)"] },
           { "action": "click", "note": "pick Create music", "afterMs": 800,
             "selectors": [".cdk-overlay-container button.mat-mdc-list-item ::-p-text(Create music)", "::-p-aria(Create music)", "::-p-text(Create music)"] }
         ],
         "options": [],
-        "input": [".ql-editor[contenteditable='true']", "rich-textarea [contenteditable='true']", "::-p-aria(Enter a prompt here)", "div[contenteditable='true'][role='textbox']"],
+        "input": ["rich-textarea .ql-editor[contenteditable='true']", "::-p-aria(Enter a prompt for Gemini)", ".ql-editor[contenteditable='true']", "div[contenteditable='true'][role='textbox']", "textarea:not([placeholder='Ask Gemini'])"],
+        "blocked": ["iframe[title='reCAPTCHA']", "::-p-text(unusual traffic)", "::-p-text(Why did this happen?)"],
         "submit": [
-          { "action": "click", "note": "send",
+          { "action": "click", "note": "send (Enter if the send button is not found)", "orPress": "Enter",
             "selectors": ["::-p-aria(Send message)", "button.send-button", "button[aria-label*='Send']", "::-p-aria(Submit)"] }
         ],
         "busy": ["::-p-aria(Stop response)", "button[aria-label*='Stop']"],

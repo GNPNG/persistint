@@ -8,7 +8,7 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { ROOT, discoverTasks, parsePromptText, dropFormat, selectTasks, formatStatus, besideFile, KIND_EXT } from '../lib/tasks.mjs';
 import { loadSelectors, validateSelectors, assertDedicatedProfile, assertOutsideRepo, validateNumbers, parseLimit, parseDelay, SELECTORS_PATH, DEFAULTS } from '../lib/config.mjs';
-import { sniffExt, saveToDrop, hasFfmpeg, wslToWindows, windowsToWsl } from '../lib/media.mjs';
+import { sniffExt, saveToDrop, hasFfmpeg, wslToWindows, windowsToWsl, imageSize, checkImage } from '../lib/media.mjs';
 import { Session, redactHtml } from '../lib/engine.mjs';
 import { preparePrompt } from '../drivers/common.mjs';
 
@@ -218,9 +218,11 @@ test('prompt preparation adds the ratio only when the prompt lacks one', () => {
   assert.equal(preparePrompt({ prompt: 'A cat.', aspect: '16:9' }, { promptPrefix: 'Generate an image:' }), 'Generate an image: A cat.');
 });
 
-test('the shipped surfaces paste prompts as is (no prefix) and never save an on-page preview as final', () => {
+test('only the image surface prefixes prompts (to trigger the image tool); no on-page preview is saved as final', () => {
   const cfg = loadSelectors(SELECTORS_PATH);
-  for (const s of Object.values(cfg.surfaces)) assert.equal(s.promptPrefix, undefined);
+  for (const [name, s] of Object.entries(cfg.surfaces)) {
+    assert.equal(s.promptPrefix, name === cfg.kinds.image ? 'Create an image:' : undefined, name);
+  }
   assert.deepEqual(cfg.surfaces[cfg.kinds.image].capture, ['download']);
   assert.deepEqual(cfg.surfaces[cfg.kinds.music].capture, ['download']);
 });
@@ -249,4 +251,35 @@ test('only a dedicated automation profile is accepted', () => {
   assert.doesNotThrow(() => assertOutsideRepo(DEFAULTS.profileDir, 'profileDir'));
   assert.doesNotThrow(() => assertOutsideRepo(DEFAULTS.downloadDir, 'downloadDir'));
   fs.rmSync(dir, { recursive: true, force: true });
+});
+
+test('imageSize reads PNG / JPEG / WebP headers and checkImage rejects previews and wrong ratios', () => {
+  const png = (w, h, pad = 0) => {
+    const b = Buffer.alloc(33 + pad);
+    Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]).copy(b, 0);
+    b.writeUInt32BE(13, 8); b.write('IHDR', 12, 'latin1'); b.writeUInt32BE(w, 16); b.writeUInt32BE(h, 20);
+    return b;
+  };
+  assert.deepEqual(imageSize(png(2048, 1152)), { w: 2048, h: 1152, ext: '.png' });
+  const jpg = Buffer.from([0xff, 0xd8, 0xff, 0xe0, 0x00, 0x04, 0x00, 0x00, 0xff, 0xc0, 0x00, 0x11, 0x08, 0x04, 0x00, 0x08, 0x00, 0x03, 0, 0, 0, 0, 0, 0]);
+  assert.deepEqual(imageSize(jpg), { w: 2048, h: 1024, ext: '.jpg' });
+  const webp = Buffer.alloc(30); webp.write('RIFF', 0, 'latin1'); webp.write('WEBPVP8X', 8, 'latin1');
+  webp.writeUIntLE(1023, 24, 3); webp.writeUIntLE(1023, 27, 3);
+  assert.deepEqual(imageSize(webp), { w: 1024, h: 1024, ext: '.webp' });
+  assert.equal(imageSize(Buffer.from('<html>')), null);
+  assert.deepEqual(checkImage(png(1024, 1024, 30_000), '1:1'), []);
+  assert.match(checkImage(png(1024, 1024, 30_000), '16:9').join(), /is not 16:9/);
+  assert.match(checkImage(png(256, 256, 30_000), '1:1').join(), /smaller than 512/);
+  assert.match(checkImage(png(1024, 1024), '1:1').join(), /only 33 bytes/);
+  assert.match(checkImage(Buffer.from('<!doctype html>'), '1:1').join(), /not a PNG/);
+});
+
+test('orPress and blocked are validated', () => {
+  const good = JSON.parse(fs.readFileSync(SELECTORS_PATH, 'utf8'));
+  const c = structuredClone(good);
+  c.surfaces.gemini_image.steps.submit[0].orPress = '';
+  assert.ok(validateSelectors(c).some((e) => /orPress/.test(e)));
+  const d = structuredClone(good);
+  d.surfaces.gemini_image.steps.blocked = [];
+  assert.ok(validateSelectors(d).some((e) => /steps\.blocked/.test(e)));
 });

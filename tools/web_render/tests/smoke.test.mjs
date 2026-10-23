@@ -91,9 +91,10 @@ test('a broken selector fails at its step and leaves screenshot, HTML and consol
   const broken = structuredClone(cfg.surfaces.fake_music);
   broken.steps.input = ['#no-such-input'];
   broken.timeouts.stepMs = 1500;
+  broken.timeouts.readyMs = 1500;
   const t = task('smoke_broken', 'music', '.mp3');
   await assert.rejects(music.render(session, broken, t), (e) => {
-    assert.equal(e.step, 'input');
+    assert.equal(e.step, 'ready', 'a missing prompt box is caught while waiting for the page to hydrate');
     assert.ok(e.debugDir && e.debugDir.startsWith(DEBUG_DIR));
     for (const f of ['screenshot.png', 'page.html', 'console.log', 'error.txt']) assert.ok(fs.existsSync(path.join(e.debugDir, f)), f);
     const html = fs.readFileSync(path.join(e.debugDir, 'page.html'), 'utf8');
