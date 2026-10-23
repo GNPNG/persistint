@@ -1,0 +1,39 @@
+[gd_resource type="SpriteFrames" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/temple/temple_candles.png" id="1_2rrw2"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5a1i2"]
+atlas = ExtResource("1_2rrw2")
+region = Rect2(0, 0, 24, 44)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jn3rg"]
+atlas = ExtResource("1_2rrw2")
+region = Rect2(24, 0, 24, 44)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nl050"]
+atlas = ExtResource("1_2rrw2")
+region = Rect2(48, 0, 24, 44)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_603aj"]
+atlas = ExtResource("1_2rrw2")
+region = Rect2(72, 0, 24, 44)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5a1i2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jn3rg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nl050")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_603aj")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 6.0
+}]

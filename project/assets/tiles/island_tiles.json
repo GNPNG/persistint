@@ -1,0 +1,282 @@
+{
+ "cell": 32,
+ "walk": [
+  "grass_a",
+  "grass_b",
+  "grass_flower",
+  "path",
+  "sand",
+  "soil",
+  "sprouts",
+  "plaza",
+  "floor",
+  "floor_alt",
+  "floor_n",
+  "rug_0_0",
+  "rug_1_0",
+  "rug_0_1",
+  "rug_1_1",
+  "rug_top_0_0",
+  "rug_top_1_0",
+  "rug_bot_0_0",
+  "rug_bot_1_0",
+  "dais_0_0",
+  "dais_1_0",
+  "dais_2_0",
+  "dais_3_0",
+  "dais_0_1",
+  "dais_1_1",
+  "dais_2_1",
+  "dais_3_1",
+  "dais_0_2",
+  "dais_1_2",
+  "dais_2_2",
+  "dais_3_2",
+  "door_s_0_0",
+  "door_s_1_0",
+  "stairs_w_0_0",
+  "stairs_w_0_1"
+ ],
+ "solid": [
+  "pool_0_0",
+  "pool_1_0",
+  "pool_0_1",
+  "pool_1_1",
+  "wall",
+  "wall_cap",
+  "hedge",
+  "rock",
+  "stripe",
+  "gold_cap",
+  "wall_base",
+  "wall_l",
+  "wall_r",
+  "wall_s",
+  "wall_sl",
+  "wall_sr"
+ ],
+ "anim": [
+  "water",
+  "foam"
+ ],
+ "anim_frames": 4,
+ "edges": {
+  "shallows": 4,
+  "shore": 5,
+  "grass_edge": 6
+ },
+ "tiles": {
+  "grass_a": [
+   0,
+   0
+  ],
+  "grass_b": [
+   1,
+   0
+  ],
+  "grass_flower": [
+   2,
+   0
+  ],
+  "path": [
+   3,
+   0
+  ],
+  "sand": [
+   4,
+   0
+  ],
+  "soil": [
+   5,
+   0
+  ],
+  "sprouts": [
+   6,
+   0
+  ],
+  "plaza": [
+   7,
+   0
+  ],
+  "floor": [
+   8,
+   0
+  ],
+  "floor_alt": [
+   9,
+   0
+  ],
+  "floor_n": [
+   10,
+   0
+  ],
+  "rug_0_0": [
+   11,
+   0
+  ],
+  "rug_1_0": [
+   12,
+   0
+  ],
+  "rug_0_1": [
+   13,
+   0
+  ],
+  "rug_1_1": [
+   14,
+   0
+  ],
+  "rug_top_0_0": [
+   15,
+   0
+  ],
+  "rug_top_1_0": [
+   16,
+   0
+  ],
+  "rug_bot_0_0": [
+   17,
+   0
+  ],
+  "rug_bot_1_0": [
+   18,
+   0
+  ],
+  "dais_0_0": [
+   19,
+   0
+  ],
+  "dais_1_0": [
+   20,
+   0
+  ],
+  "dais_2_0": [
+   21,
+   0
+  ],
+  "dais_3_0": [
+   22,
+   0
+  ],
+  "dais_0_1": [
+   23,
+   0
+  ],
+  "dais_1_1": [
+   24,
+   0
+  ],
+  "dais_2_1": [
+   25,
+   0
+  ],
+  "dais_3_1": [
+   26,
+   0
+  ],
+  "dais_0_2": [
+   27,
+   0
+  ],
+  "dais_1_2": [
+   28,
+   0
+  ],
+  "dais_2_2": [
+   29,
+   0
+  ],
+  "dais_3_2": [
+   30,
+   0
+  ],
+  "door_s_0_0": [
+   31,
+   0
+  ],
+  "door_s_1_0": [
+   32,
+   0
+  ],
+  "stairs_w_0_0": [
+   33,
+   0
+  ],
+  "stairs_w_0_1": [
+   34,
+   0
+  ],
+  "pool_0_0": [
+   35,
+   1
+  ],
+  "pool_1_0": [
+   36,
+   1
+  ],
+  "pool_0_1": [
+   37,
+   1
+  ],
+  "pool_1_1": [
+   38,
+   1
+  ],
+  "wall": [
+   39,
+   1
+  ],
+  "wall_cap": [
+   40,
+   1
+  ],
+  "hedge": [
+   41,
+   1
+  ],
+  "rock": [
+   42,
+   1
+  ],
+  "stripe": [
+   43,
+   1
+  ],
+  "gold_cap": [
+   44,
+   1
+  ],
+  "wall_base": [
+   45,
+   1
+  ],
+  "wall_l": [
+   46,
+   1
+  ],
+  "wall_r": [
+   47,
+   1
+  ],
+  "wall_s": [
+   48,
+   1
+  ],
+  "wall_sl": [
+   49,
+   1
+  ],
+  "wall_sr": [
+   50,
+   1
+  ],
+  "water": [
+   0,
+   2
+  ],
+  "foam": [
+   0,
+   3
+  ]
+ }
+}

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ptjwmlvrb303"
-path="res://.godot/imported/mirror.png-d76ab4fd512e3d7bce3d35b7f71215ef.ctex"
+uid="uid://bjk35c7gt47s6"
+path="res://.godot/imported/temple_candles.png-cc9f56b8ac056472f8f269f0babe22d3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/placeholder/mirror.png"
-dest_files=["res://.godot/imported/mirror.png-d76ab4fd512e3d7bce3d35b7f71215ef.ctex"]
+source_file="res://assets/temple/temple_candles.png"
+dest_files=["res://.godot/imported/temple_candles.png-cc9f56b8ac056472f8f269f0babe22d3.ctex"]
 
 [params]
 
