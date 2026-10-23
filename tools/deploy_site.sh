@@ -488,6 +488,9 @@ else:
 PY
 
 # ---------------------------------------------------------------- link check
+log "Version"
+python3 -I tools/version.py check || die "version not stamped; nothing was uploaded or deployed"
+
 log "Link check (PW-13)"
 allow=()
 for f in "${OVERSIZED[@]}"; do allow+=(--allow "/play/*/$f"); done

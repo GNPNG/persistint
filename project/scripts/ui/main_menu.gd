@@ -8,6 +8,19 @@ func _ready() -> void:
 	$Center/VBox/BeginButton.pressed.connect(_on_begin)
 	$Center/VBox/NewButton.pressed.connect(_on_new_game)
 	$Center/VBox/BeginButton.visible = WorldState.get_flag("_location") is Dictionary
+	_add_version_label()
+
+
+## Version from project.godot application/config/version (stamped from VERSION by tools/version.py).
+func _add_version_label() -> void:
+	var label := Label.new()
+	label.name = "Version"
+	label.text = "v%s" % ProjectSettings.get_setting("application/config/version", "0.0.0")
+	label.add_theme_font_size_override("font_size", 8)
+	label.modulate = Color(1, 1, 1, 0.6)
+	label.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT)
+	label.position -= Vector2(36, 14)
+	add_child(label)
 
 
 func _on_begin() -> void:
