@@ -1,24 +1,25 @@
-"""Render the GNPNG Ping Pong imprint mark (the publisher's colophon for its games) for the engine.
+"""Render the GNPNG Ping Pong mark (the publisher's colophon for its games) for the engine.
 
 Usage: python3 -I tools/gen_imprint_mark.py   (needs rsvg-convert from librsvg on PATH)
 
 Inputs:
-  art/brand/gnpng-pingpong.svg        the author's mark, verbatim from site/public/img/: the
-                                      letters G P G, two paddles and a gold ball that rally
-                                      (SMIL <animate>, 3 s loop), a rule, PING PONG, and
-                                      "an imprint of GNPNG"
-  art/brand/fonts/EBGaramond-VF.ttf   EB Garamond (SIL OFL, art/brand/fonts/OFL.txt), the face the
-                                      SVG names; a private fontconfig file points rsvg at this
-                                      file only, so the render does not depend on system fonts
+  art/brand/gnpng-pingpong-badge.svg  the promo site's G|P|G pong badge, verbatim from the inline
+                                      SVG in site/public/index.html (a.gnpng-float): Fredoka
+                                      letters G P G in pink, sky and mint with a warm-brown
+                                      outline, lavender and butter paddles and a gold ball that
+                                      rally (SMIL <animate>, 3 s loop), on a cream plate with a
+                                      pink border. No small print: it reads at a corner size.
+  art/brand/fonts/Fredoka-VF.ttf      Fredoka (SIL OFL, art/brand/fonts/OFL-Fredoka.txt), the
+                                      site's font (site/public/fonts/fredoka.woff2 as TrueType);
+                                      a private fontconfig file points rsvg at art/brand/fonts
+                                      only, so the render does not depend on system fonts
 
-Outputs (transparent background; the cream plate behind the mark is theme chrome, the
-ImprintPlate StyleBox in project/themes/default.tres):
+Outputs (transparent outside the badge's own plate):
   project/assets/ui/brand/gnpng_pingpong.png
-      still, 1008x632 (4x the SVG viewBox 252x158), the rally at t = 0 (ball on the left paddle);
-      the boot splash (project.godot application/boot_splash/image)
+      still, 768x304 (4x the SVG viewBox 192x76), the rally at t = 0
   project/assets/ui/brand/gnpng_pingpong_sheet.png
       the rally as a sprite sheet, read by project/scripts/ui/imprint_mark.gd into SpriteFrames:
-        frame size 504x316 (2x the viewBox), 6 columns x 6 rows, 36 frames, row-major,
+        frame size 384x152 (2x the viewBox), 6 columns x 6 rows, 36 frames, row-major,
         one animation "idle" (the rally), 12 fps, looping; frame i is the SVG at t = i / 12 s
 
 Each frame is the SVG with every <animate> evaluated at its time (values evenly spaced over dur,
@@ -39,12 +40,12 @@ from pathlib import Path
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parent.parent
-SVG = ROOT / "art/brand/gnpng-pingpong.svg"
+SVG = ROOT / "art/brand/gnpng-pingpong-badge.svg"
 FONT_DIR = ROOT / "art/brand/fonts"
 OUT = ROOT / "project/assets/ui/brand"
 
 NS = "http://www.w3.org/2000/svg"
-VIEW_W, VIEW_H = 252, 158
+VIEW_W, VIEW_H = 192, 76
 FPS = 12
 LOOP_S = 3.0                      # the longest dur in the SVG; the 1.5 s ball x loop fits twice
 FRAMES = int(FPS * LOOP_S)        # 36

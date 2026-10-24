@@ -1,7 +1,7 @@
 extends SceneTree
 ## Headless check of the GNPNG Ping Pong imprint mark: the sheet matches the frame layout in
 ## tools/gen_imprint_mark.py, the SpriteFrames rally loops, the main menu carries the mark and
-## the boot splash shows the still.
+## the boot splash and the app icon are set.
 ## Run: godot --headless --path project -s tests/test_imprint_mark.gd
 
 const ImprintMark := preload("res://scripts/ui/imprint_mark.gd")
@@ -41,8 +41,10 @@ func _run() -> void:
 	menu.free()
 
 	var splash: String = ProjectSettings.get_setting("application/boot_splash/image", "")
-	_check(splash == "res://assets/ui/brand/gnpng_pingpong.png" and ResourceLoader.exists(splash),
-		"boot splash shows the imprint still")
+	_check(splash == "res://assets/ui/brand/boot_splash.png" and ResourceLoader.exists(splash),
+		"boot splash shows the wordmark (tools/gen_brand_art.py)")
+	var icon: String = ProjectSettings.get_setting("application/config/icon", "")
+	_check(icon == "res://assets/ui/icon/app_icon.png" and ResourceLoader.exists(icon), "the app ships an icon")
 
 	print("RESULT: %s (%d failures)" % ["PASS" if _failures == 0 else "FAIL", _failures])
 	quit(1 if _failures else 0)

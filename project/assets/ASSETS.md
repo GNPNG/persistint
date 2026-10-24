@@ -226,8 +226,9 @@ change. Rows are sorted by path.
 | `project/assets/ui/backdrops/ship_cutaway.png` | ship_cutaway | `tools/gen_ui_art.py` | static; The Landing station map, 2400x600 (4x its 600x150 on-screen size) | - |
 | `project/assets/ui/backdrops/talk_show_set.png` | talk_show_set | `tools/gen_ui_art.py` | static; The Interview backdrop, 2560x1440 (4x the 640x360 viewport) | - |
 | `project/assets/ui/backdrops/temple_altar.png` | temple_altar | `tools/gen_ui_art.py` | static; ritual puzzle backdrop, 2560x1440 (4x the 640x360 viewport) (canon prop_pillar_orb) | - |
-| `project/assets/ui/brand/gnpng_pingpong.png` | gnpng_pingpong | `tools/gen_imprint_mark.py` (renders the author's art/brand/gnpng-pingpong.svg in EB Garamond) | static; 1008x632 still of the GNPNG Ping Pong imprint mark, the rally at t = 0; boot splash | - |
-| `project/assets/ui/brand/gnpng_pingpong_sheet.png` | gnpng_pingpong_sheet | `tools/gen_imprint_mark.py` | sheet; frames 504x316, 6 columns x 6 rows, 36 frames row-major, one animation idle (paddles and ball rally), 12 fps, loop; SpriteFrames built by scripts/ui/imprint_mark.gd, main menu lower left | - |
+| `project/assets/ui/brand/boot_splash.png` | boot_splash | `tools/gen_brand_art.py` | static; 1280x720 transparent, the wordmark over a heart on the cream boot splash colour (application/boot_splash/image) | - |
+| `project/assets/ui/brand/gnpng_pingpong.png` | gnpng_pingpong | `tools/gen_imprint_mark.py` (the site's G\|P\|G pong badge, art/brand/gnpng-pingpong-badge.svg, in Fredoka) | static; 768x304 still (4x the 192x76 viewBox), the rally at t = 0 | - |
+| `project/assets/ui/brand/gnpng_pingpong_sheet.png` | gnpng_pingpong_sheet | `tools/gen_imprint_mark.py` | 6x6 frames of 384x152, 36 frames, animation idle (the rally) 12 fps looping; scripts/ui/imprint_mark.gd | - |
 | `project/assets/ui/chapter_cards/chapter_card_before_the_wreck.png` | chapter_card_before_the_wreck | `tools/gen_ui_art.py` (stand-in) | static; 2560x1440 (4x the 640x360 viewport), white gold-trimmed ship low right, clear of the centred lines, behind chapter_end and flashback_card text | `prompts/image/ui/chapter_cards/chapter_card_before_the_wreck.md` |
 | `project/assets/ui/chrome/altar_tile_gold.png` | altar_tile_gold | `tools/gen_ui_art.py` | static; ritual puzzle altar tile, gold (9-slice, margin 7) | - |
 | `project/assets/ui/chrome/altar_tile_rose.png` | altar_tile_rose | `tools/gen_ui_art.py` | static; ritual puzzle altar tile, rose (9-slice, margin 7) | - |
@@ -249,4 +250,7 @@ change. Rows are sorted by path.
 | `project/assets/ui/chrome/ribbon.png` | ribbon | `tools/gen_ui_art.py` | static; HeaderLabel ribbon (9-slice, margins 6/4) | - |
 | `project/assets/ui/chrome/scroll_bg.png` | scroll_bg | `tools/gen_ui_art.py` | static; VScrollBar track (9-slice, margin 3) | - |
 | `project/assets/ui/chrome/scroll_grabber.png` | scroll_grabber | `tools/gen_ui_art.py` | static; VScrollBar grabber (9-slice, margin 3) | - |
+| `project/assets/ui/icon/app_icon.png` | app_icon | `tools/gen_brand_art.py` | static; 1024x1024, the striped gold-domed temple on an island under a heart (application/config/icon) | `prompts/image/ui/icon/app_icon.md` |
+| `project/assets/ui/title/title_screen.png` | title_screen | `tools/gen_brand_art.py` | static; 2560x1440, title_screen_plain with the wordmark at the top | `prompts/image/ui/title/title_screen.md` |
 | `project/assets/ui/title/title_screen_plain.png` | title_screen_plain | `tools/gen_ui_art.py` (stand-in; composes canon prop_ship, prop_bunker, deco_*) | static; 2560x1440 (4x the 640x360 viewport), main menu background | `prompts/image/ui/title/title_screen_plain.md` |
+| `project/assets/ui/title/wordmark.png` | wordmark | `tools/gen_brand_art.py` (Fredoka, art/brand/fonts) | static; 1600x270 transparent, PERSISTINT in bubbly pastel letters (STYLE.md 4.8); main menu | - |
