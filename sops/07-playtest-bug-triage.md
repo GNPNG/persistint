@@ -3,8 +3,8 @@
 Status: draft
 Owner: Brett Whitty
 Applies to: any interactive project with a UI; written from a game project (input, rendering, scene changes)
-Last reviewed: 2026-10-23
-Related SOPs: SOP-01 (01-parallel-agents-worktrees.md: one sub-agent per independent item, in its own worktree); SOP-08 (08-session-hygiene-tracking.md: filing leftovers, closing issues, commits)
+Last reviewed: 2026-10-24
+Related SOPs: SOP-01 (01-parallel-agents-worktrees.md: one sub-agent per independent item, in its own worktree); SOP-08 (08-session-hygiene-tracking.md: filing leftovers, closing issues, commits); SOP-11 (11-versioning-and-playtest-cadence.md: reports arrive per playtest build with the playtest label; a stop-play report becomes a patch version)
 
 ## 1. Purpose
 

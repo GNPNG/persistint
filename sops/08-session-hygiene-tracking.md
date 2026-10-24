@@ -4,7 +4,7 @@ Status: active
 Owner: Brett Whitty
 Applies to: any project where coding agents work in a git repository with an issue tracker
 Last reviewed: 2026-10-24
-Related SOPs: SOP-01 (01-parallel-agents-worktrees.md: worktree notes, close reasons and cleanup follow this SOP); SOP-07 (07-playtest-bug-triage.md: leftovers from bug fixing are filed under step 11); SOP-11 (11-versioning-and-playtest-cadence.md: sprint and playtest labels, the version commit and tag, the owner's reports as issues); SOP-12 (12-team-roles-and-dispatch.md: the owner's standup notes, status wording, which session writes what)
+Related SOPs: SOP-01 (01-parallel-agents-worktrees.md: worktree notes, close reasons and cleanup follow this SOP); SOP-04 (04-generative-render-pipeline.md: generation-gap tickets follow the issue lifecycle here and are reported at each standup); SOP-07 (07-playtest-bug-triage.md: leftovers from bug fixing are filed under step 13); SOP-11 (11-versioning-and-playtest-cadence.md: sprint and playtest labels, the version commit and tag, the owner's reports as issues); SOP-12 (12-team-roles-and-dispatch.md: the owner's standup notes, status wording, which session writes what)
 
 ## 1. Purpose
 
@@ -122,7 +122,7 @@ git status --porcelain           # no scratch files, no staged logs or tracker e
 
 7.7b **Wrong tracker binary on `PATH`.** `bd` fails with an error naming a table with unknown fields, or prints an older version than section 9 records. A non-login shell put a stale copy first. Recovery: call the tracker by the full path of the installed version for the session; remove or rename the stale copy when the author agrees. Prevention: step 1.
 
-7.8 **A stash outlives the session.** An autostash or a "WIP" stash stays in `git stash list` long after its work landed. Recovery: `git stash show --stat` each entry, confirm its changes are on `{main}` (`git log -p {main} -- {file}`), then drop it. Prevention: step 19 at every close.
+7.8 **A stash outlives the session.** An autostash or a "WIP" stash stays in `git stash list` long after its work landed. Recovery: `git stash show --stat` each entry, confirm its changes are on `{main}` (`git log -p {main} -- {file}`), then drop it. Prevention: step 21 at every close.
 
 7.9 **A stated fact is out of date.** A model id, version or name from training data is wrong today. Recovery: check with a tool, correct the file, commit the fix. Prevention: step 9.
 
@@ -200,9 +200,9 @@ Left in workspace: {worktree or stash}, because {reason}
 - Commit authorship rule: `the user-level CLAUDE.md` ("Commit authorship — ABSOLUTE RULE"). `git log --all --format='%B' | grep -ciE "co-authored|generated with"` returns 0 at `93870ee`.
 - Session-close steps: `the user-level CLAUDE.md` "Session Completion" (file issues, gates, statuses, `git pull --rebase`, `git push`, `git status`, clean stashes and branches, hand off). CLAUDE.md says plain `git pull --rebase`; this SOP uses `git pull --rebase=merges` so that `--no-ff` merges from SOP-01 survive the pull. The two agree when there is no local merge commit.
 - Repo and brief disagree on exports and logs: the brief says not to commit `.beads/*.jsonl` exports or `.claude/logs`. In the repo, `.beads/interactions.jsonl` is tracked (since `16ad549`) and `.claude/logs/actually-im-the-ahole-violations.jsonl` is tracked (since `0d87e37`). Both show as modified in the main checkout. Until they are untracked, the rule in practice is: never stage their changes (step 9). Untracking them (`git rm --cached` plus `.gitignore`, section 3) is not done; no issue filed (`bd search untrack` finds none).
-- Worktree cleanup rule: memory `worktree-cleanup` ("Remove each agent worktree (../persistint-game-wt-*) and its branch right after it is merged into main"), which step 12 implements.
-- Workspace state when this SOP was written (main checkout): `git stash list` shows `stash@{0}: On main: Teleport auto-stash` and `stash@{1}: WIP on main: 998da48 ...`; `git worktree list` shows eight worktrees besides the main checkout. Step 18 and 19 cleanup has not been applied to all of them.
-- The SOP's own issue, `persistint-game-f8f` ("sops/: methodological SOPs ..."), was open and not claimed in `bd list` at the time of writing, although work on it had started in `../persistint-game-wt-sops` (branch `sys-sops`). Step 5 was not applied.
+- Worktree cleanup rule: memory `worktree-cleanup` ("Remove each agent worktree (../persistint-game-wt-*) and its branch right after it is merged into main"), which step 14 implements.
+- Workspace state when this SOP was written (main checkout): `git stash list` shows `stash@{0}: On main: Teleport auto-stash` and `stash@{1}: WIP on main: 998da48 ...`; `git worktree list` shows eight worktrees besides the main checkout. Step 20 and 21 cleanup has not been applied to all of them.
+- The SOP's own issue, `persistint-game-f8f` ("sops/: methodological SOPs ..."), was open and not claimed in `bd list` at the time of writing, although work on it had started in `../persistint-game-wt-sops` (branch `sys-sops`). Step 7 was not applied.
 - Not done; no issue filed: a session-close script in `tools/` implementing section 8.4, and a commit-msg check that rejects attribution lines. Neither exists, and `bd search session-close` and `bd search commit-msg` find no issue for either.
 
 ## 10. Lessons learned

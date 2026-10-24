@@ -3,8 +3,8 @@
 Status: draft
 Owner: Brett Whitty
 Applies to: game projects (any engine; Godot specifics are marked as such)
-Last reviewed: 2026-10-23
-Related SOPs: SOP-03 (03-asset-style-bible-and-prompts.md: prompts for key art, icon, title and trailer footage); SOP-04 (04-generative-render-pipeline.md: renders those prompts); SOP-05 (05-voice-cloning-pipeline.md: voice reference provenance and model licence); SOP-06 (06-quote-sourcing-vv.md: real-person quote evidence); SOP-07 (07-playtest-bug-triage.md: playtest pass before release); SOP-08 (08-session-hygiene-tracking.md: issues, commits and push for every checklist session). Companion template: `templates/promo-site-plan.md` (the promotion website). A new game's repository gets these files as described in section 8.3.
+Last reviewed: 2026-10-24
+Related SOPs: SOP-11 (11-versioning-and-playtest-cadence.md: the version, tag and build id that a release candidate carries); SOP-03 (03-asset-style-bible-and-prompts.md: prompts for key art, icon, title and trailer footage); SOP-04 (04-generative-render-pipeline.md: renders those prompts); SOP-05 (05-voice-cloning-pipeline.md: voice reference provenance and model licence); SOP-06 (06-quote-sourcing-vv.md: real-person quote evidence); SOP-07 (07-playtest-bug-triage.md: playtest pass before release); SOP-08 (08-session-hygiene-tracking.md: issues, commits and push for every checklist session). Companion template: `templates/promo-site-plan.md` (the promotion website). A new game's repository gets these files as described in section 8.3.
 
 Legal items in this SOP are neutral summaries with sources. They are not legal advice. Items marked "author decides" are decisions for the author, ideally with counsel.
 

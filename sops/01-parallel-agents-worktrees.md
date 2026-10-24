@@ -130,11 +130,11 @@ Prevention: the brief forbids edits to the main checkout; only the controller wo
 
 7.8 **Two agents edit one shared file.** Recovery: keep one side, re-apply the other agent's change by hand in the main checkout, re-run the suite. Prevention: step 1 ownership check; one owner per shared file.
 
+7.9 **A pull after the merge flattens it.** `git pull --rebase` after a local `git merge --no-ff` drops the merge commit and replays the branch's commits when the remote has moved. Recovery: if not yet pushed, `git reset --hard ORIG_HEAD` (or reflog to the merge commit), then follow step 13 with `git pull --rebase=merges`. Prevention: step 13.
+
 7.10 **A worktree without the encryption key.** Files under the encrypted directory read as binary in the worktree; an agent reports "the design document is not text" or writes a new file next to an unreadable one. Recovery: install the key (`{key_install_steps}`) and `git checkout -f HEAD` in the worktree; nothing was lost, the blobs were never decrypted. Prevention: step 5 installs the key before the first checkout.
 
 7.11 **Too many heavy jobs on one machine.** Several agents run the engine import at once, or an export runs during an encode; the chat sessions stall or crash and the author loses the conversation. Recovery: stop the extra jobs; run them one at a time; move precomputes to another machine over SSH (SOP-12 step 11). Prevention: step 6 and 7 and `{max_heavy_jobs}`.
-
-7.9 **A pull after the merge flattens it.** `git pull --rebase` after a local `git merge --no-ff` drops the merge commit and replays the branch's commits when the remote has moved. Recovery: if not yet pushed, `git reset --hard ORIG_HEAD` (or reflog to the merge commit), then follow step 13 with `git pull --rebase=merges`. Prevention: step 13.
 
 ## 8. Artifacts and templates
 

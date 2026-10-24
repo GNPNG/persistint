@@ -95,7 +95,7 @@ git -C {main_checkout} status --short      # empty: the coordinator has nothing 
 | A chat stalls | The chat shows no media after the wait, or echoes the prompt back as Markdown | Leave it; re-send that asset in a new chat on the next round; delete the stalled chat when the UI allows (if deletion fails, note the chat id and move on). |
 | Fork cannot read encrypted files | Files under the encrypted directory show as binary in the worktree | Install the key (`{key_install_steps}`) and `git checkout -f HEAD`. Prevention: step 4 installs the key before dispatch. |
 | A `--dry-run` that is not dry | A batch mode sends real prompts under `--dry-run` | Stop; record the sent chat ids so they are harvested, not resent; fix the tool so every mode honours the flag and add a test. |
-| Status wording lands wrong | The owner objects to a status line | Use the agreed line (step 12); store the rule in tracker memory (SOP-08 step 10). |
+| Status wording lands wrong | The owner objects to a status line | Use the agreed line (step 12); store the rule in tracker memory (SOP-08 step 12). |
 | The owner halts an agent | A fork or sub-agent is stopped before its report | Step 13; the controller writes the state note itself. |
 
 ## 8. Artifacts and templates
