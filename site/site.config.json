@@ -4,7 +4,7 @@
   "pitch": "",
   "site_host": "persistint.dataglut.org",
   "zone": "dataglut.org",
-  "worker_name": "persistint-site",
+  "worker_name": "persistint-dataglut-org",
   "build_bucket": "persistint-builds",
   "oversized_files": [
     "index.wasm"
@@ -19,5 +19,5 @@
   "thread_support": false,
   "oversized_mode": "gzip",
   "custom_domain": false,
-  "host_type": "workers"
+  "host_type": "pages"
 }
