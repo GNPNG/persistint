@@ -13,14 +13,21 @@ sheet: width / 8, height / 3):
   rows    0 down (front view), 1 left (side view; flip it for right), 2 up (back view)
   columns 0-3 idle: a slow breath, the figure squashes 0 / 1 / 2 / 1 world px at the top,
           feet fixed
-          4-7 walk: a step bob, up 0 / 2 / 0 / 2 world px, leaning a little into the stride
-The canon art is used as cut, at full resolution: only the breath squash resamples it (LANCZOS);
-nothing is redrawn, and the game downsamples the sheet smoothly (mipmaps) to its display size.
+          4-7 walk: the cycle from tools/rig_walk.py, derived from the same view: front and
+          back lift the left then the right leg (and that side of the hem), the side view swings
+          the legs or hem forward and back about the hip line; the body bobs up while passing
+The canon art is used as cut, at full resolution: the breath squash resamples it (LANCZOS) and the
+walk moves its lower band; nothing is redrawn, and the game downsamples the sheet smoothly
+(mipmaps) to its display size.
 Deterministic: the same cuts give the same sheets.
 """
+import sys
 from pathlib import Path
 
 from PIL import Image
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))  # -I leaves tools/ off the path
+import rig_walk  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "project/assets/canon"
@@ -29,8 +36,6 @@ CASTES = ["priestess", "mother", "initiate", "drone", "barren"]
 VIEWS = ["front", "side", "back"]
 FIG_H, FW, FH, FEET = 48, 32, 52, 50   # world px: figure height, frame, feet line
 IDLE_SQUASH = [0, 1, 2, 1]
-WALK_BOB = [0, 2, 0, 2]
-WALK_LEAN = [0, 1, 0, -1]
 MIN_CUT_H = 4 * FIG_H   # cuts shorter than this are the old 48 px shrink, not source resolution
 
 
@@ -44,17 +49,18 @@ def rig(caste):
     fw, fh, feet = round(FW * s), round(FH * s), round(FEET * s)
     sheet = Image.new("RGBA", (fw * 8, fh * 3))
 
-    def place(fig, col, row, squash=0.0, bob=0.0, shift=0.0):
-        h = fig.height - round(squash * s)
-        f = fig if h == fig.height else fig.resize((fig.width, h), Image.LANCZOS)
-        x = col * fw + (fw - f.width) // 2 + round(shift * s)
-        y = row * fh + feet - h - round(bob * s)
-        sheet.alpha_composite(f, (x, y))
+    def frame_of(fig):
+        """The figure standing centred in one frame, feet on the feet line."""
+        im = Image.new("RGBA", (fw, fh))
+        im.alpha_composite(fig, ((fw - fig.width) // 2, feet - fig.height))
+        return im
 
     for row, (view, fig) in enumerate(zip(VIEWS, figs)):
+        still = frame_of(fig)
+        geo = rig_walk.geometry(feet - fig.height, feet, fw / 2, s)
         for i in range(4):
-            place(fig, i, row, squash=IDLE_SQUASH[i])
-            place(fig, 4 + i, row, bob=WALK_BOB[i], shift=WALK_LEAN[i] if view == "side" else 0)
+            sheet.alpha_composite(rig_walk.breathe(still, round(IDLE_SQUASH[i] * s), feet), (i * fw, row * fh))
+            sheet.alpha_composite(rig_walk.step(still, view, i, geo), ((4 + i) * fw, row * fh))
     return sheet
 
 

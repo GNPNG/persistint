@@ -2,7 +2,10 @@ extends CharacterBody2D
 ## Player — click-to-walk via NavigationAgent2D, click-on-things to approach & interact;
 ## arrow keys (and WASD) walk directly and cancel a click-walk. Keys do nothing while a
 ## dialogue is open, so the arrows stay free for choosing responses.
-## Paper-doll: layered sprites (Body/Hair/Dress/Accessory) driven by WorldState outfit flags.
+## Paper-doll: layered rigs (Body/Dress/Hair/Accessory) driven by WorldState outfit flags. Each
+## worn part is a directional sheet (assets/characters/player/<part>_rig.png, tools/gen_player_rig.py:
+## idle and walk facing down, left and up, all parts on one frame grid); every layer plays the same
+## animation frame, chosen from her velocity, so click-walk and arrow keys both animate her.
 ## The node's origin is the player's feet (y-sorted maps order her with the props by it).
 ## Florida pony stable: while riding (WorldState fl_riding) a PonyDoll (Mount) is drawn under the
 ## doll and click-to-move is faster (Ponies.speed_multiplier); H or the button hops down.
@@ -13,6 +16,10 @@ const INTERACT_DISTANCE := 34.0
 const DOLL_HEIGHT := 48.0
 ## Riding, the doll sits this far up, on the pony's back.
 const RIDE_LIFT := 16.0
+## A worn part's rig sheet; parts without one (the placeholder set) show their still picture.
+const RIG_PATH := "res://assets/characters/player/%s_rig.png"
+## Slower than this (world px per second) she stands.
+const WALK_SPEED_MIN := 4.0
 
 @onready var nav: NavigationAgent2D = $NavigationAgent2D
 @onready var mount_doll: PonyDoll = $Mount
@@ -21,6 +28,7 @@ var _interact_target: Node2D = null
 var _speed := SPEED
 var _ride_ui: CanvasLayer
 var _in_dialogue := false
+var _facing := Vector2.DOWN
 
 const MOVE_KEYS := {
 	"move_left": [KEY_LEFT, KEY_A],
@@ -40,6 +48,28 @@ func _ready() -> void:
 	WorldState.flag_changed.connect(_on_flag_changed)
 	refresh_outfit()
 	refresh_mount()
+
+
+func _layers() -> Array[AnimatedSprite2D]:
+	return [$Body, $Dress, $Hair, $Accessory]
+
+
+## Idle or walk, facing the way she moves (or last moved); every layer on the same frame.
+func _process(_delta: float) -> void:
+	var moving := velocity.length() > WALK_SPEED_MIN and not is_mounted()
+	if velocity.length() > WALK_SPEED_MIN:
+		_facing = velocity
+	var f := RigSheet.facing(_facing, "walk" if moving else "idle")
+	var body: AnimatedSprite2D = $Body
+	for layer in _layers():
+		if layer.sprite_frames == null:
+			continue
+		layer.flip_h = f[1]
+		if layer.animation != f[0]:
+			layer.play(f[0])
+		if layer != body and body.sprite_frames != null:
+			layer.frame = body.frame
+			layer.frame_progress = body.frame_progress
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -123,8 +153,8 @@ func refresh_mount() -> void:
 	_speed = SPEED * Ponies.speed_multiplier()
 	if id != "":
 		mount_doll.set_outfit(Ponies.parts(id))
-	for sprite: Sprite2D in [$Body, $Dress, $Hair, $Accessory]:
-		sprite.position = Vector2(0, -RIDE_LIFT) if id != "" else Vector2.ZERO
+	for layer in _layers():
+		layer.position = Vector2(0, -RIDE_LIFT) if id != "" else Vector2.ZERO
 	_show_ride_ui(id != "")
 
 
@@ -165,9 +195,14 @@ func refresh_outfit() -> void:
 	}
 	# Same art set for every layer (canon when it has all worn parts, as the wardrobe does).
 	var pattern := PaperDoll.art_dir_for(outfit.values())
-	for sprite: Sprite2D in outfit:
-		var item: String = outfit[sprite]
+	for layer: AnimatedSprite2D in outfit:
+		var item: String = outfit[layer]
 		var path := PaperDoll.part_path(pattern, item)
-		sprite.texture = load(path) if item != "none" and ResourceLoader.exists(path) else null
-		SpriteFit.fit(sprite, DOLL_HEIGHT)
-		sprite.position = Vector2(0, -RIDE_LIFT) if is_mounted() else Vector2.ZERO
+		if item == "none" or not ResourceLoader.exists(path):
+			layer.sprite_frames = null
+			continue
+		var rig := RIG_PATH % item
+		layer.sprite_frames = RigSheet.frames(rig) if ResourceLoader.exists(rig) else RigSheet.still(path)
+		layer.play(RigSheet.facing(_facing, "idle")[0])
+		SpriteFit.fit(layer, DOLL_HEIGHT)
+		layer.position = Vector2(0, -RIDE_LIFT) if is_mounted() else Vector2.ZERO
