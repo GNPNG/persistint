@@ -611,7 +611,9 @@ if [[ "$HOST_TYPE" == pages ]]; then
   cp -a "$PUBLIC" "$STAGE"
   cp "$SITE/src/worker.js" "$STAGE/_worker.js"
   if ! "${WRANGLER[@]}" pages project list 2>/dev/null | grep -q "│ $WORKER_NAME "; then
-    "${WRANGLER[@]}" pages project create "$WORKER_NAME" --production-branch main
+    # --force: create the project on classic Pages (what the live project is). Without it, current
+    # wrangler delegates new projects to the Workers API, which this account's token refuses.
+    "${WRANGLER[@]}" pages project create "$WORKER_NAME" --production-branch main --force
   fi
   "${WRANGLER[@]}" pages deploy "$STAGE" --project-name "$WORKER_NAME" --branch main \
     --commit-hash "$(git -C "$ROOT" rev-parse HEAD)" --commit-message "build $BUILD_ID" --commit-dirty=true
