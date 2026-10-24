@@ -126,7 +126,7 @@ func _run() -> void:
 						continue
 					var file := script.resource_path.get_file()
 					if shot[2] == "door" and file == "door.gd":
-						player.global_position = n.global_position + Vector2(0, 30)
+						player.global_position = n.global_position + Vector2(0, 56)  # outside the door area, inside NEAR_DISTANCE
 						break
 					if shot[2] == "bark" and file == "npc.gd":
 						n.bubble.say("Lovely morning! Everyone contributes. Everyone.")
