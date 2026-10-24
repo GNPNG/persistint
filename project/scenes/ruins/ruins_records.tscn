@@ -8,19 +8,14 @@
 [ext_resource type="PackedScene" path="res://scenes/ruins/zombie_child.tscn" id="8"]
 
 [sub_resource type="NavigationPolygon" id="navpoly"]
-vertices = PackedVector2Array(60, 130, 900, 130, 900, 500, 60, 500)
+vertices = PackedVector2Array(60, 240, 900, 240, 900, 500, 60, 500)
 polygons = [PackedInt32Array(0, 1, 2, 3)]
-outlines = [PackedVector2Array(60, 130, 900, 130, 900, 500, 60, 500)]
+outlines = [PackedVector2Array(60, 240, 900, 240, 900, 500, 60, 500)]
 
 [node name="RuinsRecords" type="Node2D"]
+y_sort_enabled = true
 script = ExtResource("1")
 map_size = Vector2(960, 540)
-
-[node name="Background" type="ColorRect" parent="."]
-offset_right = 960.0
-offset_bottom = 540.0
-color = Color(0.11, 0.11, 0.15, 1)
-mouse_filter = 2
 
 [node name="Nav" type="NavigationRegion2D" parent="."]
 navigation_polygon = SubResource("navpoly")
@@ -36,6 +31,7 @@ position = Vector2(120, 300)
 position = Vector2(120, 300)
 
 [node name="Player" parent="." instance=ExtResource("3")]
+z_index = 0
 position = Vector2(120, 300)
 
 [node name="HallDoor" parent="." instance=ExtResource("5")]

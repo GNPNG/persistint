@@ -6,25 +6,33 @@ extends "res://scripts/florida/clickable.gd"
 ## Every batch of an original shares one sprite; the designation reads the original's name
 ## through Cast ("Epstein clone, batch 7"). The spoken part of a bark is one of the original's
 ## own verified lines from data/quotes/<file>.json when that file exists; otherwise the groan itself.
+## Rig: assets/ruins/clone_<original>.png (tools/gen_clone_children.py), front/side/back idle and
+## walk through SheetRig; the node's origin sits 16 px above its feet like the player's.
 
 const ForbiddenKnowledge := preload("res://scripts/ruins/forbidden_knowledge.gd")
+const SheetRig := preload("res://scripts/ruins/sheet_rig.gd")
+const BUBBLE_BOTTOM := -21.0  # just over the head
+const PUFF := "res://assets/ruins/gore_puff.png"  # tools/gen_clone_children.py
 
 @export var original := "epstein"  # cast id of the person the batch was meant to reproduce
 @export var batch := 1
 @export var wander := Rect2(0, 0, 100, 60)  # global rect it shambles inside
 
 @onready var bubble: Label = $BarkBubble
-@onready var sprite: Sprite2D = $Sprite2D
+@onready var sprite: AnimatedSprite2D = $Sprite2D
 
 var _talking := false
+var _facing := "down"
 
 
 func _ready() -> void:
 	super()
 	add_to_group("zombie_clones")
-	var path := "res://assets/canon/clone_%s.png" % original
+	var path := "res://assets/ruins/clone_%s.png" % original
 	if ResourceLoader.exists(path):
-		sprite.texture = load(path)
+		sprite.sprite_frames = SheetRig.frames(load(path), SheetRig.CLONE)
+		sprite.play("idle_down")
+		sprite.frame = randi() % 2
 	bubble.hide()
 	area_entered.connect(_on_bumped)
 	body_entered.connect(_on_bumped)
@@ -65,6 +73,11 @@ static func quote_pool(orig: String) -> Array:
 	return pool
 
 
+func _process(_delta: float) -> void:
+	if bubble.visible:
+		SheetRig.keep_on_screen(bubble)
+
+
 ## A random point inside the wander rect; where the next shamble goes.
 func pick_target() -> Vector2:
 	return wander.position + Vector2(randf() * wander.size.x, randf() * wander.size.y)
@@ -76,13 +89,18 @@ func _shamble() -> void:
 	var target := pick_target()
 	var tw := create_tween()
 	tw.tween_interval(randf_range(1.0, 4.0))
-	tw.tween_callback(func() -> void: sprite.flip_h = target.x < global_position.x)
+	tw.tween_callback(func() -> void: _walk_towards(target))
 	tw.tween_property(self, "global_position", target, randf_range(5.0, 9.0)).set_trans(Tween.TRANS_SINE)
+	tw.tween_callback(func() -> void: sprite.play("idle_" + _facing))
 	tw.tween_callback(_shamble)
-	# the lurch: a slow side-to-side sway while it goes
-	var sway := create_tween().set_loops(4)
-	sway.tween_property(sprite, "rotation", 0.18, 0.6).set_trans(Tween.TRANS_SINE)
-	sway.tween_property(sprite, "rotation", -0.18, 0.6).set_trans(Tween.TRANS_SINE)
+
+
+## Faces the way it is about to walk and starts the shamble cycle.
+func _walk_towards(target: Vector2) -> void:
+	var delta := target - global_position
+	_facing = SheetRig.facing(delta)
+	sprite.flip_h = _facing == "side" and delta.x < 0
+	sprite.play("walk_" + _facing)
 
 
 func _groan_later() -> void:
@@ -101,7 +119,7 @@ func _on_bumped(other: Node) -> void:
 		return
 	bark("bump_barks")
 	var tw := create_tween()
-	tw.tween_property(sprite, "position:x", -4.0 if sprite.flip_h else 4.0, 0.12)
+	tw.tween_property(sprite, "position:x", 4.0 if sprite.flip_h else -4.0, 0.12)
 	tw.tween_property(sprite, "position:x", 0.0, 0.2)
 
 
@@ -113,7 +131,7 @@ func bark(list := "barks") -> String:
 	_talking = true
 	var text: String = lines.pick_random()
 	var spoken := quote()
-	bubble.text = "%s: %s" % [designation(), text] + ("\n\"%s\"" % spoken if spoken != "" else "")
+	SheetRig.say(bubble, "%s\n%s" % [designation(), text] + ("\n\"%s\"" % spoken if spoken != "" else ""), BUBBLE_BOTTOM)
 	bubble.show()
 	Voice.speak(spoken if spoken != "" else text, float(data().get("pitch", 1.0)), original)
 	get_tree().create_timer(3.5).timeout.connect(func() -> void:
@@ -126,7 +144,18 @@ func bark(list := "barks") -> String:
 func get_eaten() -> void:
 	remove_from_group("zombie_clones")
 	set_deferred("monitoring", false)
+	if ResourceLoader.exists(PUFF):
+		_puff()
+	queue_free()
+
+
+## The puff: generated clone-dust sprites (gore_puff.png), each about 6-10 world px wide.
+func _puff() -> void:
+	var tex: Texture2D = load(PUFF)
+	var fit := 6.0 / float(tex.get_width())
 	var puff := CPUParticles2D.new()
+	puff.texture = tex
+	puff.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	puff.one_shot = true
 	puff.amount = 10
 	puff.lifetime = 0.6
@@ -135,11 +164,10 @@ func get_eaten() -> void:
 	puff.initial_velocity_min = 20.0
 	puff.initial_velocity_max = 50.0
 	puff.gravity = Vector2(0, -20)
-	puff.scale_amount_min = 3.0
-	puff.scale_amount_max = 6.0
-	puff.color = Color(0.85, 0.95, 0.85, 0.8)
+	puff.scale_amount_min = fit
+	puff.scale_amount_max = fit * 1.7
+	puff.color = Color(1, 1, 1, 0.9)
 	get_parent().add_child(puff)
 	puff.global_position = global_position
 	puff.emitting = true
 	puff.finished.connect(puff.queue_free)
-	queue_free()

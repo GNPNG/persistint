@@ -138,7 +138,8 @@ func _check_clones(data: Dictionary, packed: Dictionary) -> void:
 	var z: Node2D = zs[0]
 	_check(z.designation() == "%s clone, batch %d" % [cast.short(z.original), z.batch], "zombie designation reads the name through Cast (%s)" % z.designation())
 	_check(z.bark() != "" and z.bubble.visible and z.bubble.text.begins_with(z.designation()), "zombie barks in its bubble")
-	_check(z.sprite.texture != null and cubs[0].sprite.texture != null, "clone and cub sprites load")
+	_check(z.sprite.sprite_frames != null and z.sprite.sprite_frames.has_animation("walk_side") \
+			and cubs[0].sprite.sprite_frames != null and cubs[0].sprite.sprite_frames.has_animation("nap"), "clone and cub rigs load")
 	_check(cubs[0].say("Mrrf!") != "" and cubs[0].bubble.text.contains(cast.full("polar_bear_clone")), "cub makes a bear sound")
 
 	var lab: Node = hall.get_node("CloneLab")
@@ -152,7 +153,7 @@ func _check_clones(data: Dictionary, packed: Dictionary) -> void:
 	var particles: Array = lab.gore.find_children("*", "CPUParticles2D", false, false)
 	_check(particles.size() >= 3 and lab.gore.get_node_or_null("Puddle") != null, "kawaii gore splatter, hearts, sparkles and puddle spawn")
 	_check(cub.sfx.stream != null, "pounce sfx set on the cub")
-	_check(cub.sprite.texture.resource_path.ends_with("_smeared.png"), "cub has a pink muzzle after eating")
+	_check(cub.current_animation() in ["chomp", "smeared"], "cub has a pink muzzle after eating (%s)" % cub.current_animation())
 	await process_frame
 	await process_frame
 	_check(not is_instance_valid(victim), "eaten zombie removed from the hall")

@@ -1,13 +1,26 @@
 """Draw the Ruins of Utopia and the bunker: floor and wall tiles for each room, the props the
 rooms' data names by "kind" (data/ruins.json, rooms -> props), the Forbidden Knowledge pickup
-icons, a soft glow and a contact shadow.
+icons, a soft glow and a screen vignette.
 
 Usage: python3 -I tools/gen_ruins_art.py
-Writes project/assets/ruins/*.png. Tiles are 32x32 at one texel per world pixel, like the
-island tiles; props and icons are drawn at two texels per world pixel (shown at scale 0.5,
-the player's density). Style: STYLE.md 4.1-4.5 - soft outline (the clone lab's plum
-#5a4a5e), flat pastel fills with one highlight, faces on the big machines, cat-in-a-lab-coat
-stickers on bunker machines, blue-green gloom with pink/mint accents.
+Inputs: none (palette hexes below come from prompts/STYLE.md; every random draw is seeded).
+Outputs, all under project/assets/ruins/:
+Every file is drawn at D = 8 texels per world pixel (four times the 1280x720 window's
+2x-camera display size); the game shows it at scale 1/8 with mipmapped linear filtering, so
+nothing is ever shown pixelated.
+  ruins_tiles.png + ruins_tileset.tres  atlas of 256x256 tiles (32x32 world px; layout in
+                                        tiles()), painted by scripts/ruins/ruins_decor.gd at
+                                        scale 1/8
+  ruins_<kind>.png                      the props data/ruins.json names by "kind", feet at the
+                                        bottom centre
+  ruins_tank.png, ruins_tank_duck.png   animated sheets: 1 row x 4 frames of 352x688 (tank())
+  icon_<id>.png                         Forbidden Knowledge pickups, 160x160 (data "icon")
+  glow.png, vignette.png                256x256 pickup glow, 1280x720 screen vignette
+Each piece is drawn on a canvas SS = 16 times the world size and downscaled (LANCZOS). Style: STYLE.md
+4.1-4.5 - soft outline (plum #5a4a5e in the bunker, warm brown #8a5a5a on the ship), flat
+pastel fills with one highlight, faces on the big machines, cat-in-a-lab-coat stickers on
+bunker machines, blue-green gloom with pink/mint accents. The Seal of the O and the tide
+chart are canon cuts (assets/canon/prop_seal_o.png, prop_scroll.png), not drawn here.
 """
 import math
 import random
@@ -16,9 +29,10 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFilter
 
 OUT = Path(__file__).resolve().parent.parent / "project/assets/ruins"
-INK = "#5a4a5e"
-SS = 8  # supersample: canvas pixels per world pixel
-D = 2  # output texels per world pixel for props
+PLUM, BROWN = "#5a4a5e", "#8a5a5a"  # outline colours (STYLE.md 4.1)
+INK = PLUM
+SS = 16  # supersample: canvas pixels per world pixel
+D = 8  # output texels per world pixel
 BLUSH = "#ff9fb8"
 PINK, MINT, SKY, LILAC, BUTTER, CREAM = "#ffb3c8", "#a8e6c8", "#a8d8f0", "#c9b3f0", "#ffe08a", "#fdf6e3"
 STEEL, STEEL_D, STEEL_L = "#9fb3c4", "#7d91a6", "#c8d8e4"
@@ -38,22 +52,27 @@ class Art:
     def lw(self, w=0.75):
         return max(1, int(w * SS))
 
-    def rect(self, x0, y0, x1, y1, fill, r=1.5, ink=INK, w=0.75):
+    def rect(self, x0, y0, x1, y1, fill, r=1.5, ink="INK", w=0.75):
+        ink = INK if ink == "INK" else ink
         self.d.rounded_rectangle(self.p(x0, y0, x1, y1), r * SS, fill=fill, outline=ink, width=self.lw(w) if ink else 0)
 
-    def ell(self, x0, y0, x1, y1, fill, ink=INK, w=0.75):
+    def ell(self, x0, y0, x1, y1, fill, ink="INK", w=0.75):
+        ink = INK if ink == "INK" else ink
         self.d.ellipse(self.p(x0, y0, x1, y1), fill=fill, outline=ink, width=self.lw(w) if ink else 0)
 
-    def circ(self, x, y, r, fill, ink=INK, w=0.75):
+    def circ(self, x, y, r, fill, ink="INK", w=0.75):
         self.ell(x - r, y - r, x + r, y + r, fill, ink, w)
 
-    def line(self, pts, fill=INK, w=0.75):
+    def line(self, pts, fill="INK", w=0.75):
+        fill = INK if fill == "INK" else fill
         self.d.line([(x * SS, y * SS) for x, y in pts], fill=fill, width=self.lw(w), joint="curve")
 
-    def poly(self, pts, fill, ink=INK, w=0.75):
+    def poly(self, pts, fill, ink="INK", w=0.75):
+        ink = INK if ink == "INK" else ink
         self.d.polygon([(x * SS, y * SS) for x, y in pts], fill=fill, outline=ink, width=self.lw(w) if ink else 0)
 
-    def arc(self, x0, y0, x1, y1, a0, a1, fill=INK, w=0.75):
+    def arc(self, x0, y0, x1, y1, a0, a1, fill="INK", w=0.75):
+        fill = INK if fill == "INK" else fill
         self.d.arc(self.p(x0, y0, x1, y1), a0, a1, fill=fill, width=self.lw(w))
 
     def face(self, x, y, s=1.0, sleepy=False):
@@ -72,7 +91,7 @@ class Art:
         q = r * 0.32
         self.poly([(x, y - r), (x + q, y - q), (x + r, y), (x + q, y + q), (x, y + r), (x - q, y + q), (x - r, y), (x - q, y - q)], fill, ink, 0.4)
 
-    def heart(self, x, y, r, fill="#ff8fb1", ink=INK):
+    def heart(self, x, y, r, fill="#ff8fb1", ink="INK"):
         self.circ(x - r * 0.5, y - r * 0.2, r * 0.55, fill, None)
         self.circ(x + r * 0.5, y - r * 0.2, r * 0.55, fill, None)
         self.poly([(x - r * 1.02, y), (x + r * 1.02, y), (x, y + r * 1.05)], fill, None)
@@ -95,13 +114,20 @@ class Art:
 
 # ---------------------------------------------------------------- tiles
 
-def tile(name, draw):
-    a = Art(32, 32)
-    draw(a, random.Random(name))
-    a.im.resize((32, 32), Image.LANCZOS).save(OUT / f"tile_{name}.png")
+T = 32  # tile size in world pixels (T * D texels in the atlas)
+FLOORS = ["deck", "grate", "plate", "concrete", "lab", "carpet"]
+WALLS = {  # id: (panel, seam, rivet, accent stripe, cap)
+    "hull": ("#5f6e86", "#4d5a6f", "#7c8aa1", "#e9a7b9", "#8494ad"),
+    "service": ("#4d5868", "#3f4856", "#677384", "#ff9a9a", "#6a7586"),
+    "core": ("#43465c", "#363849", "#5a5d78", "#8d6fa8", "#5d6080"),
+    "bunker": ("#55636b", "#45525a", "#6e7d85", "#ffb3c8", "#73828a"),
+    "lab": ("#5e7f86", "#4e6c72", "#7aa0a6", "#9fd9c0", "#7fa3a9"),
+    "archive": ("#6b6274", "#585063", "#857c90", "#e0b24a", "#887e94"),
+}
+VOID = "#1b1f2b"
 
 
-def floor_deck(a, r):
+def floor_deck(a, r, alt):
     for i in range(4):
         y = i * 8
         a.d.rectangle(a.p(0, y, 32, y + 8), fill="#8e7f86" if i % 2 else "#968690")
@@ -111,34 +137,47 @@ def floor_deck(a, r):
         for x in (off - 2, off + 2):
             a.circ(x, y + 4, 0.45, "#6f6270", None)
     a.ell(20, 3, 25, 5, "#a89aa3", None)
+    if alt:  # a dropped streamer
+        a.line([(4, 20), (9, 18), (14, 21), (19, 19)], "#ffb3c8", 0.8)
 
 
-def floor_grate(a, r):
+def floor_grate(a, r, alt):
     a.d.rectangle(a.p(0, 0, 32, 32), fill="#55606f")
     for i in range(4):
         for j in range(4):
             a.rect(i * 8 + 1, j * 8 + 1, i * 8 + 7, j * 8 + 7, "#485261", 1, "#3c4552", 0.5)
             a.line([(i * 8 + 2, j * 8 + 2.2), (i * 8 + 6, j * 8 + 2.2)], "#66727f", 0.5)
+    if alt:  # a shallow puddle over the grate catching the light
+        a.ell(8, 12.5, 24, 20.5, "#7a93a6", "#4f5d6d", 0.4)
+        a.ell(9.4, 13.6, 22.6, 19.4, "#86a1b4", None)
+        a.arc(12, 14.6, 21, 19.4, 200, 320, "#a9c6d6", 0.4)  # a ripple
+        a.line([(11.4, 15.2), (15.4, 14.6)], "#dff2fb", 0.6)  # the one highlight
+        a.circ(18.6, 14.8, 0.45, "#dff2fb", None)
 
 
-def floor_plate(a, r):
+def floor_plate(a, r, alt):
     a.d.rectangle(a.p(0, 0, 32, 32), fill="#4b4e66")
     a.rect(0.5, 0.5, 31.5, 31.5, "#53566f", 2, "#3d3f55", 0.6)
     for x, y in ((3, 3), (29, 3), (3, 29), (29, 29)):
         a.circ(x, y, 0.8, "#6a6d88", "#3d3f55", 0.3)
     a.line([(8, 16), (24, 16)], "#5d6079", 0.8)
+    if alt:  # scuffs where the faithful kneel
+        a.arc(6, 18, 18, 26, 200, 300, "#5d6079", 0.6)
+        a.arc(15, 6, 26, 13, 210, 320, "#5d6079", 0.5)
 
 
-def floor_concrete(a, r):
+def floor_concrete(a, r, alt):
     a.d.rectangle(a.p(0, 0, 32, 32), fill="#5c6a70")
     a.line([(0, 0.3), (32, 0.3)], "#4c585e", 0.6)
     a.line([(0.3, 0), (0.3, 32)], "#4c585e", 0.6)
     for _ in range(5):
         x, y = r.uniform(3, 29), r.uniform(3, 29)
         a.circ(x, y, r.uniform(0.4, 0.9), "#667579", None)
+    if alt:  # a hairline crack
+        a.line([(6, 8), (11, 12), (10, 17), (16, 22), (20, 21)], "#48545a", 0.5)
 
 
-def floor_lab(a, r):
+def floor_lab(a, r, alt):
     for i in range(2):
         for j in range(2):
             a.d.rectangle(a.p(i * 16, j * 16, i * 16 + 16, j * 16 + 16), fill="#6f9a92" if (i + j) % 2 else "#7aa69c")
@@ -146,54 +185,123 @@ def floor_lab(a, r):
     for k in (0.3, 16):
         a.line([(0, k), (32, k)], "#5f857e", 0.6)
         a.line([(k, 0), (k, 32)], "#5f857e", 0.6)
+    if alt:  # a floor drain (the pink spills are props: ruins_puddle)
+        a.circ(8, 24, 2.4, "#5f857e", "#4e6c72", 0.4)
+        for dx in (-1, 0, 1):
+            a.line([(8 + dx, 22.4), (8 + dx, 25.6)], "#4e6c72", 0.3)
 
 
-def floor_carpet(a, r):
+def floor_carpet(a, r, alt):
     a.d.rectangle(a.p(0, 0, 32, 32), fill="#c9bba4")
     for x, y in ((8, 8), (24, 24)):
         a.poly([(x, y - 2.4), (x + 2.4, y), (x, y + 2.4), (x - 2.4, y)], "#d6c9b2", None)
     for x, y in ((24, 8), (8, 24)):
         a.circ(x, y, 0.8, "#bcae97", None)
+    if alt:  # a worn patch where a chair stood for decades
+        a.ell(10, 12, 22, 20, "#c2b39b", None)
+        a.ell(12, 13.5, 20, 18.5, "#c9bba4", None)
 
 
-def wall_panel(base, seam, trim, stripe=None):
-    def draw(a, r):
-        a.d.rectangle(a.p(0, 0, 32, 32), fill=base)
-        a.line([(0.3, 0), (0.3, 32)], seam, 0.7)
-        a.line([(16, 0), (16, 32)], seam, 0.4)
+def wall_tile(a, wid, part):
+    base, seam, rivet, stripe, cap = WALLS[wid]
+    a.d.rectangle(a.p(0, 0, 32, 32), fill=base)
+    a.line([(0.3, 0), (0.3, 32)], seam, 0.7)
+    a.line([(16, 0), (16, 32)], seam, 0.4)
+    if part == "cap":  # the ceiling's edge: dark above, a pale trim rail below
+        a.d.rectangle(a.p(0, 0, 32, 20), fill=VOID)
+        a.d.rectangle(a.p(0, 20, 32, 26), fill=cap)
+        a.line([(0, 20.4), (32, 20.4)], INK, 0.7)
+        a.line([(0, 25.6), (32, 25.6)], seam, 0.7)
+        a.line([(0, 22), (32, 22)], "#ffffff", 0.35)
+        for x in (4, 12, 20, 28):
+            a.circ(x, 23, 0.6, seam, None)
+    elif part == "stripe":
+        a.d.rectangle(a.p(0, 12, 32, 18), fill=stripe)
+        a.line([(0, 12), (32, 12)], seam, 0.5)
+        a.line([(0, 18), (32, 18)], seam, 0.5)
+        a.line([(0, 13.2), (32, 13.2)], "#ffffff", 0.3)
+        for x in (3, 13, 19, 29):
+            a.circ(x, 4, 0.55, rivet, None)
+            a.circ(x, 27, 0.55, rivet, None)
+    elif part == "base":  # skirting board
+        for x in (3, 13, 19, 29):
+            a.circ(x, 5, 0.55, rivet, None)
+        a.d.rectangle(a.p(0, 22, 32, 32), fill=seam)
+        a.line([(0, 22), (32, 22)], cap, 0.7)
+        a.line([(0, 31.6), (32, 31.6)], INK, 0.7)
+    else:
         for y in (4, 28):
             for x in (3, 13, 19, 29):
-                a.circ(x, y, 0.55, trim, None)
-        if stripe:
-            a.d.rectangle(a.p(0, 13, 32, 17), fill=stripe)
-    return draw
+                a.circ(x, y, 0.55, rivet, None)
+
+
+def edge_shadow(a):
+    """Floor-coloured nothing: a soft shadow strip the skirting casts on the first floor row."""
+    for i in range(8):
+        a.d.rectangle(a.p(0, i, 32, i + 1), fill=(14, 16, 26, int(110 * (1 - i / 8))))
 
 
 def tiles():
-    tile("deck", floor_deck)
-    tile("grate", floor_grate)
-    tile("plate", floor_plate)
-    tile("concrete", floor_concrete)
-    tile("lab", floor_lab)
-    tile("carpet", floor_carpet)
-    tile("wall_hull", wall_panel("#5f6e86", "#4d5a6f", "#7c8aa1", "#e9a7b9"))
-    tile("wall_service", wall_panel("#4d5868", "#3f4856", "#677384"))
-    tile("wall_core", wall_panel("#43465c", "#363849", "#5a5d78", "#8d6fa8"))
-    tile("wall_bunker", wall_panel("#55636b", "#45525a", "#6e7d85"))
-    tile("wall_lab", wall_panel("#5e7f86", "#4e6c72", "#7aa0a6", "#9fd9c0"))
-    tile("wall_archive", wall_panel("#6b6274", "#585063", "#857c90"))
-    # hazard stripes, pink and mint, for the bunker wall band
-    a = Art(32, 32)
-    for i in range(-2, 6):
-        x = i * 8
-        a.poly([(x, 32), (x + 8, 0), (x + 12, 0), (x + 4, 32)], PINK if i % 2 else MINT, None)
-    a.im.resize((32, 32), Image.LANCZOS).save(OUT / "tile_hazard.png")
+    """ruins_tiles.png: a 7x6 atlas of (T*D)x(T*D) tiles.
+    row 0: floors deck, grate, plate, concrete, lab, carpet; col 6 void
+    row 1: the same floors with one detail (streamer, puddle, wax, crack, drain, card); col 6 lip
+    row 2: wall caps   hull, service, core, bunker, lab, archive; col 6 floor edge shadow
+    row 3: wall panels (same order); col 6 hazard stripes
+    row 4: wall panels with the accent stripe
+    row 5: wall skirting (bottom wall row)
+    """
+    TT = T * D
+    sheet = Image.new("RGBA", (7 * TT, 6 * TT))
+
+    def put(col, row, draw, seed):
+        a = Art(T, T)
+        draw(a, random.Random(seed))
+        sheet.alpha_composite(a.im.resize((TT, TT), Image.LANCZOS), (col * TT, row * TT))
+
+    for i, f in enumerate(FLOORS):
+        fn = globals()["floor_" + f]
+        put(i, 0, lambda a, r, fn=fn: fn(a, r, False), f)
+        put(i, 1, lambda a, r, fn=fn: fn(a, r, True), f + "_alt")
+    put(6, 0, lambda a, r: a.d.rectangle(a.p(0, 0, 32, 32), fill=VOID), "void")
+
+    def lip(a, r):
+        a.d.rectangle(a.p(0, 0, 32, 32), fill=VOID)
+        a.d.rectangle(a.p(0, 0, 32, 3), fill="#3a3f52")
+        a.line([(0, 3), (32, 3)], INK, 0.6)
+    put(6, 1, lip, "lip")
+    put(6, 2, lambda a, r: edge_shadow(a), "shadow")
+
+    def hazard(a, r):
+        for i in range(-2, 6):
+            x = i * 8
+            a.poly([(x, 32), (x + 8, 0), (x + 12, 0), (x + 4, 32)], PINK if i % 2 else MINT, None)
+    put(6, 3, hazard, "hazard")
+    for i, w in enumerate(WALLS):
+        for row, part in ((2, "cap"), (3, "panel"), (4, "stripe"), (5, "base")):
+            put(i, row, lambda a, r, w=w, part=part: wall_tile(a, w, part), w + part)
+    sheet.save(OUT / "ruins_tiles.png")
+    tileset()
+
+
+def tileset():
+    """ruins_tileset.tres: one TileSetAtlasSource over ruins_tiles.png, every cell a tile."""
+    cells = "\n".join(f"{c}:{r}/0 = 0" for r in range(6) for c in range(7))
+    (OUT / "ruins_tileset.tres").write_text(
+        '[gd_resource type="TileSet" load_steps=3 format=3]\n\n'
+        '[ext_resource type="Texture2D" path="res://assets/ruins/ruins_tiles.png" id="1_tiles"]\n\n'
+        '[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ruins"]\n'
+        'texture = ExtResource("1_tiles")\n'
+        f"texture_region_size = Vector2i({T * D}, {T * D})\n"
+        f"{cells}\n\n"
+        "[resource]\n"
+        f"tile_size = Vector2i({T * D}, {T * D})\n"
+        'sources/0 = SubResource("TileSetAtlasSource_ruins")\n')
 
 
 # ---------------------------------------------------------------- shared bits
 
 def glow():
-    n = 64
+    n = 256
     im = Image.new("RGBA", (n, n))
     px = im.load()
     for y in range(n):
@@ -204,15 +312,8 @@ def glow():
     im.save(OUT / "glow.png")
 
 
-def shadow():
-    a = Art(24, 8)
-    a.ell(0.5, 0.5, 23.5, 7.5, (40, 30, 50, 110), None)
-    a.im = a.im.filter(ImageFilter.GaussianBlur(SS * 0.8))
-    a.save("shadow")
-
-
 def vignette():
-    w, h = 160, 90
+    w, h = 1280, 720
     im = Image.new("RGBA", (w, h))
     px = im.load()
     for y in range(h):
@@ -225,29 +326,44 @@ def vignette():
 
 # ---------------------------------------------------------------- clone hall
 
-def tank(name, duck=False):
+TANK_FRAMES = 4
+
+
+def tank_frame(f, duck):
     a = Art(44, 86)
     a.ell(4, 76, 40, 85, (30, 30, 45, 90), None)
     a.rect(4, 70, 40, 82, STEEL, 3)  # base
     a.face(22, 75.5, 0.9)
-    a.rect(7, 12, 37, 72, GLASS, 10, INK, 0.9)  # glass
+    a.rect(7, 12, 37, 72, GLASS, 10, "INK", 0.9)  # glass
     a.d.rounded_rectangle(a.p(8, 24, 36, 71), 9 * SS, fill=FLUID)
     a.d.rectangle(a.p(8.5, 24, 35.5, 27), fill="#ffc4d6")
     for x, y, r in ((14, 60, 1.6), (26, 50, 1.2), (19, 40, 1.0), (30, 34, 1.4), (15, 30, 0.8), (24, 64, 1.1)):
-        a.circ(x, y, r, "#fff0f6", "#ffffff", 0.3)
+        y = 28 + (y - 28 - f * 11) % 40  # bubbles rise a quarter of the way per frame, wrapping
+        a.circ(x + (0.8 if f % 2 else 0), y, r, "#fff0f6", "#ffffff", 0.3)
     a.rect(10, 28, 12.6, 66, "#ffc8da", 1.2, None)  # glass sheen
     a.rect(10, 15, 12.6, 23, "#eef9fc", 1.2, None)
     a.rect(3, 4, 41, 15, STEEL_L, 3)  # cap
     a.rect(16, 0.5, 28, 5, STEEL_D, 1.5)
     a.line([(8, 9.5), (36, 9.5)], STEEL_D, 0.6)
-    for x in (10, 34):
-        a.circ(x, 9.5, 1.1, "#9fe0b8" if x == 10 else "#ff9ebf", INK, 0.4)
+    for x in (10, 34):  # status lights, the pink one blinks
+        lit = x == 10 or f < 2
+        a.circ(x, 9.5, 1.1, ("#9fe0b8" if x == 10 else "#ff9ebf") if lit else "#b9a3ad", "INK", 0.4)
     if duck:
-        a.ell(16, 21.5, 28, 27.5, "#ffe066")
-        a.circ(26, 20, 3.2, "#ffe066")
-        a.poly([(28.5, 20), (31.5, 20.8), (28.5, 21.8)], "#ffa040", INK, 0.4)
-        a.circ(26.4, 19.3, 0.55, INK, None)
-    a.save(name)
+        dy = (0, -0.6, 0, 0.6)[f]
+        a.ell(16, 21.5 + dy, 28, 27.5 + dy, "#ffe066")
+        a.circ(26, 20 + dy, 3.2, "#ffe066")
+        a.poly([(28.5, 20 + dy), (31.5, 20.8 + dy), (28.5, 21.8 + dy)], "#ffa040", "INK", 0.4)
+        a.circ(26.4, 19.3 + dy, 0.55, INK, None)
+    return a.im.resize((44 * D, 86 * D), Image.LANCZOS)
+
+
+def tank(name, duck=False):
+    """A clone tank, animated: one row of TANK_FRAMES frames, each 88x172 texels (44x86 world
+    px at scale 0.5), bubbles rising and the pink light blinking; 6 fps loop."""
+    sheet = Image.new("RGBA", (44 * D * TANK_FRAMES, 86 * D))
+    for f in range(TANK_FRAMES):
+        sheet.alpha_composite(tank_frame(f, duck), (f * 44 * D, 0))
+    sheet.save(OUT / f"{name}.png")
 
 
 def incubator():
@@ -468,16 +584,6 @@ def candles():
         a.ell(x - 0.5, 28 - h, x + 0.5, 30.6 - h, "#fff6c8", None)
     a.ell(1, 27, 45, 32, "#fff1d8", INK, 0.4)  # wax pool
     a.save("ruins_candles")
-
-
-def seal_stencil():
-    """The big O stamped in pink, the arrow beneath it that keeps coming back."""
-    a = Art(56, 50)
-    d2 = a.d
-    d2.ellipse(a.p(10, 3, 46, 39), fill="#ff8fb1")
-    d2.ellipse(a.p(17, 10, 39, 32), fill=(0, 0, 0, 0))
-    d2.polygon([(x * SS, y * SS) for x, y in ((24, 40), (32, 40), (32, 44), (36, 44), (28, 49.5), (20, 44), (24, 44))], fill="#ff8fb1")
-    a.save("ruins_seal_stencil")
 
 
 def floor_hatch():
@@ -777,6 +883,209 @@ def failed_drawer():
     a.save("ruins_failed_drawer")
 
 
+# ---------------------------------------------------------------- clutter (every room)
+
+def crates():
+    """Two supply crates stacked, a third beside them; heart stencils."""
+    a = Art(56, 44)
+    a.ell(2, 37, 54, 43, (20, 20, 35, 90), None)
+    for x0, y0, w, c in ((4, 18, 24, "#e8c49a"), (28, 22, 22, "#d9b48a"), (8, 2, 18, "#f0d2ac")):
+        a.rect(x0, y0, x0 + w, y0 + 19 if y0 > 10 else y0 + 17, c, 1.5)
+        a.line([(x0 + 1.5, y0 + 4), (x0 + w - 1.5, y0 + 4)], "#c29a70", 0.6)
+        a.line([(x0 + 2, y0 + 6), (x0 + w - 2, y0 + 15 if y0 > 10 else y0 + 13)], "#c29a70", 0.6)
+        a.heart(x0 + w / 2, y0 + 10 if y0 > 10 else y0 + 9, 2.4, "#ffb3c8")
+    a.save("ruins_crates")
+
+
+def barrel():
+    a = Art(28, 38)
+    a.ell(2, 32, 26, 37, (20, 20, 35, 90), None)
+    a.rect(3, 5, 25, 34, "#a8d8f0", 4)
+    for y in (12, 26):
+        a.line([(3.5, y), (24.5, y)], "INK", 0.6)
+    a.ell(3, 2, 25, 9, "#c8e8f6")
+    a.ell(9, 4, 19, 7, "#a8d8f0", "INK", 0.4)
+    a.d.rectangle(a.p(6, 15, 10, 23), fill="#e6f5fc")  # highlight
+    a.rect(13, 15, 21, 23, "#fff8ec", 1, "INK", 0.4)  # sticker: a heart, not a hazard sign
+    a.heart(17, 19, 2)
+    a.save("ruins_barrel")
+
+
+def papers():
+    """Loose pages on the floor, painted flat."""
+    a = Art(44, 22)
+    rr = random.Random(5)
+    for i in range(6):
+        x, y = rr.uniform(4, 30), rr.uniform(2, 10)
+        ang = rr.uniform(-0.5, 0.5)
+        w, h = 10, 8
+        pts = [(x, y), (x + w, y + ang * 4), (x + w - ang * 3, y + h + ang * 4), (x - ang * 3, y + h)]
+        a.poly(pts, "#fff8ec" if i % 3 else "#ffe6ee", "INK", 0.4)
+        a.line([(x + 2, y + 3 + ang), (x + 7, y + 3 + ang * 2)], "#d6c8b2", 0.4)
+    a.save("ruins_papers")
+
+
+def cables():
+    a = Art(70, 20)
+    for k, c in enumerate(("#ffb3c8", "#a8e6c8", "#c9b3f0")):
+        pts = [(2 + i * 4, 10 + 5 * math.sin(i * 0.55 + k * 1.7) + k * 2) for i in range(17)]
+        a.line(pts, "INK", 2.2)
+        a.line(pts, c, 1.3)
+    a.save("ruins_cables")
+
+
+def plant():
+    """A potted plant the Covenant tied a ribbon round: life where the ship died."""
+    a = Art(30, 44)
+    a.ell(4, 38, 26, 43, (20, 20, 35, 90), None)
+    for ang, ln in ((-60, 16), (-95, 22), (-125, 17), (-80, 19), (-110, 20)):
+        r = math.radians(ang)
+        x1, y1 = 15 + math.cos(r) * ln, 26 + math.sin(r) * ln
+        a.line([(15, 26), (x1, y1)], "#6fb85a", 0.8)
+        a.ell(x1 - 3.4, y1 - 2.2, x1 + 3.4, y1 + 2.2, "#a8e6a0", "INK", 0.5)
+    a.poly([(6, 24), (24, 24), (22, 40), (8, 40)], "#ffc9de")
+    a.rect(5, 22, 25, 27, "#ffb3c8", 1.2)
+    a.poly([(15, 31), (10, 28), (10, 34)], "#c9b3f0", "INK", 0.4)  # the ribbon
+    a.poly([(15, 31), (20, 28), (20, 34)], "#c9b3f0", "INK", 0.4)
+    a.circ(15, 31, 1.2, "#e0d0fa", "INK", 0.4)
+    a.face(15, 36, 0.55)
+    a.save("ruins_plant")
+
+
+def offering():
+    """Shells, a flower and a candle left on the floor by the faithful."""
+    a = Art(34, 20)
+    a.ell(1, 10, 33, 19, (20, 20, 35, 70), None)
+    a.rect(14, 2, 18, 13, "#fff8ec", 1, "INK", 0.4)
+    a.ell(14.6, -0.6, 17.4, 3.8, "#ffcf6a", None)
+    for x, y, c in ((6, 13, "#ffd3c2"), (25, 14, "#fff1d8")):
+        a.d.pieslice(a.p(x - 4, y - 4, x + 4, y + 4), 180, 360, fill=c, outline=INK, width=a.lw(0.4))
+        for dx in (-2, 0, 2):
+            a.line([(x, y), (x + dx, y - 3.2)], "#e0b090", 0.35)
+    for dx, dy in ((0, -1.6), (1.6, 0), (0, 1.6), (-1.6, 0)):
+        a.circ(11 + dx, 15 + dy, 1.4, "#ff9fc0", "INK", 0.3)
+    a.circ(11, 15, 1, "#ffe27a", None)
+    a.save("ruins_offering")
+
+
+def bunting():
+    """Pastel bunting strung along a wall."""
+    a = Art(120, 20)
+    pts = [(1 + i * 6, 3 + 4 * math.sin(math.pi * i / 19)) for i in range(20)]
+    a.line(pts, "INK", 0.5)
+    for i in range(1, 19, 1):
+        x, y = pts[i]
+        a.poly([(x - 2.6, y), (x + 2.6, y), (x, y + 7)], [PINK, MINT, LILAC, BUTTER, SKY][i % 5], "INK", 0.35)
+    a.save("ruins_bunting")
+
+
+def porthole():
+    a = Art(30, 30)
+    a.circ(15, 15, 13.5, "#c8d8e4")
+    a.circ(15, 15, 10, "#7fb6d8", "INK", 0.6)
+    a.d.chord(a.p(5, 5, 25, 25), 200, 330, fill="#a9ddf2")  # sea, seen through
+    a.line([(9, 10), (12, 7)], "#ffffff", 0.9)
+    for ang in range(0, 360, 45):
+        r = math.radians(ang)
+        a.circ(15 + math.cos(r) * 11.8, 15 + math.sin(r) * 11.8, 0.7, STEEL_D, None)
+    a.save("ruins_porthole")
+
+
+def life_ring():
+    a = Art(30, 30)
+    a.circ(15, 15, 13, "#ffffff")
+    for ang in (45, 135, 225, 315):
+        a.d.pieslice(a.p(2, 2, 28, 28), ang - 18, ang + 18, fill="#ff9a6e")
+    a.circ(15, 15, 13, None)
+    a.circ(15, 15, 6.5, (0, 0, 0, 0))
+    a.d.ellipse(a.p(8.5, 8.5, 21.5, 21.5), fill=(0, 0, 0, 0))
+    a.circ(15, 15, 6.5, None)
+    a.arc(4, 4, 26, 26, 200, 250, "#ffffff", 0.7)
+    a.save("ruins_life_ring")
+
+
+def chair_tipped():
+    a = Art(40, 24)
+    a.ell(2, 17, 38, 23, (20, 20, 35, 80), None)
+    a.poly([(3, 15), (30, 6), (37, 13), (10, 21)], "#ffffff")
+    for i in range(3):
+        a.poly([(6 + i * 9, 14 - i * 3), (10 + i * 9, 12.6 - i * 3), (16 + i * 9, 18.4 - i * 3), (12 + i * 9, 19.8 - i * 3)], PINK, None)
+    a.poly([(3, 15), (30, 6), (37, 13), (10, 21)], None)
+    a.line([(8, 20), (6, 9)], "#c8956d", 1.0)
+    a.line([(33, 11), (30, 3)], "#c8956d", 1.0)
+    a.save("ruins_chair_tipped")
+
+
+def puddle():
+    """Spilled tank fluid, pink, painted flat: one soft-edged pool (overlapping lobes under a
+    single outline), two stray drops, a glossy highlight and a sparkle."""
+    a = Art(40, 16)
+    lobes = ((2, 4, 22, 13), (12, 2.5, 31, 11.5), (20, 6, 35, 14))
+    for box in lobes:  # outline pass
+        a.ell(*box, "#ff9ebf", "INK", 0.5)
+    for x0, y0, x1, y1 in lobes:  # fill pass hides the inner outline arcs
+        a.d.ellipse(a.p(x0 + 0.5, y0 + 0.5, x1 - 0.5, y1 - 0.5), fill="#ff9ebf")
+    a.ell(5, 8.5, 30, 13.2, "#f58fb2", None)  # the pool's deeper near edge
+    for x0, y0, x1, y1 in lobes:
+        a.d.ellipse(a.p(x0 + 1.4, y0 + 0.9, x1 - 1.4, y1 - 2.4), fill="#ff9ebf")
+    a.ell(6, 5, 15, 7.6, "#ffd0dc", None)  # gloss
+    a.circ(17, 6.2, 0.7, "#ffd0dc", None)
+    a.circ(37, 6, 1.3, "#ff9ebf", "INK", 0.4)  # stray drops
+    a.circ(36.6, 5.6, 0.4, "#ffd0dc", None)
+    a.circ(4, 14.6, 0.9, "#ff9ebf", "INK", 0.35)
+    a.sparkle(27, 4.2, 1.6, "#ffffff", "#ffd0dc")
+    a.save("ruins_puddle")
+
+
+def lab_cart():
+    a = Art(44, 40)
+    a.ell(3, 34, 41, 39, (20, 20, 35, 90), None)
+    a.rect(4, 12, 40, 16, STEEL_L, 1.5)
+    a.rect(4, 26, 40, 30, STEEL_L, 1.5)
+    for x in (6, 38):
+        a.line([(x, 14), (x, 34)], STEEL_D, 0.9)
+        a.circ(x, 35, 2, "#6d7b90")
+    for x, c, h in ((10, FLUID, 8), (17, MINT, 6), (24, SKY, 9), (31, LILAC, 7)):
+        a.rect(x - 2.6, 12 - h, x + 2.6, 12, (200, 236, 245, 150), 1, "INK", 0.4)
+        a.d.rectangle(a.p(x - 2, 12 - h * 0.55, x + 2, 11.6), fill=c)
+    a.rect(10, 20, 32, 26, "#fff8ec", 1, "INK", 0.4)  # a folded towel
+    a.cat_sticker(36, 20, 0.6)
+    a.save("ruins_lab_cart")
+
+
+def runner():
+    """The pilgrims' rug runner (STYLE.md: #ffb3c8 with #ffe3a8 borders and pale hearts), worn."""
+    a = Art(200, 22)
+    a.rect(1, 1, 199, 21, "#ffe3a8", 2)
+    a.rect(3.5, 3.5, 196.5, 18.5, "#ffb3c8", 1, None)
+    for x in range(14, 196, 22):
+        a.heart(x, 10.4, 2.6, "#ffd0e0", None)
+    for x in range(4, 198, 4):  # fringe
+        a.line([(x, 0), (x, 1.2)], "#e0b24a", 0.4)
+        a.line([(x, 20.8), (x, 22)], "#e0b24a", 0.4)
+    a.ell(120, 5.5, 150, 16.5, "#ffc4d6", None)  # worn where everyone kneels
+    a.save("ruins_runner")
+
+
+def poster():
+    """A wall poster: the cat in the lab coat with a thumbs-up, steps as pictures, no words."""
+    a = Art(34, 44)
+    a.rect(1, 1, 33, 43, "#fff8ec", 1.5)
+    a.d.rectangle(a.p(1.6, 1.6, 32.4, 8), fill="#ffb3c8")
+    a.cat_sticker(17, 18, 1.4)
+    for i, c in enumerate((PINK, MINT, SKY)):
+        x = 8 + i * 9
+        a.circ(x, 33, 3, c, "INK", 0.4)
+        if i < 2:
+            a.line([(x + 3.4, 33), (x + 5.6, 33)], "INK", 0.5)
+    a.circ(26, 33, 1.2, "#fff0f6", None)
+    a.circ(17, 33, 1.4, "#ffe08a", None)
+    a.circ(8, 33, 0.7, "#ffffff", None)
+    for x in (4, 30):
+        a.circ(x, 4, 1, "#ff7a9a", "INK", 0.3)
+    a.save("ruins_poster")
+
+
 # ---------------------------------------------------------------- pickups
 
 def icon(name, draw):
@@ -798,29 +1107,12 @@ def icon_paper(a):
     a.circ(13, 15, 1.4, "#ff9ebf", None)
 
 
-def icon_tide(a):
-    a.rect(2, 3, 18, 17, "#cfe6f4", 2)
-    a.circ(10, 7.4, 2.4, "#fff3a8", INK, 0.5)
-    a.line([(3, 12.5), (6, 11), (9, 12.5), (12, 11), (15, 12.5), (17.5, 11.4)], "#5aa0d0", 0.8)
-    a.line([(3, 15), (6, 13.6), (9, 15), (12, 13.6), (15, 15), (17.5, 14)], "#5aa0d0", 0.8)
-
-
 def icon_thermo(a):
     a.rect(8, 1.5, 12, 15, "#eef6fb", 2)
     a.d.rectangle(a.p(9.3, 7, 10.7, 15), fill="#ff7a9a")
     a.circ(10, 15.5, 3.2, "#ff7a9a")
     for y in (4, 6.5, 9, 11.5):
         a.line([(12, y), (13.6, y)], INK, 0.4)
-
-
-def icon_calendar(a):
-    a.rect(3, 4, 17, 18, "#ffffff", 1.5)
-    a.d.rectangle(a.p(3.6, 4.6, 16.4, 8), fill=SKY)
-    for i in range(3):
-        for j in range(2):
-            a.rect(5 + i * 4, 10 + j * 3.8, 7.6 + i * 4, 12.4 + j * 3.8, "#e6e6f0", 0.4, None)
-    for x in (7, 13):
-        a.rect(x - 0.8, 2, x + 0.8, 6, STEEL_D, 0.6, INK, 0.3)
 
 
 def icon_chart(a):
@@ -842,9 +1134,7 @@ def icon_board(a):
 def icons():
     icon("book", icon_book)
     icon("paper", icon_paper)
-    icon("tide", icon_tide)
     icon("thermometer", icon_thermo)
-    icon("calendar", icon_calendar)
     icon("chart", icon_chart)
     icon("board", icon_board)
     icon("ledger", lambda a: icon_book(a, MINT))
@@ -852,48 +1142,36 @@ def icons():
     icon("appendix", lambda a: icon_book(a, PINK))
 
 
-if __name__ == "__main__":
-    OUT.mkdir(parents=True, exist_ok=True)
+def bunker():
     tiles()
-    glow()
-    shadow()
-    vignette()
     tank("ruins_tank")
     tank("ruins_tank_duck", duck=True)
-    incubator()
-    sequencer()
-    centrifuge()
-    prep_bench()
-    freezer()
-    cub_basket()
-    lift_cage()
-    intercom()
-    coat_hooks()
-    mop_bucket()
-    hazard_band()
-    server_rack()
-    altar_desk()
-    candles()
-    seal_stencil()
-    floor_hatch()
+    for draw in (incubator, sequencer, centrifuge, prep_bench, freezer, cub_basket, lift_cage, intercom,
+                 coat_hooks, mop_bucket, hazard_band, desk_lamp, filing_cabinet, stationery, failed_drawer):
+        draw()
+    for name, seed in (("ruins_binders_a", 1), ("ruins_binders_b", 2), ("ruins_binders_c", 3)):
+        binder_shelf(name, seed)
+    for draw in (puddle, lab_cart, poster):
+        draw()
+    icons()
+
+
+def ship():
+    for draw in (server_rack, altar_desk, candles, floor_hatch, portrait, towel_trolley, vending, crew_sign,
+                 gift_shop, deck_chairs, ice_swan, slots, lifeboat, buffet):
+        draw()
     pipes("ruins_pipes")
     pipes("ruins_pipes_striped", "#ff9a9a", 260)
-    portrait()
-    towel_trolley()
-    vending()
-    crew_sign()
-    gift_shop()
-    deck_chairs()
-    ice_swan()
-    slots()
-    lifeboat()
-    buffet()
-    binder_shelf("ruins_binders_a", 1)
-    binder_shelf("ruins_binders_b", 2)
-    binder_shelf("ruins_binders_c", 3)
-    desk_lamp()
-    filing_cabinet()
-    stationery()
-    failed_drawer()
-    icons()
+    for draw in (crates, barrel, papers, cables, plant, offering, bunting, porthole, life_ring, chair_tipped, runner):
+        draw()
+
+
+if __name__ == "__main__":
+    OUT.mkdir(parents=True, exist_ok=True)
+    glow()
+    vignette()
+    INK = PLUM  # the bunker: the clone lab's cool plum (STYLE.md 4.1)
+    bunker()
+    INK = BROWN  # the ship above it: the island's warm brown
+    ship()
     print("ruins art done:", len(list(OUT.glob("*.png"))), "files")
