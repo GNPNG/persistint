@@ -27,16 +27,15 @@ script = ExtResource("7")
 room_id = "clone_hall"
 
 [node name="spawn_default" type="Marker2D" parent="."]
-position = Vector2(120, 300)
+position = Vector2(120, 316)
 
 [node name="spawn_from_lift" type="Marker2D" parent="."]
-position = Vector2(120, 300)
+position = Vector2(120, 316)
 
 [node name="spawn_from_records" type="Marker2D" parent="."]
-position = Vector2(840, 300)
+position = Vector2(840, 316)
 
 [node name="Player" parent="." instance=ExtResource("3")]
-z_index = 0
 position = Vector2(120, 300)
 
 [node name="LiftDoor" parent="." instance=ExtResource("5")]
@@ -63,49 +62,49 @@ piece_id = "fk_lab_2"
 script = ExtResource("10")
 
 [node name="ZombieEpstein7" parent="." instance=ExtResource("8")]
-position = Vector2(300, 380)
+position = Vector2(300, 396)
 original = "epstein"
 batch = 7
-wander = Rect2(140, 320, 320, 150)
+wander = Rect2(140, 336, 320, 150)
 
 [node name="ZombieEpstein4" parent="." instance=ExtResource("8")]
-position = Vector2(520, 400)
+position = Vector2(520, 416)
 original = "epstein"
 batch = 4
-wander = Rect2(300, 350, 400, 130)
+wander = Rect2(300, 366, 400, 130)
 
 [node name="ZombieBillClinton2" parent="." instance=ExtResource("8")]
-position = Vector2(600, 300)
+position = Vector2(600, 316)
 original = "bill_clinton"
 batch = 2
-wander = Rect2(480, 255, 300, 185)
+wander = Rect2(480, 271, 300, 185)
 
 [node name="ZombieHillaryClinton3" parent="." instance=ExtResource("8")]
-position = Vector2(350, 280)
+position = Vector2(350, 296)
 original = "hillary_clinton"
 batch = 3
-wander = Rect2(200, 260, 400, 100)
+wander = Rect2(200, 276, 400, 100)
 
 [node name="ZombieBillGates5" parent="." instance=ExtResource("8")]
-position = Vector2(700, 430)
+position = Vector2(700, 446)
 original = "bill_gates"
 batch = 5
-wander = Rect2(520, 380, 320, 100)
+wander = Rect2(520, 396, 320, 100)
 
 [node name="Cub1" parent="." instance=ExtResource("9")]
-position = Vector2(200, 450)
+position = Vector2(200, 466)
 batch = 1
 wander = Rect2(120, 400, 300, 90)
 
 [node name="Cub2" parent="." instance=ExtResource("9")]
-position = Vector2(480, 380)
+position = Vector2(480, 396)
 batch = 1
-wander = Rect2(400, 300, 300, 180)
+wander = Rect2(400, 316, 300, 180)
 
 [node name="Cub3" parent="." instance=ExtResource("9")]
-position = Vector2(760, 320)
+position = Vector2(760, 336)
 batch = 1
-wander = Rect2(600, 260, 250, 190)
+wander = Rect2(600, 276, 250, 190)
 
 [node name="Piece3" parent="." instance=ExtResource("6")]
 position = Vector2(820, 460)

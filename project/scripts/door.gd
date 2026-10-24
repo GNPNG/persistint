@@ -2,7 +2,7 @@ extends Area2D
 ## Door — proximity map transition, or a locked door with a bark.
 ## Also used for mini-game entrances (a mini-game is just another scene).
 ## Every door shows a little kawaii doormat with a bobbing arrow (assets/common/door_marker.png,
-## drawn by tools/gen_door_marker.py: 160x192 frames stored at 4x, shown at 40x48; row 0 "open" x 8,
+## drawn by tools/gen_door_marker.py: 160x192 frames stored at 4x, shown 48 px tall; row 0 "open" x 8,
 ## row 1 "locked"), names where it goes
 ## when hovered or when the player is close, and can be clicked: the player walks over
 ## and goes through, like approaching an NPC.
@@ -10,11 +10,12 @@ extends Area2D
 const NEAR_DISTANCE := 72.0
 const MARKER_SHEET := "res://assets/common/door_marker.png"
 const MARKER_FRAME := Vector2i(160, 192)  # file px
-## The sheet is drawn at 4x; shown at a quarter, smoothly filtered.
-const MARKER_SCALE := 0.25
+## A frame is shown this tall (world px; SpriteFit), smoothly filtered.
+const MARKER_HEIGHT := 48.0
 const MARKER_FRAMES := 8
-## The mat's centre in the frame, put on the door's origin.
-const MARKER_MAT := Vector2(80, 144)  # file px
+## The mat's centre, as a fraction of the frame height (centred across), is put on the door's
+## origin. The mat lies on the floor: it draws under everyone standing (z -1, above the ground).
+const MARKER_MAT := 144.0 / 192.0
 
 static var _marker_frames: SpriteFrames
 
@@ -52,16 +53,16 @@ func _ready() -> void:
 	_name_label.hide()
 	add_child(_name_label)
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	z_index = 2
+	label.z_index = 20
+	_name_label.z_index = 20
 	if show_marker:
 		_marker = AnimatedSprite2D.new()
 		_marker.name = "Marker"
 		_marker.sprite_frames = marker_frames()
-		_marker.centered = false
-		_marker.scale = Vector2.ONE * MARKER_SCALE
-		_marker.position = -MARKER_MAT * MARKER_SCALE
+		_marker.z_index = -1
 		add_child(_marker)
 		_marker.play("locked" if locked else "open")
+		SpriteFit.fit(_marker, MARKER_HEIGHT, MARKER_MAT)
 
 
 ## The marker's animations, cut from the sheet once and shared by every door.

@@ -11,7 +11,7 @@ extends SceneTree
 const DIRS := ["res://scenes/maps", "res://scenes/ruins", "res://scenes/florida", "res://scenes/chapters"]
 const DOOR_SCRIPT := "res://scripts/door.gd"
 const MAP_SCRIPT := "res://scripts/map.gd"
-const BODY_OFFSET := Vector2(0, 8)  # player.tscn Collision position
+const BODY_OFFSET := Vector2(0, -8)  # player.tscn Collision position (the origin is her feet)
 const BODY_RADIUS := 8.0
 const REACH := 34.0  # player.gd INTERACT_DISTANCE
 

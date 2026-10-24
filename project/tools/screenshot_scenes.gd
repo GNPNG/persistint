@@ -124,8 +124,7 @@ func _run() -> void:
 						player.global_position = n.global_position + Vector2(0, 30)
 						break
 					if shot[2] == "bark" and file == "npc.gd":
-						n.bubble.text = "Lovely morning! Everyone contributes. Everyone."
-						n.bubble.show()
+						n.bubble.say("Lovely morning! Everyone contributes. Everyone.")
 						player.global_position = n.global_position + Vector2(30, 10)
 						break
 		await _wait(60)

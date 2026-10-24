@@ -26,6 +26,8 @@ func refresh() -> void:
 	var path := "res://assets/florida/plot_%s.png" % s
 	if ResourceLoader.exists(path):
 		sprite.texture = load(path)
+		# Florida art is drawn at 4x (tools/florida_draw.D); the soil stands on the origin.
+		SpriteFit.fit(sprite, sprite.texture.get_height() / 4.0)
 
 
 func interact() -> void:

@@ -5,6 +5,9 @@ extends "res://scripts/florida/clickable.gd"
 
 const PANEL_SCRIPT := preload("res://scripts/florida/stable_panel.gd")
 
+## A foal is drawn this much smaller than a grown pony.
+const FOAL_SIZE := 0.65
+
 @export var pony_id := ""
 
 @onready var doll: PonyDoll = $Doll
@@ -21,7 +24,8 @@ func _ready() -> void:
 
 func refresh() -> void:
 	doll.set_outfit(Ponies.parts(pony_id))
-	doll.scale = Vector2.ONE * (0.65 if Ponies.is_foal(pony_id, GameClock.day) else 1.0)
+	doll.scale = Vector2.ONE * (FOAL_SIZE if Ponies.is_foal(pony_id, GameClock.day) else 1.0)
+	bubble.bottom = -(PonyDoll.FRAME_HEIGHT * doll.scale.y + 4.0)
 	# The ridden pony is out with the player: not drawn and not clickable in its stall.
 	var ridden := Ponies.riding() == pony_id
 	visible = not ridden
@@ -43,8 +47,7 @@ func interact() -> void:
 func say(text: String) -> void:
 	if text == "" or not is_inside_tree():
 		return
-	bubble.text = "%s: %s" % [Ponies.display_name(pony_id), text]
-	bubble.show()
+	bubble.say("%s: %s" % [Ponies.display_name(pony_id), text])
 	Voice.speak(text, float(Ponies.data().get("pitch", 1.0)), "pony")
 	get_tree().create_timer(3.0).timeout.connect(bubble.hide)
 	var tw := create_tween()

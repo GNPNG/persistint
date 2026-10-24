@@ -20,9 +20,10 @@ func _ready() -> void:
 	var path := "res://assets/florida/%s.tres" % (sprite_frames if sprite_frames != "" else kind)
 	if ResourceLoader.exists(path):
 		sprite.sprite_frames = load(path)
-		sprite.scale = Vector2.ONE * float(sprite.sprite_frames.get_meta(&"display_scale", 1.0))
 		sprite.play("idle")
 		sprite.frame = randi() % sprite.sprite_frames.get_frame_count("idle")
+		SpriteFit.fit_sheet(sprite)  # feet (or a swimmer's belly line) on the origin
+		bubble.bottom = -SpriteFit.frame_size(sprite).y * sprite.scale.y - 4.0
 	bubble.hide()
 	if DisplayServer.get_name() != "headless":
 		_drift()
@@ -61,8 +62,7 @@ func surprise() -> Dictionary:
 	var lines: Array = s.get("lines", [])
 	if not lines.is_empty():
 		var text: String = lines.pick_random()
-		bubble.text = "%s: %s" % [Cast.short(nickname), text] if nickname != "" else text
-		bubble.show()
+		bubble.say("%s: %s" % [Cast.short(nickname), text] if nickname != "" else text)
 		Voice.speak(text, float(Florida.data()["critters"][kind].get("pitch", 1.0)), kind)
 		get_tree().create_timer(3.0).timeout.connect(bubble.hide)
 	return s

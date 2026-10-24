@@ -5,10 +5,10 @@ extends Node2D
 const WARDROBE_SCENE := "res://scenes/ui/wardrobe.tscn"
 
 ## Pixel size of the map; the camera stops at its edge. Zero leaves the camera free.
+## Maps are y-sorted: characters and props have their origin on their feet and no z_index of
+## their own, so they sort by where they stand (behind a pillar's top, in front of its base);
+## ground art sits at negative z_index.
 @export var map_size := Vector2.ZERO
-## On a y-sorted map, characters drop their scene z_index (player 5, NPCs 4) so they
-## sort with the props by their feet: behind a pillar's top, in front of its base.
-@export var sort_characters := false
 
 var _hud_label: Label
 var _wardrobe: CanvasLayer
@@ -24,8 +24,6 @@ func _ready() -> void:
 	if not scene_file_path.contains("/florida/") and WorldState.get_flag("fl_riding", "") != "":
 		WorldState.set_flag("fl_riding", "")
 	_spawn_player()
-	if sort_characters:
-		_sort_characters()
 	_limit_camera()
 	_build_hud()
 	GameClock.phase_changed.connect(func(_p: String) -> void: _update_hud())
@@ -39,12 +37,6 @@ func _spawn_player() -> void:
 		marker = find_child("spawn_default", true, false)
 	if player and marker:
 		player.global_position = (marker as Node2D).global_position
-
-
-func _sort_characters() -> void:
-	for n in get_children():
-		if n is CharacterBody2D or (n is Area2D and n.has_method("current_bark")):
-			(n as Node2D).z_index = 0
 
 
 func _limit_camera() -> void:

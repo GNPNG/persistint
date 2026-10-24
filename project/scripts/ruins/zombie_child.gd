@@ -11,7 +11,6 @@ extends "res://scripts/florida/clickable.gd"
 
 const ForbiddenKnowledge := preload("res://scripts/ruins/forbidden_knowledge.gd")
 const SheetRig := preload("res://scripts/ruins/sheet_rig.gd")
-const BUBBLE_BOTTOM := -21.0  # just over the head
 const PUFF := "res://assets/ruins/gore_puff.png"  # tools/gen_clone_children.py
 
 @export var original := "epstein"  # cast id of the person the batch was meant to reproduce
@@ -33,6 +32,7 @@ func _ready() -> void:
 		sprite.sprite_frames = SheetRig.frames(load(path), SheetRig.CLONE)
 		sprite.play("idle_down")
 		sprite.frame = randi() % 2
+		SheetRig.fit(sprite, SheetRig.CLONE)
 	bubble.hide()
 	area_entered.connect(_on_bumped)
 	body_entered.connect(_on_bumped)
@@ -71,11 +71,6 @@ static func quote_pool(orig: String) -> Array:
 				and String(q.get("text", "")) != "":
 			pool.append(String(q["text"]))
 	return pool
-
-
-func _process(_delta: float) -> void:
-	if bubble.visible:
-		SheetRig.keep_on_screen(bubble)
 
 
 ## A random point inside the wander rect; where the next shamble goes.
@@ -131,8 +126,7 @@ func bark(list := "barks") -> String:
 	_talking = true
 	var text: String = lines.pick_random()
 	var spoken := quote()
-	SheetRig.say(bubble, "%s\n%s" % [designation(), text] + ("\n\"%s\"" % spoken if spoken != "" else ""), BUBBLE_BOTTOM)
-	bubble.show()
+	bubble.say("%s\n%s" % [designation(), text] + ("\n\"%s\"" % spoken if spoken != "" else ""))
 	Voice.speak(spoken if spoken != "" else text, float(data().get("pitch", 1.0)), original)
 	get_tree().create_timer(3.5).timeout.connect(func() -> void:
 		bubble.hide()
@@ -152,7 +146,7 @@ func get_eaten() -> void:
 ## The puff: generated clone-dust sprites (gore_puff.png), each about 6-10 world px wide.
 func _puff() -> void:
 	var tex: Texture2D = load(PUFF)
-	var fit := 6.0 / float(tex.get_width())
+	var fit := SpriteFit.scale_for(tex, 6.0 * tex.get_height() / float(tex.get_width()))
 	var puff := CPUParticles2D.new()
 	puff.texture = tex
 	puff.one_shot = true
@@ -167,6 +161,6 @@ func _puff() -> void:
 	puff.scale_amount_max = fit * 1.7
 	puff.color = Color(1, 1, 1, 0.9)
 	get_parent().add_child(puff)
-	puff.global_position = global_position
+	puff.global_position = global_position - Vector2(0, 16)  # from its middle; the origin is the feet
 	puff.emitting = true
 	puff.finished.connect(puff.queue_free)

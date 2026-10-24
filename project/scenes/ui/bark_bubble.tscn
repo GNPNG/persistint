@@ -1,0 +1,31 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" uid="uid://06esqbkoeyeu" path="res://scripts/ui/bark_bubble.gd" id="1_bubble"]
+[ext_resource type="Texture2D" path="res://assets/ui/chrome/bubble_tail.png" id="2_tail"]
+
+[node name="BarkBubble" type="Label"]
+visible = false
+offset_left = -32.0
+offset_top = -68.0
+offset_right = 32.0
+offset_bottom = -54.0
+mouse_filter = 2
+theme_type_variation = &"BarkBubble"
+theme_override_font_sizes/font_size = 5
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("1_bubble")
+
+[node name="Tail" type="TextureRect" parent="."]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -4.5
+offset_top = -1.0
+offset_right = 4.5
+offset_bottom = 5.0
+grow_horizontal = 2
+mouse_filter = 2
+texture = ExtResource("2_tail")

@@ -13,6 +13,13 @@ const ART_EXTRA := {"res://assets/canon/%s.png": ["res://assets/florida/%s.png"]
 ## What the player wears before any outfit_* flag is set (player and wardrobe agree on it).
 const DEFAULT_OUTFIT := {"body": "body_base", "dress": "dress_white", "hair": "hair_braids", "accessory": "none"}
 
+## Shown this tall (px) when set: the doll sizes itself (custom_minimum_size) to the art's
+## frame at that height through SpriteFit, aspect kept. 0 leaves the size to the layout.
+@export var display_height := 0.0:
+	set(h):
+		display_height = h
+		_fit()
+
 var outfit: Dictionary = {}
 var _layers: Dictionary = {}  # slot -> TextureRect
 
@@ -28,6 +35,7 @@ func _ready() -> void:
 		add_child(rect)
 		_layers[slot] = rect
 	_apply()
+	_fit()
 
 
 func set_outfit(new_outfit: Dictionary) -> void:
@@ -38,6 +46,13 @@ func set_outfit(new_outfit: Dictionary) -> void:
 func set_part(slot: String, part_id: String) -> void:
 	outfit[slot] = part_id
 	_apply()
+
+
+func _fit() -> void:
+	if display_height <= 0.0:
+		return
+	var body: Texture2D = load(part_path(art_dir_for([DEFAULT_OUTFIT["body"]]), DEFAULT_OUTFIT["body"]))
+	custom_minimum_size = SpriteFit.size_for(body, display_height)
 
 
 ## The first art set that has every worn part, so canon and placeholder layers never mix.

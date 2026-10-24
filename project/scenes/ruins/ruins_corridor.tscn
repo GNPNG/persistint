@@ -25,16 +25,15 @@ script = ExtResource("7")
 room_id = "corridor"
 
 [node name="spawn_default" type="Marker2D" parent="."]
-position = Vector2(120, 300)
+position = Vector2(120, 316)
 
 [node name="spawn_from_wreck" type="Marker2D" parent="."]
-position = Vector2(120, 300)
+position = Vector2(120, 316)
 
 [node name="spawn_from_core" type="Marker2D" parent="."]
-position = Vector2(840, 300)
+position = Vector2(840, 316)
 
 [node name="Player" parent="." instance=ExtResource("3")]
-z_index = 0
 position = Vector2(120, 300)
 
 [node name="WreckDoor" parent="." instance=ExtResource("5")]

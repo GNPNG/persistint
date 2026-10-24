@@ -8,6 +8,8 @@ signal spoke(text: String)
 
 ## How many "Foal with ..." buttons show before the list scrolls.
 const FOAL_ROWS := 3
+## The pony in the panel is shown this tall (world px of the panel, before the UI scale).
+const PREVIEW_HEIGHT := 114.0
 
 var pony_id := ""
 
@@ -31,8 +33,10 @@ func _ready() -> void:
 	hbox.add_child(preview)
 	_doll = PonyDoll.new()
 	_doll.name = "Preview"
-	_doll.position = Vector2(75, 65)
-	_doll.scale = Vector2(2.2, 2.2)
+	# The doll stands on its hooves (origin at the feet): PREVIEW_HEIGHT tall, centred in the box.
+	var k := PREVIEW_HEIGHT / PonyDoll.FRAME_HEIGHT
+	_doll.position = Vector2(75, 65 + PREVIEW_HEIGHT / 2.0)
+	_doll.scale = Vector2(k, k)
 	preview.add_child(_doll)
 	_box = VBoxContainer.new()
 	_box.name = "Buttons"

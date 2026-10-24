@@ -9,10 +9,11 @@ extends Node2D
 
 const ForbiddenKnowledge := preload("res://scripts/ruins/forbidden_knowledge.gd")
 const ZombieScene := preload("res://scenes/ruins/zombie_child.tscn")
-const RuinsDecor := preload("res://scripts/ruins/ruins_decor.gd")
 const FLAG := "clones_eaten"
 const SFX_GAP := 0.35  # seconds between the pounce's sound effects
-const GORE_SCALE := 0.1875  # gore_*.png are drawn at eight texels per world pixel (gen_clone_children.py)
+## Gore sprites' world heights (gore_*.png from tools/gen_clone_children.py, drawn at 8 texels
+## per world px; shown half again bigger so the splat reads at the hall's zoom).
+const GORE_HEIGHT := {"gore_puddle": 21.0, "gore_bone": 9.0, "gore_chunk": 15.0}
 
 var gore: Node2D
 
@@ -138,30 +139,32 @@ func restock(info: Dictionary) -> Node2D:
 	return z
 
 
-## Kawaii gore at a spot: splatter, hearts, sparkles, bouncing bits and a fading puddle.
+## Kawaii gore where a clone stood (`spot` is its feet): splatter, hearts and sparkles from its
+## middle, bouncing bits and a fading puddle on the floor.
 func splatter(spot: Vector2) -> void:
+	var middle := spot - Vector2(0, 16)
 	var puddle := Sprite2D.new()
 	puddle.texture = _tex("gore_puddle")
-	puddle.scale = Vector2(GORE_SCALE, GORE_SCALE)
+	SpriteFit.fit(puddle, GORE_HEIGHT["gore_puddle"], 0.5)
 	puddle.name = "Puddle"
 	puddle.z_index = -8  # on the floor, under the characters
 	gore.add_child(puddle)
-	puddle.global_position = spot + Vector2(0, 14)
+	puddle.global_position = spot - Vector2(0, 2)
 	var fade := puddle.create_tween()
 	fade.tween_interval(float(settings().get("puddle_seconds", 8.0)))
 	fade.tween_property(puddle, "modulate:a", 0.0, 1.5)
 	fade.tween_callback(puddle.queue_free)
 
-	_burst(spot, _tex("gore_drop"), 20, 4.0)
-	_burst(spot, _tex("deco_heart"), 6, 8.0)
-	_burst(spot, _tex("deco_sparkle"), 6, 8.0)
+	_burst(middle, _tex("gore_drop"), 20, 4.0)
+	_burst(middle, _tex("deco_heart"), 6, 8.0)
+	_burst(middle, _tex("deco_sparkle"), 6, 8.0)
 
 	for bit: String in ["gore_bone", "gore_chunk"]:
 		var b := Sprite2D.new()
 		b.texture = _tex(bit)
-		b.scale = Vector2(GORE_SCALE, GORE_SCALE)
+		SpriteFit.fit(b, GORE_HEIGHT[bit], 0.5)
 		gore.add_child(b)
-		b.global_position = spot
+		b.global_position = middle
 		var dx := randf_range(-40.0, 40.0)
 		var tw := b.create_tween()
 		tw.tween_property(b, "position", b.position + Vector2(dx * 0.5, -30), 0.25).set_ease(Tween.EASE_OUT)
@@ -179,7 +182,7 @@ func splatter(spot: Vector2) -> void:
 func _burst(spot: Vector2, texture: Texture2D, amount: int, world_px: float) -> void:
 	if texture == null:
 		return
-	var size := world_px / float(texture.get_width())
+	var size := SpriteFit.scale_for(texture, world_px * texture.get_height() / float(texture.get_width()))
 	var p := CPUParticles2D.new()
 	p.one_shot = true
 	p.amount = amount

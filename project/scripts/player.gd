@@ -3,11 +3,16 @@ extends CharacterBody2D
 ## arrow keys (and WASD) walk directly and cancel a click-walk. Keys do nothing while a
 ## dialogue is open, so the arrows stay free for choosing responses.
 ## Paper-doll: layered sprites (Body/Hair/Dress/Accessory) driven by WorldState outfit flags.
+## The node's origin is the player's feet (y-sorted maps order her with the props by it).
 ## Florida pony stable: while riding (WorldState fl_riding) a PonyDoll (Mount) is drawn under the
 ## doll and click-to-move is faster (Ponies.speed_multiplier); H or the button hops down.
 
 const SPEED := 130.0
 const INTERACT_DISTANCE := 34.0
+## The doll is shown this tall (NPC height), its feet on the node's origin.
+const DOLL_HEIGHT := 48.0
+## Riding, the doll sits this far up, on the pony's back.
+const RIDE_LIFT := 16.0
 
 @onready var nav: NavigationAgent2D = $NavigationAgent2D
 @onready var mount_doll: PonyDoll = $Mount
@@ -119,7 +124,7 @@ func refresh_mount() -> void:
 	if id != "":
 		mount_doll.set_outfit(Ponies.parts(id))
 	for sprite: Sprite2D in [$Body, $Dress, $Hair, $Accessory]:
-		sprite.position = Vector2(0, -24) if id != "" else Vector2(0, -8)
+		sprite.position = Vector2(0, -RIDE_LIFT) if id != "" else Vector2.ZERO
 	_show_ride_ui(id != "")
 
 
@@ -164,7 +169,5 @@ func refresh_outfit() -> void:
 		var item: String = outfit[sprite]
 		var path := PaperDoll.part_path(pattern, item)
 		sprite.texture = load(path) if item != "none" and ResourceLoader.exists(path) else null
-		# Scale the doll to 48 px tall (NPC height) with its feet on the collision circle.
-		var h := float(sprite.texture.get_height()) if sprite.texture else 48.0
-		sprite.scale = Vector2.ONE * (48.0 / h)
-		sprite.position = Vector2(0, -24) if is_mounted() else Vector2(0, -8)
+		SpriteFit.fit(sprite, DOLL_HEIGHT)
+		sprite.position = Vector2(0, -RIDE_LIFT) if is_mounted() else Vector2.ZERO

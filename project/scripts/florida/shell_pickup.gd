@@ -10,7 +10,7 @@ const HEIGHT := 11.0
 func _ready() -> void:
 	super()
 	$Sprite2D.texture = load("res://assets/florida/shell_%s.png" % look)
-	$Sprite2D.scale = Vector2.ONE * (HEIGHT / $Sprite2D.texture.get_height())
+	SpriteFit.fit($Sprite2D, HEIGHT)
 	GameClock.day_changed.connect(func(_d: int) -> void: show())
 	if WorldState.get_flag("fl_shell_%s" % name, 0) == GameClock.day:
 		hide()

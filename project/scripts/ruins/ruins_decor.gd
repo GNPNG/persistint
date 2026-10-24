@@ -19,9 +19,6 @@ const TEXELS := 8.0
 const TILE := 32
 ## World height of a canon cut (source resolution, assets/canon) when the room data gives none.
 const CANON_HEIGHT := {"prop_seal_o": 36.0, "prop_scroll": 18.0, "prop_calendar": 20.0, "prop_tag_x": 20.0}
-## Characters stand with their feet this far below their origin (player.gd: a 48 px doll drawn
-## 8 px up); a standing prop's node sits the same distance above its feet so y-sort agrees.
-const FEET := 16.0
 ## Atlas columns and rows in ruins_tiles.png (see tools/gen_ruins_art.py tiles()).
 const FLOORS := ["deck", "grate", "plate", "concrete", "lab", "carpet"]
 const WALLS := ["hull", "service", "core", "bunker", "lab", "archive"]
@@ -59,14 +56,15 @@ static func texture_for(kind: String) -> Texture2D:
 	return null
 
 
-## The scale that shows `tex` at world size: 1/TEXELS for generated ruins art; a canon cut
-## (kept at the sheet's resolution) is fitted to `world_h` px tall, or its CANON_HEIGHT.
-static func scale_for(tex: Texture2D, world_h := 0.0) -> float:
+## The world height `tex` (one frame `frame_h` texels tall) is shown at: generated ruins art at
+## 1/TEXELS; a canon cut (kept at the sheet's resolution) at `world_h` px, or its CANON_HEIGHT.
+static func world_height(tex: Texture2D, world_h := 0.0, frame_h := 0.0) -> float:
+	var h := frame_h if frame_h > 0.0 else float(tex.get_height())
 	if tex.resource_path.begins_with("res://assets/ruins/"):
-		return 1.0 / TEXELS
+		return h / TEXELS
 	if world_h <= 0.0:
 		world_h = CANON_HEIGHT.get(tex.resource_path.get_file().get_basename(), 32.0)
-	return world_h / float(tex.get_height())
+	return world_h
 
 
 
@@ -137,13 +135,12 @@ func _add_prop(prop: Dictionary) -> void:
 	var holder := Node2D.new()
 	holder.name = kind
 	var feet := Vector2(prop["x"], prop["y"])
-	holder.position = feet - Vector2(0, FEET)
+	holder.position = feet
 	holder.set_meta("text", prop.get("text", ""))
 	if place == "wall":
 		holder.z_index = -8
 	elif place == "floor":
 		holder.z_index = -7
-	var s := scale_for(tex, float(prop.get("h", 0.0)))
 	var frames: int = ANIMATED.get(kind, 1)
 	var cell := Vector2(tex.get_width() / float(frames), tex.get_height())
 	var node: Node2D
@@ -152,16 +149,13 @@ func _add_prop(prop: Dictionary) -> void:
 		anim.sprite_frames = sheet_frames(tex, frames, 6.0)
 		anim.play("default")
 		anim.frame = randi() % frames
-		anim.position.y = FEET
-		anim.offset = Vector2(0, -cell.y / 2.0)
 		node = anim
 	else:
 		var sprite := Sprite2D.new()
 		sprite.texture = tex
-		sprite.position.y = FEET
-		sprite.offset = Vector2(0, -cell.y / 2.0)
 		node = sprite
-	node.scale = Vector2.ONE * s
+	SpriteFit.fit(node, world_height(tex, float(prop.get("h", 0.0))))
+	var s := node.scale.x
 	holder.add_child(node)
 	holder.set_meta("rect", Rect2(feet - Vector2(cell.x * s / 2.0, cell.y * s), cell * s))
 	add_child(holder)

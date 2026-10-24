@@ -49,148 +49,129 @@ centered = false
 navigation_polygon = SubResource("navpoly")
 
 [node name="spawn_default" type="Marker2D" parent="."]
-position = Vector2(500, 340)
+position = Vector2(500, 356)
 
 [node name="spawn_from_garden" type="Marker2D" parent="."]
-position = Vector2(110, 385)
+position = Vector2(110, 401)
 
 [node name="spawn_from_aquarium" type="Marker2D" parent="."]
-position = Vector2(840, 365)
+position = Vector2(840, 381)
 
 [node name="spawn_from_stable" type="Marker2D" parent="."]
-position = Vector2(262, 378)
+position = Vector2(262, 394)
 
 [node name="Player" parent="." instance=ExtResource("3")]
-z_index = 3
 position = Vector2(500, 340)
 
 [node name="Aquarium" type="Sprite2D" parent="."]
-z_index = 3
-position = Vector2(862, 284)
+position = Vector2(862, 306)
 texture = ExtResource("4")
 scale = Vector2(0.25, 0.25)
-offset = Vector2(0, -152)
+offset = Vector2(0, -240)
 
 [node name="GardenArch" type="Sprite2D" parent="."]
-z_index = 3
-position = Vector2(70, 308)
+position = Vector2(70, 330)
 texture = ExtResource("5")
 scale = Vector2(0.25, 0.25)
-offset = Vector2(0, -24)
+offset = Vector2(0, -112)
 
 [node name="StableSign" type="Sprite2D" parent="."]
-z_index = 3
-position = Vector2(222, 304)
+position = Vector2(222, 326)
 texture = ExtResource("6")
 scale = Vector2(0.25, 0.25)
-offset = Vector2(0, 20)
+offset = Vector2(0, -68)
 
 [node name="Rowboat" type="Sprite2D" parent="."]
-z_index = 3
-position = Vector2(736, 302)
+position = Vector2(736, 324)
 texture = ExtResource("7")
 scale = Vector2(0.25, 0.25)
-offset = Vector2(0, 32)
+offset = Vector2(0, -56)
 
 [node name="Umbrella" type="Sprite2D" parent="."]
-z_index = 3
-position = Vector2(378, 422)
+position = Vector2(378, 444)
 texture = ExtResource("8")
 scale = Vector2(0.25, 0.25)
-offset = Vector2(0, -16)
+offset = Vector2(0, -104)
 
 [node name="Sandcastle" type="Sprite2D" parent="."]
-z_index = 3
-position = Vector2(524, 452)
+position = Vector2(524, 474)
 texture = ExtResource("9")
 scale = Vector2(0.25, 0.25)
-offset = Vector2(0, 40)
+offset = Vector2(0, -48)
 
 [node name="Palm1" type="Sprite2D" parent="."]
-z_index = 3
-position = Vector2(150, 292)
+position = Vector2(150, 314)
 texture = ExtResource("10")
 scale = Vector2(0.25, 0.25)
-offset = Vector2(0, -104)
+offset = Vector2(0, -192)
 
 [node name="Palm2" type="Sprite2D" parent="."]
-z_index = 3
-position = Vector2(432, 284)
+position = Vector2(432, 306)
 texture = ExtResource("11")
 scale = Vector2(0.25, 0.25)
-offset = Vector2(0, -88)
+offset = Vector2(0, -176)
 
 [node name="Palm3" type="Sprite2D" parent="."]
-z_index = 3
-position = Vector2(24, 516)
+position = Vector2(24, 538)
 texture = ExtResource("10")
 scale = Vector2(0.25, 0.25)
-offset = Vector2(0, -104)
+offset = Vector2(0, -192)
 flip_h = true
 
 [node name="Palm4" type="Sprite2D" parent="."]
-z_index = 3
-position = Vector2(936, 514)
+position = Vector2(936, 536)
 texture = ExtResource("11")
 scale = Vector2(0.25, 0.25)
-offset = Vector2(0, -88)
+offset = Vector2(0, -176)
 
 [node name="Palm5" type="Sprite2D" parent="."]
-z_index = 3
-position = Vector2(770, 296)
+position = Vector2(770, 318)
 texture = ExtResource("10")
 scale = Vector2(0.25, 0.25)
-offset = Vector2(0, -104)
+offset = Vector2(0, -192)
 flip_h = true
 
 [node name="Bush1" type="Sprite2D" parent="."]
-z_index = 3
-position = Vector2(26, 314)
+position = Vector2(26, 336)
 texture = ExtResource("12")
 scale = Vector2(0.25, 0.25)
-offset = Vector2(0, 36)
+offset = Vector2(0, -52)
 
 [node name="Bush2" type="Sprite2D" parent="."]
-z_index = 3
-position = Vector2(118, 312)
+position = Vector2(118, 334)
 texture = ExtResource("13")
 scale = Vector2(0.25, 0.25)
-offset = Vector2(0, 36)
+offset = Vector2(0, -52)
 
 [node name="Bush3" type="Sprite2D" parent="."]
-z_index = 3
-position = Vector2(940, 308)
+position = Vector2(940, 330)
 texture = ExtResource("12")
 scale = Vector2(0.25, 0.25)
-offset = Vector2(0, 36)
+offset = Vector2(0, -52)
 
 [node name="Grass1" type="Sprite2D" parent="."]
-z_index = 3
-position = Vector2(300, 518)
+position = Vector2(300, 540)
 texture = ExtResource("14")
 scale = Vector2(0.25, 0.25)
-offset = Vector2(0, 56)
+offset = Vector2(0, -32)
 
 [node name="Grass2" type="Sprite2D" parent="."]
-z_index = 3
-position = Vector2(610, 516)
+position = Vector2(610, 538)
 texture = ExtResource("14")
 scale = Vector2(0.25, 0.25)
-offset = Vector2(0, 56)
+offset = Vector2(0, -32)
 
 [node name="Grass3" type="Sprite2D" parent="."]
-z_index = 3
-position = Vector2(860, 518)
+position = Vector2(860, 540)
 texture = ExtResource("14")
 scale = Vector2(0.25, 0.25)
-offset = Vector2(0, 56)
+offset = Vector2(0, -32)
 
 [node name="Grass4" type="Sprite2D" parent="."]
-z_index = 3
-position = Vector2(180, 518)
+position = Vector2(180, 540)
 texture = ExtResource("14")
 scale = Vector2(0.25, 0.25)
-offset = Vector2(0, 56)
+offset = Vector2(0, -32)
 
 [node name="GardenDoor" parent="." instance=ExtResource("15")]
 position = Vector2(70, 346)
@@ -216,56 +197,55 @@ target_spawn = "spawn_from_tropical"
 exit_label = "Back to the Village"
 
 [node name="Dolphin1" parent="." instance=ExtResource("16")]
-position = Vector2(300, 160)
+position = Vector2(300, 176)
 kind = "dolphin"
 nickname = "dolphin_sunny"
-wander = Rect2(150, 110, 300, 110)
+wander = Rect2(150, 126, 300, 110)
 
 [node name="Dolphin2" parent="." instance=ExtResource("16")]
-position = Vector2(700, 150)
+position = Vector2(700, 166)
 kind = "dolphin"
 nickname = "dolphin_pearl"
-wander = Rect2(650, 100, 110, 100)
+wander = Rect2(650, 116, 110, 100)
 
 [node name="Crab1" parent="." instance=ExtResource("16")]
-position = Vector2(400, 420)
+position = Vector2(400, 429)
 kind = "crab"
 nickname = "crab_sidestep"
-wander = Rect2(300, 390, 160, 70)
+wander = Rect2(300, 399, 160, 70)
 
 [node name="Crab2" parent="." instance=ExtResource("16")]
-position = Vector2(640, 460)
+position = Vector2(640, 469)
 kind = "crab"
 nickname = "crab_clementine"
-wander = Rect2(580, 430, 150, 70)
+wander = Rect2(580, 439, 150, 70)
 
 [node name="Gull1" parent="." instance=ExtResource("16")]
-position = Vector2(220, 430)
+position = Vector2(220, 442)
 kind = "gull"
 nickname = "gull_biscuit"
-wander = Rect2(150, 400, 150, 70)
+wander = Rect2(150, 412, 150, 70)
 
 [node name="Gull2" parent="." instance=ExtResource("16")]
-position = Vector2(790, 410)
+position = Vector2(790, 422)
 kind = "gull"
 nickname = "gull_mabel"
-wander = Rect2(720, 380, 160, 70)
+wander = Rect2(720, 392, 160, 70)
 
 [node name="Shell1" parent="." instance=ExtResource("17")]
-position = Vector2(300, 482)
+position = Vector2(300, 488)
 look = "scallop"
 
 [node name="Shell2" parent="." instance=ExtResource("17")]
-position = Vector2(566, 506)
+position = Vector2(566, 512)
 look = "spiral"
 
 [node name="Shell3" parent="." instance=ExtResource("17")]
-position = Vector2(822, 452)
+position = Vector2(822, 458)
 look = "conch"
 
 [node name="Father" parent="." instance=ExtResource("18")]
-z_index = 3
-position = Vector2(640, 318)
+position = Vector2(640, 342)
 npc_id = "father"
 display_name = "Father"
 sprite_texture = "npc_father"
@@ -274,8 +254,7 @@ dialogue_title = "father"
 voice_pitch = 0.8
 
 [node name="Daughter" parent="." instance=ExtResource("18")]
-z_index = 3
-position = Vector2(566, 362)
+position = Vector2(566, 386)
 npc_id = "daughter"
 display_name = "Daughter"
 sprite_texture = "npc_daughter"

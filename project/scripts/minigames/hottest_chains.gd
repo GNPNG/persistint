@@ -58,7 +58,7 @@ func _ready() -> void:
 	row.add_theme_constant_override("separation", 10)
 	_box.add_child(row)
 	doll = PAPER_DOLL.new()
-	doll.custom_minimum_size = Vector2(182, 192)  # 2x the 91x96 paper-doll parts
+	doll.display_height = 192.0
 	doll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	row.add_child(doll)
 	var outfit: Dictionary = WorldState.get_flag("hottest_prep_outfit", {}).duplicate()

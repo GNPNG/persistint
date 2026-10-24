@@ -9,7 +9,8 @@ extends Node2D
 
 const LAYERS: Array[String] = ["body", "spots", "mane", "accessory", "sparkle"]
 
-## One frame is 64x52 world px whatever the sheet's resolution (the art is drawn at 4x).
+## One frame is 64x52 world px whatever the sheet's resolution (the art is drawn at 4x); the
+## hooves stand on the frame's bottom edge, which SpriteFit puts on the doll's origin.
 const FRAME_HEIGHT := 52.0
 const IDLE_FPS := 3.0
 const WALK_FPS := 8.0
@@ -95,5 +96,4 @@ func _apply() -> void:
 		var path := Ponies.ART % part_id
 		var sprite: Sprite2D = _layers[slot]
 		sprite.texture = load(path) if part_id != "none" and ResourceLoader.exists(path) else null
-		if sprite.texture:
-			sprite.scale = Vector2.ONE * (FRAME_HEIGHT * sprite.vframes / sprite.texture.get_height())
+		SpriteFit.fit(sprite, FRAME_HEIGHT)

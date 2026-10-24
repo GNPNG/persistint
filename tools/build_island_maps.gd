@@ -126,7 +126,6 @@ func _begin(root_name: String, w: int, h: int, fill: String) -> void:
 	_root.y_sort_enabled = true
 	_root.set_script(load("res://scripts/map.gd"))
 	_root.set("map_size", Vector2(w * CELL, h * CELL))
-	_root.set("sort_characters", true)
 	for x in w:
 		for y in h:
 			_grid[Vector2i(x, y)] = fill
@@ -334,8 +333,8 @@ func _inst(path: String, node_name: String, pos: Vector2, props := {}) -> Node2D
 
 
 func _character(path: String, node_name: String, pos: Vector2, props := {}) -> Node2D:
-	# Sorted with the props by map.gd (sort_characters): a z_index of 0 set here is
-	# not saved for an instanced scene.
+	# Characters stand with their origin on their feet (no z_index of their own), so the
+	# y-sorted map orders them with the props by where they stand; pos is the feet.
 	return _inst(path, node_name, pos, props)
 
 
@@ -527,17 +526,17 @@ func _build_village() -> void:
 	_edge_layer("GrassEdge", "grass_edge", func(t: String) -> bool: return t.begins_with("grass"), none)
 
 	# Spawns (names unchanged) and exits.
-	_marker("spawn_default", _px(19.5, 12.5))
-	_marker("spawn_from_temple", _px(tx, ty + 2.6))
-	_marker("spawn_from_ruins", _px(rx - 1.375, 24.3))  # beside the wreck door, not on it
-	_marker("spawn_from_tropical", _px(34.0, 23.5))
-	_character("res://scenes/player/player.tscn", "Player", _px(19.5, 12.5))
-	_character("res://scenes/npc/npc.tscn", "Initiate", _px(20.6, 13.2), {
+	_marker("spawn_default", _px(19.5, 13.0))
+	_marker("spawn_from_temple", _px(tx, ty + 3.1))
+	_marker("spawn_from_ruins", _px(rx - 1.375, 24.8))  # beside the wreck door, not on it
+	_marker("spawn_from_tropical", _px(34.0, 23.5))  # feet on the sand, not in the surf
+	_character("res://scenes/player/player.tscn", "Player", _px(19.5, 13.0))
+	_character("res://scenes/npc/npc.tscn", "Initiate", _px(20.6, 13.95), {
 		"npc_id": "initiate", "caste": "initiate", "sprite_texture": "npc_initiate",
 		"dialogue_path": "res://dialogue/offering.dialogue", "voice_pitch": 1.25})
-	_character("res://scenes/npc/npc.tscn", "Drone", _px(9.5, 15.5), {
+	_character("res://scenes/npc/npc.tscn", "Drone", _px(9.5, 16.25), {
 		"npc_id": "drone", "caste": "drone", "sprite_texture": "npc_drone", "voice_pitch": 0.7})
-	_character("res://scenes/npc/npc.tscn", "Barren", _px(17.5, 18.0), {
+	_character("res://scenes/npc/npc.tscn", "Barren", _px(17.5, 18.75), {
 		"npc_id": "barren", "caste": "barren", "sprite_texture": "npc_barren", "voice_pitch": 0.9})
 	_door("TempleDoor", _px(tx, ty + 1.5), {
 		"target_scene": "res://scenes/maps/temple.tscn", "target_spawn": "spawn_from_village",
@@ -651,12 +650,12 @@ func _build_temple() -> void:
 		var tw := _anim_prop(twinkle, spots[i], 0, "Twinkle_%d" % i, i * 2)
 		tw.z_index = 3
 
-	_marker("spawn_default", Vector2(15 * CELL, 15 * CELL))
-	_marker("spawn_from_village", Vector2(15 * CELL, 17 * CELL + 8))
-	_marker("spawn_from_ruins", Vector2(2 * CELL + 8, 8 * CELL))
-	_marker("spawn_from_puzzle", Vector2(25 * CELL, 12 * CELL))
-	_character("res://scenes/player/player.tscn", "Player", Vector2(15 * CELL, 15 * CELL))
-	_character("res://scenes/npc/npc.tscn", "Priestess", Vector2(15 * CELL, 7 * CELL + 16), {
+	_marker("spawn_default", Vector2(15 * CELL, 15 * CELL + 16))
+	_marker("spawn_from_village", Vector2(15 * CELL, 17 * CELL + 24))
+	_marker("spawn_from_ruins", Vector2(2 * CELL + 8, 8 * CELL + 16))
+	_marker("spawn_from_puzzle", Vector2(25 * CELL, 12 * CELL + 16))
+	_character("res://scenes/player/player.tscn", "Player", Vector2(15 * CELL, 15 * CELL + 16))
+	_character("res://scenes/npc/npc.tscn", "Priestess", Vector2(15 * CELL, 7 * CELL + 40), {
 		"npc_id": "priestess", "caste": "priestess", "sprite_texture": "npc_priestess",
 		"dialogue_path": "res://dialogue/priestess.dialogue", "voice_pitch": 0.85})
 	_door("ExitDoor", Vector2(15 * CELL, 19 * CELL + 16), {

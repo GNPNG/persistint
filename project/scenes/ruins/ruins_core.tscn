@@ -25,16 +25,15 @@ script = ExtResource("7")
 room_id = "core"
 
 [node name="spawn_default" type="Marker2D" parent="."]
-position = Vector2(120, 300)
+position = Vector2(120, 316)
 
 [node name="spawn_from_bunker" type="Marker2D" parent="."]
-position = Vector2(480, 420)
+position = Vector2(480, 436)
 
 [node name="spawn_from_corridor" type="Marker2D" parent="."]
-position = Vector2(120, 300)
+position = Vector2(120, 316)
 
 [node name="Player" parent="." instance=ExtResource("3")]
-z_index = 0
 position = Vector2(120, 300)
 
 [node name="CorridorDoor" parent="." instance=ExtResource("5")]
