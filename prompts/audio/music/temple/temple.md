@@ -7,7 +7,7 @@ game: project/audio/music/temple/temple.mp3
 
 # temple
 
-The Temple of the Queen Mothers.
+The Temple of the Queen Mother.
 
 ## Prompt
 

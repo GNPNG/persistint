@@ -7,7 +7,7 @@ game: project/assets/video/temple_reveal.ogv
 
 # temple_reveal
 
-Interior reveal of the Temple of the Queen Mothers (6 s).
+Interior reveal of the Temple of the Queen Mother (6 s).
 
 ## Prompt
 
