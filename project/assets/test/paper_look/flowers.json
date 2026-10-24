@@ -1,0 +1,39 @@
+{
+  "source": [
+    "project/assets/canon/deco_flowers.png"
+  ],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [
+    144,
+    88
+  ],
+  "scaled_frame": [
+    144,
+    88
+  ],
+  "frame": [
+    208,
+    152
+  ],
+  "pad": 32,
+  "scale": 4.0,
+  "world_h": 22.0,
+  "feet": 0.7894736842105263,
+  "world_h_padded": 38.0,
+  "edges": [
+    1,
+    2,
+    3
+  ],
+  "files": {
+    "edge1_white": "flowers_edge1_white.png",
+    "edge1_cream": "flowers_edge1_cream.png",
+    "edge2_white": "flowers_edge2_white.png",
+    "edge2_cream": "flowers_edge2_cream.png",
+    "edge3_white": "flowers_edge3_white.png",
+    "edge3_cream": "flowers_edge3_cream.png",
+    "shadow_soft": "flowers_shadow_soft.png",
+    "shadow_hard": "flowers_shadow_hard.png"
+  }
+}

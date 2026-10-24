@@ -1,0 +1,41 @@
+{
+  "source": [
+    "project/assets/characters/player/body_base_rig.png",
+    "project/assets/characters/player/dress_white_rig.png",
+    "project/assets/characters/player/hair_braids_rig.png"
+  ],
+  "cols": 8,
+  "rows": 3,
+  "src_frame": [
+    364,
+    384
+  ],
+  "scaled_frame": [
+    182,
+    192
+  ],
+  "frame": [
+    246,
+    256
+  ],
+  "pad": 32,
+  "scale": 4.0,
+  "world_h": 48.0,
+  "feet": 0.875,
+  "world_h_padded": 64.0,
+  "edges": [
+    1,
+    2,
+    3
+  ],
+  "files": {
+    "edge1_white": "player_edge1_white.png",
+    "edge1_cream": "player_edge1_cream.png",
+    "edge2_white": "player_edge2_white.png",
+    "edge2_cream": "player_edge2_cream.png",
+    "edge3_white": "player_edge3_white.png",
+    "edge3_cream": "player_edge3_cream.png",
+    "shadow_soft": "player_shadow_soft.png",
+    "shadow_hard": "player_shadow_hard.png"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "source": [
+    "project/assets/canon/prop_sign_a.png"
+  ],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [
+    433,
+    510
+  ],
+  "scaled_frame": [
+    163,
+    192
+  ],
+  "frame": [
+    227,
+    256
+  ],
+  "pad": 32,
+  "scale": 4.0,
+  "world_h": 48.0,
+  "feet": 0.875,
+  "world_h_padded": 64.0,
+  "edges": [
+    1,
+    2,
+    3
+  ],
+  "files": {
+    "edge1_white": "sign_a_edge1_white.png",
+    "edge1_cream": "sign_a_edge1_cream.png",
+    "edge2_white": "sign_a_edge2_white.png",
+    "edge2_cream": "sign_a_edge2_cream.png",
+    "edge3_white": "sign_a_edge3_white.png",
+    "edge3_cream": "sign_a_edge3_cream.png",
+    "shadow_soft": "sign_a_shadow_soft.png",
+    "shadow_hard": "sign_a_shadow_hard.png"
+  }
+}

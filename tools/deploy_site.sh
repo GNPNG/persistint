@@ -12,6 +12,12 @@
 #                     With no local build, /play/ becomes a "not available yet" page.
 #   --allow-dirty     deploy from a tree with uncommitted changes (build id gets "-dirty").
 #   --check-external  also fetch external links in the link check.
+#   --channel=NAME    review channel: deploy to the separate Cloudflare Pages project
+#                     <worker_name>-NAME (served at https://<worker_name>-NAME.pages.dev/, no custom
+#                     domain, R2 untouched), so a test build never replaces the player-facing site.
+#                     Its play build is /play/<build-id>/ with /play/current/ pointing at it; the
+#                     landing pages are deployed alongside unchanged. NAME: [a-z0-9-]{1,24}.
+#                     Pages only (host_type pages). A test scene opens with ?scene=<name> (DevScene).
 #
 # Steps: read site/site.config.json -> refuse a dirty tree -> export the "Web" preset
 # (project/export_presets.cfg) to a temp dir -> print every file's size, fail on any file over
@@ -39,13 +45,14 @@ usage() { sed -n '2,/^set -euo/{/^#/s/^# \{0,1\}//p}' "$0"; }
 die() { printf 'deploy_site: %s\n' "$*" >&2; exit 1; }
 log() { printf '\n== %s\n' "$*"; }
 
-DRY_RUN=0 SITE_ONLY=0 ALLOW_DIRTY=0 CHECK_EXTERNAL=0
+DRY_RUN=0 SITE_ONLY=0 ALLOW_DIRTY=0 CHECK_EXTERNAL=0 CHANNEL=""
 for arg in "$@"; do
   case "$arg" in
     --dry-run) DRY_RUN=1 ;;
     --site-only) SITE_ONLY=1 ;;
     --allow-dirty) ALLOW_DIRTY=1 ;;
     --check-external) CHECK_EXTERNAL=1 ;;
+    --channel=*) CHANNEL="${arg#--channel=}" ;;
     -h|--help) usage; exit 0 ;;
     *) die "unknown option: $arg (see --help)" ;;
   esac
@@ -88,6 +95,13 @@ CUSTOM_DOMAIN="$(jq -r 'if has("custom_domain") then .custom_domain else true en
 HOST_TYPE="$(jq -r '.host_type // "workers"' "$CONFIG")"
 [[ "$HOST_TYPE" == workers || "$HOST_TYPE" == pages ]] || die "host_type must be workers or pages"
 [[ "$OVERSIZED_MODE" == r2 || "$OVERSIZED_MODE" == gzip ]] || die "oversized_mode must be r2 or gzip"
+if [[ -n "$CHANNEL" ]]; then
+  [[ "$CHANNEL" =~ ^[a-z0-9-]{1,24}$ ]] || die "--channel must match [a-z0-9-]{1,24}"
+  [[ "$HOST_TYPE" == pages ]] || die "--channel needs host_type pages"
+  WORKER_NAME="$WORKER_NAME-$CHANNEL"
+  CUSTOM_DOMAIN=false
+  echo "review channel $CHANNEL: Pages project $WORKER_NAME (https://$WORKER_NAME.pages.dev/), player-facing site untouched"
+fi
 use_r2() { [[ "$OVERSIZED_MODE" == r2 ]] && ((${#OVERSIZED[@]})); }
 [[ "$SITE_HOST" =~ ^[a-z0-9.-]+$ ]] || die "site_host is not a hostname: $SITE_HOST"
 for f in "${OVERSIZED[@]}"; do
@@ -597,7 +611,9 @@ if [[ "$HOST_TYPE" == pages ]]; then
   cp -a "$PUBLIC" "$STAGE"
   cp "$SITE/src/worker.js" "$STAGE/_worker.js"
   if ! "${WRANGLER[@]}" pages project list 2>/dev/null | grep -q "│ $WORKER_NAME "; then
-    "${WRANGLER[@]}" pages project create "$WORKER_NAME" --production-branch main
+    # --force: create the project on classic Pages (what the live project is). Without it, current
+    # wrangler delegates new projects to the Workers API, which this account's token refuses.
+    "${WRANGLER[@]}" pages project create "$WORKER_NAME" --production-branch main --force
   fi
   "${WRANGLER[@]}" pages deploy "$STAGE" --project-name "$WORKER_NAME" --branch main \
     --commit-hash "$(git -C "$ROOT" rev-parse HEAD)" --commit-message "build $BUILD_ID" --commit-dirty=true
@@ -623,7 +639,14 @@ if not d:
 print(f"{host}: status {d.get('status')}; DNS: CNAME {host} -> {project}.pages.dev")
 PY
   fi
+  if [[ -n "$CHANNEL" ]]; then
+    # The generated wrangler.toml named the channel project; put the committed one back so the
+    # tree does not carry the channel's name into the next player-facing deploy.
+    git -C "$ROOT" checkout -q -- site/wrangler.toml 2>/dev/null || true
+    log "Deployed build ${BUILD_ID:-none} to review channel $CHANNEL: https://$WORKER_NAME.pages.dev/play/current/ (the player-facing site is untouched)"
+  else
   log "Deployed build ${BUILD_ID:-none} to https://$WORKER_NAME.pages.dev/ and https://$SITE_HOST/ (play: /play/)"
+  fi
   exit 0
 fi
 
