@@ -1,0 +1,118 @@
+{
+  "_note": "Written by tools/gen_brand_art.py: where each cell of ui/title/wordmark_letters.png sits in the 1600-px-wide wordmark (scripts/ui/title_letters.gd).",
+  "sheet": "res://assets/ui/title/wordmark_letters.png",
+  "width": 1600,
+  "height": 270,
+  "letters": [
+    {
+      "ch": "P",
+      "cell": [
+        0,
+        0,
+        243,
+        273
+      ],
+      "x": -28,
+      "y": -2
+    },
+    {
+      "ch": "E",
+      "cell": [
+        257,
+        0,
+        245,
+        278
+      ],
+      "x": 147,
+      "y": -13
+    },
+    {
+      "ch": "R",
+      "cell": [
+        514,
+        0,
+        240,
+        277
+      ],
+      "x": 324,
+      "y": 5
+    },
+    {
+      "ch": "S",
+      "cell": [
+        771,
+        0,
+        232,
+        279
+      ],
+      "x": 496,
+      "y": -13
+    },
+    {
+      "ch": "I",
+      "cell": [
+        1028,
+        0,
+        159,
+        274
+      ],
+      "x": 660,
+      "y": -2
+    },
+    {
+      "ch": "S",
+      "cell": [
+        1285,
+        0,
+        230,
+        279
+      ],
+      "x": 750,
+      "y": 4
+    },
+    {
+      "ch": "T",
+      "cell": [
+        1542,
+        0,
+        253,
+        278
+      ],
+      "x": 912,
+      "y": -12
+    },
+    {
+      "ch": "I",
+      "cell": [
+        1799,
+        0,
+        159,
+        274
+      ],
+      "x": 1096,
+      "y": -2
+    },
+    {
+      "ch": "N",
+      "cell": [
+        2056,
+        0,
+        257,
+        277
+      ],
+      "x": 1186,
+      "y": 5
+    },
+    {
+      "ch": "T",
+      "cell": [
+        2313,
+        0,
+        253,
+        278
+      ],
+      "x": 1376,
+      "y": -12
+    }
+  ]
+}

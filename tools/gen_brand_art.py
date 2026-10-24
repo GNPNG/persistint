@@ -17,6 +17,14 @@ Outputs:
                                              white sticker outline, one white shine per letter),
                                              letters tilted and bobbing a little; the main menu
                                              shows it (scenes/ui/main_menu.tscn) at a quarter size
+  project/assets/ui/title/wordmark_letters.png
+                                             the same ten sticker letters, one per cell in a
+                                             row, each with its own shadow, at the wordmark's
+                                             scale; project/data/title_wordmark.json says which
+                                             cell is which letter and where it sits in the
+                                             1600-px wordmark, so scenes/ui/main_menu.tscn can
+                                             show the letters as separate sprites that jiggle
+                                             and answer taps (scripts/ui/title_letters.gd)
   project/assets/ui/title/title_screen.png   2560x1440, stand-in for prompts/image/ui/title/
                                              title_screen.md (the title art with the logo at the
                                              top): title_screen_plain.png with the wordmark
@@ -109,6 +117,59 @@ def wordmark(width):
     return out.resize((width, h), Image.LANCZOS)
 
 
+def wordmark_parts(size=400):
+    """The letters as wordmark() lays them out: (letter image, x, y) on the unscaled canvas, plus
+    the canvas size. Shared with wordmark_letters() so the sheet matches the one-piece wordmark."""
+    parts = []
+    for i, ch in enumerate(WORD):
+        im = letter(ch, size, LETTERS[i % 3])
+        im = im.rotate((-4, 3, -2, 4, -3, 2, -4, 3, -2, 4)[i], resample=Image.BICUBIC, expand=True)
+        im = im.crop(im.getchannel("A").getbbox())
+        parts.append((im, (0, -1, 1, -1, 0, 1, -1, 0, 1, -1)[i] * size * 0.035))
+    overlap = size * 0.05
+    total = sum(p.width for p, _ in parts) - overlap * (len(parts) - 1)
+    tall = max(p.height for p, _ in parts) + size * 0.2
+    placed, x = [], 0.0
+    for p, dy in parts:
+        placed.append((p, round(x), round((tall - p.height) / 2 + dy)))
+        x += p.width - overlap
+    return placed, (math.ceil(total), math.ceil(tall))
+
+
+def wordmark_letters(width):
+    """One cell per letter, each with the sticker's soft shadow, scaled like wordmark(width);
+    returns the sheet and the layout dict for project/data/title_wordmark.json."""
+    size = 400
+    placed, (cw, chh) = wordmark_parts(size)
+    f = width / cw
+    pad = round(size * 0.12)                                   # room for the shadow's blur and drop
+    cells = []
+    for im, x, y in placed:
+        cell = Image.new("RGBA", (im.width + 2 * pad, im.height + 2 * pad))
+        alpha = im.getchannel("A")
+        shadow = Image.merge("RGBA", (*[Image.new("L", im.size, c) for c in INK], alpha.point(lambda v: v * 0.3)))
+        shadow = shadow.filter(ImageFilter.GaussianBlur(size * 0.03))
+        cell.alpha_composite(shadow, (pad, pad + round(size * 0.04)))
+        cell.alpha_composite(im, (pad, pad))
+        cells.append((cell, x - pad, y - pad))
+    cell_w = max(round(c.width * f) for c, _, _ in cells)
+    cell_h = max(round(c.height * f) for c, _, _ in cells)
+    sheet = Image.new("RGBA", (cell_w * len(cells), cell_h))
+    letters = []
+    for i, (cell, x, y) in enumerate(cells):
+        small = cell.resize((round(cell.width * f), round(cell.height * f)), Image.LANCZOS)
+        sheet.alpha_composite(small, (i * cell_w, 0))
+        letters.append({"ch": WORD[i], "cell": [i * cell_w, 0, small.width, small.height],
+                        "x": round(x * f), "y": round(y * f)})
+    layout = {
+        "_note": "Written by tools/gen_brand_art.py: where each cell of ui/title/wordmark_letters.png sits in the %d-px-wide wordmark (scripts/ui/title_letters.gd)." % width,
+        "sheet": "res://assets/ui/title/wordmark_letters.png",
+        "width": width, "height": round(chh * f),
+        "letters": letters,
+    }
+    return sheet, layout
+
+
 def heart(d, cx, cy, r, fill, ink, w):
     pts = []
     for i in range(96):
@@ -184,7 +245,13 @@ def save(im, rel):
 
 
 if __name__ == "__main__":
+    import json
     save(wordmark(1600), "ui/title/wordmark.png")
+    sheet, layout = wordmark_letters(1600)
+    save(sheet, "ui/title/wordmark_letters.png")
+    layout_path = ROOT / "project/data/title_wordmark.json"
+    layout_path.write_text(json.dumps(layout, indent=2) + "\n")
+    print(layout_path.relative_to(ROOT))
     save(title_screen(), "ui/title/title_screen.png")
     save(boot_splash(), "ui/brand/boot_splash.png")
     save(app_icon(), "ui/icon/app_icon.png")
