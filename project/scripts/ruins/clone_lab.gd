@@ -21,7 +21,6 @@ func _ready() -> void:
 	gore = Node2D.new()
 	gore.name = "Gore"
 	gore.z_index = 2  # flying bits over everyone; the puddle goes under (below)
-	RuinsDecor.smooth(gore)
 	add_child(gore)
 	if DisplayServer.get_name() != "headless":
 		_schedule()

@@ -22,7 +22,6 @@ polygons = [PackedInt32Array(0, 1, 2, 3)]
 outlines = [PackedVector2Array(60, 222, 900, 222, 900, 526, 60, 526)]
 
 [node name="Stable" type="Node2D"]
-texture_filter = 4
 y_sort_enabled = true
 script = ExtResource("1")
 map_size = Vector2(960, 540)

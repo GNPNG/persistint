@@ -9,8 +9,8 @@ extends SceneTree
 ## Layouts live here as code (cell = 32 world px); the scenes are the output. Re-run after edits.
 ## Resolution: the art files are drawn at 4x their size on the map (tiles 128 px per 32 px cell,
 ## generated props ART_SCALE = 0.25) and canon cuts keep the sheet's own resolution, scaled to the
-## display height in data/island_props.json. Each map root filters its textures linearly with
-## mipmaps, so everything is downsampled smoothly instead of shown as pixels.
+## display height in data/island_props.json. Textures are imported with mipmaps and the project
+## default canvas filter is Linear Mipmap, so everything is downsampled smoothly.
 ## Tile names and atlas cells come from assets/tiles/island_tiles.json (written by the tile
 ## generator); the village gets dual-grid edge overlays (Shallows, Shore, PathEdge, PavingEdge,
 ## GrassEdge), drawn in that order so each border runs up to the next instead of stopping short.
@@ -127,8 +127,6 @@ func _begin(root_name: String, w: int, h: int, fill: String) -> void:
 	_root.set_script(load("res://scripts/map.gd"))
 	_root.set("map_size", Vector2(w * CELL, h * CELL))
 	_root.set("sort_characters", true)
-	# The art is high resolution; children inherit smooth, mipmapped filtering.
-	_root.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	for x in w:
 		for y in h:
 			_grid[Vector2i(x, y)] = fill

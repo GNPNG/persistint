@@ -15,7 +15,6 @@ vertices = PackedVector2Array(40, 66, 224, 66, 736, 66, 920, 66, 40, 124, 224, 1
 polygons = [PackedInt32Array(0, 1, 5, 4), PackedInt32Array(1, 2, 6, 5), PackedInt32Array(2, 3, 7, 6), PackedInt32Array(4, 5, 9, 8), PackedInt32Array(6, 7, 11, 10), PackedInt32Array(8, 9, 13, 12), PackedInt32Array(9, 10, 14, 13), PackedInt32Array(10, 11, 15, 14)]
 
 [node name="Aquarium" type="Node2D"]
-texture_filter = 4
 y_sort_enabled = true
 script = ExtResource("1")
 map_size = Vector2(960, 540)

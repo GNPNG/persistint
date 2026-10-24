@@ -28,7 +28,6 @@ agent_radius = 8.0
 
 [node name="Temple" type="Node2D" unique_id=493435700]
 y_sort_enabled = true
-texture_filter = 4
 script = ExtResource("1_uoanx")
 map_size = Vector2(960, 640)
 sort_characters = true
