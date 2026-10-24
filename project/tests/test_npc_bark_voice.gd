@@ -13,6 +13,8 @@ func _initialize() -> void:
 			npc = n
 			break
 	var player: Node2D = current_scene.get_tree().get_first_node_in_group("player")
+	npc._on_proximity_exited(player)  # the player can spawn beside her, bubble already up
+	heard.clear()
 	npc._on_proximity_entered(player)
 	var ok: bool = heard.size() == 1 and heard[0][0] == npc.display_name and heard[0][1] == npc.current_bark()
 	npc._on_proximity_entered(player)  # bubble already showing the same line: not repeated
