@@ -84,6 +84,9 @@ git -C {main_checkout} status --short      # empty: the coordinator has nothing 
 - No `blocked` outcome in the run log for the round.
 - The owner has a status message with the agreed wording.
 
+
+- Browser frame timing (added 2026-10-24): a probe asserts `document.visibilityState === "visible" && document.hasFocus()` in the same script as the measurement and records both with the numbers; Chrome throttles a background tab's requestAnimationFrame to about two per second and Godot's own FPS overlay counts the same throttled callbacks, which produced a false "2 fps" reading (persistint-game-fy7) when the Gemini tab was in front.
+
 ## 7. Failure modes and recovery
 
 | Failure | How it shows | Recovery |

@@ -98,6 +98,13 @@ Further failure modes:
 - Crash mid-run leaves rows in `rendering`. Recovery: on start, call `reset_stale`, which resets any `rendering` row whose `last_tried` is older than the per-kind time limit to `todo` and logs it as `timeout`.
 - Duplicate work from two runners. Recovery: one runner per generator account; the renderer takes the row with `claim` (sets `rendering` and `last_tried`) before starting, and `claim` refuses a row already in `rendering`.
 
+
+### 7.x Gemini spends the turn on the skill and never calls the music tool (added 2026-10-24)
+
+Symptom: a Music-chat send with the `@persistint-asset-prompts` prefix returns a text "Asset Specification" (parameter table, structural breakdown) and no "Generating your track"; the chat may then vanish from the sidebar without a log. Evidence (name_it_sting v3, chat 28751c871093494b): Gemini's own reply ended "Tool Capability: music_gen:generate_music. Execution State: Blocked (0 tool calls remaining in the current system turn allocation). Action Required: Re-trigger the request or explicitly command audio generation in the next turn." With the skill attached, the orchestrator spends the turn's tool budget writing the spec and only sometimes has a call left for the music tool; six loop tracks got through, the sting (longer skill output) did not, twice (gen-gap `al7`, `90v`).
+
+Interim rule (in force): keep the prefix; if "Generating your track" has not appeared within about 15 s and the reply is a spec text, send a second turn in the same chat: "Generate the audio now with the music tool, using exactly the prompt I gave above. Instrumental only." Record the chat and both turns in the batch record (SOP-12 §8.5). Proposed clause for the author's one-time approval (changes his prefix convention, so not adopted by the team): the two-step, the skill in a text chat produces the final prompts, then clean prompts with no prefix in Music chats; cheaper in credits and deterministic.
+
 ## 8. Artifacts and templates
 
 Prompt file front matter:
