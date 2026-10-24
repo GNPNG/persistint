@@ -3,29 +3,65 @@
 // other request goes to the static assets in ./public. _headers does not apply to
 // responses built here, so the headers are set below.
 const TYPES = { wasm: "application/wasm", pck: "application/octet-stream", js: "text/javascript" };
-const OVERSIZED = /^\/play\/([\w.-]+)\/(index\.wasm)$/;
+const OVERSIZED = /^\/play\/([\w.-]+)\/(index\.wasm|index\.pck)$/;
 
-// oversized_mode "gzip": the file ships as static <name>.gz; it is served with
-// Content-Encoding: gzip (encodeBody "manual" passes the bytes through) and the browser
-// inflates it.
+// oversized_mode "gzip": a file ships either as static <name>.gz, served with
+// Content-Encoding: gzip (encodeBody "manual" passes the bytes through, the browser inflates
+// it), or, when even its gzip is over the 25 MiB static-file limit (the .pck: its MP3s don't
+// compress), as static parts <name>.part00, .part01, ... listed in <name>.parts.json
+// ({"size": bytes, "parts": [names]}), streamed back to back as one response of that length.
+// Pages answers a missing file with the HTML landing page, so each lookup checks the type.
+const isHtml = (r) => (r.headers.get("content-type") || "").includes("text/html");
+
+function baseHeaders(name) {
+  const h = new Headers();
+  h.set("content-type", TYPES[name.split(".").pop()] || "application/octet-stream");
+  h.set("cache-control", "public, max-age=31536000, immutable");
+  h.set("x-content-type-options", "nosniff");
+  h.set("strict-transport-security", "max-age=31536000");
+  return h;
+}
+
 export default {
-  async fetch(req, env) {
+  async fetch(req, env, ctx) {
     const url = new URL(req.url);
     const m = url.pathname.match(OVERSIZED);
     if (m) {
       if (req.method !== "GET" && req.method !== "HEAD") {
         return new Response("Method not allowed", { status: 405, headers: { allow: "GET, HEAD" } });
       }
-      const gz = await env.ASSETS.fetch(new Request(new URL(url.pathname + ".gz", url)));
-      if (!gz.ok) return new Response("Not found", { status: 404 });
-      const h = new Headers();
-      h.set("content-type", TYPES[m[2].split(".").pop()] || "application/octet-stream");
+      const asset = (suffix) => env.ASSETS.fetch(new Request(new URL(url.pathname + suffix, url)));
+      const man = await asset(".parts.json");
+      let info = null;
+      if (man.ok && !isHtml(man)) {
+        try { info = await man.json(); } catch { info = null; }
+      }
+      if (info && Number.isSafeInteger(info.size) && Array.isArray(info.parts) && info.parts.length) {
+        const h = baseHeaders(m[2]);
+        h.set("content-length", String(info.size));
+        if (req.method === "HEAD") return new Response(null, { headers: h });
+        const { readable, writable } = new FixedLengthStream(info.size);
+        const dir = url.pathname.slice(0, url.pathname.lastIndexOf("/") + 1);
+        ctx.waitUntil((async () => {
+          try {
+            for (const part of info.parts) {
+              const r = await env.ASSETS.fetch(new Request(new URL(dir + part, url)));
+              if (!r.ok || isHtml(r)) throw new Error("missing part " + part);
+              await r.body.pipeTo(writable, { preventClose: true });
+            }
+            await writable.close();
+          } catch (e) {
+            await writable.abort(e);
+          }
+        })());
+        return new Response(readable, { headers: h });
+      }
+      const gz = await asset(".gz");
+      if (!gz.ok || isHtml(gz)) return new Response("Not found", { status: 404 });
+      const h = baseHeaders(m[2]);
       h.set("content-encoding", "gzip");
-      h.set("cache-control", "public, max-age=31536000, immutable");
       const etag = gz.headers.get("etag");
       if (etag) h.set("etag", etag);
-      h.set("x-content-type-options", "nosniff");
-      h.set("strict-transport-security", "max-age=31536000");
       return new Response(req.method === "HEAD" ? null : gz.body, { headers: h, encodeBody: "manual" });
     }
     return env.ASSETS.fetch(req);

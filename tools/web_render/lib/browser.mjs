@@ -94,6 +94,9 @@ export async function launchAndConnect({ chrome, profileDir, launchTimeoutSec = 
     async close() {
       try { await browser.close(); } catch { /* already gone */ }
       if (exited === null) child.kill();
+      // Wait for Chrome to exit, so its profile is released (and no longer being written to)
+      // when close() returns.
+      for (let i = 0; i < 40 && exited === null; i++) await sleep(250);
     },
   };
 }

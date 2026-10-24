@@ -30,8 +30,8 @@ function pythonTasks() {
 test('prompt parsing matches render_all_assets.py on the real prompts/ tree', () => {
   const py = pythonTasks();
   const js = discoverTasks(undefined, { warn: () => {} }).map((t) => Object.fromEntries(FIELDS.map((k) => [k, t[k] ?? null])));
-  assert.equal(js.length, 45, 'expected 45 asset prompts');
-  assert.equal(py.length, 45);
+  assert.equal(js.length, 46, 'expected 46 asset prompts');
+  assert.equal(py.length, 46);
   assert.deepEqual(js, py);
 });
 
@@ -44,7 +44,7 @@ test('every asset has a drop extension matching its kind (png / mp4 / mp3)', () 
     assert.ok(t.drop_abs.startsWith(ROOT + path.sep) && t.drop.startsWith('prompts/'), t.drop);
     counts[t.kind] = (counts[t.kind] || 0) + 1;
   }
-  assert.deepEqual(counts, { image: 16, video: 9, music: 20 });
+  assert.deepEqual(counts, { image: 16, video: 10, music: 20 });
   assert.deepEqual(KIND_EXT, { image: '.png', video: '.mp4', music: '.mp3' });
 });
 
@@ -218,10 +218,13 @@ test('prompt preparation adds the ratio only when the prompt lacks one', () => {
   assert.equal(preparePrompt({ prompt: 'A cat.', aspect: '16:9' }, { promptPrefix: 'Generate an image:' }), 'Generate an image: A cat.');
 });
 
-test('only the image surface prefixes prompts (to trigger the image tool); no on-page preview is saved as final', () => {
+test('every Gemini prompt carries @persistint-asset-prompts; only the image surface adds "Create an image:"; no on-page preview is saved as final', () => {
+  // Author, 2026-10-24: the author's Gemini skill goes in every Gemini render prompt.
   const cfg = loadSelectors(SELECTORS_PATH);
   for (const [name, s] of Object.entries(cfg.surfaces)) {
-    assert.equal(s.promptPrefix, name === cfg.kinds.image ? 'Create an image:' : undefined, name);
+    const want = !name.startsWith('gemini_') ? undefined
+      : name === cfg.kinds.image ? '@persistint-asset-prompts Create an image:' : '@persistint-asset-prompts';
+    assert.equal(s.promptPrefix, want, name);
   }
   assert.deepEqual(cfg.surfaces[cfg.kinds.image].capture, ['download']);
   assert.deepEqual(cfg.surfaces[cfg.kinds.music].capture, ['download']);
@@ -282,4 +285,57 @@ test('orPress and blocked are validated', () => {
   const d = structuredClone(good);
   d.surfaces.gemini_image.steps.blocked = [];
   assert.ok(validateSelectors(d).some((e) => /steps\.blocked/.test(e)));
+});
+
+// ---------------------------------------------------------------- Google's check page in batch mode
+
+/** A page stand-in: on `url`, no results, and `visible` selectors each match one visible element. */
+function fakePage(url, visible = []) {
+  const handle = { boundingBox: async () => ({ x: 0, y: 0, width: 10, height: 10 }), evaluate: async () => true };
+  return {
+    url: () => url,
+    $: async () => null,
+    $$: async (sel) => (visible.includes(sel) ? [handle] : []),
+    evaluateHandle: async () => ({ evaluate: async () => 0, dispose: async () => {} }),
+  };
+}
+
+test('markIfBlocked turns a failure during check-page redirects into a blocked, run-stopping error', async () => {
+  const { markIfBlocked } = await import('../lib/engine.mjs');
+  const plain = markIfBlocked({ sorry: [] }, new Error('no download within 180s'));
+  assert.equal(plain.blocked, undefined);
+  const e = markIfBlocked({ sorry: ['request', 'console'] }, new Error('no download within 180s\nmore'));
+  assert.equal(e.blocked, true);
+  assert.equal(e.abortRun, true);
+  assert.match(e.message, /^no download within 180s -- while Google was redirecting .*2x/);
+});
+
+test('checkPageShowing sees the reCAPTCHA iframe or a www.google.com/sorry tab, nothing else', async () => {
+  const { checkPageShowing } = await import('../lib/engine.mjs');
+  const sel = "iframe[title='reCAPTCHA']";
+  assert.equal(await checkPageShowing(fakePage('https://gemini.google.com/app'), [sel]), null);
+  assert.equal(await checkPageShowing(fakePage('https://gemini.google.com/app', [sel]), [sel]), sel);
+  assert.match(await checkPageShowing(fakePage('https://www.google.com/sorry/index?continue=x'), [sel]), /sorry/);
+});
+
+test('batch harvest stops the run on a check page instead of calling the chat "not ready yet"', async () => {
+  const { harvestAll } = await import('../lib/batch.mjs');
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'wr-batch-'));
+  const file = path.join(dir, 'batch.json');
+  const chat = 'https://gemini.google.com/app/0123456789abcdef';
+  fs.writeFileSync(file, JSON.stringify({ track: { kind: 'music', chat, submitted: '2026-10-24T00:00:00Z' } }));
+  const sel = "iframe[title='reCAPTCHA']";
+  const page = fakePage(chat, [sel]);
+  const session = { page, sorry: [], log: () => {}, newPage: async () => page };
+  const surface = { url: 'https://gemini.google.com/app', steps: { result: ['audio'], busy: [], blocked: [sel] } };
+  const logs = [];
+  await assert.rejects(
+    harvestAll(session, { tasks: [{ id: 'track', kind: 'music', drop_abs: path.join(dir, 'none.mp3') }], surfaceOf: () => surface, file, log: (m) => logs.push(m) }),
+    (e) => e.blocked === true && e.abortRun === true,
+  );
+  assert.ok(!logs.some((m) => /not ready yet/.test(m)), logs.join('\n'));
+  const after = JSON.parse(fs.readFileSync(file, 'utf8'));
+  assert.equal(after.track.harvested, undefined);
+  assert.equal(after.track.deleted, undefined);
+  fs.rmSync(dir, { recursive: true, force: true });
 });

@@ -18,15 +18,24 @@
  *      (the shared secret is the access control). Copy the /exec URL into the renderer.
  *
  * POST (Content-Type: application/json), body:
- *   { "secret": "...", "action": "attempt_start" | "attempt_end",
+ *   { "secret": "...", "action": "attempt_start" | "attempt_end" | "reset",
  *     "asset_id": "key_art_temple", "kind": "image",
- *     "outcome": "done|failed|quota|refused|timeout|selector|skipped",   // attempt_end
+ *     "outcome": "done|failed|quota|refused|timeout|selector|skipped|blocked",   // attempt_end
  *     "error": "...", "file": "path/of/rendered/file", "debug_dir": "...",
  *     "run_id": "...", "surface": "gemini web / model name",
  *     "started": "2026-10-23T10:00:00Z",  // optional; default = Last Attempt set by attempt_start
  *     "note": "..."                        // optional; appended to the row's Notes cell (once)
  *   }
  *   -> { ok: true, asset_id, kind, status, attempts, next_eligible }
+ *   outcome "blocked" = Google's "unusual traffic" check page stopped the renderer before it could
+ *   render: the attempt is logged, the row goes back to Pending with no Next Eligible, and it
+ *   neither counts against the Daily Cap nor starts a cooldown or a retry backoff.
+ *
+ *   action "reset": { asset_id, kind (optional), run_id, from_outcome, to_outcome (all three
+ *   optional) } -> the row is set to Pending with Next Eligible cleared; with run_id, that run's
+ *   Attempts entries of the asset whose Outcome is from_outcome get to_outcome instead (e.g. a
+ *   check page logged as 'quota' becomes 'blocked', which lifts the kind's quota cooldown).
+ *   -> { ok: true, asset_id, kind, status: 'Pending', relabeled: N }
  *
  * GET  ?secret=...&kind=image|video|music (optional)&all=1 (optional)&limit=N (optional)
  *   -> { ok: true, now, kinds: { image: {daily_cap, used_today, remaining_today, min_gap_s,
@@ -95,8 +104,8 @@ var CONFIG = {
     pending: 'Pending', rendering: 'Rendering', done: 'Done', failed: 'Failed',
     quota: 'Quota', refused: 'Refused', needsEdit: 'Needs prompt edit', skipped: 'Skipped'
   },
-  OUTCOMES: ['done', 'failed', 'quota', 'refused', 'timeout', 'selector', 'skipped'],
-  // Outcomes that use up the daily cap (quota/skipped do not).
+  OUTCOMES: ['done', 'failed', 'quota', 'refused', 'timeout', 'selector', 'skipped', 'blocked'],
+  // Outcomes that use up the daily cap (quota/skipped/blocked do not).
   COUNTED_OUTCOMES: ['done', 'failed', 'refused', 'timeout', 'selector'],
   // Outcomes that are retried with backoff, up to Max Retries.
   RETRY_OUTCOMES: ['failed', 'timeout', 'selector'],
@@ -129,6 +138,7 @@ function doPost(e) {
   try {
     if (body.action === 'attempt_start') return json_(attemptStart_(body));
     if (body.action === 'attempt_end') return json_(attemptEnd_(body));
+    if (body.action === 'reset') return json_(reset_(body));
     return json_({ ok: false, error: 'unknown action: ' + body.action });
   } catch (err) {
     return json_({ ok: false, error: String(err && err.message || err) });
@@ -195,6 +205,8 @@ function attemptEnd_(b) {
     status = CONFIG.STATUS.needsEdit;          // no auto-retry; a human edits the prompt in the repo
   } else if (outcome === 'skipped') {
     status = CONFIG.STATUS.skipped;
+  } else if (outcome === 'blocked') {
+    status = CONFIG.STATUS.pending;            // the asset is fine; the renderer's session needs a human
   } else {                                     // failed / timeout / selector
     status = CONFIG.STATUS.failed;
     if (failures < q.maxRetries) {
@@ -219,6 +231,34 @@ function attemptEnd_(b) {
 
   return { ok: true, asset_id: b.asset_id, kind: ctx.kind, status: status, attempts: attempts,
            failures: failures, next_eligible: next ? iso_(next) : null };
+}
+
+function reset_(b) {
+  var ctx = findAsset_(b.kind, b.asset_id);
+  var relabeled = 0;
+  if (b.run_id && b.from_outcome && b.to_outcome) {
+    var to = String(b.to_outcome).toLowerCase();
+    if (CONFIG.OUTCOMES.indexOf(to) < 0) throw new Error('unknown outcome: ' + b.to_outcome);
+    var from = String(b.from_outcome).toLowerCase();
+    var sh = sheet_(CONFIG.ATTEMPTS_TAB);
+    var last = sh.getLastRow();
+    if (last >= 2) {
+      var h = CONFIG.ATTEMPTS_HEADERS;
+      var iId = h.indexOf('Asset ID'), iKind = h.indexOf('Kind'), iOut = h.indexOf('Outcome'), iRun = h.indexOf('Run ID');
+      var data = sh.getRange(2, 1, last - 1, h.length).getValues();
+      for (var r = 0; r < data.length; r++) {
+        if (String(data[r][iId]).trim() === b.asset_id && data[r][iKind] === ctx.kind &&
+            String(data[r][iRun]) === String(b.run_id) && String(data[r][iOut]).toLowerCase() === from) {
+          sh.getRange(r + 2, iOut + 1).setValue(to);
+          relabeled++;
+        }
+      }
+    }
+  }
+  ctx.set('status', CONFIG.STATUS.pending);
+  ctx.set('nextEligible', '');
+  ctx.save();
+  return { ok: true, asset_id: b.asset_id, kind: ctx.kind, status: CONFIG.STATUS.pending, relabeled: relabeled };
 }
 
 function queue_(onlyKind, all, limit) {
@@ -279,7 +319,7 @@ function kindState_(kind, q, log, now) {
     if (CONFIG.COUNTED_OUTCOMES.indexOf(a.outcome) >= 0 &&
         Utilities.formatDate(a.ts, tz, 'yyyy-MM-dd') === today) used++;
     if (a.outcome === 'quota' && (!lastQuota || a.ts > lastQuota)) lastQuota = a.ts;
-    if (a.ended && (!lastEnd || a.ended > lastEnd)) lastEnd = a.ended;
+    if (a.outcome !== 'blocked' && a.ended && (!lastEnd || a.ended > lastEnd)) lastEnd = a.ended;
   });
   var nextT = 0;
   if (lastQuota) nextT = Math.max(nextT, lastQuota.getTime() + q.cooldown * 60 * 1000);
