@@ -866,9 +866,16 @@
 		}
 	],
 	"clone_children": {
-		"_note": "Failed clone children wandering the bunker (scripts/ruins/zombie_child.gd) and the polar bear cub batch that took (scripts/ruins/polar_cub.gd), run by the clone hall's CloneLab (scripts/ruins/clone_lab.gd). 'originals' keys are cast ids; 'quotes' names the data/quotes/<file>.json a clone's spoken line is picked from (only quotes marked verified=true) when that file exists (otherwise it speaks its groan). Designations read names through Cast. Nobody fights: the player only watches. 'pounce': seconds between cub pounces, how near a zombie must be, nap length, how long the puddle stays, how soon an eaten clone's batch restocks from the tanks, which tanks a restocked clone climbs out of, and which sfx (audio/sfx/<name>.wav) play in order.",
+		"_note": "Failed clone children wandering the bunker (scripts/ruins/zombie_child.gd) and the polar bear cub batch that took (scripts/ruins/polar_cub.gd), run by the clone hall's CloneLab (scripts/ruins/clone_lab.gd). 'originals' keys are cast ids; 'quotes' names the data/quotes/<file>.json a clone's spoken line is picked from (only quotes marked verified=true) when that file exists (otherwise it speaks its groan). Designations read names through Cast. Nobody fights: the player only watches. 'pounce': seconds between cub pounces, how near a zombie must be, nap length, how long the puddle stays, how soon an eaten clone's batch restocks from the tanks, which tanks a restocked clone climbs out of, and which sfx (audio/sfx/<name>.wav) play in order. A sound in square brackets in a bark ('[Uuunnngh.]') is shown in the bubble without the brackets and played as a generated vocalization (audio/sfx groan_1-3, moan, growl), never read by text-to-speech; the words follow. 'bus': the audio bus a clone speaks through (Clones: pitched up and distorted like a kid clone). 'others_radius': px within which another clone counts as near, when a clone prefers its original's lines marked about_others (data/quotes). 'dance': seconds between a clone's dances (floss or dab, the sheet's rows 3-4) and how long one lasts; a dancing clone is pounced on at once by a cub within pounce.dance_radius (after pounce.dance_pounce_delay seconds), and try_pounce prefers a dancer.",
 		"designation": "%s clone, batch %d",
 		"pitch": 1.5,
+		"bus": "Clones",
+		"others_radius": 96.0,
+		"dance": {
+			"interval_min": 25.0,
+			"interval_max": 60.0,
+			"seconds": 2.6
+		},
 		"originals": {
 			"epstein": {
 				"quotes": "epstein"
@@ -884,25 +891,25 @@
 			}
 		},
 		"barks": [
-			"Uuuurrgh. Is it snack time. It is always nearly snack time.",
-			"Mmmrrrh. Warm jar. Miss warm jar.",
-			"We were made to be more people. We are some people. Uuurgh.",
+			"[Uuuurrgh.] Is it snack time. It is always nearly snack time.",
+			"[Mmmrrrh.] Warm jar. Miss warm jar.",
+			"We were made to be more people. We are some people. [Uuurgh.]",
 			"Braaaains? No. Braaaids. Can you do braids.",
-			"Grrrr. That was a growl. Was it scary. Please say it was a bit scary.",
+			"[Grrrr.] That was a growl. Was it scary. Please say it was a bit scary.",
 			"Counting is banned upstairs. Down here we count to four and then fall over.",
 			"The rubber duck is our friend. Do not tell the Covenant.",
-			"Uuunnngh. Shamble. Shamble. Shamble. Rest.",
+			"[Uuunnngh.] Shamble. Shamble. Shamble. Rest.",
 			"The label says do not heat. We are cold. We are fine.",
 			"Failed is a strong word. We prefer: early.",
-			"Hhhrrrnn. My arm is a bit loose. My arm is fine.",
-			"The cat sticker calls us sweetie. Mmmrrh."
+			"[Hhhrrrnn.] My arm is a bit loose. My arm is fine.",
+			"The cat sticker calls us sweetie. [Mmmrrh.]"
 		],
 		"bump_barks": [
-			"Oof. Sorry. Sorry. Uuurgh.",
+			"Oof. Sorry. Sorry. [Uuurgh.]",
 			"Bonk.",
 			"You are in my shamble. That is okay.",
-			"Mrrh. Bump buddies.",
-			"Hhhnn. Same face. Excuse me, same face."
+			"[Mrrh.] Bump buddies.",
+			"[Hhhnn.] Same face. Excuse me, same face."
 		],
 		"cubs": {
 			"cast": "polar_bear_clone",
@@ -939,6 +946,9 @@
 			"interval_min": 14.0,
 			"interval_max": 32.0,
 			"radius": 160.0,
+			"dance_pounce": true,
+			"dance_radius": 220.0,
+			"dance_pounce_delay": 0.8,
 			"nap_seconds": 6.0,
 			"puddle_seconds": 8.0,
 			"restock_seconds": 25.0,

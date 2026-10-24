@@ -4,7 +4,8 @@ Usage: python3 -I tools/export_voice_lines.py
 Writes project/audio/voice/manifest.json: [{speaker, text, key, clip}]. Generate each clip
 (LLM-based impersonated narration of `speaker` reading `text`) and save it as `clip`;
 Voice.speak plays it instead of text-to-speech. key = md5("speaker|text"), matching
-Voice.line_key in project/scripts/autoload/voice.gd.
+Voice.line_key in project/scripts/autoload/voice.gd; bracketed sounds ("[Uuunnngh.]") are not
+part of a line's text (Voice plays them as generated vocalizations from audio/sfx).
 """
 import hashlib
 import json
@@ -21,7 +22,10 @@ QUOTE_SPEAKERS = {"epstein": "epstein", "bill_clinton": "bill_clinton", "hillary
 
 
 def add(speaker, text):
-    if speaker and text and text.strip() and "{{" not in speaker + text:
+    # A sound in square brackets ("[Uuunnngh.] Shamble.") is a vocalization Voice plays from
+    # audio/sfx, never read: the clip and its key cover the words alone (Voice.spoken_text).
+    text = re.sub(r"\s+", " ", re.sub(r"\[[^\]]*\]", " ", text or "")).strip()
+    if speaker and text and "{{" not in speaker + text:
         key = hashlib.md5(f"{speaker}|{text}".encode()).hexdigest()
         lines.append({"speaker": speaker, "text": text, "key": key, "clip": f"res://audio/voice/{key}.wav"})
 

@@ -1,7 +1,8 @@
 # Assets
 
-Every art file the game loads, the generator that writes it and how it is laid out. Every
-generator runs as `python3 -I tools/<generator>` from the repo root and reproduces its files.
+Every art file the game loads (and the generated sound effects), the generator that writes it
+and how it is laid out. Every generator runs as `python3 -I tools/<generator>` from the repo root
+and reproduces its files.
 A Gemini render synced to a prompt's `game:` path replaces the stand-in there with no code
 change. Rows are sorted by path.
 
@@ -153,10 +154,10 @@ change. Rows are sorted by path.
 | `project/assets/florida/shell_spiral.png` | shell_spiral | `tools/cut_island_props.py` project/data/florida_canon.json (canon tide scroll, sheet 481b) | still, canon sheet resolution; shown 11 world px tall | - |
 | `project/assets/island/mirror.png` | mirror | `tools/gen_village_props.py` | single 104x160 (26x40 world px at 4x), foot y 148 | - |
 | `project/assets/island/temple_pavilion.png` | temple_pavilion | `tools/gen_village_props.py` | single 600x560 (150x140 world px at 4x), foot y 544, door at x 300 | - |
-| `project/assets/ruins/clone_bill_clinton.png` | clone_bill_clinton | `tools/gen_clone_children.py` | 192x272 frames (24x34 world px); rows front/side(right; flip for left)/back; cols 0-1 idle, 2-5 walk; scale 1/8, SpriteFrames via scripts/ruins/sheet_rig.gd | - |
-| `project/assets/ruins/clone_bill_gates.png` | clone_bill_gates | `tools/gen_clone_children.py` | 192x272 frames (24x34 world px); rows front/side(right; flip for left)/back; cols 0-1 idle, 2-5 walk; scale 1/8, SpriteFrames via scripts/ruins/sheet_rig.gd | - |
-| `project/assets/ruins/clone_epstein.png` | clone_epstein | `tools/gen_clone_children.py` | 192x272 frames (24x34 world px); rows front/side(right; flip for left)/back; cols 0-1 idle, 2-5 walk; scale 1/8, SpriteFrames via scripts/ruins/sheet_rig.gd | - |
-| `project/assets/ruins/clone_hillary_clinton.png` | clone_hillary_clinton | `tools/gen_clone_children.py` | 192x272 frames (24x34 world px); rows front/side(right; flip for left)/back; cols 0-1 idle, 2-5 walk; scale 1/8, SpriteFrames via scripts/ruins/sheet_rig.gd | - |
+| `project/assets/ruins/clone_bill_clinton.png` | clone_bill_clinton | `tools/gen_clone_children.py` | 192x272 frames (24x34 world px); rows 0-2 front/side(right; flip for left)/back: cols 0-1 idle, 2-5 walk; row 3 the floss, cols 0-5; row 4 the dab, cols 0-2 (front views, ZombieChild.dance); scale 1/8, SpriteFrames via scripts/ruins/sheet_rig.gd | - |
+| `project/assets/ruins/clone_bill_gates.png` | clone_bill_gates | `tools/gen_clone_children.py` | 192x272 frames (24x34 world px); rows 0-2 front/side(right; flip for left)/back: cols 0-1 idle, 2-5 walk; row 3 the floss, cols 0-5; row 4 the dab, cols 0-2 (front views, ZombieChild.dance); scale 1/8, SpriteFrames via scripts/ruins/sheet_rig.gd | - |
+| `project/assets/ruins/clone_epstein.png` | clone_epstein | `tools/gen_clone_children.py` | 192x272 frames (24x34 world px); rows 0-2 front/side(right; flip for left)/back: cols 0-1 idle, 2-5 walk; row 3 the floss, cols 0-5; row 4 the dab, cols 0-2 (front views, ZombieChild.dance); scale 1/8, SpriteFrames via scripts/ruins/sheet_rig.gd | - |
+| `project/assets/ruins/clone_hillary_clinton.png` | clone_hillary_clinton | `tools/gen_clone_children.py` | 192x272 frames (24x34 world px); rows 0-2 front/side(right; flip for left)/back: cols 0-1 idle, 2-5 walk; row 3 the floss, cols 0-5; row 4 the dab, cols 0-2 (front views, ZombieChild.dance); scale 1/8, SpriteFrames via scripts/ruins/sheet_rig.gd | - |
 | `project/assets/ruins/clone_polar_bear.png` | clone_polar_bear | `tools/gen_clone_children.py` | 192x176 frames (24x22 world px); rows front/side/back (cols 0-1 idle, 2-5 walk), row3 smeared idle 0-1 + chomp 2-3, row4 nap 0-1; scale 1/8 | - |
 | `project/assets/ruins/glow.png` | glow | `tools/gen_ruins_art.py` | 256x256 pickup glow, scale 0.15 | - |
 | `project/assets/ruins/gore_bone.png` | gore_bone | `tools/gen_clone_children.py` | 96x48 still, scale 0.1875 | - |
@@ -283,3 +284,13 @@ change. Rows are sorted by path.
 | `project/assets/ui/title/title_screen.png` | title_screen | `tools/gen_brand_art.py` | static; 2560x1440, title_screen_plain with the wordmark at the top | `prompts/image/ui/title/title_screen.md` |
 | `project/assets/ui/title/title_screen_plain.png` | title_screen_plain | `tools/gen_ui_art.py` (stand-in; composes canon prop_ship, prop_bunker, deco_*) | static; 2560x1440 (4x the 640x360 viewport), main menu background | `prompts/image/ui/title/title_screen_plain.md` |
 | `project/assets/ui/title/wordmark.png` | wordmark | `tools/gen_brand_art.py` (Fredoka, art/brand/fonts) | static; 1600x270 transparent, PERSISTINT in bubbly pastel letters (STYLE.md 4.8); main menu | - |
+| `project/audio/sfx/boing.wav` | boing | `tools/gen_clone_sfx.py` | 22.05 kHz 16-bit mono; the cub's pounce hop, 0.45 s | - |
+| `project/audio/sfx/burp.wav` | burp | `tools/gen_clone_sfx.py` | 22.05 kHz 16-bit mono; the cub after a clone, 0.4 s | - |
+| `project/audio/sfx/chomp.wav` | chomp | `tools/gen_clone_sfx.py` | 22.05 kHz 16-bit mono; three crunches, 0.4 s | - |
+| `project/audio/sfx/groan_1.wav` | groan_1 | `tools/gen_clone_sfx.py` | 22.05 kHz 16-bit mono; a clone's "Uuunnngh", 1.1 s: a vocalization for a bracketed bark sound (Voice.sfx_for) | - |
+| `project/audio/sfx/groan_2.wav` | groan_2 | `tools/gen_clone_sfx.py` | 22.05 kHz 16-bit mono; a clone's groan, 0.9 s (vocalization) | - |
+| `project/audio/sfx/groan_3.wav` | groan_3 | `tools/gen_clone_sfx.py` | 22.05 kHz 16-bit mono; a clone's groan, 1.3 s (vocalization) | - |
+| `project/audio/sfx/growl.wav` | growl | `tools/gen_clone_sfx.py` | 22.05 kHz 16-bit mono; a clone's "Grrrr", 0.75 s (vocalization for a bracketed g... sound) | - |
+| `project/audio/sfx/moan.wav` | moan | `tools/gen_clone_sfx.py` | 22.05 kHz 16-bit mono; a clone's "Mmmrrrh", 1.2 s (vocalization for a bracketed m... sound) | - |
+| `project/audio/sfx/snore.wav` | snore | `tools/gen_clone_sfx.py` | 22.05 kHz 16-bit mono; the napping cub, 2.3 s | - |
+| `project/audio/sfx/splat.wav` | splat | `tools/gen_clone_sfx.py` | 22.05 kHz 16-bit mono; the pounce's splat, 0.35 s | - |
