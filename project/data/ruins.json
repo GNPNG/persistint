@@ -23,38 +23,32 @@
 				{
 					"kind": "ruins_gift_shop",
 					"x": 160,
-					"y": 268,
-					"text": "GIFT SHOP (sacked)"
+					"y": 268
 				},
 				{
 					"kind": "ruins_deck_chairs",
 					"x": 330,
-					"y": 362,
-					"text": "deck chairs"
+					"y": 362
 				},
 				{
 					"kind": "ruins_ice_swan",
 					"x": 440,
-					"y": 272,
-					"text": "melted ice swan"
+					"y": 272
 				},
 				{
 					"kind": "ruins_slots",
 					"x": 700,
-					"y": 268,
-					"text": "slot machines, tilted"
+					"y": 268
 				},
 				{
 					"kind": "ruins_lifeboat",
 					"x": 770,
-					"y": 456,
-					"text": "lifeboat, stencilled LIFEBOAT 7"
+					"y": 456
 				},
 				{
 					"kind": "ruins_buffet",
 					"x": 175,
-					"y": 458,
-					"text": "buffet, reverent"
+					"y": 458
 				},
 				{
 					"kind": "ruins_porthole",
@@ -137,6 +131,30 @@
 					"kind": "ruins_barrel",
 					"x": 100,
 					"y": 412
+				},
+				{
+					"kind": "ruins_sign_shop",
+					"x": 160,
+					"y": 150,
+					"place": "wall"
+				},
+				{
+					"kind": "ruins_sign_slots",
+					"x": 700,
+					"y": 150,
+					"place": "wall"
+				},
+				{
+					"kind": "ruins_sign_buffet",
+					"x": 245,
+					"y": 160,
+					"place": "wall"
+				},
+				{
+					"kind": "ruins_sign_lifeboat",
+					"x": 905,
+					"y": 160,
+					"place": "wall"
 				}
 			]
 		},
@@ -515,62 +533,52 @@
 				{
 					"kind": "ruins_tank",
 					"x": 150,
-					"y": 263,
-					"text": "tank 1 (pink, empty)"
+					"y": 263
 				},
 				{
 					"kind": "ruins_tank",
 					"x": 240,
-					"y": 263,
-					"text": "tank 2"
+					"y": 263
 				},
 				{
 					"kind": "ruins_tank_duck",
 					"x": 330,
-					"y": 263,
-					"text": "tank 3 (duck)"
+					"y": 263
 				},
 				{
 					"kind": "ruins_tank",
 					"x": 420,
-					"y": 263,
-					"text": "tank 4"
+					"y": 263
 				},
 				{
 					"kind": "ruins_incubator",
 					"x": 600,
-					"y": 268,
-					"text": "incubators, warm"
+					"y": 268
 				},
 				{
 					"kind": "ruins_sequencer",
 					"x": 760,
-					"y": 265,
-					"text": "sequencer, cat sticker"
+					"y": 265
 				},
 				{
 					"kind": "ruins_centrifuge",
 					"x": 640,
-					"y": 372,
-					"text": "centrifuge, mid-spin forever"
+					"y": 372
 				},
 				{
 					"kind": "ruins_prep_bench",
 					"x": 210,
-					"y": 455,
-					"text": "prep benches, sterile, dusty"
+					"y": 455
 				},
 				{
 					"kind": "ruins_freezer",
 					"x": 800,
-					"y": 432,
-					"text": "freezer, humming"
+					"y": 432
 				},
 				{
 					"kind": "ruins_cub_basket",
 					"x": 150,
-					"y": 497,
-					"text": "cub basket, fluffy"
+					"y": 497
 				},
 				{
 					"kind": "ruins_poster",
@@ -592,14 +600,12 @@
 				{
 					"kind": "ruins_tank",
 					"x": 300,
-					"y": 382,
-					"text": ""
+					"y": 382
 				},
 				{
 					"kind": "ruins_tank",
 					"x": 390,
-					"y": 382,
-					"text": ""
+					"y": 382
 				},
 				{
 					"kind": "ruins_puddle",
@@ -623,6 +629,44 @@
 					"kind": "ruins_lab_cart",
 					"x": 690,
 					"y": 482
+				},
+				{
+					"kind": "ruins_plaque_1",
+					"x": 180,
+					"y": 292
+				},
+				{
+					"kind": "ruins_plaque_2",
+					"x": 270,
+					"y": 292
+				},
+				{
+					"kind": "ruins_plaque_3",
+					"x": 360,
+					"y": 292
+				},
+				{
+					"kind": "ruins_plaque_4",
+					"x": 450,
+					"y": 292
+				},
+				{
+					"kind": "ruins_sign_lab",
+					"x": 640,
+					"y": 150,
+					"place": "wall"
+				},
+				{
+					"kind": "ruins_sign_cold",
+					"x": 860,
+					"y": 160,
+					"place": "wall"
+				},
+				{
+					"kind": "ruins_sign_cubs",
+					"x": 70,
+					"y": 165,
+					"place": "wall"
 				}
 			]
 		},
