@@ -2,7 +2,8 @@
 """Copy rendered assets from prompts/**/assets/ to their game paths in project/.
 
 Each prompt file's front matter names `drop:` (where the rendered file is saved) and `game:`
-(where the game loads it). .mp4 drops are converted to .ogv (Theora) with ffmpeg.
+(where the game loads it). .mp4 drops are converted to .ogv (Theora) with ffmpeg, without
+sound unless the front matter says `audio: keep` (then the sound is kept as Vorbis).
 """
 import re
 import shutil
@@ -25,8 +26,10 @@ for prompt in sorted((ROOT / "prompts").rglob("*.md")):
         continue
     dest.parent.mkdir(parents=True, exist_ok=True)
     if src.suffix == ".mp4" and dest.suffix == ".ogv":
+        keep_audio = re.search(r"^audio: keep$", text, re.M) is not None
+        audio = ["-c:a", "libvorbis", "-q:a", "5"] if keep_audio else ["-an"]
         subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(src), "-c:v", "libtheora",
-                        "-q:v", "7", "-an", str(dest)], check=True)
+                        "-q:v", "7", *audio, str(dest)], check=True)
     else:
         shutil.copyfile(src, dest)
     print("synced", game.group(1))

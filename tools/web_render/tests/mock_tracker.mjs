@@ -1,12 +1,12 @@
 // A local stand-in for tools/render_tracker/tracker_webapp.gs: the same JSON contract (doGet
-// queue, doPost attempt_start / attempt_end, shared secret) and the same arithmetic (daily cap,
+// queue, doPost attempt_start / attempt_end / reset, shared secret) and the same arithmetic (daily cap,
 // min gap, quota cooldown, retry backoff, max retries, stale Rendering), on an injectable clock.
 // Like Apps Script, a POST is answered with a 302 to a URL that serves the result with GET.
 import http from 'node:http';
 
 const COUNTED = ['done', 'failed', 'refused', 'timeout', 'selector'];
 const RETRY = ['failed', 'timeout', 'selector'];
-const OUTCOMES = ['done', 'failed', 'quota', 'refused', 'timeout', 'selector', 'skipped'];
+const OUTCOMES = ['done', 'failed', 'quota', 'refused', 'timeout', 'selector', 'skipped', 'blocked'];
 const DEFAULT_QUOTA = { dailyCap: 20, minGap: 60, cooldown: 240, maxRetries: 3, backoff: 120 };
 const STALE_RENDERING_MIN = 120;
 
@@ -38,7 +38,7 @@ export async function startMockTracker({ secret, clock = { t: Date.now() }, quot
       if (a.kind !== kind) continue;
       if (COUNTED.includes(a.outcome) && day(a.ts) === day(t)) used++;
       if (a.outcome === 'quota' && (!lastQuota || a.ts > lastQuota)) lastQuota = a.ts;
-      if (!lastEnd || a.ended > lastEnd) lastEnd = a.ended;
+      if (a.outcome !== 'blocked' && (!lastEnd || a.ended > lastEnd)) lastEnd = a.ended;
     }
     let nextT = 0;
     if (lastQuota) nextT = Math.max(nextT, lastQuota.getTime() + q.cooldown * 60_000);
@@ -104,6 +104,7 @@ export async function startMockTracker({ secret, clock = { t: Date.now() }, quot
     else if (outcome === 'quota') { status = 'Quota'; next = new Date(t.getTime() + q.cooldown * 60_000); }
     else if (outcome === 'refused') status = 'Needs prompt edit';
     else if (outcome === 'skipped') status = 'Skipped';
+    else if (outcome === 'blocked') status = 'Pending';
     else {
       status = 'Failed';
       if (f < q.maxRetries) next = new Date(t.getTime() + q.backoff * 2 ** Math.max(0, f - 1) * 1000);
@@ -112,6 +113,20 @@ export async function startMockTracker({ secret, clock = { t: Date.now() }, quot
     if (outcome === 'done' && b.file) r.renderedFile = b.file;
     if (b.note && !r.notes.includes(b.note)) r.notes = r.notes ? `${r.notes}\n${b.note}` : b.note;
     return { ok: true, asset_id: b.asset_id, kind: r.kind, status, attempts: r.attempts, failures: f, next_eligible: iso(next) };
+  }
+
+  function reset(b) {
+    const r = find(b.kind, b.asset_id);
+    let relabeled = 0;
+    if (b.run_id && b.from_outcome && b.to_outcome) {
+      const to = String(b.to_outcome).toLowerCase();
+      if (!OUTCOMES.includes(to)) throw new Error(`unknown outcome: ${b.to_outcome}`);
+      for (const a of state.attempts) {
+        if (a.id === b.asset_id && a.kind === r.kind && a.run_id === b.run_id && a.outcome === String(b.from_outcome).toLowerCase()) { a.outcome = to; relabeled++; }
+      }
+    }
+    Object.assign(r, { status: 'Pending', nextEligible: null });
+    return { ok: true, asset_id: b.asset_id, kind: r.kind, status: 'Pending', relabeled };
   }
 
   const results = new Map();
@@ -143,6 +158,7 @@ export async function startMockTracker({ secret, clock = { t: Date.now() }, quot
           try {
             if (body.action === 'attempt_start') result = attemptStart(body);
             else if (body.action === 'attempt_end') result = attemptEnd(body);
+            else if (body.action === 'reset') result = reset(body);
             else result = { ok: false, error: `unknown action: ${body.action}` };
           } catch (e) { result = { ok: false, error: e.message }; }
         }

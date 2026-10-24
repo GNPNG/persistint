@@ -21,6 +21,10 @@ Modes
                            only, the sheet's Min Gap / Daily Cap / cooldown / retries, every
                            attempt logged to the sheet; exits when nothing is eligible
   --queue                  print the tracker's per-kind state and eligible rows; no browser
+  --reset id,id            make these tracker rows eligible again now (Status Pending, Next
+                           Eligible cleared); with --run RUNID also relabel that run's 'quota'
+                           attempts of these assets as 'blocked', which lifts the kind's quota
+                           cooldown they caused. No browser
   --assist                 like --render, but you click send/download yourself; the script fills
                            the prompt and saves whatever you download or what appears on the page
   --convert                convert captures kept beside their drop in another format (status
@@ -50,6 +54,10 @@ Options
   --gap SEC                batch: seconds between sends with --submit (default 20)
   --wait                   batch: with --submit, stay on each chat until it completes, download it,
                            delete that chat, then send the next (one at a time)
+  --run RUNID              with --reset: the run whose 'quota' attempts were really the check page
+
+If Google shows its "unusual traffic" check page (reCAPTCHA), the run stops at once (outcome
+"blocked", no cooldown). Solve it by hand with: node inspect.mjs --keep 300   then run again.
 `;
 
 const { values: a } = parseArgs({
@@ -57,6 +65,7 @@ const { values: a } = parseArgs({
     status: { type: 'boolean' }, login: { type: 'boolean' }, render: { type: 'boolean' },
     assist: { type: 'boolean' }, 'check-selectors': { type: 'boolean' }, convert: { type: 'boolean' },
     tracker: { type: 'boolean' }, local: { type: 'boolean' }, queue: { type: 'boolean' },
+    reset: { type: 'string' }, run: { type: 'string' },
     kind: { type: 'string', default: 'all' }, only: { type: 'string' }, force: { type: 'boolean' },
     'dry-run': { type: 'boolean' }, limit: { type: 'string' }, delay: { type: 'string' },
     'pause-on-error': { type: 'boolean' }, sync: { type: 'boolean' },
@@ -83,7 +92,7 @@ try {
 const selectorsFile = a.selectors ? path.resolve(a.selectors) : SELECTORS_PATH;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const trackerConfigured = !!settings.trackerUrl;
-if ((a.tracker || a.queue) && !trackerConfigured) {
+if ((a.tracker || a.queue || a.reset) && !trackerConfigured) {
   console.error('No render tracker configured: set trackerUrl and trackerSecret in tools/web_render/config.local.json\n' +
     '(or WEB_RENDER_TRACKER_URL / WEB_RENDER_TRACKER_SECRET). See tools/render_tracker/DEPLOY.md.');
   process.exit(2);
@@ -93,6 +102,9 @@ if (a.tracker && a.local) { console.error('--tracker and --local exclude each ot
 const trackerMode = !!a.tracker || (!!a.render && !a.assist && trackerConfigured && !a.local);
 const RUNS_DIR = process.env.WEB_RENDER_RUNS_DIR || path.join(WEB_RENDER_DIR, 'runs');   // tests point it elsewhere
 const ATTEMPTS_JSONL = path.join(RUNS_DIR, 'attempts.jsonl');
+const BLOCKED_SUMMARY = 'Stopped: Google is showing its "unusual traffic" check page (reCAPTCHA). Nothing else was tried.\n' +
+  '  Solve it by hand in the renderer\'s Chrome profile:  node inspect.mjs --keep 300   (tick the box, then wait for Gemini to load)\n' +
+  '  Then run again. The asset(s) got no cooldown; the attempt is logged with outcome "blocked".';
 const newRunId = () => `${new Date().toISOString().replace(/[:.]/g, '-')}-${process.pid}`;
 
 async function makeTrackerClient() {
@@ -112,16 +124,48 @@ async function runBatch(tasks) {
   };
   const surfaceOf = (t) => selectors.surfaces[selectors.kinds[t.kind]];
   const file = path.join(RUNS_DIR, 'batch.json');
+  if (a['dry-run']) {
+    // No browser: what --submit would send (assets that have no recorded chat yet, --limit
+    // applied) and what --harvest would reopen.
+    let rec = {};
+    try { rec = JSON.parse(fs.readFileSync(file, 'utf8')); } catch { /* no batch file yet */ }
+    if (a.submit) {
+      let todo = selectTasks(tasks, { kind: a.kind, only: a.only, force: a.force }).filter((t) => !rec[t.id]?.chat);
+      if (a.limit !== undefined) todo = todo.slice(0, Number(a.limit));
+      console.log(`dry run: --submit would send ${todo.length}`);
+      for (const t of todo) console.log(`  [${t.kind}] ${t.id} -> ${t.drop}`);
+    }
+    if (a.harvest) {
+      const open = Object.entries(rec).filter(([k, v]) => !k.startsWith('_') && v?.chat && !v.harvested);
+      console.log(`dry run: --harvest would reopen ${open.length}`);
+      for (const [k, v] of open) console.log(`  ${k}  ${v.chat}`);
+    }
+    return;
+  }
   const b = await getBrowser(settings);
   const session = new Session(b.browser, settings);
   await session.init();
   try {
     if (a.submit) {
-      const todo = selectTasks(tasks, { kind: a.kind, only: a.only, force: a.force });
+      let todo = selectTasks(tasks, { kind: a.kind, only: a.only, force: a.force });
+      if (a.limit !== undefined) {
+        // --limit counts new sends only: assets that already have a chat are skipped by submitAll.
+        let rec = {};
+        try { rec = JSON.parse(fs.readFileSync(file, 'utf8')); } catch { /* no batch file yet */ }
+        todo = todo.filter((t) => !rec[t.id]?.chat).slice(0, Number(a.limit));
+      }
       const gap = a.gap === undefined ? 20 : Number(a.gap);
       await submitAll(session, { tasks: todo, surfaceOf, promptOf: (t) => drivers[t.kind].preparePrompt(t, surfaceOf(t)), file, gapMs: gap * 1000, wait: !!a.wait });
     }
     if (a.harvest) await harvestAll(session, { tasks: a.only ? tasks.filter((t) => a.only.split(',').map((x) => x.trim()).includes(t.id)) : tasks, surfaceOf, file });
+  } catch (e) {
+    if (!e.blocked) throw e;
+    console.log('Stopped: Google is showing its "unusual traffic" check page (reCAPTCHA). Nothing else was tried.\n' +
+      (settings.browserURL
+        ? '  Solve it by hand in the attached Chrome window (tick the box, then wait for Gemini to load).\n'
+        : '  Solve it by hand in the renderer\'s Chrome profile:  node inspect.mjs --keep 300   (tick the box, then wait for Gemini to load)\n') +
+      '  Then run the same command again: chats already recorded in runs/batch.json are kept, and no chat was deleted.');
+    process.exitCode = 1;
   } finally {
     // Attach mode reuses the window's tab: leave it open; only disconnect.
     if (!settings.browserURL && session.page && !session.page.isClosed()) await session.page.close().catch(() => {});
@@ -162,6 +206,18 @@ async function main() {
     const q = await (await makeTrackerClient()).getQueue({ kind: a.kind === 'all' ? null : a.kind, all: true });
     console.log(`Tracker at ${q.now}:\n${describeQueue(q, kinds)}`);
     for (const r of q.rows) if (kinds.includes(r.kind)) console.log(`  ${r.kind.padEnd(6)} ${String(r.asset_id).padEnd(38)} ${r.status}${r.attempts ? `, ${r.attempts} attempt(s)` : ''}`);
+    return;
+  }
+
+  if (a.reset) {
+    const ids = a.reset.split(',').map((s) => s.trim()).filter(Boolean);
+    const kindOf = new Map(discoverTasks(undefined, { warn: () => {} }).map((t) => [t.id, t.kind]));
+    const client = await makeTrackerClient();
+    for (const id of ids) {
+      const r = await client.reset({ asset_id: id, kind: kindOf.get(id) ?? null },
+        a.run ? { runId: a.run, from: 'quota', to: 'blocked' } : {});
+      console.log(`  ${id}: ${r.status}${r.relabeled ? `, ${r.relabeled} attempt(s) of run ${a.run} relabeled quota -> blocked` : ''}`);
+    }
     return;
   }
 
@@ -265,6 +321,7 @@ async function main() {
   const ok = runLog.results.filter((r) => r.status === 'ok');
   console.log(`\nDone: ${ok.length} saved, ${failed.length} failed, ${runLog.results.length - ok.length - failed.length} skipped. Run log: ${path.relative(ROOT, runLogPath)}; attempts: ${path.relative(ROOT, ATTEMPTS_JSONL)}`);
   for (const f of failed) console.log(`  failed ${f.id} at ${f.step}: ${f.error.split('\n')[0]}${f.debugDir ? `  (debug: ${f.debugDir})` : ''}`);
+  if (runLog.results.some((r) => r.outcome === 'blocked')) console.log(BLOCKED_SUMMARY);
   if (a.sync && ok.length) {
     const r = spawnSync('python3', [path.join(ROOT, 'tools/sync_rendered_assets.py')], { stdio: 'inherit' });
     if (r.status !== 0) process.exitCode = 1;
@@ -305,6 +362,8 @@ async function runTracker(tasks) {
     return;
   }
 
+  // One Chrome and one Session for the whole run, started on the first render: a quota on one
+  // kind, or switching kinds, only opens a new tab (Session.newPage), never a new browser.
   let b = null, session = null;
   const renderOne = async (task) => {
     if (!session) {
@@ -362,7 +421,7 @@ async function runTracker(tasks) {
     const r = spawnSync('python3', [path.join(ROOT, 'tools/sync_rendered_assets.py')], { stdio: 'inherit' });
     if (r.status !== 0) process.exitCode = 1;
   }
-  if (out.results.some((r) => !['done', 'skipped', 'quota'].includes(r.outcome))) process.exitCode = 1;
+  if (out.reason === 'blocked' || out.results.some((r) => !['done', 'skipped', 'quota'].includes(r.outcome))) process.exitCode = 1;
 }
 
 function printTrackerSummary(out, T, runLogRel) {
@@ -370,6 +429,7 @@ function printTrackerSummary(out, T, runLogRel) {
   for (const r of out.results) by[r.outcome] = (by[r.outcome] || 0) + 1;
   console.log(`\nDone: ${Object.entries(by).map(([k, v]) => `${v} ${k}`).join(', ') || 'nothing rendered'}. Run log: ${runLogRel}`);
   for (const r of out.results) if (r.error) console.log(`  ${r.outcome} ${r.id}: ${r.error.slice(0, 200)}${r.debugDir ? `  (debug: ${r.debugDir})` : ''}`);
+  if (out.reason === 'blocked') { console.log(BLOCKED_SUMMARY); return; }
   if (out.stopped?.length) console.log(`Stopped on a usage limit: ${out.stopped.join(', ')}.`);
   if (out.capped?.length) console.log(`Daily cap used up: ${out.capped.join(', ')} (resets at midnight in the sheet's time zone).`);
   if (out.reason === 'later') console.log(`Next eligible: ${T.fmtTime(out.nextEligible)} (${out.wakes[0].kind}, ${out.wakes[0].why}). Run again then.`);
