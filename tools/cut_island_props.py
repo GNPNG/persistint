@@ -1,6 +1,6 @@
 """Cut island props (buildings, fences, signs, temple icons) from the canon sheets.
 
-Usage: python3 -I tools/cut_island_props.py [name ...]   (no names: cut every prop)
+Usage: python3 -I tools/cut_island_props.py
 Reads project/data/island_props.json: each prop names a sheet under art/canon, a crop
 "WxH+X+Y" in full-resolution pixels, and a background mode:
   white  - clear near-white background (edge-connected, plus large enclosed gaps)
@@ -9,7 +9,6 @@ Reads project/data/island_props.json: each prop names a sheet under art/canon, a
 Output: project/assets/canon/<name>.png scaled to "height" px tall.
 """
 import json
-import sys
 from pathlib import Path
 
 import numpy as np
@@ -69,8 +68,6 @@ def cut(spec):
 
 OUT.mkdir(parents=True, exist_ok=True)
 for name, spec in CFG["props"].items():
-    if sys.argv[1:] and name not in sys.argv[1:]:
-        continue
     im = cut(spec)
     im.save(OUT / f"{name}.png")
     print(name, im.size)
