@@ -16,7 +16,7 @@ Outputs, all in project/assets/florida/:
       960x540 world px (3840x2160 texture) ground only (sea, sand, lawn, paths, floors, the dock and the tank wall);
       everything a person can stand in front of or behind is a prop below.
   Props (the bottom edge is where the prop stands; scenes y-sort them with the people):
-      prop_palm_a, prop_palm_b, prop_tree_mango, prop_tree_key_lime, prop_bush_hibiscus,
+      prop_palm_a, prop_palm_b (76 wide), prop_tree_mango, prop_tree_key_lime, prop_bush_hibiscus,
       prop_bush_bougainvillea, prop_dune_grass, prop_umbrella, prop_rowboat, prop_aquarium,
       prop_garden_arch, prop_sign_stable, prop_sandcastle, prop_house, prop_fence_picket,
       prop_birdbath, prop_bench, prop_palm_potted, prop_barn, prop_fence_paddock, prop_hay,
@@ -54,49 +54,84 @@ def prop(name, w, h, draw):
 # ================================================================== trees and plants
 
 def palm_drawing(lean=1.0, fronds_seed=0):
+    """A coconut palm: one smooth tapered trunk curving up (ring marks, a highlight down the
+    lit side, a small face), a crown of saw-edged fronds and a cluster of coconuts."""
     def draw(p, w, h):
         base_x = w / 2 - lean * 6
         top_x, top_y = w / 2 + lean * 8, 26
-        # trunk: stacked rings along a curve, bottom to top
-        segs = 11
-        for i in range(segs, -1, -1):
-            t = i / segs
-            x = base_x + (top_x - base_x) * (t ** 1.6)
-            y = h - 3 - (h - 3 - top_y) * t
-            r = 4.6 - t * 1.4
-            p.ell(x, y, r + 0.6, 3.2, fd.mix(fd.COCONUT, WHITE, 0.25), 0.9)
-            p.arc(x, y + 0.4, r - 0.6, 2.0, 200, 340, fd.mix(fd.COCONUT, INK, 0.2), 0.5)
-        # little face on the trunk
-        t = 0.42
-        p.face(base_x + (top_x - base_x) * t ** 1.6, h - 3 - (h - 3 - top_y) * t, 0.5)
-        # fronds: long leaves fanning out from the crown
+        bark = fd.mix(fd.COCONUT, WHITE, 0.32)
+        bark_dk = fd.mix(fd.COCONUT, INK, 0.12)
+
+        def spine(t):
+            return base_x + (top_x - base_x) * (t ** 1.6), h - 3 - (h - 3 - top_y) * t
+
+        def radius(t):
+            return 4.8 - t * 1.9 + (1 - t) ** 6 * 1.6  # flares a little at the foot
+
+        n = 24
+        left, right = [], []
+        for i in range(n + 1):
+            t = i / n
+            x, y = spine(t)
+            x2, y2 = spine(min(1, t + 0.01))
+            dx, dy = x2 - x, y2 - y
+            ln = math.hypot(dx, dy) or 1
+            nx, ny = -dy / ln, dx / ln
+            r = radius(t)
+            left.append((x - nx * r, y - ny * r))
+            right.append((x + nx * r, y + ny * r))
+        p.ell(base_x, h - 2.6, 9, 2.4, fd.alpha(INK, 0x30), 0)  # shadow
+        p.poly(left + list(reversed(right)), bark, 1.0)
+        # lit side
+        hi = [(x + (rx - x) * 0.18, y) for (x, y), (rx, _) in zip(left[2:-2], right[2:-2])]
+        p.line(hi, fd.alpha(WHITE, 0x70), 1.1)
+        # ring marks: shallow chevrons across the trunk
+        for i in range(1, 12):
+            t = i / 12
+            x, y = spine(t)
+            r = radius(t) - 0.5
+            p.line([(x - r, y - 0.7), (x, y + 0.6), (x + r, y - 0.7)], bark_dk, 0.55)
+        t = 0.38
+        fx_, fy_ = spine(t)
+        p.face(fx_, fy_ - 1, 0.5)
+        # fronds: saw-edged leaves fanning out and drooping from the crown
         rnd = random.Random(fronds_seed)
-        for a in (-160, -128, -95, -62, -28, 8, 190, 150):
-            a += rnd.uniform(-6, 6)
-            L = rnd.uniform(20, 25)
+        fronds = []
+        for a in (-172, -140, -108, -76, -44, -12, 18, 200, 160):
+            a += rnd.uniform(-5, 5)
+            fronds.append((a, rnd.uniform(24, 30)))
+        fronds.sort(key=lambda f: -math.sin(math.radians(f[0])))  # back (upward) fronds first
+        for a, L in fronds:
             rad = math.radians(a)
-            ex, ey = top_x + math.cos(rad) * L, top_y + math.sin(rad) * L * 0.75 + 6
-            mx, my = top_x + math.cos(rad) * L * 0.55, top_y + math.sin(rad) * L * 0.42 - 3
-            nx, ny = -math.sin(rad), math.cos(rad)
+            droop = 9 + 5 * abs(math.cos(rad))
+            ex, ey = top_x + math.cos(rad) * L, top_y + math.sin(rad) * L * 0.6 + droop
+            mx, my = top_x + math.cos(rad) * L * 0.55, top_y + math.sin(rad) * L * 0.5 - 4
+            col = "#79cf86" if math.sin(rad) < -0.3 else "#62bd74"
 
             def bez(t):
                 return ((1 - t) ** 2 * top_x + 2 * (1 - t) * t * mx + t * t * ex,
                         (1 - t) ** 2 * top_y + 2 * (1 - t) * t * my + t * t * ey)
-            leaf = [(top_x, top_y)]
-            for k in range(1, 9):
-                bx, by = bez(k / 8)
-                wd = math.sin(k / 8 * math.pi) * 4.2
-                leaf.append((bx + nx * wd, by + ny * wd))
-            for k in range(8, 0, -1):
-                bx, by = bez(k / 8)
-                wd = math.sin(k / 8 * math.pi) * 1.2
-                leaf.append((bx - nx * wd, by - ny * wd))
-            col = "#7fd08a" if a < -40 or a > 100 else "#6cc27c"
-            p.poly(leaf, col, 0.9)
-            p.line([(top_x, top_y), (mx, my), (ex, ey)], fd.mix(col, INK, 0.3), 0.45)
-        for dx, dy in ((-2.6, 2.6), (2.2, 3.2), (0, 4.6)):
-            p.ell(top_x + dx, top_y + dy, 2.6, 2.6, "#a07850", 0.8)
-            p.ell(top_x + dx - 0.8, top_y + dy - 0.9, 0.8, 0.7, "#c8a070", 0)
+            steps = 26
+            up, down = [], []
+            for k in range(steps + 1):
+                t = k / steps
+                bx, by = bez(t)
+                bx2, by2 = bez(min(1, t + 0.02))
+                dx, dy = bx2 - bx, by2 - by
+                ln = math.hypot(dx, dy) or 1
+                nx, ny = -dy / ln, dx / ln
+                base_w = math.sin(min(1, t * 1.15) * math.pi) * 4.6 + 0.4
+                tooth = 1.0 if k % 2 else 0.74  # leaflet tips
+                wd = base_w * (tooth if 0 < k < steps else 1)
+                up.append((bx + nx * wd, by + ny * wd))
+                down.append((bx - nx * wd * 0.9, by - ny * wd * 0.9))
+            p.poly(up + list(reversed(down)), col, 0.85)
+            rib = [bez(k / 8) for k in range(9)]
+            p.line(rib, fd.mix(col, INK, 0.28), 0.5)
+            p.line([(x + 0.0, y - 0.9) for x, y in rib[1:6]], fd.alpha(WHITE, 0x60), 0.7)
+        for dx, dy in ((-2.6, 3.0), (2.4, 3.4), (0, 5.2)):
+            p.ell(top_x + dx, top_y + dy, 2.7, 2.7, "#a07850", 0.8)
+            p.ell(top_x + dx - 0.8, top_y + dy - 0.9, 0.85, 0.7, "#c8a070", 0)
     return draw
 
 
@@ -864,8 +899,8 @@ def stable_bg():
 # ================================================================== main
 
 def main():
-    prop("prop_palm_a", 56, 96, palm_drawing(1.0, 1))
-    prop("prop_palm_b", 56, 88, palm_drawing(-1.0, 2))
+    prop("prop_palm_a", 76, 96, palm_drawing(1.0, 1))
+    prop("prop_palm_b", 76, 88, palm_drawing(-1.0, 2))
     prop("prop_tree_mango", 48, 58, fruit_tree(fd.LEAF_MINT, fd.MANGO, "#ffd9a0", "#7fbf7a"))
     prop("prop_tree_key_lime", 48, 58, fruit_tree("#9ddc8e", fd.KEY_LIME, "#f4ffd0", "#6fb06a"))
     prop("prop_bush_hibiscus", 34, 26, bush(_hib, fd.HIBISCUS))
