@@ -1,7 +1,7 @@
 """Draw the island tile atlas (32 px map cells, stored at 128 px): village ground, coast, and the temple interior.
 
 Usage: python3 -I tools/gen_island_tiles.py
-Inputs: none (palette hexes from prompts/STYLE.md 4.3-4.4; every tile seeds its RNG with the
+Inputs: none (palette hexes from dev/STYLE.md 4.3-4.4; every tile seeds its RNG with the
 crc32 of its name, so the output is the same on every run).
 Outputs:
   project/assets/tiles/island_tiles.png   the atlas

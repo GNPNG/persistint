@@ -5,7 +5,7 @@ Usage: python3 -I tools/gen_stage_hosts.py
 
 The shows' celebrities are named in the game text (data/cast.json, through the nameplate under
 each figure, scripts/minigames/stage_figure.gd); the art never depicts a real person
-(prompts/STYLE.md 7.5). So each host here is a generic canon kawaii figure: the canon paper-doll
+(dev/STYLE.md 7.5). So each host here is a generic canon kawaii figure: the canon paper-doll
 body turnaround's front view (the same canon base the Florida people stand on, tools/
 gen_florida_cast.py, which supplies the drawing kit) with plain made-up hair and a show outfit in
 the cruise palette, no likeness intended or attempted. A role, not a person:

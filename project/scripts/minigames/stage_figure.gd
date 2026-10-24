@@ -3,7 +3,7 @@ extends Control
 ## StageFigure — someone standing on a cruise show's stage: a host stand-in figure (a 4-frame
 ## idle sheet from tools/gen_stage_hosts.py: rest, breath, rest, blink) or the player's paper
 ## doll, with a nameplate over its head. The art is a generic canon kawaii figure; who it is comes
-## only from the nameplate, read from data/cast.json (prompts/STYLE.md 7.5: real people are named
+## only from the nameplate, read from data/cast.json (dev/STYLE.md 7.5: real people are named
 ## in the text, never drawn as themselves).
 ## place() puts the figure's feet at a point of the 640x360 screen, scaled to a height there.
 

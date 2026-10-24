@@ -1,7 +1,7 @@
 """Draw the temple's small furnishings: candle stands, flower urns and twinkling sparkles.
 
 Usage: python3 -I tools/gen_temple_props.py
-Inputs: none (palette hexes from prompts/STYLE.md 4.3-4.4 and 6.1; fixed seed).
+Inputs: none (palette hexes from dev/STYLE.md 4.3-4.4 and 6.1; fixed seed).
 Outputs (project/assets/temple/; sizes in world px, each file stored at 4x and shown by the
 map builder at scale 0.25, so a 24x44 frame is 96x176 file px):
   temple_candles.png  sprite sheet, frame 24x44, 1 row (idle) x 4 columns (flame flicker);

@@ -1,7 +1,7 @@
 """Draw the doormat-and-arrow marker that every exit door shows (scripts/door.gd).
 
 Usage: python3 -I tools/gen_door_marker.py
-Inputs: none (palette hexes from prompts/STYLE.md 4.3-4.4).
+Inputs: none (palette hexes from dev/STYLE.md 4.3-4.4).
 Output: project/assets/common/door_marker.png, a sprite sheet of 160x192 frames (40x48 world
 px stored at 4x; door.gd shows it at scale 0.25):
   row 0  "open"    8 frames: a pink pill doormat with a white heart, the arrow above it bobbing

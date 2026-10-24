@@ -1,6 +1,7 @@
 ---
 id: studio_intro
 tool: Gemini Veo
+rendered: author
 drop: prompts/video/ui/assets/studio_intro.mp4
 game: project/assets/video/studio_intro.ogv
 audio: keep

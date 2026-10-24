@@ -3,7 +3,7 @@ rooms' data names by "kind" (data/ruins.json, rooms -> props), the Forbidden Kno
 icons, a soft glow and a screen vignette.
 
 Usage: python3 -I tools/gen_ruins_art.py
-Inputs: none (palette hexes below come from prompts/STYLE.md; every random draw is seeded).
+Inputs: none (palette hexes below come from dev/STYLE.md; every random draw is seeded).
 Outputs, all under project/assets/ruins/:
 Every file is drawn at D = 8 texels per world pixel (four times the 1280x720 window's
 2x-camera display size); the game shows it at scale 1/8 with mipmapped linear filtering, so
@@ -1145,7 +1145,7 @@ def icons():
 
 
 # ---------------------------------------------------------------- in-world signage (no lettering)
-# Signs say what they mark with a picture, never words (prompts/STYLE.md 4.11): hanging boards on
+# Signs say what they mark with a picture, never words (dev/STYLE.md 4.11): hanging boards on
 # the ship's walls, little plaques on posts in front of the clone tanks.
 
 def hanging_sign(name, board, draw_icon, w=40, h=30):

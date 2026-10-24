@@ -54,7 +54,7 @@ Tools (placeholders by role; suggested default paths in brackets; section 9 give
 bindings):
 
 - `{bible}`: the world-and-style bible, one Markdown file usable with no other context
-  [`prompts/STYLE.md`].
+  [`dev/STYLE.md`].
 - `{checker}`: a script that runs a mechanical pre-flight check of every leaf prompt file and exits
   non-zero on any failure [`tools/check_prompts.py`].
 - `{sync}`: a script that copies rendered drops into the game project, transcodes video for the
@@ -301,9 +301,9 @@ REAL_IDS = [...]                                                      # cast ids
 
 ## 9. Reference implementation in persistint
 
-- Bible: `prompts/STYLE.md` (11,842 words by `wc -w` on 2026-10-23).
+- Bible: `dev/STYLE.md` (11,842 words by `wc -w` on 2026-10-23).
   Written in commit `47acfe7`, after an earlier style guide `998da48`; sources listed in its
-  section 13 (`docs/DESIGN.md`, the novel's Story Structure, `art/canon/`, `project/data/`,
+  section 13 (`dev/DESIGN.md`, the novel's Story Structure, `art/canon/`, `project/data/`,
   `project/dialogue/`, art generators in `tools/`). Palette hexes sampled from `project/assets/`
   and the generator scripts (section 4.4); castes from the canon caste sheet (section 7.2).
   Preambles and world lines: section 11; template and checklist: section 12.
@@ -338,7 +338,7 @@ REAL_IDS = [...]                                                      # cast ids
   `5c80263`. "Veo" is the label, not the model used.
 - Commit gate: nothing enforces it. No git hook (including `.beads/hooks`, the configured
   `core.hooksPath`) or CI job calls `tools/check_prompts.py`; only `prompts/README.md` and
-  `prompts/STYLE.md` tell you to run it. It is a manual step.
+  `dev/STYLE.md` tell you to run it. It is a manual step.
 - Known doc error: the internal cross-reference in STYLE 1.2 points to "section 7.4" for depicting
   real people; the rule is in section 7.5.
 - Not recorded in the repo: the planted-violation run (7 violations, all reported) and the Gemini

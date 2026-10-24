@@ -27,7 +27,7 @@ Outputs (all static, no animation frames):
 A Gemini render synced to either stand-in path by tools/sync_rendered_assets.py replaces it with
 no code change (the scenes load whatever PNG is at that path, scaled to cover the screen).
 
-Style: prompts/STYLE.md 4.3/4.4 -- warm-brown outline #8a5a5a, cream #fdf6e3, flat pastel fills
+Style: dev/STYLE.md 4.3/4.4 -- warm-brown outline #8a5a5a, cream #fdf6e3, flat pastel fills
 with one highlight. Noise uses fixed seeds.
 
 Resolution: shapes are laid out in logical units of the 640x360 viewport (project.godot

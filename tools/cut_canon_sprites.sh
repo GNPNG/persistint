@@ -2,12 +2,12 @@
 # Cut canon sprites from the author's Gemini sheets at their source resolution.
 #
 # Usage: tools/cut_canon_sprites.sh [caste_sheet.jpg]
-#   (default sheet: art/canon/gemini/Gemini_Generated_Image_4bzs3l4bzs3l4bzs.jpg)
+#   (default sheet: dev/art/canon-gemini/Gemini_Generated_Image_4bzs3l4bzs3l4bzs.jpg)
 # Inputs:
-#   art/canon/gemini/Gemini_Generated_Image_4bzs*.jpg  caste turnaround sheet; boxes are the
+#   dev/art/canon-gemini/Gemini_Generated_Image_4bzs*.jpg  caste turnaround sheet; boxes are the
 #                                                      sheet's connected components
 #                                                      (3 rows x 9 figures, ~440 px tall)
-#   art/canon/gemini/Gemini_Generated_Image_481b*.jpg  forbidden-instruments sheet
+#   dev/art/canon-gemini/Gemini_Generated_Image_481b*.jpg  forbidden-instruments sheet
 # Outputs (project/assets/canon/):
 #   npc_<caste>_<view>.png  caste NPCs, views front/side/back; npc_<caste>.png is the front view
 #   prop_scroll.png         the tide/moon scroll (a Forbidden Knowledge pickup in the ruins)
@@ -17,8 +17,8 @@
 # ImageMagick 7.1.2-31 and the versions in tools/requirements-art.txt).
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-CASTES="${1:-$(ls "$ROOT"/art/canon/gemini/Gemini_Generated_Image_4bzs*.jpg)}"
-INSTRUMENTS="$(ls "$ROOT"/art/canon/gemini/Gemini_Generated_Image_481b*.jpg)"
+CASTES="${1:-$(ls "$ROOT"/dev/art/canon-gemini/Gemini_Generated_Image_4bzs*.jpg)}"
+INSTRUMENTS="$(ls "$ROOT"/dev/art/canon-gemini/Gemini_Generated_Image_481b*.jpg)"
 OUT="$ROOT/project/assets/canon"
 mkdir -p "$OUT"
 

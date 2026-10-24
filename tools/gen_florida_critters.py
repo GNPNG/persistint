@@ -2,7 +2,7 @@
 
 Usage: python3 -I tools/gen_florida_critters.py
 The canon sheets have no animals of the Keys, so these are drawn in the canon sticker look of
-prompts/STYLE.md 4.3: warm-brown outline #8a5a5a, flat fills with one highlight, dot eyes with a
+dev/STYLE.md 4.3: warm-brown outline #8a5a5a, flat fills with one highlight, dot eyes with a
 catch-light, pink blush, a small smile; Florida colours from 4.4 (coral, sea blue, foam).
 Drawn at 8x world size and LANCZOS-resized to tools/florida_draw.D = 4 texture px per world
 px. Deterministic: no randomness.
