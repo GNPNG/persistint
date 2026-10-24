@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ptjwmlvrb303"
-path="res://.godot/imported/mirror.png-d76ab4fd512e3d7bce3d35b7f71215ef.ctex"
+uid="uid://cibyk4807ouc0"
+path="res://.godot/imported/temple_plinth.png-0256c675d064f6f8b158aae622371bc7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/placeholder/mirror.png"
-dest_files=["res://.godot/imported/mirror.png-d76ab4fd512e3d7bce3d35b7f71215ef.ctex"]
+source_file="res://assets/temple/temple_plinth.png"
+dest_files=["res://.godot/imported/temple_plinth.png-0256c675d064f6f8b158aae622371bc7.ctex"]
 
 [params]
 
@@ -23,7 +23,7 @@ compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=false
+mipmaps/generate=true
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""

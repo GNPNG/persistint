@@ -1,11 +1,18 @@
 # Assets
 
-Every art file the game loads, the generator that writes it and how it is laid out. Re-run the
-generator to reproduce a file; a Gemini render synced to a prompt's `game:` path replaces the
-stand-in there with no code change.
+Every art file the game loads, the generator that writes it and how it is laid out. Every
+generator runs as `python3 -I tools/<generator>` from the repo root and reproduces its files.
+A Gemini render synced to a prompt's `game:` path replaces the stand-in there with no code
+change. Rows are sorted by path.
 
 | Path | Id | Generator | Frame layout | Stands in for prompt |
 |---|---|---|---|---|
+| `project/assets/canon/deco_flowers.png` | deco_flowers | `tools/gen_island_deco.py` | single 144x88 (4x of 36x22 world px), foot at bottom | - |
+| `project/assets/canon/deco_heart.png` | deco_heart | `tools/cut_island_props.py` (dev/art PERSISTINT overview, crop in project/data/island_props.json) | single 39x39 at source resolution, shown 14 px tall, foot at bottom | - |
+| `project/assets/canon/deco_sparkle.png` | deco_sparkle | `tools/cut_island_props.py` (dev/art PERSISTINT overview, crop in project/data/island_props.json) | single 37x41 at source resolution, shown 14 px tall, foot at bottom | - |
+| `project/assets/canon/deco_tree_a.png` | deco_tree_a | `tools/gen_island_deco.py` | single 160x208 (4x of 40x52 world px), foot at bottom | - |
+| `project/assets/canon/deco_tree_b.png` | deco_tree_b | `tools/gen_island_deco.py` | single 160x208 (4x of 40x52 world px), foot at bottom | - |
+| `project/assets/canon/deco_tree_c.png` | deco_tree_c | `tools/gen_island_deco.py` | single 160x208 (4x of 40x52 world px), foot at bottom | - |
 | `project/assets/canon/npc_barren.png` | npc_barren | `tools/cut_canon_sprites.sh` (canon caste sheet 4bzs) | 263x441 canon cut at source resolution, barren NPC front view (the default the game loads) | - |
 | `project/assets/canon/npc_barren_back.png` | npc_barren_back | `tools/cut_canon_sprites.sh` (canon caste sheet 4bzs) | 263x440 canon cut at source resolution, barren NPC back view | - |
 | `project/assets/canon/npc_barren_front.png` | npc_barren_front | `tools/cut_canon_sprites.sh` (canon caste sheet 4bzs) | 263x441 canon cut at source resolution, barren NPC front view | - |
@@ -26,7 +33,27 @@ stand-in there with no code change.
 | `project/assets/canon/npc_priestess_back.png` | npc_priestess_back | `tools/cut_canon_sprites.sh` (canon caste sheet 4bzs) | 224x441 canon cut at source resolution, priestess NPC back view | - |
 | `project/assets/canon/npc_priestess_front.png` | npc_priestess_front | `tools/cut_canon_sprites.sh` (canon caste sheet 4bzs) | 216x437 canon cut at source resolution, priestess NPC front view | - |
 | `project/assets/canon/npc_priestess_side.png` | npc_priestess_side | `tools/cut_canon_sprites.sh` (canon caste sheet 4bzs) | 207x439 canon cut at source resolution, priestess NPC side view | - |
+| `project/assets/canon/prop_bunker.png` | prop_bunker | `tools/cut_island_props.py` (canon sheet i7kl, crop in project/data/island_props.json) | single 890x790 at source resolution, shown 120 px tall, foot at bottom | - |
+| `project/assets/canon/prop_calendar.png` | prop_calendar | `tools/cut_island_props.py` (canon sheet 481b, crop in project/data/island_props.json) | single 764x669 at source resolution, shown 40 px tall, foot at bottom | - |
+| `project/assets/canon/prop_fence_a.png` | prop_fence_a | `tools/cut_island_props.py` (canon sheet i7kl, crop in project/data/island_props.json) | single 619x374 at source resolution, shown 34 px tall, foot at bottom | - |
+| `project/assets/canon/prop_fence_b.png` | prop_fence_b | `tools/cut_island_props.py` (canon sheet i7kl, crop in project/data/island_props.json) | single 612x364 at source resolution, shown 34 px tall, foot at bottom | - |
+| `project/assets/canon/prop_icon_queen_mother.png` | prop_icon_queen_mother | `tools/cut_island_props.py` (dev/art PERSISTINT overview, crop in project/data/island_props.json) | single 269x293 at source resolution, shown 72 px tall, foot at bottom | - |
+| `project/assets/canon/prop_pillar_orb.png` | prop_pillar_orb | `tools/cut_island_props.py` (dev/art PERSISTINT overview, crop in project/data/island_props.json) | single 153x280 at source resolution, shown 64 px tall, foot at bottom | - |
 | `project/assets/canon/prop_scroll.png` | prop_scroll | `tools/cut_canon_sprites.sh` (canon sheet 481b) | 792x651 canon cut at source resolution, shown 18 world px tall as a pickup icon | - |
+| `project/assets/canon/prop_seal_o.png` | prop_seal_o | `tools/cut_island_props.py` (dev/art PERSISTINT overview, crop in project/data/island_props.json) | single 180x170 at source resolution, shown 36 px tall, foot at bottom | - |
+| `project/assets/canon/prop_ship.png` | prop_ship | `tools/cut_island_props.py` (canon sheet i7kl, crop in project/data/island_props.json) | single 1305x871 at source resolution, shown 150 px tall, foot at bottom | - |
+| `project/assets/canon/prop_sign_a.png` | prop_sign_a | `tools/cut_island_props.py` (canon sheet i7kl, crop in project/data/island_props.json) | single 433x510 at source resolution, shown 48 px tall, foot at bottom | - |
+| `project/assets/canon/prop_sign_b.png` | prop_sign_b | `tools/cut_island_props.py` (canon sheet i7kl, crop in project/data/island_props.json) | single 391x516 at source resolution, shown 48 px tall, foot at bottom | - |
+| `project/assets/canon/prop_skull_altar.png` | prop_skull_altar | `tools/cut_island_props.py` (dev/art PERSISTINT overview, crop in project/data/island_props.json) | single 171x216 at source resolution, shown 48 px tall, foot at bottom | - |
+| `project/assets/canon/prop_tag_x.png` | prop_tag_x | `tools/cut_island_props.py` (canon sheet 481b, crop in project/data/island_props.json) | single 510x672 at source resolution, shown 36 px tall, foot at bottom | - |
+| `project/assets/characters/npc_barren_rig.png` | npc_barren_rig | `tools/gen_npc_rigs.py` (from the full-resolution canon cuts) | 8x3 frames of 294x478 (32x52 world px, feet at 50/52); rows down / left / up; cols 0-3 idle, 4-7 walk | - |
+| `project/assets/characters/npc_drone_rig.png` | npc_drone_rig | `tools/gen_npc_rigs.py` (from the full-resolution canon cuts) | 8x3 frames of 306x497 (32x52 world px, feet at 50/52); rows down / left / up; cols 0-3 idle, 4-7 walk | - |
+| `project/assets/characters/npc_initiate_rig.png` | npc_initiate_rig | `tools/gen_npc_rigs.py` (from the full-resolution canon cuts) | 8x3 frames of 294x478 (32x52 world px, feet at 50/52); rows down / left / up; cols 0-3 idle, 4-7 walk | - |
+| `project/assets/characters/npc_mother_rig.png` | npc_mother_rig | `tools/gen_npc_rigs.py` (from the full-resolution canon cuts) | 8x3 frames of 295x480 (32x52 world px, feet at 50/52); rows down / left / up; cols 0-3 idle, 4-7 walk | - |
+| `project/assets/characters/npc_priestess_rig.png` | npc_priestess_rig | `tools/gen_npc_rigs.py` (from the full-resolution canon cuts) | 8x3 frames of 294x478 (32x52 world px, feet at 50/52); rows down / left / up; cols 0-3 idle, 4-7 walk | - |
+| `project/assets/common/door_marker.png` | door_marker | `tools/gen_door_marker.py` | 160x192 frames (40x48 world px at 4x), mat centre (80, 144); row 0 open x 8 (arrow bob), row 1 locked x 1 | - |
+| `project/assets/island/mirror.png` | mirror | `tools/gen_village_props.py` | single 104x160 (26x40 world px at 4x), foot y 148 | - |
+| `project/assets/island/temple_pavilion.png` | temple_pavilion | `tools/gen_village_props.py` | single 600x560 (150x140 world px at 4x), foot y 544, door at x 300 | - |
 | `project/assets/ruins/clone_bill_clinton.png` | clone_bill_clinton | `tools/gen_clone_children.py` | 192x272 frames (24x34 world px); rows front/side(right; flip for left)/back; cols 0-1 idle, 2-5 walk; scale 1/8, SpriteFrames via scripts/ruins/sheet_rig.gd | - |
 | `project/assets/ruins/clone_bill_gates.png` | clone_bill_gates | `tools/gen_clone_children.py` | 192x272 frames (24x34 world px); rows front/side(right; flip for left)/back; cols 0-1 idle, 2-5 walk; scale 1/8, SpriteFrames via scripts/ruins/sheet_rig.gd | - |
 | `project/assets/ruins/clone_epstein.png` | clone_epstein | `tools/gen_clone_children.py` | 192x272 frames (24x34 world px); rows front/side(right; flip for left)/back; cols 0-1 idle, 2-5 walk; scale 1/8, SpriteFrames via scripts/ruins/sheet_rig.gd | - |
@@ -99,3 +126,10 @@ stand-in there with no code change.
 | `project/assets/ruins/ruins_towel_trolley.png` | ruins_towel_trolley | `tools/gen_ruins_art.py` | 416x352 still, scale 1/8, feet at bottom centre | - |
 | `project/assets/ruins/ruins_vending.png` | ruins_vending | `tools/gen_ruins_art.py` | 384x592 still, scale 1/8, feet at bottom centre | - |
 | `project/assets/ruins/vignette.png` | vignette | `tools/gen_ruins_art.py` | 1280x720 screen overlay, linear filter | - |
+| `project/assets/temple/temple_candles.png` | temple_candles | `tools/gen_temple_props.py` | 96x176 frames (24x44 world px at 4x), foot (48, 168); row 0 idle x 4 (flicker); SpriteFrames temple_candles.tres | - |
+| `project/assets/temple/temple_cushion.png` | temple_cushion | `tools/gen_temple_props.py` | single 120x80 (30x20 world px at 4x), foot y 72 | - |
+| `project/assets/temple/temple_plinth.png` | temple_plinth | `tools/gen_temple_props.py` | single 128x56 (32x14 world px at 4x), pillar foot y 36 | - |
+| `project/assets/temple/temple_shadow.png` | temple_shadow | `tools/gen_temple_props.py` | single 96x32 (24x8 world px at 4x) | - |
+| `project/assets/temple/temple_twinkle.png` | temple_twinkle | `tools/gen_temple_props.py` | 48x48 frames (12x12 world px at 4x), centred; row 0 idle x 6; SpriteFrames temple_twinkle.tres | - |
+| `project/assets/temple/temple_urn.png` | temple_urn | `tools/gen_temple_props.py` | single 112x144 (28x36 world px at 4x), foot y 136 | - |
+| project/assets/tiles/island_tiles.png (+ island_tiles.json index) | island_tiles | `tools/gen_island_tiles.py`; TileSet island_tileset.tres by tools/build_island_maps.gd | 4096 px wide (32 columns) of 128x128 cells (32 px map cells at 4x, layers scaled 0.25): walkable cells, then their blocked copies and the solid tiles, then water / foam strips of 4 animation frames, then dual-grid edge overlays (shallows, shore, grass_edge, path_edge, paving_edge) of 16 corner-mask cells each; every position is in the json index | - |
