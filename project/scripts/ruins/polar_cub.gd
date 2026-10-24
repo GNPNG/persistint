@@ -3,27 +3,35 @@ extends "res://scripts/florida/clickable.gd"
 ## "cubs"): fluffy, round, identical, not zombies. Toddles around its patch, makes little
 ## bear sounds, and now and then pounces on a nearby zombie clone (CloneLab.pounce), then
 ## naps with a pink muzzle until it wakes up clean.
+## Rig: assets/ruins/clone_polar_bear.png (tools/gen_clone_children.py) through SheetRig:
+## front/side/back idle and walk, smeared, chomp and nap; origin 16 px above the feet.
 
 const ForbiddenKnowledge := preload("res://scripts/ruins/forbidden_knowledge.gd")
-const FRAME := "res://assets/canon/clone_polar_bear%s.png"
+const SheetRig := preload("res://scripts/ruins/sheet_rig.gd")
+const SHEET := "res://assets/ruins/clone_polar_bear.png"
+const BUBBLE_BOTTOM := -9.0
 
 @export var batch := 1
 @export var wander := Rect2(0, 0, 100, 60)  # global rect it toddles inside
 
 @onready var bubble: Label = $BarkBubble
-@onready var sprite: Sprite2D = $Sprite2D
+@onready var sprite: AnimatedSprite2D = $Sprite2D
 @onready var sfx: AudioStreamPlayer2D = $Sfx
 
 var napping := false
 var busy := false
 var _talking := false
 var _walk: Tween
+var _facing := "down"
+var _state := ""  # "", "_smeared" or "_nap"
 
 
 func _ready() -> void:
 	super()
 	add_to_group("polar_cubs")
+	sprite.sprite_frames = SheetRig.frames(load(SHEET), SheetRig.CUB)
 	set_frame("")
+	sprite.frame = randi() % 2
 	bubble.hide()
 	area_entered.connect(_on_bumped)
 	body_entered.connect(_on_bumped)
@@ -42,8 +50,19 @@ func designation() -> String:
 
 ## "" (clean), "_smeared" (pink muzzle) or "_nap" (asleep, still pink).
 func set_frame(suffix: String) -> void:
-	if ResourceLoader.exists(FRAME % suffix):
-		sprite.texture = load(FRAME % suffix)
+	_state = suffix
+	sprite.flip_h = sprite.flip_h and suffix == ""
+	sprite.play({"": "idle_" + _facing, "_smeared": "smeared", "_nap": "nap"}.get(suffix, "idle_down"))
+
+
+## The animation playing now ("idle_down", "walk_side", "smeared", "chomp", "nap", ...).
+func current_animation() -> String:
+	return String(sprite.animation)
+
+
+func _process(_delta: float) -> void:
+	if bubble.visible:
+		SheetRig.keep_on_screen(bubble)
 
 
 func pick_target() -> Vector2:
@@ -63,10 +82,13 @@ func _toddle() -> void:
 	var target := pick_target()
 	_walk = create_tween()
 	_walk.tween_interval(randf_range(0.8, 3.0))
-	_walk.tween_callback(func() -> void: sprite.flip_h = target.x < global_position.x)
+	_walk.tween_callback(func() -> void:
+		var delta := target - global_position
+		_facing = SheetRig.facing(delta)
+		sprite.flip_h = _facing == "side" and delta.x < 0
+		sprite.play("walk_" + _facing))
 	_walk.tween_property(self, "global_position", target, randf_range(2.5, 5.0)).set_trans(Tween.TRANS_SINE)
-	_walk.parallel().tween_property(sprite, "position:y", -3.0, 0.2).set_trans(Tween.TRANS_SINE)
-	_walk.tween_property(sprite, "position:y", 0.0, 0.2)
+	_walk.tween_callback(func() -> void: set_frame(_state))
 	_walk.tween_callback(_toddle)
 
 
@@ -92,7 +114,7 @@ func say(text: String) -> String:
 	if text == "" or _talking:
 		return ""
 	_talking = true
-	bubble.text = "%s: %s" % [designation(), text]
+	SheetRig.say(bubble, "%s\n%s" % [designation(), text], BUBBLE_BOTTOM)
 	bubble.show()
 	Voice.speak(text, float(data().get("pitch", 1.5)), data().get("cast", "polar_bear_clone"))
 	get_tree().create_timer(2.5).timeout.connect(func() -> void:

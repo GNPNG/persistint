@@ -1,5 +1,6 @@
 {
 	"_note": "Room titles, ambient lines, props and Forbidden Knowledge text are adapted from Story Structure: the repurposed bunker and clone lab (L88-95), the Great Biological Misreading (L70-78), banned counting and measuring (L126, L428). The bunker/clone-lab rooms, props and cat stickers are author-directed additions written in the sources' voice. The failed clone batches (and the polar bear batch that took) are author-directed additions: names are cast ids written as {cast_id} in text and filled from data/cast.json; spoken clone lines come from data/quotes/*.json.",
+	"_props_note": "Room props: 'kind' is the texture id (project/assets/ruins/<kind>.png from tools/gen_ruins_art.py, or a canon cut project/assets/canon/<kind>.png); x, y are the prop's feet (bottom centre) in world pixels; 'place' is 'wall' (hung on the wall band, behind everyone) or 'floor' (painted flat on the floor), otherwise it stands and sorts by its feet; 'text' is what the player reads on hovering it. 'h' (optional) is the world height a canon cut is shown at (canon cuts keep the sheet's resolution; scripts/ruins/ruins_decor.gd CANON_HEIGHT has the defaults). 'floor' and 'wall' name the room's tiles in assets/ruins/ruins_tiles.png (scripts/ruins/ruins_decor.gd).",
 	"rooms": {
 		"wreck": {
 			"scene": "res://scenes/ruins/ruins_wreck.tscn",
@@ -10,78 +11,132 @@
 				"Something drips in rhythm. Somebody once decided it was a chant.",
 				"The gift-shop awning says SOUVENIRS in letters the Covenant calls scripture and cannot read."
 			],
+			"floor": "deck",
+			"wall": "hull",
 			"props": [
 				{
-					"x": 80,
-					"y": 150,
-					"w": 150,
-					"h": 70,
-					"color": [
-						0.93,
-						0.62,
-						0.74
-					],
+					"kind": "ruins_runner",
+					"x": 480,
+					"y": 440,
+					"place": "floor"
+				},
+				{
+					"kind": "ruins_gift_shop",
+					"x": 160,
+					"y": 268,
 					"text": "GIFT SHOP (sacked)"
 				},
 				{
-					"x": 280,
-					"y": 300,
-					"w": 90,
-					"h": 40,
-					"color": [
-						0.9,
-						0.85,
-						0.7
-					],
+					"kind": "ruins_deck_chairs",
+					"x": 330,
+					"y": 362,
 					"text": "deck chairs"
 				},
 				{
-					"x": 420,
-					"y": 150,
-					"w": 110,
-					"h": 60,
-					"color": [
-						0.55,
-						0.74,
-						0.9
-					],
+					"kind": "ruins_ice_swan",
+					"x": 440,
+					"y": 272,
 					"text": "melted ice swan"
 				},
 				{
-					"x": 640,
-					"y": 170,
-					"w": 120,
-					"h": 80,
-					"color": [
-						0.62,
-						0.55,
-						0.82
-					],
+					"kind": "ruins_slots",
+					"x": 700,
+					"y": 268,
 					"text": "slot machines, tilted"
 				},
 				{
-					"x": 700,
-					"y": 380,
-					"w": 130,
-					"h": 60,
-					"color": [
-						0.62,
-						0.4,
-						0.36
-					],
+					"kind": "ruins_lifeboat",
+					"x": 770,
+					"y": 456,
 					"text": "lifeboat, stencilled LIFEBOAT 7"
 				},
 				{
-					"x": 120,
-					"y": 400,
-					"w": 100,
-					"h": 50,
-					"color": [
-						0.55,
-						0.82,
-						0.7
-					],
+					"kind": "ruins_buffet",
+					"x": 175,
+					"y": 458,
 					"text": "buffet, reverent"
+				},
+				{
+					"kind": "ruins_porthole",
+					"x": 330,
+					"y": 172,
+					"place": "wall"
+				},
+				{
+					"kind": "ruins_porthole",
+					"x": 620,
+					"y": 172,
+					"place": "wall"
+				},
+				{
+					"kind": "ruins_porthole",
+					"x": 840,
+					"y": 172,
+					"place": "wall"
+				},
+				{
+					"kind": "ruins_life_ring",
+					"x": 420,
+					"y": 181,
+					"place": "wall"
+				},
+				{
+					"kind": "ruins_bunting",
+					"x": 470,
+					"y": 88,
+					"place": "wall"
+				},
+				{
+					"kind": "ruins_bunting",
+					"x": 760,
+					"y": 88,
+					"place": "wall"
+				},
+				{
+					"kind": "ruins_crates",
+					"x": 820,
+					"y": 272
+				},
+				{
+					"kind": "ruins_chair_tipped",
+					"x": 610,
+					"y": 366
+				},
+				{
+					"kind": "ruins_plant",
+					"x": 235,
+					"y": 352
+				},
+				{
+					"kind": "ruins_barrel",
+					"x": 760,
+					"y": 382
+				},
+				{
+					"kind": "ruins_offering",
+					"x": 410,
+					"y": 392
+				},
+				{
+					"kind": "ruins_plant",
+					"x": 600,
+					"y": 452
+				},
+				{
+					"kind": "ruins_offering",
+					"x": 360,
+					"y": 474
+				},
+				{
+					"kind": "ruins_papers",
+					"x": 300,
+					"y": 414,
+					"place": "floor"
+				},
+				{
+					"kind": "ruins_barrel",
+					"x": 100,
+					"y": 412
 				}
 			]
 		},
@@ -94,78 +149,111 @@
 				"The walls are hung with portraits painted from memory. Every pair of eyes is slightly too large and slightly too kind.",
 				"A trolley of folded towels waits outside a door. It has waited for decades. It is very patient."
 			],
+			"floor": "grate",
+			"wall": "service",
 			"props": [
 				{
-					"x": 150,
-					"y": 140,
-					"w": 300,
-					"h": 22,
-					"color": [
-						0.3,
-						0.33,
-						0.4
-					],
+					"kind": "ruins_pipes",
+					"x": 230,
+					"y": 110,
+					"place": "wall",
 					"text": "pipes"
 				},
 				{
-					"x": 520,
-					"y": 140,
-					"w": 260,
-					"h": 22,
-					"color": [
-						0.93,
-						0.62,
-						0.74
-					],
+					"kind": "ruins_pipes_striped",
+					"x": 680,
+					"y": 110,
+					"place": "wall",
 					"text": "painted red stripe"
 				},
 				{
-					"x": 380,
-					"y": 260,
-					"w": 90,
-					"h": 70,
-					"color": [
-						0.55,
-						0.74,
-						0.9
-					],
+					"kind": "ruins_portrait",
+					"x": 430,
+					"y": 203,
+					"place": "wall",
 					"text": "portrait: a smiling woman, huge-eyed"
 				},
 				{
-					"x": 200,
-					"y": 420,
-					"w": 110,
-					"h": 45,
-					"color": [
-						0.55,
-						0.82,
-						0.7
-					],
+					"kind": "ruins_towel_trolley",
+					"x": 255,
+					"y": 372,
 					"text": "towel trolley"
 				},
 				{
-					"x": 720,
-					"y": 300,
-					"w": 120,
-					"h": 60,
-					"color": [
-						0.62,
-						0.55,
-						0.82
-					],
+					"kind": "ruins_vending",
+					"x": 790,
+					"y": 268,
 					"text": "vending machine, offering"
 				},
 				{
-					"x": 450,
-					"y": 470,
-					"w": 160,
-					"h": 24,
-					"color": [
-						0.62,
-						0.4,
-						0.36
-					],
+					"kind": "ruins_crew_sign",
+					"x": 565,
+					"y": 190,
+					"place": "wall",
 					"text": "CREW ONLY, scratched out"
+				},
+				{
+					"kind": "ruins_porthole",
+					"x": 160,
+					"y": 181,
+					"place": "wall"
+				},
+				{
+					"kind": "ruins_barrel",
+					"x": 190,
+					"y": 270
+				},
+				{
+					"kind": "ruins_crates",
+					"x": 470,
+					"y": 272
+				},
+				{
+					"kind": "ruins_offering",
+					"x": 735,
+					"y": 276
+				},
+				{
+					"kind": "ruins_barrel",
+					"x": 650,
+					"y": 270
+				},
+				{
+					"kind": "ruins_cables",
+					"x": 360,
+					"y": 342,
+					"place": "floor"
+				},
+				{
+					"kind": "ruins_papers",
+					"x": 700,
+					"y": 347,
+					"place": "floor"
+				},
+				{
+					"kind": "ruins_plant",
+					"x": 520,
+					"y": 372
+				},
+				{
+					"kind": "ruins_chair_tipped",
+					"x": 140,
+					"y": 384
+				},
+				{
+					"kind": "ruins_crates",
+					"x": 760,
+					"y": 472
+				},
+				{
+					"kind": "ruins_barrel",
+					"x": 400,
+					"y": 470
+				},
+				{
+					"kind": "ruins_towel_trolley",
+					"x": 610,
+					"y": 482
 				}
 			]
 		},
@@ -178,78 +266,121 @@
 				"A big O is stamped on the wall in pink. Beneath it, an arrow points down. It was painted over twice and the arrow came back.",
 				"Cables are braided and tied with ribbons. The ribbons are sacred. The cables are just cables."
 			],
+			"floor": "plate",
+			"wall": "core",
 			"props": [
 				{
+					"kind": "ruins_runner",
+					"x": 330,
+					"y": 372,
+					"place": "floor"
+				},
+				{
+					"kind": "ruins_server_rack",
+					"x": 190,
+					"y": 268,
+					"text": "server racks, humming"
+				},
+				{
+					"kind": "ruins_server_rack",
 					"x": 300,
-					"y": 150,
-					"w": 120,
-					"h": 90,
-					"color": [
-						0.3,
-						0.33,
-						0.4
-					],
+					"y": 268,
 					"text": "server racks, humming"
 				},
 				{
-					"x": 540,
-					"y": 150,
-					"w": 120,
-					"h": 90,
-					"color": [
-						0.3,
-						0.33,
-						0.4
-					],
-					"text": "server racks, humming"
-				},
-				{
-					"x": 400,
-					"y": 280,
-					"w": 160,
-					"h": 70,
-					"color": [
-						0.93,
-						0.62,
-						0.74
-					],
+					"kind": "ruins_altar_desk",
+					"x": 480,
+					"y": 362,
 					"text": "altar built on a control desk"
 				},
 				{
-					"x": 180,
-					"y": 380,
-					"w": 100,
-					"h": 50,
-					"color": [
-						0.9,
-						0.85,
-						0.7
-					],
+					"kind": "ruins_candles",
+					"x": 230,
+					"y": 392,
 					"text": "candle forest"
 				},
 				{
-					"x": 700,
-					"y": 380,
-					"w": 110,
-					"h": 55,
-					"color": [
-						0.62,
-						0.55,
-						0.82
-					],
+					"kind": "prop_seal_o",
+					"x": 755,
+					"y": 447,
+					"place": "floor",
 					"text": "Seal of the O (stencil)"
 				},
 				{
-					"x": 430,
-					"y": 470,
-					"w": 100,
-					"h": 22,
-					"color": [
-						0.62,
-						0.4,
-						0.36
-					],
+					"kind": "ruins_floor_hatch",
+					"x": 480,
+					"y": 498,
+					"place": "floor",
 					"text": "hatch, stencilled DOWN"
+				},
+				{
+					"kind": "ruins_server_rack",
+					"x": 660,
+					"y": 268
+				},
+				{
+					"kind": "ruins_server_rack",
+					"x": 770,
+					"y": 268
+				},
+				{
+					"kind": "ruins_bunting",
+					"x": 480,
+					"y": 88,
+					"place": "wall"
+				},
+				{
+					"kind": "ruins_plant",
+					"x": 405,
+					"y": 262
+				},
+				{
+					"kind": "ruins_plant",
+					"x": 560,
+					"y": 262
+				},
+				{
+					"kind": "ruins_candles",
+					"x": 730,
+					"y": 367
+				},
+				{
+					"kind": "ruins_offering",
+					"x": 380,
+					"y": 387
+				},
+				{
+					"kind": "ruins_offering",
+					"x": 590,
+					"y": 392
+				},
+				{
+					"kind": "ruins_cables",
+					"x": 210,
+					"y": 342,
+					"place": "floor"
+				},
+				{
+					"kind": "ruins_papers",
+					"x": 320,
+					"y": 474,
+					"place": "floor"
+				},
+				{
+					"kind": "ruins_candles",
+					"x": 610,
+					"y": 472
+				},
+				{
+					"kind": "ruins_cables",
+					"x": 840,
+					"y": 422,
+					"place": "floor"
+				},
+				{
+					"kind": "ruins_offering",
+					"x": 200,
+					"y": 330
 				}
 			]
 		},
@@ -263,78 +394,107 @@
 				"A sign says AUTHORISED STAFF ONLY. A smaller sign beneath says PLEASE KNOCK. Nobody knocked.",
 				"Little footprints in pink fluid lead from the lift to the tanks, and back, and back again."
 			],
+			"floor": "concrete",
+			"wall": "bunker",
 			"props": [
 				{
-					"x": 80,
-					"y": 200,
-					"w": 150,
-					"h": 160,
-					"color": [
-						0.3,
-						0.33,
-						0.4
-					],
+					"kind": "ruins_lift_cage",
+					"x": 170,
+					"y": 268,
 					"text": "lift cage, propped open"
 				},
 				{
-					"x": 300,
-					"y": 180,
-					"w": 200,
-					"h": 28,
-					"color": [
-						0.93,
-						0.62,
-						0.74
-					],
+					"kind": "ruins_hazard_band",
+					"x": 340,
+					"y": 172,
+					"place": "wall",
 					"text": "hazard stripes"
 				},
 				{
-					"x": 300,
-					"y": 214,
-					"w": 200,
-					"h": 28,
-					"color": [
-						0.55,
-						0.82,
-						0.7
-					],
-					"text": ""
+					"kind": "ruins_hazard_band",
+					"x": 470,
+					"y": 172,
+					"place": "wall",
+					"text": "hazard stripes"
 				},
 				{
-					"x": 580,
-					"y": 160,
-					"w": 120,
-					"h": 70,
-					"color": [
-						0.55,
-						0.74,
-						0.9
-					],
+					"kind": "ruins_intercom",
+					"x": 640,
+					"y": 181,
+					"place": "wall",
 					"text": "intercom, clicking"
 				},
 				{
-					"x": 560,
-					"y": 330,
-					"w": 170,
-					"h": 60,
-					"color": [
-						0.9,
-						0.85,
-						0.7
-					],
+					"kind": "ruins_coat_hooks",
+					"x": 820,
+					"y": 200,
+					"place": "wall",
 					"text": "coat hooks (cloaks of the dead)"
 				},
 				{
-					"x": 380,
-					"y": 400,
-					"w": 100,
-					"h": 50,
-					"color": [
-						0.62,
-						0.55,
-						0.82
-					],
+					"kind": "ruins_mop_bucket",
+					"x": 430,
+					"y": 402,
 					"text": "mop bucket"
+				},
+				{
+					"kind": "ruins_poster",
+					"x": 560,
+					"y": 190,
+					"place": "wall"
+				},
+				{
+					"kind": "ruins_crates",
+					"x": 300,
+					"y": 272
+				},
+				{
+					"kind": "ruins_barrel",
+					"x": 640,
+					"y": 270
+				},
+				{
+					"kind": "ruins_crates",
+					"x": 760,
+					"y": 272
+				},
+				{
+					"kind": "ruins_cables",
+					"x": 520,
+					"y": 342,
+					"place": "floor"
+				},
+				{
+					"kind": "ruins_papers",
+					"x": 300,
+					"y": 382,
+					"place": "floor"
+				},
+				{
+					"kind": "ruins_barrel",
+					"x": 700,
+					"y": 382
+				},
+				{
+					"kind": "ruins_lab_cart",
+					"x": 820,
+					"y": 384
+				},
+				{
+					"kind": "ruins_crates",
+					"x": 560,
+					"y": 472
+				},
+				{
+					"kind": "ruins_barrel",
+					"x": 690,
+					"y": 462
+				},
+				{
+					"kind": "ruins_papers",
+					"x": 820,
+					"y": 482,
+					"place": "floor"
 				}
 			]
 		},
@@ -349,126 +509,120 @@
 				"Small figures shamble between the tanks, arms out, groaning politely. Each batch shares one face. None of them took. All of them stayed.",
 				"A polar bear cub naps on the prep bench, muzzle pink, belly round. The tanks refill themselves with patience."
 			],
+			"floor": "lab",
+			"wall": "lab",
 			"props": [
 				{
-					"x": 100,
-					"y": 150,
-					"w": 70,
-					"h": 160,
-					"color": [
-						0.93,
-						0.62,
-						0.74
-					],
+					"kind": "ruins_tank",
+					"x": 150,
+					"y": 263,
 					"text": "tank 1 (pink, empty)"
 				},
 				{
-					"x": 200,
-					"y": 150,
-					"w": 70,
-					"h": 160,
-					"color": [
-						0.93,
-						0.62,
-						0.74
-					],
+					"kind": "ruins_tank",
+					"x": 240,
+					"y": 263,
 					"text": "tank 2"
 				},
 				{
-					"x": 300,
-					"y": 150,
-					"w": 70,
-					"h": 160,
-					"color": [
-						0.93,
-						0.62,
-						0.74
-					],
+					"kind": "ruins_tank_duck",
+					"x": 330,
+					"y": 263,
 					"text": "tank 3 (duck)"
 				},
 				{
-					"x": 400,
-					"y": 150,
-					"w": 70,
-					"h": 160,
-					"color": [
-						0.93,
-						0.62,
-						0.74
-					],
+					"kind": "ruins_tank",
+					"x": 420,
+					"y": 263,
 					"text": "tank 4"
 				},
 				{
-					"x": 560,
-					"y": 150,
-					"w": 130,
-					"h": 70,
-					"color": [
-						0.55,
-						0.82,
-						0.7
-					],
+					"kind": "ruins_incubator",
+					"x": 600,
+					"y": 268,
 					"text": "incubators, warm"
 				},
 				{
-					"x": 730,
-					"y": 150,
-					"w": 110,
-					"h": 70,
-					"color": [
-						0.55,
-						0.74,
-						0.9
-					],
+					"kind": "ruins_sequencer",
+					"x": 760,
+					"y": 265,
 					"text": "sequencer, cat sticker"
 				},
 				{
-					"x": 560,
-					"y": 330,
-					"w": 120,
-					"h": 60,
-					"color": [
-						0.62,
-						0.55,
-						0.82
-					],
+					"kind": "ruins_centrifuge",
+					"x": 640,
+					"y": 372,
 					"text": "centrifuge, mid-spin forever"
 				},
 				{
-					"x": 120,
-					"y": 400,
-					"w": 200,
-					"h": 50,
-					"color": [
-						0.9,
-						0.85,
-						0.7
-					],
+					"kind": "ruins_prep_bench",
+					"x": 210,
+					"y": 455,
 					"text": "prep benches, sterile, dusty"
 				},
 				{
-					"x": 740,
-					"y": 330,
-					"w": 100,
-					"h": 90,
-					"color": [
-						0.3,
-						0.33,
-						0.4
-					],
+					"kind": "ruins_freezer",
+					"x": 800,
+					"y": 432,
 					"text": "freezer, humming"
 				},
 				{
-					"x": 120,
-					"y": 460,
-					"w": 160,
-					"h": 30,
-					"color": [
-						0.95,
-						0.75,
-						0.82
-					],
+					"kind": "ruins_cub_basket",
+					"x": 150,
+					"y": 497,
 					"text": "cub basket, fluffy"
+				},
+				{
+					"kind": "ruins_poster",
+					"x": 530,
+					"y": 190,
+					"place": "wall"
+				},
+				{
+					"kind": "ruins_bunting",
+					"x": 700,
+					"y": 110,
+					"place": "wall"
+				},
+				{
+					"kind": "ruins_lab_cart",
+					"x": 515,
+					"y": 272
+				},
+				{
+					"kind": "ruins_tank",
+					"x": 300,
+					"y": 382,
+					"text": ""
+				},
+				{
+					"kind": "ruins_tank",
+					"x": 390,
+					"y": 382,
+					"text": ""
+				},
+				{
+					"kind": "ruins_puddle",
+					"x": 230,
+					"y": 335,
+					"place": "floor"
+				},
+				{
+					"kind": "ruins_cables",
+					"x": 720,
+					"y": 335,
+					"place": "floor"
+				},
+				{
+					"kind": "ruins_puddle",
+					"x": 560,
+					"y": 432,
+					"place": "floor"
+				},
+				{
+					"kind": "ruins_lab_cart",
+					"x": 690,
+					"y": 482
 				}
 			]
 		},
@@ -482,90 +636,87 @@
 				"The carpet is cream and untouched. The archivist in you wants to take your shoes off.",
 				"A drawer labelled FAILED BATCHES is too full to close. A drawer labelled BEARS has a heart drawn on it."
 			],
+			"floor": "carpet",
+			"wall": "archive",
 			"props": [
 				{
-					"x": 100,
-					"y": 150,
-					"w": 180,
-					"h": 120,
-					"color": [
-						0.9,
-						0.85,
-						0.7
-					],
+					"kind": "ruins_binders_a",
+					"x": 190,
+					"y": 268,
 					"text": "binders, spines in tiny print"
 				},
 				{
-					"x": 340,
-					"y": 150,
-					"w": 180,
-					"h": 120,
-					"color": [
-						0.9,
-						0.85,
-						0.7
-					],
+					"kind": "ruins_binders_b",
+					"x": 430,
+					"y": 268,
 					"text": "binders, by year"
 				},
 				{
-					"x": 580,
-					"y": 150,
-					"w": 180,
-					"h": 120,
-					"color": [
-						0.9,
-						0.85,
-						0.7
-					],
+					"kind": "ruins_binders_c",
+					"x": 670,
+					"y": 268,
 					"text": "binders, cross-referenced"
 				},
 				{
-					"x": 380,
-					"y": 330,
-					"w": 150,
-					"h": 60,
-					"color": [
-						0.62,
-						0.55,
-						0.82
-					],
+					"kind": "ruins_desk_lamp",
+					"x": 455,
+					"y": 382,
 					"text": "desk, lamp on"
 				},
 				{
-					"x": 120,
-					"y": 330,
-					"w": 120,
-					"h": 70,
-					"color": [
-						0.55,
-						0.82,
-						0.7
-					],
+					"kind": "ruins_filing_cabinet",
+					"x": 180,
+					"y": 392,
 					"text": "filing cabinets"
 				},
 				{
-					"x": 700,
-					"y": 330,
-					"w": 110,
-					"h": 70,
-					"color": [
-						0.93,
-						0.62,
-						0.74
-					],
+					"kind": "ruins_stationery",
+					"x": 620,
+					"y": 352,
 					"text": "stationery, labelled"
 				},
 				{
-					"x": 260,
-					"y": 440,
-					"w": 140,
-					"h": 40,
-					"color": [
-						0.55,
-						0.82,
-						0.7
-					],
+					"kind": "ruins_failed_drawer",
+					"x": 320,
+					"y": 494,
 					"text": "FAILED BATCHES (overfull)"
+				},
+				{
+					"kind": "ruins_binders_b",
+					"x": 890,
+					"y": 268
+				},
+				{
+					"kind": "ruins_plant",
+					"x": 110,
+					"y": 268
+				},
+				{
+					"kind": "ruins_papers",
+					"x": 380,
+					"y": 332,
+					"place": "floor"
+				},
+				{
+					"kind": "ruins_crates",
+					"x": 560,
+					"y": 322
+				},
+				{
+					"kind": "ruins_filing_cabinet",
+					"x": 800,
+					"y": 442
+				},
+				{
+					"kind": "ruins_papers",
+					"x": 560,
+					"y": 474,
+					"place": "floor"
+				},
+				{
+					"kind": "ruins_crates",
+					"x": 740,
+					"y": 482
 				}
 			]
 		}
@@ -575,85 +726,99 @@
 			"id": "fk_wreck_1",
 			"room": "wreck",
 			"title": "A Gift-Shop Paperback",
-			"text": "Its spine has never been cracked. Whoever carried it read the back-cover reviews and stopped. The Covenant calls this a way of reading."
+			"text": "Its spine has never been cracked. Whoever carried it read the back-cover reviews and stopped. The Covenant calls this a way of reading.",
+			"icon": "icon_book"
 		},
 		{
 			"id": "fk_wreck_2",
 			"room": "wreck",
 			"title": "A Gift-Shop Receipt",
-			"text": "Tucked inside a book of soup-for-the-soul platitudes: three items, a total, a tax. Someone counted everything once, and it was ordinary."
+			"text": "Tucked inside a book of soup-for-the-soul platitudes: three items, a total, a tax. Someone counted everything once, and it was ordinary.",
+			"icon": "icon_paper"
 		},
 		{
 			"id": "fk_corridor_1",
 			"room": "corridor",
 			"title": "A Tide Table",
-			"text": "Laminated, with a little moon at the top. High tide follows the moon, not the blood. Whoever printed it did not ask permission to know."
+			"text": "Laminated, with a little moon at the top. High tide follows the moon, not the blood. Whoever printed it did not ask permission to know.",
+			"icon": "prop_scroll"
 		},
 		{
 			"id": "fk_corridor_2",
 			"room": "corridor",
 			"title": "A Glass Thermometer",
-			"text": "A device of domination, the Priestesses say. It only tells you how warm a thing is. Nothing else about it is sinister, which is the trouble."
+			"text": "A device of domination, the Priestesses say. It only tells you how warm a thing is. Nothing else about it is sinister, which is the trouble.",
+			"icon": "icon_thermometer"
 		},
 		{
 			"id": "fk_core_1",
 			"room": "core",
 			"title": "A Wall Calendar",
-			"text": "Squares all the same size, none of them red. Days were counted before blood was, and they did not drift."
+			"text": "Squares all the same size, none of them red. Days were counted before blood was, and they did not drift.",
+			"icon": "prop_calendar"
 		},
 		{
 			"id": "fk_bunker_1",
 			"room": "bunker_lift",
 			"title": "A Cycle Chart",
-			"text": "Pinned inside the lift cage. One bar marks the fertile window, about five days, roughly two weeks before the next period. The rites are held at the far end of the page."
+			"text": "Pinned inside the lift cage. One bar marks the fertile window, about five days, roughly two weeks before the next period. The rites are held at the far end of the page.",
+			"icon": "icon_chart"
 		},
 		{
 			"id": "fk_lab_1",
 			"room": "clone_hall",
 			"title": "A Tank Label",
-			"text": "Reads: handle fresh, do not sedate, do not heat. Whatever is done to the drones before the rites, this tank has opinions about it. Two mistakes at once, blamed on devotion."
+			"text": "Reads: handle fresh, do not sedate, do not heat. Whatever is done to the drones before the rites, this tank has opinions about it. Two mistakes at once, blamed on devotion.",
+			"icon": "prop_tag_x"
 		},
 		{
 			"id": "fk_lab_2",
 			"room": "clone_hall",
 			"title": "The Procedure on the Wall",
-			"text": "Step one: a single cell. Step two: a warm jar. Step three: wait. Nobody in this room was ever called by a womb, and the cat sticker doesn't mind."
+			"text": "Step one: a single cell. Step two: a warm jar. Step three: wait. Nobody in this room was ever called by a womb, and the cat sticker doesn't mind.",
+			"icon": "icon_paper"
 		},
 		{
 			"id": "fk_records_1",
 			"room": "records",
 			"title": "The Conception Ledger",
-			"text": "Conceptions logged by cycle day. They cluster around day fourteen and almost never on day one. The rites are held on day one. Birth rates decline. The Covenant concludes the Gate wants more devotion."
+			"text": "Conceptions logged by cycle day. They cluster around day fourteen and almost never on day one. The rites are held on day one. Birth rates decline. The Covenant concludes the Gate wants more devotion.",
+			"icon": "icon_ledger"
 		},
 		{
 			"id": "fk_records_2",
 			"room": "records",
 			"title": "The Bunker's Mission Statement",
-			"text": "Built to make more people, in comfort, for the future. The island learned instead to make fewer, with ceremony, for the past. A tidy summary, in 12-point font."
+			"text": "Built to make more people, in comfort, for the future. The island learned instead to make fewer, with ceremony, for the past. A tidy summary, in 12-point font.",
+			"icon": "icon_paper"
 		},
 		{
 			"id": "fk_bunker_2",
 			"room": "bunker_lift",
 			"title": "A Head Count Sheet",
-			"text": "Clipped to the lift cage: one column per batch. Counting is banned upstairs, so the last tally is from before. Under every clone column someone has written: some. Under the polar bears: fewer of the others."
+			"text": "Clipped to the lift cage: one column per batch. Counting is banned upstairs, so the last tally is from before. Under every clone column someone has written: some. Under the polar bears: fewer of the others.",
+			"icon": "icon_paper"
 		},
 		{
 			"id": "fk_lab_3",
 			"room": "clone_hall",
 			"title": "The Batch Board",
-			"text": "A whiteboard in dry-wipe marker, one column per original. {epstein}: batches 1 to 9. {bill_clinton}: batches 1 to 4. {hillary_clinton}: batches 1 to 4. {bill_gates}: batches 1 to 6. Beside every number, the same note: did not take. In the last column: polar bear, batch 1. Beside it: took. Very well. Please stop feeding them the others."
+			"text": "A whiteboard in dry-wipe marker, one column per original. {epstein}: batches 1 to 9. {bill_clinton}: batches 1 to 4. {hillary_clinton}: batches 1 to 4. {bill_gates}: batches 1 to 6. Beside every number, the same note: did not take. In the last column: polar bear, batch 1. Beside it: took. Very well. Please stop feeding them the others.",
+			"icon": "icon_board"
 		},
 		{
 			"id": "fk_records_3",
 			"room": "records",
 			"title": "The Reproduction Proposal",
-			"text": "A bound proposal to reproduce four prominent people of the old world from cells, in comfort, for the future: {epstein}, {bill_clinton}, {hillary_clinton}, {bill_gates}. Budget approved. Appendix C, results: every batch walks, groans and will not grow up. None of them remembers anyone. Recommendation: discontinue. Nobody discontinued anything. The incubators kept them warm out of habit."
+			"text": "A bound proposal to reproduce four prominent people of the old world from cells, in comfort, for the future: {epstein}, {bill_clinton}, {hillary_clinton}, {bill_gates}. Budget approved. Appendix C, results: every batch walks, groans and will not grow up. None of them remembers anyone. Recommendation: discontinue. Nobody discontinued anything. The incubators kept them warm out of habit.",
+			"icon": "icon_proposal"
 		},
 		{
 			"id": "fk_records_4",
 			"room": "records",
 			"title": "The Polar Bear Appendix",
-			"text": "A thinner file with a heart on the tab. One polar bear batch, grown as a control in case the cold storage failed. It came out fine: fluffy, healthy, identical, hungry. The last line, in a different pen: the control group is eating the experimental group. Results inconclusive."
+			"text": "A thinner file with a heart on the tab. One polar bear batch, grown as a control in case the cold storage failed. It came out fine: fluffy, healthy, identical, hungry. The last line, in a different pen: the control group is eating the experimental group. Results inconclusive.",
+			"icon": "icon_appendix"
 		}
 	],
 	"clone_children": {
@@ -742,20 +907,20 @@
 			"nap_sfx": "snore",
 			"tanks": [
 				[
-					135,
-					320
+					150,
+					275
 				],
 				[
-					235,
-					320
+					240,
+					275
 				],
 				[
-					335,
-					320
+					420,
+					275
 				],
 				[
-					435,
-					320
+					300,
+					394
 				]
 			]
 		}
