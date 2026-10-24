@@ -13,7 +13,7 @@ soon from [GNPNG](https://gnpng.org), an independent Canadian press.**
 
 **Status: v0.2.1 — zeroth release (playable vertical slice, placeholder art in places).**
 
-PERSISTINT (Per-sist-INT, "INT like INTJ") is a free companion game: a small 2D game
+PERSISTINT is a free companion game: a small 2D game
 made in Godot 4. It wraps social control in the cutest possible packaging, so
 that players, and girls and women above all, can recognize it, name it and feel comfortable
 criticizing it, at school, at work or online. The cuteness is the weapon.
