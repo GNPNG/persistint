@@ -31,11 +31,16 @@ FIG_H, FW, FH, FEET = 48, 32, 52, 50   # world px: figure height, frame, feet li
 IDLE_SQUASH = [0, 1, 2, 1]
 WALK_BOB = [0, 2, 0, 2]
 WALK_LEAN = [0, 1, 0, -1]
+MIN_CUT_H = 4 * FIG_H   # cuts shorter than this are the old 48 px shrink, not source resolution
 
 
 def rig(caste):
     figs = [Image.open(SRC / f"npc_{caste}_{view}.png").convert("RGBA") for view in VIEWS]
     s = max(f.height for f in figs) / FIG_H
+    if max(f.height for f in figs) < MIN_CUT_H:
+        raise SystemExit(f"npc_{caste} cuts are {max(f.height for f in figs)} px tall, not the canon "
+                         f"sheet's resolution (at least {MIN_CUT_H} px); re-run tools/cut_canon_sprites.sh "
+                         "from a checkout where it keeps the source resolution, then this script")
     fw, fh, feet = round(FW * s), round(FH * s), round(FEET * s)
     sheet = Image.new("RGBA", (fw * 8, fh * 3))
 
