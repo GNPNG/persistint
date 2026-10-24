@@ -3,21 +3,22 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://6qgbvvsrb7uy"
-path="res://.godot/imported/prop_bunker.png-47de8975d624219dcf4d569891b75e2c.ctex"
+path.s3tc="res://.godot/imported/prop_bunker.png-47de8975d624219dcf4d569891b75e2c.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/canon/prop_bunker.png"
-dest_files=["res://.godot/imported/prop_bunker.png-47de8975d624219dcf4d569891b75e2c.ctex"]
+dest_files=["res://.godot/imported/prop_bunker.png-47de8975d624219dcf4d569891b75e2c.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
-compress/lossy_quality=0.7
+compress/lossy_quality=0.9
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
 compress/hdr_compression=1

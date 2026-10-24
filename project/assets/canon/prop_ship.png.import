@@ -3,21 +3,22 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://wyak7kf7x571"
-path="res://.godot/imported/prop_ship.png-f37ff4b9b0163bea048d73b9f67bc1d4.ctex"
+path.s3tc="res://.godot/imported/prop_ship.png-f37ff4b9b0163bea048d73b9f67bc1d4.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/canon/prop_ship.png"
-dest_files=["res://.godot/imported/prop_ship.png-f37ff4b9b0163bea048d73b9f67bc1d4.ctex"]
+dest_files=["res://.godot/imported/prop_ship.png-f37ff4b9b0163bea048d73b9f67bc1d4.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
-compress/lossy_quality=0.7
+compress/lossy_quality=0.9
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
