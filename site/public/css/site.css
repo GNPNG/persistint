@@ -379,8 +379,18 @@ figcaption { margin-top: 10px; font-size: .9rem; color: var(--plum-soft); text-a
 .modal-close:focus-visible { outline: 3px solid var(--pink-ink); outline-offset: 2px; }
 .modal-body { padding: 8px 22px 24px; overflow: auto; max-height: calc(min(86vh, 900px) - 70px); }
 /* Online safety & support badge in the footer */
-.safety-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px 4px 8px; border-radius: 999px; background: var(--sky-tint); border: 2px solid var(--sky); color: var(--plum); font-weight: 600; text-decoration: none; }
-.safety-badge:hover, .safety-badge:focus-visible { background: var(--white); }
+.safety-badge {
+  display: inline-flex; align-items: center; gap: 7px; padding: 6px 16px 7px 10px; border-radius: 999px;
+  background: linear-gradient(180deg, #ffd1ec 0%, #f7a8d8 55%, #ee8fca 100%);
+  border: 2px solid #c25a9c; color: #4a1f3d; font-weight: 700; text-decoration: none;
+  box-shadow: 0 4px 0 #a8437f, 0 7px 12px rgba(89, 30, 70, .35), inset 0 2px 0 rgba(255, 255, 255, .65);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, .5);
+  transform: translateY(0); transition: transform .12s ease, box-shadow .12s ease;
+}
+.safety-badge:hover { transform: translateY(-1px); box-shadow: 0 5px 0 #a8437f, 0 9px 14px rgba(89, 30, 70, .38), inset 0 2px 0 rgba(255, 255, 255, .7); }
+.safety-badge:active { transform: translateY(3px); box-shadow: 0 1px 0 #a8437f, 0 3px 6px rgba(89, 30, 70, .3), inset 0 2px 0 rgba(255, 255, 255, .5); }
+.safety-badge:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { .safety-badge { transition: none; } }
 
 /* Host context + IOA Emotional Well-Being Referral (outrage.dataglut.org boilerplate) */
 .ioa-host h2 { font-family: var(--display); margin: 0 0 .5rem; }
