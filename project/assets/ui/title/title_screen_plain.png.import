@@ -3,20 +3,19 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://db1jabglmmqak"
-path.s3tc="res://.godot/imported/title_screen_plain.png-70c984cd84a78a5ec7c631463c36dd41.s3tc.ctex"
+path="res://.godot/imported/title_screen_plain.png-70c984cd84a78a5ec7c631463c36dd41.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://assets/ui/title/title_screen_plain.png"
-dest_files=["res://.godot/imported/title_screen_plain.png-70c984cd84a78a5ec7c631463c36dd41.s3tc.ctex"]
+dest_files=["res://.godot/imported/title_screen_plain.png-70c984cd84a78a5ec7c631463c36dd41.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.9
 compress/uastc_level=0

@@ -3,20 +3,19 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bsm38pvh04itx"
-path.s3tc="res://.godot/imported/body_base_rig.png-b943814ffa9431aef4b7e0e1805419cf.s3tc.ctex"
+path="res://.godot/imported/body_base_rig.png-b943814ffa9431aef4b7e0e1805419cf.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://assets/characters/player/body_base_rig.png"
-dest_files=["res://.godot/imported/body_base_rig.png-b943814ffa9431aef4b7e0e1805419cf.s3tc.ctex"]
+dest_files=["res://.godot/imported/body_base_rig.png-b943814ffa9431aef4b7e0e1805419cf.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.9
 compress/uastc_level=0

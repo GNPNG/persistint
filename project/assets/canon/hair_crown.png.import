@@ -3,20 +3,19 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dsug4nd738w2h"
-path.s3tc="res://.godot/imported/hair_crown.png-65c1e9532dff04b9d791936b6b75a256.s3tc.ctex"
+path="res://.godot/imported/hair_crown.png-65c1e9532dff04b9d791936b6b75a256.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://assets/canon/hair_crown.png"
-dest_files=["res://.godot/imported/hair_crown.png-65c1e9532dff04b9d791936b6b75a256.s3tc.ctex"]
+dest_files=["res://.godot/imported/hair_crown.png-65c1e9532dff04b9d791936b6b75a256.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.9
 compress/uastc_level=0

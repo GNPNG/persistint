@@ -3,20 +3,19 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bnkg1e6svse2h"
-path.s3tc="res://.godot/imported/hair_pigtails_rig.png-070057ba90c5ae7999da471fa8fb76e0.s3tc.ctex"
+path="res://.godot/imported/hair_pigtails_rig.png-070057ba90c5ae7999da471fa8fb76e0.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://assets/characters/player/hair_pigtails_rig.png"
-dest_files=["res://.godot/imported/hair_pigtails_rig.png-070057ba90c5ae7999da471fa8fb76e0.s3tc.ctex"]
+dest_files=["res://.godot/imported/hair_pigtails_rig.png-070057ba90c5ae7999da471fa8fb76e0.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.9
 compress/uastc_level=0

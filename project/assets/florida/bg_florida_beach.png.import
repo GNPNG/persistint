@@ -3,20 +3,19 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://wg3fqyqqe72i"
-path.s3tc="res://.godot/imported/bg_florida_beach.png-d8025b669236f2857a18fe39987a8b1d.s3tc.ctex"
+path="res://.godot/imported/bg_florida_beach.png-d8025b669236f2857a18fe39987a8b1d.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://assets/florida/bg_florida_beach.png"
-dest_files=["res://.godot/imported/bg_florida_beach.png-d8025b669236f2857a18fe39987a8b1d.s3tc.ctex"]
+dest_files=["res://.godot/imported/bg_florida_beach.png-d8025b669236f2857a18fe39987a8b1d.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.9
 compress/uastc_level=0

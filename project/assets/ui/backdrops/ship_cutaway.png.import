@@ -3,20 +3,19 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://de5fxbc02jyip"
-path.s3tc="res://.godot/imported/ship_cutaway.png-99f67b582766672beeff4154b42bb624.s3tc.ctex"
+path="res://.godot/imported/ship_cutaway.png-99f67b582766672beeff4154b42bb624.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://assets/ui/backdrops/ship_cutaway.png"
-dest_files=["res://.godot/imported/ship_cutaway.png-99f67b582766672beeff4154b42bb624.s3tc.ctex"]
+dest_files=["res://.godot/imported/ship_cutaway.png-99f67b582766672beeff4154b42bb624.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.9
 compress/uastc_level=0

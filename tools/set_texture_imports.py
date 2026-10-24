@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Lossy import for the big textures, so the web build stays small.
 
-Every PNG under project/assets at or over --min-bytes (default 300 KB) gets compress/mode=2
-(lossy WebP) at compress/lossy_quality (default 0.9) in its .import file; smaller ones stay
-lossless (mode 0). Run `godot --headless --path project --import` afterwards. Idempotent.
+Every PNG under project/assets at or over --min-bytes (default 300 KB) gets compress/mode=1
+(Lossy: WebP) at compress/lossy_quality (default 0.9) in its .import file; smaller ones stay
+lossless (mode 0). Godot 4's modes: 0 Lossless, 1 Lossy, 2 VRAM Compressed (several GPU formats
+per texture: it made the web build bigger, not smaller), 3 VRAM Uncompressed, 4 Basis Universal. Run `godot --headless --path project --import` afterwards. Idempotent.
 
     python3 tools/set_texture_imports.py [--min-bytes N] [--quality Q] [--dry-run]
 """
@@ -36,7 +37,7 @@ def main() -> None:
             continue
         text = imp.read_text(encoding="utf-8")
         big = png.stat().st_size >= a.min_bytes
-        new = set_option(text, "compress/mode", "2" if big else "0")
+        new = set_option(text, "compress/mode", "1" if big else "0")
         if big:
             new = set_option(new, "compress/lossy_quality", f"{a.quality:g}")
         if new != text:

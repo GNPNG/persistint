@@ -3,20 +3,19 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ddngxouqwdu61"
-path.s3tc="res://.godot/imported/fog_sea.png-46849f21e862fb17624e347e2bbf4719.s3tc.ctex"
+path="res://.godot/imported/fog_sea.png-46849f21e862fb17624e347e2bbf4719.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://assets/ui/backdrops/fog_sea.png"
-dest_files=["res://.godot/imported/fog_sea.png-46849f21e862fb17624e347e2bbf4719.s3tc.ctex"]
+dest_files=["res://.godot/imported/fog_sea.png-46849f21e862fb17624e347e2bbf4719.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.9
 compress/uastc_level=0

@@ -3,20 +3,19 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dv26x42mf7uiv"
-path.s3tc="res://.godot/imported/chapter_card_before_the_wreck.png-b56a1ec1dbabdbb836fc94af1c9a71e5.s3tc.ctex"
+path="res://.godot/imported/chapter_card_before_the_wreck.png-b56a1ec1dbabdbb836fc94af1c9a71e5.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://assets/ui/chapter_cards/chapter_card_before_the_wreck.png"
-dest_files=["res://.godot/imported/chapter_card_before_the_wreck.png-b56a1ec1dbabdbb836fc94af1c9a71e5.s3tc.ctex"]
+dest_files=["res://.godot/imported/chapter_card_before_the_wreck.png-b56a1ec1dbabdbb836fc94af1c9a71e5.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.9
 compress/uastc_level=0
