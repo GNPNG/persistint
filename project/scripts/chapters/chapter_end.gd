@@ -17,6 +17,7 @@ var _left := false
 func _ready() -> void:
 	from = Chapters.current()
 	card = Chapters.chapter(from).get("end_card", {})
+	Music.chapter_end(from)  # the time-jump stinger ("Before the Wreck" leaving the island)
 	_build_ui()
 	if autostart:
 		entry = Chapters.jump(from)

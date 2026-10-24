@@ -1,0 +1,81 @@
+{
+	"_note": "Music (scripts/autoload/music.gd). 'scenes' maps every scene the game changes to (maps, menus, mini-games, chapter cards) to a loop track id: a string, \"\" for silence, or {\"track\": default, \"when\": [{\"when\": {...}, \"track\": id}, ...]} where the first rule whose 'when' block holds (GameClock.matches_when: phase, festival, cycle_day_min/max, ...) wins and is re-checked on every phase and day change. Same track as the one playing: it keeps playing. A scene not listed keeps the music that is playing. 'chapter_end_stingers' plays a stinger on the time-jump card of the chapter being left (chapter id -> stinger id); 'events' are stingers fired by game moments (Music.event(name)). While a stinger plays the loop ducks by 'duck_db'. 'tracks' and 'stingers' (id -> res:// path) are generated from the prompts' front matter (id:, game:) by tools/gen_music_map.py; do not edit them by hand. A missing file plays nothing until the rendered file is synced in.",
+	"crossfade_seconds": 2.0,
+	"duck_db": -12.0,
+	"scenes": {
+		"res://scenes/ui/main_menu.tscn": "title_theme",
+		"res://scenes/maps/village.tscn": {
+			"track": "island_village",
+			"when": [
+				{
+					"when": {
+						"phase": "night"
+					},
+					"track": "island_night"
+				},
+				{
+					"when": {
+						"festival": true
+					},
+					"track": "festival_fourteenth"
+				},
+				{
+					"when": {
+						"cycle_day_min": 15,
+						"cycle_day_max": 20
+					},
+					"track": "island_night"
+				}
+			]
+		},
+		"res://scenes/maps/temple.tscn": "temple",
+		"res://scenes/minigames/ritual_puzzle.tscn": "ritual_puzzle",
+		"res://scenes/ruins/ruins_wreck.tscn": "ruins_wreck",
+		"res://scenes/ruins/ruins_corridor.tscn": "ruins_colony",
+		"res://scenes/ruins/ruins_core.tscn": "ruins_colony",
+		"res://scenes/ruins/ruins_bunker_lift.tscn": "bunker_clone_lab",
+		"res://scenes/ruins/ruins_clone_hall.tscn": "bunker_clone_lab",
+		"res://scenes/ruins/ruins_records.tscn": "bunker_clone_lab",
+		"res://scenes/florida/beach.tscn": "florida_beach",
+		"res://scenes/florida/garden.tscn": "florida_garden",
+		"res://scenes/florida/aquarium.tscn": "florida_aquarium",
+		"res://scenes/florida/stable.tscn": "pony_stable",
+		"res://scenes/chapters/chapter_end.tscn": "",
+		"res://scenes/chapters/flashback_card.tscn": "cruise_lounge",
+		"res://scenes/minigames/interview.tscn": "the_interview",
+		"res://scenes/minigames/landing.tscn": "the_landing",
+		"res://scenes/minigames/hottest_chains.tscn": "hottest_of_the_hot",
+		"res://scenes/minigames/hottest_of_the_hot.tscn": "hottest_of_the_hot",
+		"res://scenes/minigames/next_top_comic.tscn": "next_top_comic"
+	},
+	"chapter_end_stingers": {
+		"island": "chapter_end_before_the_wreck"
+	},
+	"events": {
+		"name_it": "name_it_sting"
+	},
+	"tracks": {
+		"cruise_lounge": "res://audio/music/cruise/cruise_lounge.mp3",
+		"hottest_of_the_hot": "res://audio/music/cruise/hottest_of_the_hot.mp3",
+		"next_top_comic": "res://audio/music/cruise/next_top_comic.mp3",
+		"the_interview": "res://audio/music/cruise/the_interview.mp3",
+		"the_landing": "res://audio/music/cruise/the_landing.mp3",
+		"florida_aquarium": "res://audio/music/florida/florida_aquarium.mp3",
+		"florida_beach": "res://audio/music/florida/florida_beach.mp3",
+		"florida_garden": "res://audio/music/florida/florida_garden.mp3",
+		"pony_stable": "res://audio/music/florida/pony_stable.mp3",
+		"festival_fourteenth": "res://audio/music/island/festival_fourteenth.mp3",
+		"island_night": "res://audio/music/island/island_night.mp3",
+		"island_village": "res://audio/music/island/island_village.mp3",
+		"ritual_puzzle": "res://audio/music/island/ritual_puzzle.mp3",
+		"bunker_clone_lab": "res://audio/music/ruins/bunker_clone_lab.mp3",
+		"ruins_colony": "res://audio/music/ruins/ruins_colony.mp3",
+		"ruins_wreck": "res://audio/music/ruins/ruins_wreck.mp3",
+		"temple": "res://audio/music/temple/temple.mp3",
+		"title_theme": "res://audio/music/ui/title_theme.mp3"
+	},
+	"stingers": {
+		"chapter_end_before_the_wreck": "res://audio/stingers/chapter_end_before_the_wreck.mp3",
+		"name_it_sting": "res://audio/stingers/name_it_sting.mp3"
+	}
+}
