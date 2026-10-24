@@ -268,6 +268,21 @@ those sheets. The planned music, key art and video are to be generated with Gemi
 and Veo) from the prompts in `prompts/`. All voice clips, cloned or built-in, are generated with
 XTTS v2.
 
+## Citations
+
+Every work cited in the game and its documentation (quote sources, books, television and games
+named in the design, and the law and policy sources in the release checklist) is listed on the
+[Citations & Further Reading](https://persistint.dataglut.org/citations.html) page
+(`site/public/citations.html`), with further peer-reviewed reading on social aggression,
+cyberbullying, body-shaming and coercive control by girls and women.
+
+## Support
+
+The [Need support?](https://persistint.dataglut.org/support.html) page (`site/public/support.html`)
+lists crisis lines by country, support services for girls and women hurt by other girls and
+women, and validated screening tools with their validation studies. The game's main menu links to
+it with the **Help & Support** button.
+
 ## About
 
 ![GNPNG x PERSISTINT: the studio team](docs/images/web/gnpng-persistint-banner-studio-team.png)

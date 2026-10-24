@@ -42,10 +42,12 @@
   </a>
   <nav aria-label="Sections">
     <ul>
-      <li><a href="#trailer">Trailer</a></li>
-      <li><a href="#worlds">Worlds</a></li>
-      <li><a href="#name-it">Name It</a></li>
-      <li><a href="#cruise">Cruise</a></li>
+      <li class="nav-sec"><a href="#trailer">Trailer</a></li>
+      <li class="nav-sec"><a href="#worlds">Worlds</a></li>
+      <li class="nav-sec"><a href="#name-it">Name It</a></li>
+      <li class="nav-sec"><a href="#cruise">Cruise</a></li>
+      <li><a href="/citations.html">Citations</a></li>
+      <li><a href="/support.html">Support</a></li>
       <li><a class="nav-play" href="/play/">Play</a></li>
     </ul>
   </nav>
@@ -277,6 +279,8 @@
       <a class="gnpng" href="https://gnpng.org">gnpng.org</a>
       <a href="https://www.youtube.com/watch?v=8GxFjrDAJf4">Book trailer on YouTube</a>
       <a href="/play/">Play <span data-version>v0.1.0</span></a>
+      <a href="/citations.html" data-modal="cite-modal">Citations &amp; further reading</a>
+      <a class="safety-badge" href="/support.html"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5z" fill="#a8d4f5" stroke="#593859" stroke-width="1.5" stroke-linejoin="round"/><path d="M12 16.5s-4-2.4-4-5.1A2.2 2.2 0 0 1 12 10a2.2 2.2 0 0 1 4 1.4c0 2.7-4 5.1-4 5.1z" fill="#ff8fb1"/></svg>Online safety &amp; support</a>
     </div>
   </div>
   <div class="wrap legal">
@@ -301,6 +305,30 @@ document.querySelectorAll('.video[data-yt]').forEach(function (box) {
     f.focus();
   });
 });
+</script>
+<dialog id="cite-modal" class="modal" aria-labelledby="cite-modal-title">
+  <div class="modal-head"><h2 id="cite-modal-title">Citations &amp; further reading</h2><button type="button" class="modal-close" aria-label="Close">&times;</button></div>
+  <div class="modal-body" tabindex="0"><p><a href="/citations.html">Open the citations page</a></p></div>
+</dialog>
+<script>
+(() => {
+  const dlg = document.getElementById('cite-modal');
+  if (!dlg || typeof dlg.showModal !== 'function') return;
+  const body = dlg.querySelector('.modal-body');
+  let loaded = false;
+  document.querySelectorAll('a[data-modal="cite-modal"]').forEach(a => a.addEventListener('click', async e => {
+    e.preventDefault();
+    dlg.showModal();
+    if (loaded) return;
+    try {
+      const html = await (await fetch(a.getAttribute('href'))).text();
+      const main = new DOMParser().parseFromString(html, 'text/html').querySelector('main');
+      if (main) { body.replaceChildren(...main.childNodes); loaded = true; }
+    } catch (_) { /* the fallback link stays */ }
+  }));
+  dlg.querySelector('.modal-close').addEventListener('click', () => dlg.close());
+  dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+})();
 </script>
 <a class="gnpng-float" href="https://gnpng.org" aria-label="GNPNG Ping Pong"><svg viewBox="0 0 192 76" width="96" height="38" aria-hidden="true">
   <rect x="1.5" y="1.5" width="189" height="73" rx="16" fill="#fdf6e3" stroke="#ffb3c8" stroke-width="3"/>
