@@ -47,9 +47,20 @@ for f in sorted((ROOT / "dialogue").glob("*.dialogue")):
         m = re.match(r'\s*(\{\{Cast\.full\("\w+"\)\}\}|[A-Z][^:{]*):\s*(.+)$', raw)
         if m:
             add(resolve(m.group(1)), resolve(m.group(2)))
+usable = lambda q: q.get("verified") is True and q.get("excluded_from_game") is not True and not q.get("fragment")
+# Clones speak their original's usable quotes (data/quotes/<file>.json), keyed by cast id, as
+# ZombieChild.quote_pool picks them (verified, not excluded_from_game).
 for stem, cid in QUOTE_SPEAKERS.items():
     for q in json.loads((ROOT / f"data/quotes/{stem}.json").read_text()).get("quotes", []):
-        add(cid, q["text"])
+        if usable(q):
+            add(cid, q["text"])
+# Real people who speak only their own sourced words (data/quotes/<cast id>.json): every usable quote
+# (verified, not excluded_from_game) and every verified, whole-line speech habit, under their display name.
+for cid in ("atwood",):
+    qf = json.loads((ROOT / f"data/quotes/{cid}.json").read_text())
+    for q in qf.get("quotes", []) + qf.get("speech_habits", []):
+        if usable(q):
+            add(name(cid), q["text"])
 seen, out = set(), []
 for l in lines:
     if l["key"] not in seen:

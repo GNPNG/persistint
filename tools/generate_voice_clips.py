@@ -5,11 +5,14 @@ Usage:
   python3 -I tools/generate_voice_clips.py [--speaker NAME] [--force]
 
 Each speaker's voice is set in project/data/voices.json (keyed by cast id): a reference
-recording of the real person ("ref", 6-30 s of clean speech) or one of XTTS-v2's built-in
+recording of the real person ("ref", 6-30 s of clean speech; optional "extra_refs": more clips
+of the same person, all passed to XTTS together) or one of XTTS-v2's built-in
 studio voices ("builtin") for characters who aren't real people. Clips are synthesized with Coqui XTTS-v2 (an LLM-based TTS: a GPT-style model
 that speaks text in the reference speaker's voice) and written to project/audio/voice/<key>.wav,
 which Voice.speak plays instead of system text-to-speech. Lines whose speaker has no reference
 recording are skipped. Requires: pip install coqui-tts (uses CUDA when available).
+Known-good venv: torch 2.4.1, coqui-tts 0.24.3, transformers 4.46.3 (SOP-05 section 10); on a GPU
+whose torch build has no kernels, force CPU with CUDA_VISIBLE_DEVICES="".
 """
 import argparse
 import json
@@ -38,7 +41,8 @@ def main():
     def voice_for(speaker):
         v = by_name.get(speaker) or voices.get(speaker) or {}
         if "ref" in v and (ROOT / v["ref"]).exists():
-            return {"speaker_wav": str(ROOT / v["ref"])}
+            extra = [str(ROOT / r) for r in v.get("extra_refs", []) if (ROOT / r).exists()]
+            return {"speaker_wav": [str(ROOT / v["ref"])] + extra if extra else str(ROOT / v["ref"])}
         if "builtin" in v:
             return {"speaker": v["builtin"]}
         return None

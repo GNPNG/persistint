@@ -3,7 +3,8 @@
 Usage: python3 -I tools/verify_quotes.py [--list-unverified]
 Reads only the json fields written by the verbatim V&V pass (verified, checked_url, primary_source,
 was, note, excluded_from_game); no network. "usable" = verified and not excluded_from_game (only
-those may be used in game). Prints a per-file table and exits 1 if any quote lacks a verified flag or a
+those may be used in game). A file's optional "speech_habits" list (verbatim utterances transcribed from
+recordings) is checked the same way, as its own row, and each entry also needs a "timestamp". Prints a per-file table and exits 1 if any quote lacks a verified flag or a
 checked_url, or if a url is not https.
 """
 import json
@@ -16,8 +17,14 @@ QUOTES = Path(__file__).resolve().parent.parent / "project/data/quotes"
 def main() -> int:
     list_unverified = "--list-unverified" in sys.argv[1:]
     rows, problems, unverified = [], [], []
+    lists = []
     for path in sorted(QUOTES.glob("*.json")):
-        quotes = json.loads(path.read_text())["quotes"]
+        data = json.loads(path.read_text())
+        lists.append((path.name, data["quotes"]))
+        if "speech_habits" in data:  # verbatim from recordings: each also needs a timestamp
+            lists.append((f"{path.name}:speech_habits", data["speech_habits"]))
+    for name, quotes in lists:
+        path = Path(name)
         n = len(quotes)
         ok = sum(1 for q in quotes if q.get("verified") is True)
         corrected = sum(1 for q in quotes if "was" in q)
@@ -29,6 +36,8 @@ def main() -> int:
                 problems.append(f"{path.name}[{i}]: no verified flag")
             if not q.get("checked_url"):
                 problems.append(f"{path.name}[{i}]: no checked_url")
+            if name.endswith(":speech_habits") and not q.get("timestamp"):
+                problems.append(f"{path.name}[{i}]: no timestamp")
             for key in ("url", "checked_url", "primary_source"):
                 if q.get(key) and not str(q[key]).startswith("https://"):
                     problems.append(f"{path.name}[{i}]: {key} is not https")

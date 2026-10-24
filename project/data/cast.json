@@ -167,5 +167,9 @@
 	"gadsby": {
 		"name": "Hannah Gadsby",
 		"short": "Hannah"
+	},
+	"atwood": {
+		"name": "Margaret Atwood",
+		"short": "Margaret"
 	}
 }
