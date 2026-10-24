@@ -12,6 +12,13 @@ const PAPER_DOLL := preload("res://scripts/systems/paper_doll.gd")
 ## The passenger on the runway: this tall, the top this far above the screen centre.
 const DOLL_HEIGHT := 192.0
 const DOLL_TOP := -150.0
+## Who stands by the runway (stand-in figures, tools/gen_stage_hosts.py, named by nameplates):
+## the emcee and the show's host at the runway's edge, stage left (the pickers are on the right);
+## feet and height in screen px.
+const EMCEE_ART := "res://assets/ui/stage/host_emcee.png"
+const HOST_ART := "res://assets/ui/stage/host_runway.png"
+const EMCEE_SPOT := Vector3(80, 272, 104)
+const HOST_SPOT := Vector3(178, 272, 104)
 const GAME_ID := "hottest_of_the_hot"
 const Flashbacks := preload("res://scripts/chapters/flashbacks.gd")
 
@@ -45,6 +52,10 @@ func _ready() -> void:
 	doll.offset_top = DOLL_TOP
 	doll.offset_bottom = DOLL_TOP + size.y
 	add_child(doll)
+	for pair: Array in [[StageFigure.host(EMCEE_ART, emcee.get("emcee", "")), EMCEE_SPOT],
+			[StageFigure.host(HOST_ART, data.get("host", "")), HOST_SPOT]]:
+		add_child(pair[0])
+		pair[0].place(pair[1].x, pair[1].y, pair[1].z)
 	var panel := PanelContainer.new()
 	panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER_RIGHT, Control.PRESET_MODE_MINSIZE, 14)
 	panel.grow_horizontal = Control.GROW_DIRECTION_BEGIN
