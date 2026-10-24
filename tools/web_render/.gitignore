@@ -1,8 +1,0 @@
-node_modules
-debug/
-runs/
-config.local.json
-# in case a profile or download folder is pointed inside the repo
-.profile/
-chrome-profile/
-downloads/

@@ -212,7 +212,7 @@ godot --path project -s tools/screenshot_scenes.gd -- <out_dir> [prefix]
   `python3 tools/check_prompts.py` checks them.
 - **Rendering.** `tools/render_all_assets.py` renders prompts through the Gemini API (`--status`,
   `--export-queue`, `--type ...`). A browser-driven renderer for the Gemini web app is in
-  progress in [tools/web_render/](tools/web_render/). `tools/sync_rendered_assets.py` copies rendered files into `project/` (converting video
+  progress in [tools/web_render/](tools/web_render/), the [gnomatix/web-render](https://gitea.gnomatix.com/gnomatix/web-render) engine as a submodule (`git submodule update --init` after cloning; project side: `web-render.config.json`). `tools/sync_rendered_assets.py` copies rendered files into `project/` (converting video
   to Godot's `.ogv`) and lists what is still missing. See [prompts/README.md](prompts/README.md).
 - **Placeholders.** Until rendered art arrives, `tools/gen_placeholder_art.sh` (ImageMagick) and
   the generator scripts in `tools/` make placeholder tiles and sprites.
