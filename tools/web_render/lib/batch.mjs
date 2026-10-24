@@ -148,18 +148,38 @@ export async function deleteChat(session, chatUrl) {
 }
 
 /** Submit every task not already submitted; `gapMs` between sends. */
-export async function submitAll(session, { tasks, surfaceOf, promptOf, file, gapMs, log = console.log }) {
+export async function submitAll(session, { tasks, surfaceOf, promptOf, file, gapMs, wait = false, log = console.log }) {
   const state = loadBatch(file);
-  const todo = tasks.filter((t) => !state[t.id]?.chat);
+  const todo = tasks.filter((t) => !state[t.id]?.chat && !downloaded(t));
   log(`batch submit: ${todo.length} to send (${tasks.length - todo.length} already have a chat), ${Math.round(gapMs / 1000)}s apart`);
   for (const [i, t] of todo.entries()) {
     if (i) await sleep(gapMs);
     log(`[${i + 1}/${todo.length}] ${t.kind} ${t.id}`);
     try {
-      const chat = await submitOne(session, surfaceOf(t), t, promptOf(t));
+      const surface = surfaceOf(t);
+      let chat = await submitOne(session, surface, t, promptOf(t));
       state[t.id] = { kind: t.kind, chat, submitted: new Date().toISOString() };
       saveBatch(file, state, t.id);
-      log(`    -> ${chat}`);
+      log(`    generation started (${chat})`);
+      if (wait) {
+        // Author, 2026-10-24: stay on this chat until it completes, download, then delete it,
+        // and only then send the next prompt. The chat id is read again here, once it is final.
+        const gms = surface.timeouts?.generateMs ?? 900_000;
+        await waitForResult(session, surface, 0, gms, null);
+        chat = session.page.url().split('?')[0];
+        const got = await capture(session, surface, { vars: { aspect: t.aspect, id: t.id }, stepMs: surface.timeouts?.stepMs ?? 20_000 });
+        await finish(session, t, got, surface);
+        state[t.id] = { ...state[t.id], chat, harvested: new Date().toISOString() };
+        saveBatch(file, state, t.id);
+        if (downloaded(t)) {
+          try {
+            await deleteChat(session, chat);
+            state[t.id].deleted = new Date().toISOString();
+            saveBatch(file, state, t.id);
+            log(`    chat ${chatId(chat)} deleted`);
+          } catch (e) { log(`  !! ${t.id}: downloaded, chat kept: ${e.message.split('\n')[0]}`); }
+        }
+      }
     } catch (e) {
       const dir = await session.dumpDebug(t.id, e).catch(() => null);
       log(`  !! ${t.id}: ${e.message.split('\n')[0]}${dir ? ` (debug: ${dir})` : ''}`);

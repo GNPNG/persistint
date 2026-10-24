@@ -48,6 +48,8 @@ Options
   --harvest                batch: reopen each recorded chat and download its finished result into
                            the drop file; run again later for chats still generating
   --gap SEC                batch: seconds between sends with --submit (default 20)
+  --wait                   batch: with --submit, stay on each chat until it completes, download it,
+                           delete that chat, then send the next (one at a time)
 `;
 
 const { values: a } = parseArgs({
@@ -59,7 +61,7 @@ const { values: a } = parseArgs({
     'dry-run': { type: 'boolean' }, limit: { type: 'string' }, delay: { type: 'string' },
     'pause-on-error': { type: 'boolean' }, sync: { type: 'boolean' },
     chrome: { type: 'string' }, profile: { type: 'string' }, 'browser-url': { type: 'string' },
-    selectors: { type: 'string' }, submit: { type: 'boolean' }, harvest: { type: 'boolean' }, gap: { type: 'string' }, help: { type: 'boolean', short: 'h' },
+    selectors: { type: 'string' }, submit: { type: 'boolean' }, harvest: { type: 'boolean' }, gap: { type: 'string' }, wait: { type: 'boolean' }, help: { type: 'boolean', short: 'h' },
   },
   strict: true,
 });
@@ -117,7 +119,7 @@ async function runBatch(tasks) {
     if (a.submit) {
       const todo = selectTasks(tasks, { kind: a.kind, only: a.only, force: a.force });
       const gap = a.gap === undefined ? 20 : Number(a.gap);
-      await submitAll(session, { tasks: todo, surfaceOf, promptOf: (t) => drivers[t.kind].preparePrompt(t, surfaceOf(t)), file, gapMs: gap * 1000 });
+      await submitAll(session, { tasks: todo, surfaceOf, promptOf: (t) => drivers[t.kind].preparePrompt(t, surfaceOf(t)), file, gapMs: gap * 1000, wait: !!a.wait });
     }
     if (a.harvest) await harvestAll(session, { tasks: a.only ? tasks.filter((t) => a.only.split(',').map((x) => x.trim()).includes(t.id)) : tasks, surfaceOf, file });
   } finally {
