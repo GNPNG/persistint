@@ -414,10 +414,15 @@ figcaption { margin-top: 10px; font-size: .9rem; color: var(--plum-soft); text-a
 }
 .music-toggle:hover, .music-toggle:focus-visible { transform: translateY(-2px); }
 .music-toggle.on { background: var(--pink-hot); color: #fff; border-color: #fff; }
+.music-toggle svg { display: block; width: 22px; height: 22px; }
 .music-toggle .on-mark { display: none; }
 .music-toggle.on .off-mark { display: none; }
-.music-toggle.on .on-mark { display: inline-block; animation: music-bob 1.2s ease-in-out infinite; }
-@keyframes music-bob { 0%, 100% { transform: translateY(0) rotate(-8deg); } 50% { transform: translateY(-2px) rotate(8deg); } }
+.music-toggle.on .on-mark { display: block; }
+.music-toggle.on .w1 { animation: music-wave 1.6s ease-in-out infinite; }
+.music-toggle.on .w2 { animation: music-wave 1.6s ease-in-out .35s infinite; }
+.music-toggle.on::after { content: ""; position: absolute; inset: -3px; border-radius: 50%; border: 2px solid var(--pink-hot); pointer-events: none; animation: music-halo 1.6s ease-out infinite; }
+@keyframes music-wave { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
+@keyframes music-halo { 0% { transform: scale(1); opacity: .75; } 100% { transform: scale(1.8); opacity: 0; } }
 .heart-rain { position: fixed; inset: 0; z-index: 49; pointer-events: none; }
 @media (max-width: 480px) { .music-toggle { right: 10px; bottom: 10px; width: 40px; height: 40px; font-size: 20px; } }
-@media (prefers-reduced-motion: reduce) { .music-toggle { transition: none; } .music-toggle.on .on-mark { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .music-toggle { transition: none; } .music-toggle.on .w1, .music-toggle.on .w2, .music-toggle.on::after { animation: none; } }

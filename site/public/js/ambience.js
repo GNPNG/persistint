@@ -8,7 +8,7 @@
   // ---------------------------------------------------------------- music
   const btn = document.querySelector('.music-toggle');
   const KEY = 'persistint.music';
-  const VOLUME = 0.18;
+  const VOLUME = 0.04; // the author's call: very subtle, about a fifth of the first setting
   let audio = null;
   let fadeId = 0;
   const saved = (() => { try { return localStorage.getItem(KEY); } catch (_) { return null; } })();
@@ -17,7 +17,7 @@
     if (!btn) return;
     btn.setAttribute('aria-pressed', String(on));
     btn.classList.toggle('on', on);
-    btn.title = on ? 'Music is on (click to turn it off)' : 'Play the title theme quietly';
+    btn.title = on ? 'Music is on. Click to mute.' : 'Music is muted. Click to play the title theme, quietly.';
   };
   const ensure = () => {
     if (!audio) {
