@@ -18,7 +18,10 @@ of being shrunk here. The cut() function is imported by the art generators that 
 canon drawings at full resolution.
 Sheets are looked up under art/canon/*/ and dev/art/ (the world-building overview, which is
 kept in the git-crypt dev/ tree). A prop whose sheet is missing (a checkout without the
-git-crypt key) is skipped and its committed PNG stays.
+git-crypt key) is skipped and its committed PNG stays. The Queen Mother icon, the Seal of the O,
+the pillar orb, the skull altar, the heart and the sparkle come from that overview
+(dev/art/PERSISTINT_Novel_World-Building_Overview.png, sheet name "PERSISTINT").
+Deterministic: with the versions in tools/requirements-art.txt it reproduces the committed PNGs.
 """
 import json
 import sys

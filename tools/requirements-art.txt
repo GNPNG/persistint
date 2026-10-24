@@ -1,0 +1,11 @@
+# Versions the art tools (tools/cut_*.py, tools/cut_canon_sprites.sh, tools/gen_*.py) were last
+# run with; with these, every cutter and generator reproduces the committed PNGs byte for byte
+# (checked by rerunning them and `git status` showing no change). The cutters' background removal
+# (scipy.ndimage label / binary morphology / gaussian_filter) and Pillow's LANCZOS and PNG writer
+# are the version-sensitive parts: other versions can move edge alpha by a level or two.
+#   python3 -m pip install -r tools/requirements-art.txt
+numpy==2.4.4
+scipy==1.14.1
+Pillow==10.4.0
+# Not pip packages: ImageMagick 7.1.2-31 (magick, tools/cut_canon_sprites.sh) and
+# librsvg 2.62.3 (rsvg-convert, tools/gen_imprint_mark.py).
