@@ -12,7 +12,8 @@ extends SceneTree
 ## display height in data/island_props.json. Each map root filters its textures linearly with
 ## mipmaps, so everything is downsampled smoothly instead of shown as pixels.
 ## Tile names and atlas cells come from assets/tiles/island_tiles.json (written by the tile
-## generator); the village gets dual-grid edge overlays (Shallows, Shore, GrassEdge).
+## generator); the village gets dual-grid edge overlays (Shallows, Shore, PathEdge, PavingEdge,
+## GrassEdge), drawn in that order so each border runs up to the next instead of stopping short.
 
 const CELL := 32
 ## Tile names and atlas cells come from the tile generator (tools/gen_island_tiles.py).
@@ -199,10 +200,11 @@ func _tile_layer() -> void:
 	layer.y_sort_enabled = false
 
 
-func _edge_layer(layer_name: String, set_name: String, inside: Callable, skip: Callable) -> void:
+func _edge_layer(layer_name: String, set_name: String, inside: Callable, skip: Callable, need := Callable()) -> void:
 	## Dual-grid overlay: cell (i, j) sits half a cell up-left, its corners are the centres of
 	## ground cells (i-1, j-1), (i, j-1), (i-1, j), (i, j); its mask says which are inside.
-	## Cells touching a cell that skip() rejects stay empty.
+	## Cells touching a cell that skip() rejects stay empty, and so do cells with no corner
+	## that need() accepts (when given).
 	var layer := TileMapLayer.new()
 	layer.tile_set = _ts
 	layer.scale = Vector2.ONE * CELL / _tile_px
@@ -213,6 +215,7 @@ func _edge_layer(layer_name: String, set_name: String, inside: Callable, skip: C
 		for i in _size.x + 1:
 			var mask := 0
 			var bad := false
+			var wanted := not need.is_valid()
 			var k := 0
 			for c: Vector2i in [Vector2i(i - 1, j - 1), Vector2i(i, j - 1), Vector2i(i - 1, j), Vector2i(i, j)]:
 				var cc := c.clamp(Vector2i.ZERO, _size - Vector2i.ONE)
@@ -221,8 +224,10 @@ func _edge_layer(layer_name: String, set_name: String, inside: Callable, skip: C
 					bad = true
 				if inside.call(t):
 					mask |= 1 << k
+				if not wanted and need.call(t):
+					wanted = true
 				k += 1
-			if not bad and mask != 0 and mask != 15:
+			if wanted and not bad and mask != 0 and mask != 15:
 				layer.set_cell(Vector2i(i, j), 0, first + Vector2i(mask, 0))
 	_add(layer, layer_name)
 	layer.y_sort_enabled = false
@@ -502,18 +507,26 @@ func _build_village() -> void:
 
 	_trees()
 	_hearts_and_sparkles()
-	# Round the coast and the grass borders.
+	# Round the coast and the grass borders. The Shore goes first and the land overlays over
+	# it, none of them skipping cells that touch the sea, so footpaths, paving and grass run
+	# right up to the coast instead of stopping a cell short of it in a square notch.
 	var sea := func(t: String) -> bool: return t == "water" or t == "foam"
-	_edge_layer("Shallows", "shallows", func(t: String) -> bool: return t != "water", func(_t: String) -> bool: return false)
-	_edge_layer("Shore", "shore", func(t: String) -> bool: return not sea.call(t), func(_t: String) -> bool: return false)
-	# Footpaths and paving get soft borders where they meet sand; grass borders are drawn
-	# by GrassEdge, so those cells are left to it.
-	var grassy := func(t: String) -> bool: return sea.call(t) or t.begins_with("grass") or t in ["soil", "sprouts", "rock"]
-	_edge_layer("PathEdge", "path_edge", func(t: String) -> bool: return t == "path",
-		func(t: String) -> bool: return grassy.call(t) or t == "plaza" or t.begins_with("rug") or t.begins_with("pool"))
-	_edge_layer("PavingEdge", "paving_edge", func(t: String) -> bool: return t == "plaza" or t.begins_with("rug"),
-		func(t: String) -> bool: return grassy.call(t) or t.begins_with("pool"))
-	_edge_layer("GrassEdge", "grass_edge", func(t: String) -> bool: return t.begins_with("grass"), sea)
+	var none := func(_t: String) -> bool: return false
+	_edge_layer("Shallows", "shallows", func(t: String) -> bool: return t != "water", none)
+	_edge_layer("Shore", "shore", func(t: String) -> bool: return not sea.call(t), none)
+	# Footpaths and paving get soft borders where they meet sand. Where such a border also
+	# touches grass or paving, those corners count as inside too (so the border stops at
+	# them instead of leaving a square notch) and the overlays drawn after it (PavingEdge,
+	# GrassEdge) paint their own ground back over them. Soil, crops, rock and pools have no
+	# overlay of their own, so borders touching them are left out.
+	var bare := func(t: String) -> bool: return t in ["soil", "sprouts", "rock"] or t.begins_with("pool")
+	var paved := func(t: String) -> bool: return t == "plaza" or t.begins_with("rug")
+	_edge_layer("PathEdge", "path_edge",
+		func(t: String) -> bool: return t == "path" or t.begins_with("grass") or paved.call(t), bare,
+		func(t: String) -> bool: return t == "path")
+	_edge_layer("PavingEdge", "paving_edge",
+		func(t: String) -> bool: return paved.call(t) or t.begins_with("grass"), bare, paved)
+	_edge_layer("GrassEdge", "grass_edge", func(t: String) -> bool: return t.begins_with("grass"), none)
 
 	# Spawns (names unchanged) and exits.
 	_marker("spawn_default", _px(19.5, 12.5))
