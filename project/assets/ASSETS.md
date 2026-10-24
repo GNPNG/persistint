@@ -19,8 +19,8 @@ the file. Sorted by path.
 | project/assets/florida/acc_flower_crown.png | acc_flower_crown | tools/gen_florida_wearables.py (on the canon paper-doll frame) | still, 721x760 canon paper-doll frame (sheet resolution) | - |
 | project/assets/florida/acc_plumeria_lei.png | acc_plumeria_lei | tools/gen_florida_wearables.py (on the canon paper-doll frame) | still, 721x760 canon paper-doll frame (sheet resolution) | - |
 | project/assets/florida/acc_shell_garland.png | acc_shell_garland | tools/gen_florida_wearables.py (on the canon paper-doll frame) | still, 721x760 canon paper-doll frame (sheet resolution) | - |
-| project/assets/florida/bg_florida_aquarium.png | bg_florida_aquarium | tools/gen_florida_art.py | still, 4 texture px per world px; scenes scale 0.25 | - |
-| project/assets/florida/bg_florida_beach.png | bg_florida_beach | tools/gen_florida_art.py | still, 4 texture px per world px; scenes scale 0.25 | - |
+| project/assets/florida/bg_florida_aquarium.png | bg_florida_aquarium | tools/gen_florida_art.py (pool floor shells: canon shell_scallop/conch/spiral from project/data/florida_canon.json, cut at sheet resolution) | still, 4 texture px per world px; scenes scale 0.25 | - |
+| project/assets/florida/bg_florida_beach.png | bg_florida_beach | tools/gen_florida_art.py | still, 4 texture px per world px; scenes scale 0.25; the surf on its water line is sea_foam | - |
 | project/assets/florida/bg_florida_garden.png | bg_florida_garden | tools/gen_florida_art.py | still, 4 texture px per world px; scenes scale 0.25 | - |
 | project/assets/florida/bg_florida_stable.png | bg_florida_stable | tools/gen_florida_art.py | still, 4 texture px per world px; scenes scale 0.25 | - |
 | project/assets/florida/crab.png (+ crab.tres) | crab | tools/gen_florida_critters.py | 24x18 world px (96x72 texture); row 0 idle, row 1 walk, 4 cols; .tres idle/walk; .tres metadata display_scale 0.25 | - |
@@ -87,6 +87,7 @@ the file. Sorted by path.
 | project/assets/florida/prop_tree_mango.png | prop_tree_mango | tools/gen_florida_art.py | still, 4 texture px per world px; scenes scale 0.25 | - |
 | project/assets/florida/prop_trough.png | prop_trough | tools/gen_florida_art.py | still, 4 texture px per world px; scenes scale 0.25 | - |
 | project/assets/florida/prop_umbrella.png | prop_umbrella | tools/gen_florida_art.py | still, 4 texture px per world px; scenes scale 0.25 | - |
+| project/assets/florida/sea_foam.png (+ sea_foam.tres) | sea_foam | tools/gen_florida_art.py | sheet, frame 960x120 world px (3840x480 texture), one frame per row, rows 0-5; .tres lap (rows 0-5 at 5 fps, loop), metadata display_scale 0.25; AnimatedSprite2D at world (0, 180) in beach.tscn, top-left anchor, scale 0.25 | - |
 | project/assets/florida/seed_bag.png | seed_bag | tools/gen_florida_art.py | still, 4 texture px per world px; scenes scale 0.25 | - |
 | project/assets/florida/shell_conch.png | shell_conch | tools/cut_island_props.py project/data/florida_canon.json (canon tide scroll, sheet 481b) | still, canon sheet resolution; shown 11 world px tall | - |
 | project/assets/florida/shell_scallop.png | shell_scallop | tools/cut_island_props.py project/data/florida_canon.json (canon tide scroll, sheet 481b) | still, canon sheet resolution; shown 11 world px tall | - |

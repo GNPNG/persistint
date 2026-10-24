@@ -18,6 +18,7 @@
 [ext_resource type="PackedScene" path="res://scenes/florida/critter.tscn" id="16"]
 [ext_resource type="PackedScene" path="res://scenes/florida/shell.tscn" id="17"]
 [ext_resource type="PackedScene" path="res://scenes/npc/npc.tscn" id="18"]
+[ext_resource type="SpriteFrames" path="res://assets/florida/sea_foam.tres" id="19"]
 
 [sub_resource type="NavigationPolygon" id="navpoly"]
 vertices = PackedVector2Array(40, 300, 920, 300, 920, 526, 40, 526)
@@ -34,6 +35,15 @@ map_size = Vector2(960, 540)
 z_index = -1
 texture = ExtResource("2")
 scale = Vector2(0.25, 0.25)
+centered = false
+
+[node name="SeaFoam" type="AnimatedSprite2D" parent="."]
+z_index = -1
+position = Vector2(0, 180)
+scale = Vector2(0.25, 0.25)
+sprite_frames = ExtResource("19")
+animation = &"lap"
+autoplay = "lap"
 centered = false
 
 [node name="Nav" type="NavigationRegion2D" parent="."]

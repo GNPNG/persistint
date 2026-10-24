@@ -25,6 +25,13 @@ Outputs, all in project/assets/florida/:
   fish.png + fish.tres: frame 16x12 world px (64x48 texture); rows 0 coral, 1 mango, 2 lilac; columns 0-2 swim
       (tail wiggle), 3 fin wave. Animations swim_<colour> (frames 0,1,2,1 at 5 fps) and
       wave_<colour> (frames 3,0 at 2 fps). Faces right; anchor: frame centre.
+  sea_foam.png + sea_foam.tres: the beach's surf line, animated. Frame 960x120 world px
+      (3840x480 texture), one frame per row, rows 0-5 (one column); animation "lap" plays
+      rows 0-5 at 5 fps, looping: the foam line and a turquoise wash slide up to 7 world px
+      over the wet sand and back. Placed at world (0, 180) over bg_florida_beach, top-left
+      anchor; the dock is cut out so its posts stay on top.
+The aquarium pool's floor shows the canon shells (project/data/florida_canon.json 'props',
+cut at full resolution through tools/cut_island_props.py) on a little sand patch.
 """
 import json
 import math
@@ -690,13 +697,56 @@ def wavy(y0, amp, period, phase, x0=-10, x1=970, step=6):
             for x in range(x0, x1 + 1, step)]
 
 
+DOCK = (588, 624, 96, 284)  # x0, x1, top, bottom of the beach dock (world px)
+
+
+def beach_shore():
+    """The beach's water line, pulled up on the right where the aquarium stands on its sandy point."""
+    return [(x, y - 60 * min(1, max(0, (x - 760) / 80))) for x, y in wavy(268, 6, 220, 0.6)]
+
+
+FOAM_Y, FOAM_H, FOAM_FRAMES = 180, 120, 6
+
+
+def sea_foam_sheet():
+    """The surf on the beach: per frame the foam line and a turquoise wash sit d world px further
+    up the wet sand (d eases 0 -> 7 -> 0 over the loop), with a lighter second wave behind."""
+    shore = beach_shore()
+    back = wavy(262, 5, 180, 2.0, -10, 760)
+    fw, fh = 960 * fd.D, FOAM_H * fd.D
+    sheet = Image.new("RGBA", (fw, fh * FOAM_FRAMES))
+    dx0, dx1, dtop, dbot = DOCK
+    for k in range(FOAM_FRAMES):
+        rnd = random.Random(700 + k)
+        d = 7 * (1 - math.cos(2 * math.pi * k / FOAM_FRAMES)) / 2
+        im = Image.new("RGBA", (960 * BG_S, FOAM_H * BG_S))
+        p = Pen(im, BG_S, oy=-FOAM_Y)
+        edge = [(x, y + d) for x, y in shore]
+        p.poly([(x, y + 2) for x, y in shore] + list(reversed(edge)), fd.alpha("#9be6d6", 0x9a), 0)
+        p.line(edge, fd.alpha("#bfeee4", 0xe0), 6)
+        p.line([(x, y - 1) for x, y in edge], WHITE, 3.4)
+        for x, y in edge[::5]:
+            p.ell(x + rnd.uniform(-2, 2), y + 1, rnd.uniform(3, 5), 1.6, WHITE, 0)
+        for x, y in edge[2::9]:
+            p.ell(x, y - 3, 0.9, 0.9, fd.alpha(WHITE, 0xc0), 0)
+        p.line([(x, y - 9 + d * 0.5) for x, y in back], fd.alpha(WHITE, 0x90), 1.4)
+        # the dock stays on top: clear its planks and post tops from the strip
+        cp = Pen(im, BG_S, oy=-FOAM_Y)
+        cp.rect(dx0 - 0.6, FOAM_Y - 10, dx1 + 0.6, dbot + 0.6, (0, 0, 0, 0), 2, 0)
+        for y in range(dtop + 4, dbot, 36):
+            for x in (dx0 + 1, dx1 - 1):
+                cp.ell(x, y, 3.8, 3.8, (0, 0, 0, 0), 0)
+        sheet.alpha_composite(im.resize((fw, fh), Image.LANCZOS), (0, k * fh))
+    fd.save(sheet, "sea_foam")
+    fd.write_frames("sea_foam", 960, FOAM_H, [("lap", 0, [(0, r) for r in range(FOAM_FRAMES)], 5, True)])
+
+
 def beach_bg():
     """Sea across the top (deep blue to turquoise shallows), foam, wet sand, warm dry sand with
     starfish and shells, two towels, the dock out into the water, footprints, dune grass."""
     rnd = random.Random(101)
     g = Ground(fd.SAND)
-    # the shoreline, pulled up on the right where the aquarium stands on its sandy point
-    shore = [(x, y - 60 * min(1, max(0, (x - 760) / 80))) for x, y in wavy(268, 6, 220, 0.6)]
+    shore = beach_shore()
     bands = [(0, "#7ec3e6"), (70, "#88cdea"), (140, "#8fd6e8"), (200, "#86dccf"), (240, "#9be6d6")]
     sea = Image.new("RGBA", g.im.size)
     sp = Pen(sea, BG_S)
@@ -718,13 +768,9 @@ def beach_bg():
             p.sparkle(x, y, rnd.uniform(1.6, 2.8), WHITE, None)
     wet = [(x, y + 16) for x, y in shore]
     p.poly(shore + list(reversed(wet)), "#f3d9a6", 0)
-    p.line(shore, "#bfeee4", 7)
-    p.line([(x, y - 1) for x, y in shore], WHITE, 3.4)
-    for x, y in shore[::5]:
-        p.ell(x, y + 1, rnd.uniform(3, 5), 1.6, WHITE, 0)
-    p.line([(x, y - 9) for x, y in wavy(262, 5, 180, 2.0, -10, 760)], fd.alpha(WHITE, 0x90), 1.4)
+    p.line(shore, "#bfeee4", 7)  # the water's edge; the foam on it is the sea_foam sheet
     # the dock: planks on posts out into the water, where the Father ties up
-    dx0, dx1, dtop = 588, 624, 96
+    dx0, dx1, dtop, _ = DOCK
     for y in (110, 160, 210, 250):
         for x in (dx0 + 2, dx1 - 2):
             p.ell(x, y + 8, 3.4, 2.2, fd.alpha("#5f97b8", 0x80), 0)
@@ -807,7 +853,7 @@ POOL = (240, 140, 720, 340)  # the show pool, also used by the aquarium scene's 
 def aquarium_bg():
     """The aquarium show room seen from above: a pale boardwalk floor, the back wall with
     portholes onto the sea, and the big round-cornered show pool in the middle where the
-    mermaids swim (turquoise water, light ripples, coral and sea grass, a rock with a pearl)."""
+    mermaids swim (turquoise water, light ripples, coral and sea grass, canon shells on a sand patch)."""
     rnd = random.Random(303)
     g = Ground("#f4e3c6")
     p = g.p
@@ -848,7 +894,7 @@ def aquarium_bg():
     for _ in range(40):  # light ripples
         x, y = rnd.uniform(x0 + 30, x1 - 30), rnd.uniform(y0 + 20, y1 - 20)
         p.arc(x, y, rnd.uniform(6, 12), rnd.uniform(2, 3.5), 200, 340, fd.alpha(WHITE, 0x90), 1.0)
-    # coral and sea grass along the pool's floor edge, a rock with a pearl in the middle
+    # coral and sea grass along the pool's floor edge
     for x, y, col in ((290, 175, fd.CORAL), (680, 180, "#ff9fc0"), (300, 310, "#c9a8f0"), (660, 305, fd.MANGO),
                       (420, 320, "#ff9fc0"), (560, 160, "#c9a8f0")):
         for a in (-50, -90, -130):
@@ -862,11 +908,18 @@ def aquarium_bg():
             pts = [(x + k * 5 + math.sin(j) * 2, y - j * 5) for j in range(5)]
             p.line(pts, "#6cbf8a", 3)
             p.line(pts, "#8fdca8", 1.4)
-    p.blob([(472, 244, 22), (494, 236, 18), (486, 254, 16)], "#d7cfe6", 1.2)
-    p.ell(470, 234, 7, 3, fd.alpha(WHITE, 0x90), 0)
-    p.ell(492, 244, 9, 6, "#ffb3c8", 1.0)  # an open clam with a pearl
-    p.ell(492, 243, 4, 4, WHITE, 0.8)
-    p.sparkle(500, 232, 4, fd.SPARK, fd.GOLD)
+    # a little sand patch on the pool floor with the canon shells from the tide scroll
+    patch = mix("#f6e6c0", "#58b8dc", 0.12)
+    p.blob([(470, 250, 22), (496, 246, 20), (484, 258, 18)], patch, 0.8, mix(patch, INK, 0.3))
+    for x, y, r in ((452, 256, 2.4), (510, 254, 2.0), (500, 262, 1.6), (462, 244, 1.4)):
+        p.ell(x, y, r, r * 0.7, "#fff4dc", 0.5, mix(patch, INK, 0.3))
+    for name, cx, cy, wide in (("shell_scallop", 470, 246, 18), ("shell_conch", 494, 252, 15),
+                               ("shell_spiral", 482, 236, 11)):
+        sh = fd.canon_prop(name)
+        sw = round(wide * BG_S)
+        sh = sh.resize((sw, round(sh.height * sw / sh.width)), Image.LANCZOS)
+        g.im.alpha_composite(sh, (round(cx * BG_S - sh.width / 2), round(cy * BG_S - sh.height / 2)))
+    p.sparkle(504, 238, 3.2, fd.SPARK, fd.GOLD)
     for _ in range(40):
         r = rnd.uniform(1.4, 3.2)
         p.ell(rnd.uniform(x0 + 30, x1 - 30), rnd.uniform(y0 + 20, y1 - 20), r, r, fd.alpha(WHITE, 0x80), 0.6, "#c6eefb")
@@ -945,6 +998,7 @@ def main():
     prop("craft_bench", 52, 30, craft_bench)
     fish_sheet()
     beach_bg()
+    sea_foam_sheet()
     garden_bg()
     aquarium_bg()
     stable_bg()
