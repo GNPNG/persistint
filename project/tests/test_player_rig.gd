@@ -61,7 +61,9 @@ func _run() -> void:
 	_check(layers[0].animation == &"idle_up", "stopping stands, still facing up")
 
 	var npc_sheet: Texture2D = load("res://assets/characters/npc_priestess_rig.png")
-	var img := npc_sheet.get_image()
+	# The source PNG, not the imported texture: big sheets import lossy (tools/set_texture_imports.py)
+	# and a compressed texture has no pixels to read under the headless renderer.
+	var img := Image.load_from_file(ProjectSettings.globalize_path("res://assets/characters/npc_priestess_rig.png"))
 	var fr := RigSheet.frame_size(npc_sheet)
 	var idle := img.get_region(Rect2i(0, 0, int(fr.x), int(fr.y)))
 	var walk := img.get_region(Rect2i(int(fr.x) * 4, 0, int(fr.x), int(fr.y)))

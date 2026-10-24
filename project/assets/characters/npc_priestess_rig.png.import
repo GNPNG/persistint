@@ -3,21 +3,22 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c0tptsfuh0xhx"
-path="res://.godot/imported/npc_priestess_rig.png-bba77e023f33b77fba1aac6176a1d104.ctex"
+path.s3tc="res://.godot/imported/npc_priestess_rig.png-bba77e023f33b77fba1aac6176a1d104.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/characters/npc_priestess_rig.png"
-dest_files=["res://.godot/imported/npc_priestess_rig.png-bba77e023f33b77fba1aac6176a1d104.ctex"]
+dest_files=["res://.godot/imported/npc_priestess_rig.png-bba77e023f33b77fba1aac6176a1d104.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
-compress/lossy_quality=0.7
+compress/lossy_quality=0.9
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
