@@ -30,8 +30,9 @@ const OTHER_HEIGHTS := {"deco_tree_a": 52.0, "deco_tree_b": 52.0, "deco_tree_c":
 var _ts: TileSet
 var _walk: Array = []
 var _solid: Array = []
-var _cells: Dictionary = {}  # tile name -> Vector2i atlas cell (row 0 or 1, or an animation row)
-var _edge_rows: Dictionary = {}  # overlay set name -> atlas row of its 16 mask cells
+var _cells: Dictionary = {}  # tile name -> Vector2i atlas cell (walkable, solid, or animation frame 0)
+var _blocked_cells: Dictionary = {}  # walkable tile name -> Vector2i atlas cell of its blocked copy
+var _edge_rows: Dictionary = {}  # overlay set name -> Vector2i atlas cell of its mask 0
 var _grid: Dictionary = {}  # Vector2i -> tile name
 var _blocked: Dictionary = {}  # Vector2i -> true (walkable art that props stand on)
 var _size := Vector2i.ZERO
@@ -62,11 +63,16 @@ func _build_tileset() -> void:
 	var index: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(INDEX_PATH))
 	_walk = index["walk"]
 	_solid = index["solid"] + index["anim"]  # water animates and is solid
-	_edge_rows = index["edges"]
 	_tile_px = int(index["cell_px"])
+	for n: String in index["edges"]:
+		var e: Array = index["edges"][n]
+		_edge_rows[n] = Vector2i(int(e[0]), int(e[1]))
 	for n: String in index["tiles"]:
 		var c: Array = index["tiles"][n]
 		_cells[n] = Vector2i(int(c[0]), int(c[1]))
+	for n: String in index["blocked"]:
+		var c: Array = index["blocked"][n]
+		_blocked_cells[n] = Vector2i(int(c[0]), int(c[1]))
 	_ts = TileSet.new()
 	_ts.tile_size = Vector2i(_tile_px, _tile_px)
 	_ts.add_physics_layer()
@@ -77,15 +83,17 @@ func _build_tileset() -> void:
 	_ts.add_source(src, 0)
 	var h := _tile_px / 2.0
 	var full := PackedVector2Array([Vector2(-h, -h), Vector2(h, -h), Vector2(h, h), Vector2(-h, h)])
-	for x in _walk.size() + (index["solid"] as Array).size():
-		for y in 2:
-			if y == 0 and x >= _walk.size():
-				continue
-			src.create_tile(Vector2i(x, y))
-			if y == 1:
-				var td := src.get_tile_data(Vector2i(x, y), 0)
-				td.add_collision_polygon(0)
-				td.set_collision_polygon_points(0, 0, full)
+	# Walkable cells; their blocked copies and the solid-only cells get a full collision square.
+	for n: String in _walk:
+		src.create_tile(_cells[n])
+	var solid_cells: Array = _blocked_cells.values()
+	for n: String in index["solid"]:
+		solid_cells.append(_cells[n])
+	for c: Vector2i in solid_cells:
+		src.create_tile(c)
+		var td := src.get_tile_data(c, 0)
+		td.add_collision_polygon(0)
+		td.set_collision_polygon_points(0, 0, full)
 	# Animated tiles: frame 0 is the tile, the next frames sit to its right in the same row.
 	for n: String in index["anim"]:
 		var c: Vector2i = _cells[n]
@@ -100,7 +108,7 @@ func _build_tileset() -> void:
 	# Edge overlays (no collision): masks 1-14 of each set.
 	for n: String in _edge_rows:
 		for m in range(1, 15):
-			src.create_tile(Vector2i(m, int(_edge_rows[n])))
+			src.create_tile(_edge_rows[n] + Vector2i(m, 0))
 	ResourceSaver.save(_ts, TILESET_PATH)
 	_ts = load(TILESET_PATH)
 
@@ -184,8 +192,8 @@ func _tile_layer() -> void:
 		var t: String = _grid[c]
 		assert(_cells.has(t), "no tile named " + t)
 		var cell: Vector2i = _cells[t]
-		if _blocked.has(c) and cell.y == 0:
-			cell.y = 1
+		if _blocked.has(c) and _blocked_cells.has(t):
+			cell = _blocked_cells[t]
 		layer.set_cell(c, 0, cell)
 	_add(layer, "Ground")
 	layer.y_sort_enabled = false
@@ -200,7 +208,7 @@ func _edge_layer(layer_name: String, set_name: String, inside: Callable, skip: C
 	layer.scale = Vector2.ONE * CELL / _tile_px
 	layer.z_index = -9
 	layer.position = Vector2(-CELL / 2.0, -CELL / 2.0)
-	var row := int(_edge_rows[set_name])
+	var first: Vector2i = _edge_rows[set_name]
 	for j in _size.y + 1:
 		for i in _size.x + 1:
 			var mask := 0
@@ -215,7 +223,7 @@ func _edge_layer(layer_name: String, set_name: String, inside: Callable, skip: C
 					mask |= 1 << k
 				k += 1
 			if not bad and mask != 0 and mask != 15:
-				layer.set_cell(Vector2i(i, j), 0, Vector2i(mask, row))
+				layer.set_cell(Vector2i(i, j), 0, first + Vector2i(mask, 0))
 	_add(layer, layer_name)
 	layer.y_sort_enabled = false
 
