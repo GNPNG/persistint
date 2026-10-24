@@ -70,30 +70,56 @@ func _station_pos(name: String) -> Vector2:
 	return Vector2(0.5, 0.5)
 
 
+const FOG_ART := preload("res://assets/ui/backdrops/fog_sea.png")
+const SHIP_ART := preload("res://assets/ui/backdrops/ship_cutaway.png")
+
+
+## Fog over the sea; the captain and the first mate's shout with the countdown on top; the ship
+## cutaway with its stations in the middle; the station's crew tasks and controls below.
 func _build_ui() -> void:
-	var fog := ColorRect.new()
+	var fog := TextureRect.new()
+	fog.texture = FOG_ART
+	fog.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	fog.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	fog.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	fog.color = Color(0.92, 0.93, 0.95, 0.55)
 	fog.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(fog)
+	var margin := MarginContainer.new()
+	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	for side in ["left", "top", "right", "bottom"]:
+		margin.add_theme_constant_override("margin_" + side, 6)
+	add_child(margin)
 	var box := VBoxContainer.new()
-	box.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE, 6)
-	add_child(box)
+	box.add_theme_constant_override("separation", 4)
+	margin.add_child(box)
+	var head := PanelContainer.new()
+	head.theme_type_variation = &"HudPanel"
+	box.add_child(head)
+	var head_box := VBoxContainer.new()
+	head.add_child(head_box)
 	var captain := Label.new()
 	captain.text = captain_name()
-	box.add_child(captain)
+	captain.theme_type_variation = &"SubtleLabel"
+	head_box.add_child(captain)
 	_shout = Label.new()
 	_shout.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_shout.add_theme_font_size_override("font_size", 11)
-	box.add_child(_shout)
+	head_box.add_child(_shout)
 	_timer_bar = ProgressBar.new()
 	_timer_bar.show_percentage = false
-	_timer_bar.custom_minimum_size = Vector2(0, 5)
-	box.add_child(_timer_bar)
+	_timer_bar.custom_minimum_size = Vector2(0, 8)
+	head_box.add_child(_timer_bar)
 	_ship = Control.new()
-	_ship.custom_minimum_size = Vector2(0, 90)
+	_ship.custom_minimum_size = Vector2(0, 120)
 	_ship.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	box.add_child(_ship)
+	var ship_art := TextureRect.new()
+	ship_art.texture = SHIP_ART
+	ship_art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	ship_art.stretch_mode = TextureRect.STRETCH_SCALE
+	ship_art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	ship_art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_ship.add_child(ship_art)
 	for name: String in station_names():
 		var b := Button.new()
 		b.text = name
@@ -106,13 +132,22 @@ func _build_ui() -> void:
 		b.anchor_bottom = p.y
 		b.grow_horizontal = Control.GROW_DIRECTION_BOTH
 		b.grow_vertical = Control.GROW_DIRECTION_BOTH
+	var foot := PanelContainer.new()
+	box.add_child(foot)
+	var foot_box := VBoxContainer.new()
+	foot.add_child(foot_box)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 8)
+	foot_box.add_child(row)
 	_tasks = VBoxContainer.new()
-	box.add_child(_tasks)
+	_tasks.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(_tasks)
 	_controls = GridContainer.new()
-	_controls.columns = 3
-	box.add_child(_controls)
+	_controls.columns = 2
+	row.add_child(_controls)
 	_status = Label.new()
-	box.add_child(_status)
+	_status.theme_type_variation = &"SubtleLabel"
+	foot_box.add_child(_status)
 
 
 ## Move to a crew station around the ship; only its controls are in reach.
@@ -120,9 +155,11 @@ func go_to(name: String) -> void:
 	station = name
 	for child in _controls.get_children():
 		child.queue_free()
+	var shown := {}
 	for c: Dictionary in data.get("commands", []):
-		if c["station"] != name:
+		if c["station"] != name or shown.has(c["control"]):
 			continue
+		shown[c["control"]] = true     # several commands share a control; one button for each
 		var b := Button.new()
 		b.text = c["control"]
 		b.custom_minimum_size = Vector2(72, 18)

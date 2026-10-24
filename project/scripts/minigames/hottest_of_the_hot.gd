@@ -25,36 +25,53 @@ func _ready() -> void:
 	data = _load(DATA_PATH)
 	emcee = _load(EMCEE_PATH)
 	options = _load(OUTFITS_PATH)
-	_box = VBoxContainer.new()
-	_box.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE, 6)
-	add_child(_box)
+	# Runway backdrop (scene), the show title on a ribbon, the doll on the runway, the outfit
+	# pickers in a panel on the right, and what is said in a dialogue box at the bottom.
 	var title := Label.new()
 	title.text = data.get("title", "")
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_box.add_child(title)
-	_say = Label.new()
-	_say.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_box.add_child(_say)
-	var row := HBoxContainer.new()
-	_box.add_child(row)
+	title.theme_type_variation = &"HeaderLabel"
+	title.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP, Control.PRESET_MODE_MINSIZE, 8)
+	title.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	add_child(title)
 	doll = PAPER_DOLL.new()
-	doll.custom_minimum_size = Vector2(64, 96)
-	row.add_child(doll)
-	var pickers := VBoxContainer.new()
-	row.add_child(pickers)
+	doll.set_anchors_preset(Control.PRESET_CENTER)
+	doll.offset_left = -91  # 2x the 91x96 paper-doll parts, so pixels stay square
+	doll.offset_right = 91
+	doll.offset_top = -150
+	doll.offset_bottom = 42
+	add_child(doll)
+	var panel := PanelContainer.new()
+	panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER_RIGHT, Control.PRESET_MODE_MINSIZE, 14)
+	panel.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	panel.grow_vertical = Control.GROW_DIRECTION_BOTH
+	panel.offset_top -= 34
+	panel.offset_bottom -= 34
+	add_child(panel)
+	_box = VBoxContainer.new()
+	_box.custom_minimum_size = Vector2(96, 0)
+	panel.add_child(_box)
 	var outfit := {"body": "body_base"}
 	for slot: String in options:
 		outfit[slot] = options[slot][0]
 		var b := Button.new()
 		b.text = slot.capitalize()
 		b.pressed.connect(_cycle.bind(slot))
-		pickers.add_child(b)
+		_box.add_child(b)
 	outfit.merge(WorldState.get_flag("hottest_prep_outfit", {}), true)
 	doll.set_outfit(outfit)
 	var walk_button := Button.new()
 	walk_button.text = "Walk"
 	walk_button.pressed.connect(walk)
-	pickers.add_child(walk_button)
+	_box.add_child(walk_button)
+	var say_box := PanelContainer.new()
+	say_box.theme_type_variation = &"DialoguePanel"
+	say_box.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE, Control.PRESET_MODE_MINSIZE, 14)
+	say_box.offset_top = -82
+	say_box.offset_bottom = -6
+	add_child(say_box)
+	_say = Label.new()
+	_say.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	say_box.add_child(_say)
 	_introduce()
 
 

@@ -16,29 +16,29 @@ func _ready() -> void:
 	panel.grow_vertical = Control.GROW_DIRECTION_BOTH
 	add_child(panel)
 	var scroll := ScrollContainer.new()
-	scroll.custom_minimum_size = Vector2(380, 300)
+	scroll.custom_minimum_size = Vector2(390, 296)
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	panel.add_child(scroll)
 	var box := VBoxContainer.new()
 	box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroll.add_child(box)
-	_label(box, "Journal — Forbidden Knowledge")
+	_heading(box, "Journal — Forbidden Knowledge", true)
 
-	_label(box, "Named")
+	_heading(box, "Named")
 	var journal: Dictionary = WorldState.get_flag("journal", {})
 	if journal.is_empty():
-		_label(box, "    (nothing named yet)")
+		_label(box, "    (nothing named yet)", "SubtleLabel")
 	for tactic: String in journal:
 		_label(box, "%s\n    %s" % [tactic, "\n    ".join(journal[tactic].map(func(q: String) -> String: return "\"%s\"" % q))])
 
-	_label(box, "Recovered")
+	_heading(box, "Recovered")
 	var found := recovered()
 	if found.is_empty():
-		_label(box, "    (nothing recovered yet)")
+		_label(box, "    (nothing recovered yet)", "SubtleLabel")
 	for title: String in found:
 		_label(box, "    " + title)
 
-	_label(box, "Before the Wreck")
+	_heading(box, "Before the Wreck")
 	for e: Dictionary in entries():
 		if e["unlocked"]:
 			_label(box, "%s%s\n    %s" % [e["title"], "  (remembered)" if e["seen"] else "", e["why"]])
@@ -48,7 +48,7 @@ func _ready() -> void:
 			play_button.pressed.connect(play.bind(e["id"]))
 			box.add_child(play_button)
 		else:
-			_label(box, "%s  (locked)\n    Missing: %s" % [e["title"], ", ".join(e["missing"])])
+			_label(box, "%s  (locked)\n    Missing: %s" % [e["title"], ", ".join(e["missing"])], "SubtleLabel")
 
 
 ## Titles of the recovered pieces, in recovery order.
@@ -92,9 +92,19 @@ func play(id: String) -> void:
 	get_tree().call_deferred("change_scene_to_file", Flashbacks.CARD_SCENE)
 
 
-func _label(box: Container, text: String) -> void:
+func _label(box: Container, text: String, variation := "") -> void:
 	var label := Label.new()
 	label.text = text
+	label.theme_type_variation = variation
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	label.custom_minimum_size = Vector2(360, 0)
+	label.custom_minimum_size = Vector2(370, 0)
+	box.add_child(label)
+
+
+## A section heading on a ribbon (theme HeaderLabel); the title one is centred.
+func _heading(box: Container, text: String, title := false) -> void:
+	var label := Label.new()
+	label.text = text
+	label.theme_type_variation = &"HeaderLabel"
+	label.size_flags_horizontal = Control.SIZE_SHRINK_CENTER if title else Control.SIZE_SHRINK_BEGIN
 	box.add_child(label)
