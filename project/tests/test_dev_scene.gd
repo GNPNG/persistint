@@ -10,11 +10,13 @@ func _init() -> void:
 	ok = _eq(S.sanitize("Paper Look"), "") and ok
 	ok = _eq(S.sanitize(""), "") and ok
 	ok = _eq(S.sanitize("x".repeat(41)), "") and ok
-	var ds = root.get_node_or_null("DevScene")
-	ok = _check(ds != null, "DevScene autoload present") and ok
-	ok = _check(ds != null and ds.requested_scene() == "", "no scene requested in tests") and ok
-	print("RESULT: %s" % ("PASS" if ok else "FAIL"))
-	quit(0 if ok else 1)
+	# Autoloads join the tree after _init, so the live check waits one frame.
+	process_frame.connect(func():
+		var ds = root.get_node_or_null("DevScene")
+		ok = _check(ds != null, "DevScene autoload present") and ok
+		ok = _check(ds != null and ds.requested_scene() == "", "no scene requested in tests") and ok
+		print("RESULT: %s" % ("PASS" if ok else "FAIL"))
+		quit(0 if ok else 1), CONNECT_ONE_SHOT)
 
 func _eq(got: String, want: String) -> bool:
 	return _check(got == want, "sanitize -> '%s' (want '%s')" % [got, want])
