@@ -10,6 +10,11 @@ extends Control
 const DATA_PATH := "res://data/hottest_chains.json"
 const OUTFITS_PATH := "res://data/outfits.json"
 const PAPER_DOLL := preload("res://scripts/systems/paper_doll.gd")
+## Layout: the doll at the vanity mirror (screen x), its height, margins and the row's gap.
+const VANITY_X := 320.0
+const DOLL_HEIGHT := 192.0
+const MARGIN := 8
+const ROW_GAP := 10
 
 var data: Dictionary = {}
 var done: Array[String] = []
@@ -32,12 +37,12 @@ func _ready() -> void:
 		done.append(id)
 	for id: String in WorldState.get_flag("hottest_chain_items", []):
 		items.append(id)
-	# Cabin backdrop (scene); the stations along the top, the doll at the vanity on the left,
+	# Cabin backdrop (scene); the stations along the top, the doll at the vanity in the middle,
 	# the station's tasks, what is in hand and the way to the show in a panel on the right.
 	var margin := MarginContainer.new()
 	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	for side in ["left", "top", "right", "bottom"]:
-		margin.add_theme_constant_override("margin_" + side, 8)
+		margin.add_theme_constant_override("margin_" + side, MARGIN)
 	add_child(margin)
 	_box = VBoxContainer.new()
 	_box.add_theme_constant_override("separation", 6)
@@ -55,11 +60,17 @@ func _ready() -> void:
 		_stations.add_child(b)
 	var row := HBoxContainer.new()
 	row.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	row.add_theme_constant_override("separation", 10)
+	row.add_theme_constant_override("separation", ROW_GAP)
 	_box.add_child(row)
 	doll = PAPER_DOLL.new()
-	doll.display_height = 192.0
-	doll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	doll.display_height = DOLL_HEIGHT
+	doll.size_flags_vertical = Control.SIZE_SHRINK_END
+	# The doll stands at the vanity, the cabin's centrepiece (tools/gen_ui_art.py ship_cabin,
+	# centred on the screen); the bed and porthole show to the left, the panel sits right.
+	var spacer := Control.new()
+	spacer.custom_minimum_size.x = VANITY_X - doll.custom_minimum_size.x / 2.0 - MARGIN - ROW_GAP
+	spacer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_child(spacer)
 	row.add_child(doll)
 	var outfit: Dictionary = WorldState.get_flag("hottest_prep_outfit", {}).duplicate()
 	if outfit.is_empty():
