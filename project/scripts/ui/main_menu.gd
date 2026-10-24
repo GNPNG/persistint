@@ -14,11 +14,16 @@ func _ready() -> void:
 	_add_version_label()
 
 
-## Version from project.godot application/config/version (stamped from VERSION by tools/version.py).
+## Version from project.godot application/config/version (stamped from VERSION by tools/version.py),
+## followed by the build id (short commit) that tools/deploy_site.sh writes to res://build.json
+## before it exports, so a player can tell which build the site is serving.
 func _add_version_label() -> void:
 	var label := Label.new()
 	label.name = "Version"
 	label.text = "v%s" % ProjectSettings.get_setting("application/config/version", "0.0.0")
+	var build := BuildInfo.id()
+	if build != "":
+		label.text += " · %s" % build
 	label.add_theme_font_size_override("font_size", 8)
 	label.modulate = Color(1, 1, 1, 0.6)
 	label.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT)
