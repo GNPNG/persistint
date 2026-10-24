@@ -155,7 +155,6 @@ func _puff() -> void:
 	var fit := 6.0 / float(tex.get_width())
 	var puff := CPUParticles2D.new()
 	puff.texture = tex
-	puff.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	puff.one_shot = true
 	puff.amount = 10
 	puff.lifetime = 0.6

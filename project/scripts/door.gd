@@ -60,7 +60,6 @@ func _ready() -> void:
 		_marker.centered = false
 		_marker.scale = Vector2.ONE * MARKER_SCALE
 		_marker.position = -MARKER_MAT * MARKER_SCALE
-		_marker.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 		add_child(_marker)
 		_marker.play("locked" if locked else "open")
 

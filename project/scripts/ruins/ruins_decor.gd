@@ -41,7 +41,6 @@ var _hint_prop: Node2D
 func _ready() -> void:
 	var r := room()
 	y_sort_enabled = true
-	smooth(self)
 	_paint_tiles(r)
 	for prop: Dictionary in r.get("props", []):
 		_add_prop(prop)
@@ -69,12 +68,6 @@ static func scale_for(tex: Texture2D, world_h := 0.0) -> float:
 		world_h = CANON_HEIGHT.get(tex.resource_path.get_file().get_basename(), 32.0)
 	return world_h / float(tex.get_height())
 
-
-## Art in the ruins is high-resolution illustration shown scaled down: filter it smoothly
-## (linear with mipmaps) from `root` down, whatever the project-wide default is. Only art
-## nodes get this (room props and tiles, clones, cubs, pickups, gore); text keeps its own.
-static func smooth(root: CanvasItem) -> void:
-	root.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 
 
 ## The wall band fills the rows above the walkable floor (the Nav polygon's top edge).
@@ -198,7 +191,6 @@ func _build_screen(r: Dictionary) -> void:
 	var vignette := TextureRect.new()
 	vignette.name = "Vignette"
 	vignette.texture = VIGNETTE
-	vignette.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	vignette.stretch_mode = TextureRect.STRETCH_SCALE
 	vignette.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	vignette.mouse_filter = Control.MOUSE_FILTER_IGNORE

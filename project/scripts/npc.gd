@@ -34,7 +34,6 @@ static var _rigs: Dictionary = {}  # sheet path -> SpriteFrames
 
 ## The rigged sheet when the art has one; see _load_art.
 var rig: AnimatedSprite2D
-var _player_near: Node2D
 
 
 func _ready() -> void:
@@ -94,7 +93,6 @@ func _build_rig() -> void:
 	var frame := rig_frame_size(load(RIG_PATH % sprite_texture))
 	var k := RIG_HEIGHT / frame.y
 	rig.scale = Vector2(k, k)
-	rig.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	rig.position = Vector2(-frame.x * k / 2.0, 24 - RIG_HEIGHT * RIG_FEET)
 	add_child(rig)
 	move_child(rig, $Sprite2D.get_index() + 1)
@@ -196,13 +194,11 @@ func interact() -> void:
 
 func _on_proximity_entered(body: Node2D) -> void:
 	if body.is_in_group("player"):
-		_player_near = body
 		_show_bubble(current_bark())
 
 
 func _on_proximity_exited(body: Node2D) -> void:
 	if body.is_in_group("player"):
-		_player_near = null
 		bubble.hide()
 
 

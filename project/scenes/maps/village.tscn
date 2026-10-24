@@ -37,7 +37,6 @@ agent_radius = 8.0
 
 [node name="Village" type="Node2D" unique_id=736641068]
 y_sort_enabled = true
-texture_filter = 4
 script = ExtResource("1_mwvcf")
 map_size = Vector2(1280, 1216)
 sort_characters = true
