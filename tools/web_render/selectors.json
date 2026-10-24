@@ -46,7 +46,7 @@
       "capture": [
         "download"
       ],
-      "_capture": "download only: the on-page <img> is a downscaled preview, so it must never be saved as the final PNG. If Download full size breaks, fix its selector or use --assist / --pause-on-error.",
+      "_capture": "download only: the on-page <img> (a blob: URL) is a downscaled preview, so it must never be saved as the final PNG. The finished result (seen 2026-10-24) is model-response > generated-image > single-image > img.image[src^=blob:] with hover controls Share image / Copy image / <download-generated-image-button data-test-id=download-generated-image-button> button[aria-label='Download full size image']. That click makes the app request the full-size file from Google (a batchexecute RPC) and then save it as a browser download; if Google redirects that request to its check page (www.google.com/sorry) no download ever starts, which the engine now reports at once as 'blocked'. If Download full size breaks otherwise, fix its selector or use --assist / --pause-on-error.",
       "timeouts": {
         "stepMs": 20000,
         "generateMs": 600000,
@@ -133,6 +133,7 @@
           "model-response"
         ],
         "result": [
+          "model-response generated-image single-image img.image",
           "model-response generated-image img",
           "model-response single-image img",
           "model-response img",
@@ -148,6 +149,8 @@
             "action": "click",
             "note": "Download full size",
             "selectors": [
+              "model-response download-generated-image-button button[aria-label='Download full size image']",
+              "model-response [data-test-id='download-generated-image-button'] button",
               "model-response ::-p-aria(Download full size image)",
               "model-response ::-p-aria(Download full size)",
               "model-response button:has(mat-icon[fonticon='download'])",
