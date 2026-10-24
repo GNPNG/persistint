@@ -6,8 +6,13 @@ Reads project/data/island_props.json: each prop names a sheet under art/canon, a
   white  - clear near-white background (edge-connected, plus large enclosed gaps)
   fuzz   - flood the colour found at the crop corners (tolerance "tol")
   ellipse- keep only the inscribed ellipse (round seals)
-Output: project/assets/canon/<name>.png scaled to "height" px tall.
-A prop whose sheet is no longer under art/canon is skipped (its committed PNG stays).
+Output: project/assets/canon/<name>.png at the sheet's own resolution (trimmed, background
+removed, never rescaled). "height" is the prop's display height in world pixels: the map
+builder (tools/build_island_maps.gd) scales the sprite to it, so the full-resolution cut is
+downsampled smoothly by the GPU (mipmaps) instead of being shrunk here.
+Sheets are looked up under art/canon/*/ and dev/art/ (the world-building overview, which is
+kept in the git-crypt dev/ tree). A prop whose sheet is missing (a checkout without the
+git-crypt key) is skipped and its committed PNG stays.
 """
 import json
 from pathlib import Path
@@ -23,7 +28,14 @@ sheets = {}
 
 
 def sheet_path(name):
-    return next((ROOT / "art/canon").glob(f"*/{name}*"), None)
+    for pattern in (f"art/canon/*/{name}*", f"dev/art/{name}*"):
+        for p in sorted(ROOT.glob(pattern)):
+            try:  # a locked git-crypt file is not an image
+                Image.open(p).verify()
+                return p
+            except Exception:
+                continue
+    return None
 
 
 def sheet(name):
@@ -66,15 +78,13 @@ def cut(spec):
         keep = ndimage.binary_erosion(keep, iterations=1)
     alpha = ndimage.gaussian_filter(keep.astype(float), 0.7)
     img = Image.fromarray(np.dstack([rgb.astype(np.uint8), (alpha * 255).astype(np.uint8)]), "RGBA")
-    img = img.crop(img.getchannel("A").point(lambda a: 255 if a > 20 else 0).getbbox())
-    ht = spec["height"]
-    return img.resize((round(img.width * ht / img.height), ht), Image.LANCZOS)
+    return img.crop(img.getchannel("A").point(lambda a: 255 if a > 20 else 0).getbbox())
 
 
 OUT.mkdir(parents=True, exist_ok=True)
 for name, spec in CFG["props"].items():
     if sheet_path(spec["sheet"]) is None:
-        print(name, "skipped: sheet", spec["sheet"], "not under art/canon")
+        print(name, "skipped: sheet", spec["sheet"], "not found (or still encrypted)")
         continue
     im = cut(spec)
     im.save(OUT / f"{name}.png")

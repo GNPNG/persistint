@@ -76,7 +76,8 @@ func _village() -> void:
 	for n in ["TempleDoor", "Initiate", "Drone", "Barren", "Mirror", "Exit_Ruins", "Exit_Cruise", "Exit_Tropical", "spawn_from_temple", "spawn_from_tropical"]:
 		_check(_reaches(region, from, m.get_node(n).position), "village: walkable route from spawn to " + n)
 	var drone: Node2D = m.get_node("Drone")
-	var beds: Vector2i = m.get_node("Ground").get_cell_atlas_coords(m.get_node("Ground").local_to_map(drone.position + Vector2(0, -48)))
+	var ground: TileMapLayer = m.get_node("Ground")  # scaled: its 128 px atlas cells sit on the 32 px grid
+	var beds: Vector2i = ground.get_cell_atlas_coords(ground.local_to_map(ground.to_local(drone.position + Vector2(0, -48))))
 	_check(beds.x in [5, 6], "village Drone stands in the garden beds")
 	m.queue_free()
 	await process_frame

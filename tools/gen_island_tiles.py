@@ -1,4 +1,4 @@
-"""Draw the island tile atlas (32 px cells): village ground, coast, and the temple interior.
+"""Draw the island tile atlas (32 px map cells, stored at 128 px): village ground, coast, and the temple interior.
 
 Usage: python3 -I tools/gen_island_tiles.py
 Inputs: none (palette hexes from prompts/STYLE.md 4.3-4.4; every tile seeds its RNG with the
@@ -7,7 +7,7 @@ Outputs:
   project/assets/tiles/island_tiles.png   the atlas
   project/assets/tiles/island_tiles.json  {name: [col, row]} read by tools/build_island_maps.gd
 
-Atlas layout (cell = 32x32 px):
+Atlas layout (cell = 32x32 world px = 128x128 atlas px; index "cell" and "cell_px"):
   row 0  walkable ground, one column per name in WALK
   row 1  the same cells again as blocked ground (props stand on them), then the solid-only
          tiles in SOLID; the builder gives every row-1 cell a full collision square
@@ -16,16 +16,18 @@ Atlas layout (cell = 32x32 px):
   then   one row per EDGE set: 16 dual-grid overlay cells, column = corner mask
          (bit 1 top-left, 2 top-right, 4 bottom-left, 8 bottom-right set where that corner's
          cell is "inside": shallows or land for "shallows", land for "shore", grass for
-         "grass_edge"). An overlay TileMapLayer
+         "grass_edge", path for "path_edge", paving for "paving_edge"). An overlay TileMapLayer
          sits half a cell up-left of the ground, so each overlay cell's corners are the
          centres of four ground cells; it rounds the reef line, the coast (sand rim, wet line,
-         foam) and the grass borders (soft bulge with a clover-green edge). Mask 0 and 15 are empty.
+         foam), the grass borders (soft bulge with a clover-green edge), the footpaths where they
+         cross sand (trodden rim) and the paved terraces (curb band). Mask 0 and 15 are empty.
 Multi-cell pieces (rug, dais, doorway, stairs) are drawn whole at supersample and sliced into
 cells named <piece>_<col>_<row>; their cells only line up when placed together.
 
 The canon sheets carry no tiles, so these are drawn in the canon sticker look: flat pastel
 fills, one light highlight edge, soft warm-brown outline #8a5a5a, candy shapes (hearts,
-four-point sparkles). Drawn at 4x and downscaled with LANCZOS.
+four-point sparkles). Drawn at 16x (K) and downscaled with LANCZOS to the 4x atlas (O); the
+map builder scales the tile layers by 0.25, so every size in the drawing code is world px.
 """
 import json
 import random
@@ -37,7 +39,10 @@ from PIL import Image, ImageDraw
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "project/assets/tiles/island_tiles.png"
 INDEX = ROOT / "project/assets/tiles/island_tiles.json"
-S, K = 32, 4  # cell size, supersample
+S = 32          # cell size in world pixels (the map grid)
+O = 4           # file pixels per world pixel: the atlas is drawn at 4x the on-map size
+C = S * O       # cell size in atlas pixels (128)
+K = 16          # drawing pixels per world pixel (supersample 4x over the atlas, LANCZOS down)
 INK = "#8a5a5a"
 OUTLINE = K // 2 * 3 // 2
 ANIM_FRAMES = 4
@@ -61,14 +66,14 @@ def piece_cells(name):
 
 SOLID_PIECES = ["pool"]
 WALK = ["grass_a", "grass_b", "grass_flower", "path", "sand", "soil", "sprouts", "plaza",
-        "floor", "floor_alt", "floor_n"]
+        "floor", "floor_b", "floor_alt", "floor_n", "floor_nb"]
 for _p in PIECES:
     if _p not in SOLID_PIECES:
         WALK += piece_cells(_p)
 SOLID = [c for _p in SOLID_PIECES for c in piece_cells(_p)] + ["wall", "wall_cap", "hedge", "rock", "stripe", "gold_cap",
          "wall_base", "wall_l", "wall_r", "wall_s", "wall_sl", "wall_sr"]
 ANIM = ["water", "foam"]
-EDGES = ["shallows", "shore", "grass_edge"]
+EDGES = ["shallows", "shore", "grass_edge", "path_edge", "paving_edge"]
 
 
 def canvas(w=1, h=1):
@@ -126,43 +131,60 @@ def vline(d, x, y0, y1, col, w=1.0):
 
 # ---------------- temple stone ----------------
 
-CREAM, CREAM_HI, CREAM_LO, CREAM_VEIN = "#fff6e2", "#fffaee", "#f3e2c4", "#f6e8d0"
-BLUSH, BLUSH_HI, BLUSH_LO, BLUSH_VEIN = "#ffe6ee", "#ffeff4", "#f6ccd9", "#fad9e3"
+CREAM, CREAM_HI, CREAM_LO, CREAM_VEIN = "#fff6e2", "#fffaee", "#f3e2c4", "#f8ecd8"
+BLUSH, BLUSH_HI, BLUSH_LO, BLUSH_VEIN = "#ffe6ee", "#ffeff4", "#f6ccd9", "#fbdde6"
 GROUT = "#efd9c4"
 GOLD, GOLD_HI, GOLD_LO = "#ffe3a8", "#fff4c4", "#e0b24a"
 
 
 def slab(d, x0, y0, w, h, base, hi, lo, vein, r):
-    """One marble slab: flat fill, light top-left bevel, darker bottom-right bevel, a faint vein."""
-    d.rectangle(P(x0, y0, x0 + w, y0 + h), fill=base)
-    d.ellipse(P(x0 + 2, y0 + 1.6, x0 + 6.5, y0 + 3.2), fill=hi)
-    px, py = x0 + 3 + r.random() * (w - 6), y0 + 2.5
-    if r.random() < 0.4:
-        return
+    """One polished marble slab: flat fill, a darker lower-right bevel, a light upper-left bevel,
+    one soft diagonal sheen (the canon's single highlight) and a faint wandering vein."""
+    d.rectangle(P(x0, y0, x0 + w, y0 + h), fill=lo)
+    d.rectangle(P(x0, y0, x0 + w - 0.9, y0 + h - 0.9), fill=hi)
+    d.rectangle(P(x0 + 0.7, y0 + 0.7, x0 + w - 0.9, y0 + h - 0.9), fill=base)
+    # Sheen: a soft diagonal band across the upper-left half.
+    d.polygon([tuple(P(x0 + 3, y0 + 13)), tuple(P(x0 + 13, y0 + 3)), tuple(P(x0 + 17, y0 + 3)),
+               tuple(P(x0 + 3, y0 + 17))], fill=hi)
+    d.polygon([tuple(P(x0 + 3, y0 + 19.5)), tuple(P(x0 + 19.5, y0 + 3)), tuple(P(x0 + 20.6, y0 + 3)),
+               tuple(P(x0 + 3, y0 + 20.6))], fill=hi)
+    # A vein that wanders diagonally across the slab.
+    px, py = x0 + 4 + r.random() * (w - 14), y0 + 3
     pts = []
-    while py < y0 + h - 2.5:
+    while py < y0 + h - 3 and px < x0 + w - 3:
         pts.append((px * K, py * K))
-        px = min(max(px + r.uniform(-2.0, 2.0), x0 + 2.5), x0 + w - 3)
-        py += r.uniform(2.0, 3.2)
-    if len(pts) > 1:
-        d.line(pts, fill=vein, width=K // 2 + 1, joint="curve")
+        px += r.uniform(1.0, 3.2)
+        py += r.uniform(1.6, 3.4)
+    if len(pts) > 2:
+        d.line(pts, fill=vein, width=K // 3, joint="curve")
 
 
-def temple_floor(d, r, glint=False):
-    """2x2 checker of 16 px marble slabs, cream and blush (STYLE.md 6.1), soft grout joints."""
-    for i, (x, y) in enumerate(((0, 0), (16, 0), (0, 16), (16, 16))):
-        if i in (1, 2):
-            slab(d, x, y, 16, 16, BLUSH, BLUSH_HI, BLUSH_LO, BLUSH_VEIN, r)
-        else:
-            slab(d, x, y, 16, 16, CREAM, CREAM_HI, CREAM_LO, CREAM_VEIN, r)
-    # Grout: half a pixel on each side of every joint, so neighbouring tiles join cleanly.
-    for c in (0, S):
-        hline(d, 0, S, c - 0.25 if c else 0, GROUT, 0.25)
-        vline(d, c - 0.25 if c else 0, 0, S, GROUT, 0.25)
-    hline(d, 0, S, 15.75, GROUT, 0.5)
-    vline(d, 15.75, 0, S, GROUT, 0.5)
+def temple_floor(d, r, blush=False, glint=False):
+    """One 32 px marble slab of the temple's cream and blush checkerboard (STYLE.md 6.1).
+
+    The map builder alternates "floor" (cream) and "floor_b" (blush) by cell parity, so the
+    checker has one slab per cell. Every corner carries a quarter of a small gold diamond inlay,
+    so where four slabs meet a whole diamond shows."""
+    if blush:
+        slab(d, 0, 0, S, S, BLUSH, BLUSH_HI, BLUSH_LO, BLUSH_VEIN, r)
+    else:
+        slab(d, 0, 0, S, S, CREAM, CREAM_HI, CREAM_LO, CREAM_VEIN, r)
+    # Grout: half a world pixel on each side, so neighbouring tiles join into one joint.
+    hline(d, 0, S, 0, GROUT, 0.5)
+    hline(d, 0, S, S - 0.5, GROUT, 0.5)
+    vline(d, 0, 0, S, GROUT, 0.5)
+    vline(d, S - 0.5, 0, S, GROUT, 0.5)
+    for cx in (0, S):
+        for cy in (0, S):
+            rr = 3.6
+            d.polygon([((cx) * K, (cy - rr) * K), ((cx + rr) * K, cy * K), (cx * K, (cy + rr) * K),
+                       ((cx - rr) * K, cy * K)], fill=GOLD_LO)
+            rr = 2.7
+            d.polygon([((cx) * K, (cy - rr) * K), ((cx + rr) * K, cy * K), (cx * K, (cy + rr) * K),
+                       ((cx - rr) * K, cy * K)], fill=GOLD)
+            d.polygon([((cx - 0.9) * K, (cy - 1.1) * K), ((cx) * K, (cy - 2.0) * K), ((cx + 0.6) * K, (cy - 1.4) * K)], fill=GOLD_HI)
     if glint:
-        sparkle(d, 8, 7, 2.2, "#ffffff")
+        sparkle(d, 10, 9, 2.4, "#ffffff")
 
 
 def wall_face(d, r):
@@ -281,7 +303,7 @@ def draw_piece(name, r):
         for a0 in (20, 110, 200, 290):
             d.arc(P(31, 27, 47, 43), a0, a0 + 35, fill="#ffffff", width=int(2.2 * K))
     elif name == "rug":
-        floor_under(im, cw, ch)
+        floor_under(im, cw, ch, PIECE_PARITY[name])
         d = ImageDraw.Draw(im)
         rug_body(d, H)
         for y in (16, 48):
@@ -291,14 +313,14 @@ def draw_piece(name, r):
                 blob(d, x, y, 1.2, RUG_HI, RUG_HI)
     elif name in ("rug_top", "rug_bot"):
         # The ends sit on the temple floor (or paving); the floor shows through the fringe.
-        floor_under(im, cw, ch)
+        floor_under(im, cw, ch, PIECE_PARITY[name])
         d = ImageDraw.Draw(im)
         y0, y1 = rug_body(d, H, top=name == "rug_top", bot=name == "rug_bot")
         sparkle(d, 32, (y0 + y1) / 2, 4.2, "#fff4f8")
         for x in (12, 52):
             blob(d, x, (y0 + y1) / 2, 1.2, RUG_HI, RUG_HI)
     elif name == "dais":
-        floor_under(im, cw, ch)
+        floor_under(im, cw, ch, PIECE_PARITY[name])
         d = ImageDraw.Draw(im)
         # Raised blush platform (rows 0-1) with a gold lip, two cream steps in front (row 2).
         d.rounded_rectangle(P(1, 1, W - 1, 62), 3 * K, fill="#ffd3e0", outline=INK, width=OUTLINE)
@@ -318,7 +340,7 @@ def draw_piece(name, r):
         hline(d, 10, W - 10, 78.5, "#fffdf8", 1.2)
     elif name == "door_s":
         # Gap in the south wall: floor runs through to a gold threshold, wall ends either side.
-        floor_under(im, cw, ch)
+        floor_under(im, cw, ch, PIECE_PARITY[name])
         d = ImageDraw.Draw(im)
         d.rectangle(P(0, 22, W, H), fill=GOLD)
         hline(d, 0, W, 22, GOLD_LO, 1)
@@ -345,12 +367,17 @@ def draw_piece(name, r):
     return im
 
 
-def floor_under(im, cw, ch):
+# Checker parity of each piece's top-left cell where the temple map places it (the builder
+# asserts these): 1 = that cell is a blush slab. The rug body repeats every two rows.
+PIECE_PARITY = {"rug": 0, "rug_top": 1, "rug_bot": 0, "dais": 1, "door_s": 1, "stairs_w": 1, "pool": 0}
+
+
+def floor_under(im, cw, ch, parity=0):
     """Paint temple floor under a piece, seeded per piece cell so it matches every run."""
     for y in range(ch):
         for x in range(cw):
             sub, sd = canvas()
-            temple_floor(sd, random.Random(x * 31 + y))
+            temple_floor(sd, random.Random(x * 31 + y), blush=(x + y + parity) % 2 == 1)
             im.paste(sub, (x * S * K, y * S * K))
 
 
@@ -405,9 +432,9 @@ def draw(name):
                         x, y = cx + ox, cy + oy
                         d.rounded_rectangle(P(x - rx, y - ry, x + rx, y + ry), 2.4 * K, fill=col)
                         d.line(P(x - rx + 1.8, y - ry + 0.9, x + rx - 1.8, y - ry + 0.9), fill="#fdf7fa", width=K // 2)
-    elif name in ("floor", "floor_alt", "floor_n"):
-        temple_floor(d, r, glint=name == "floor_alt")
-        if name == "floor_n":  # soft shadow under the north wall
+    elif name in ("floor", "floor_b", "floor_alt", "floor_n", "floor_nb"):
+        temple_floor(d, r, blush=name in ("floor_b", "floor_nb"), glint=name == "floor_alt")
+        if name in ("floor_n", "floor_nb"):  # soft shadow under the north wall
             sh = Image.new("RGBA", im.size)
             sd = ImageDraw.Draw(sh)
             for i in range(8):
@@ -437,7 +464,7 @@ def draw(name):
         d.ellipse(P(9, 11, 17, 16), fill="#f5f2fb")
         blob(d, 12, 20, .7, INK, INK)
         blob(d, 20, 20, .7, INK, INK)
-    return im.resize((S, S), Image.LANCZOS)
+    return im.resize((C, C), Image.LANCZOS)
 
 
 def water(name, frame):
@@ -456,7 +483,7 @@ def water(name, frame):
     rad = [1.2, 2.2, 1.6, 0.0][frame]
     if rad:
         sparkle(d, sx, sy, rad, "#ffffff")
-    return im.resize((S, S), Image.LANCZOS)
+    return im.resize((C, C), Image.LANCZOS)
 
 
 def edge(name, mask):
@@ -464,67 +491,64 @@ def edge(name, mask):
 
     f is the bilinear blend of the corner flags over the cell, plus a wobble that is zero on
     the cell's sides so neighbouring cells meet. Inside = f > 0.25: that region always covers
-    the inside corners' quarters, so the overlay only ever paints over "outside" cells."""
-    import math
+    the inside corners' quarters, so the overlay only ever paints over "outside" cells.
+    Computed per drawing pixel with numpy, then downscaled like every other tile."""
+    import numpy as np
     W = S * K
-    im = Image.new("RGBA", (W, W))
-    px = im.load()
     c = [(mask >> i) & 1 for i in range(4)]  # tl, tr, bl, br
     if mask in (0, 15):
-        return im.resize((S, S), Image.LANCZOS)
+        return Image.new("RGBA", (C, C))
     rng = random.Random(mask * 7 + len(name))
     ph = rng.uniform(0, 6.28)
 
     def f(u, v):
         b = (c[0] * (1 - u) * (1 - v) + c[1] * u * (1 - v) + c[2] * (1 - u) * v + c[3] * u * v)
-        return b + 0.06 * math.sin(math.pi * u) * math.sin(math.pi * v) * math.sin(ph + 5 * (u + v))
+        return b + 0.06 * np.sin(np.pi * u) * np.sin(np.pi * v) * np.sin(ph + 5 * (u + v))
 
     T = 0.25
-    shore = name == "shore"
-    for y in range(W):
-        v = (y + 0.5) / W
-        for x in range(W):
-            u = (x + 0.5) / W
-            val = f(u, v)
-            e = 1.0 / W
-            g = math.hypot(f(u + e, v) - f(u - e, v), f(u, v + e) - f(u, v - e)) / (2 * e) or 1.0
-            dist = (val - T) / g * S  # signed distance to the edge in cell pixels, + inside
-            q = c[(1 if u >= 0.5 else 0) + (2 if v >= 0.5 else 0)]  # this quarter's own cell
-            col = None
-            if name == "shallows":
-                if 0 <= dist < 0.9:
-                    col = (224, 246, 255, 255)          # light line along the reef edge
-                elif dist >= 0.9 and not q:
-                    col = (198, 238, 251, 255)          # shallow water over the deep cell
-            elif shore:
-                if 0 <= dist < 1.3:
-                    col = (233, 196, 140, 255)          # wet line
-                elif dist >= 1.3 and not q:
-                    col = (255, 233, 184, 255)          # beach sand over the water cell
-                elif -2.6 <= dist < 0:
-                    col = (255, 255, 255, 235)          # foam
-                elif -4.2 <= dist < -2.6:
-                    col = (226, 247, 255, 200)          # wash
-            else:
-                if 0 <= dist < 1.0:
-                    col = (121, 180, 95, 255)           # clover-green edge
-                elif 1.0 <= dist < 2.2:
-                    col = (166, 220, 138, 255)
-                elif dist >= 2.2 and not q:
-                    col = (197, 236, 170, 255)          # grass over the neighbour
-            if col:
-                px[x, y] = col
-    return im.resize((S, S), Image.LANCZOS)
+    v, u = (np.mgrid[0:W, 0:W] + 0.5) / W
+    val = f(u, v)
+    e = 1.0 / W
+    g = np.hypot(f(u + e, v) - f(u - e, v), f(u, v + e) - f(u, v - e)) / (2 * e)
+    g[g == 0] = 1.0
+    dist = (val - T) / g * S  # signed distance to the edge in world pixels, + inside
+    qi = (u >= 0.5).astype(int) + 2 * (v >= 0.5).astype(int)
+    q = np.array(c)[qi].astype(bool)  # this quarter's own cell is inside
+    out = np.zeros((W, W, 4), np.uint8)
+
+    def paint(sel, col):
+        out[sel & (out[..., 3] == 0)] = col
+
+    if name == "shallows":
+        paint((dist >= 0) & (dist < 0.9), (224, 246, 255, 255))     # light line along the reef
+        paint((dist >= 0.9) & ~q, (198, 238, 251, 255))             # shallow water over deep
+    elif name == "shore":
+        paint((dist >= 0) & (dist < 1.3), (233, 196, 140, 255))     # wet line
+        paint((dist >= 1.3) & ~q, (255, 233, 184, 255))             # beach sand over water
+        paint((dist >= -2.6) & (dist < 0), (255, 255, 255, 235))    # foam
+        paint((dist >= -4.2) & (dist < -2.6), (226, 247, 255, 200))  # wash
+    elif name == "path_edge":
+        paint((dist >= 0) & (dist < 0.8), (236, 210, 165, 255))     # trodden rim
+        paint((dist >= 0.8) & ~q, (255, 240, 207, 255))             # path over the sand
+    elif name == "paving_edge":
+        paint((dist >= 0) & (dist < 1.0), (214, 184, 200, 255))     # curb shadow
+        paint((dist >= 1.0) & (dist < 2.4), (249, 238, 244, 255))   # curb stone
+        paint((dist >= 2.4) & ~q, (234, 214, 225, 255))             # joint band
+    else:
+        paint((dist >= 0) & (dist < 1.0), (121, 180, 95, 255))      # clover-green edge
+        paint((dist >= 1.0) & (dist < 2.2), (166, 220, 138, 255))
+        paint((dist >= 2.2) & ~q, (197, 236, 170, 255))             # grass over the neighbour
+    return Image.fromarray(out, "RGBA").resize((C, C), Image.LANCZOS)
 
 
 def cells():
     """name -> 32x32 image, for every single tile and every piece cell."""
     out = {}
     for name, (cw, ch) in PIECES.items():
-        big = draw_piece(name, random.Random(zlib.crc32(name.encode()))).resize((cw * S, ch * S), Image.LANCZOS)
+        big = draw_piece(name, random.Random(zlib.crc32(name.encode()))).resize((cw * C, ch * C), Image.LANCZOS)
         for y in range(ch):
             for x in range(cw):
-                out[f"{name}_{x}_{y}"] = big.crop((x * S, y * S, (x + 1) * S, (y + 1) * S))
+                out[f"{name}_{x}_{y}"] = big.crop((x * C, y * C, (x + 1) * C, (y + 1) * C))
     for n in WALK + SOLID:
         if n not in out:
             out[n] = draw(n)
@@ -534,27 +558,27 @@ def cells():
 def main():
     tiles = cells()
     cols = max(len(WALK) + len(SOLID), ANIM_FRAMES, 16)
-    atlas = Image.new("RGBA", (S * cols, S * (2 + len(ANIM) + len(EDGES))))
+    atlas = Image.new("RGBA", (C * cols, C * (2 + len(ANIM) + len(EDGES))))
     index = {}
     for i, n in enumerate(WALK):
-        atlas.paste(tiles[n], (i * S, 0))
-        atlas.paste(tiles[n], (i * S, S))
+        atlas.paste(tiles[n], (i * C, 0))
+        atlas.paste(tiles[n], (i * C, C))
         index[n] = [i, 0]
     for i, n in enumerate(SOLID):
-        atlas.paste(tiles[n], ((len(WALK) + i) * S, S))
+        atlas.paste(tiles[n], ((len(WALK) + i) * C, C))
         index[n] = [len(WALK) + i, 1]
     for j, n in enumerate(ANIM):
         for f in range(ANIM_FRAMES):
-            atlas.paste(water(n, f), (f * S, (2 + j) * S))
+            atlas.paste(water(n, f), (f * C, (2 + j) * C))
         index[n] = [0, 2 + j]
     edges = {}
     for j, n in enumerate(EDGES):
         row = 2 + len(ANIM) + j
         for m in range(16):
-            atlas.paste(edge(n, m), (m * S, row * S))
+            atlas.paste(edge(n, m), (m * C, row * C))
         edges[n] = row
     atlas.save(OUT)
-    INDEX.write_text(json.dumps({"cell": S, "walk": WALK, "solid": SOLID, "anim": ANIM,
+    INDEX.write_text(json.dumps({"cell": S, "cell_px": C, "walk": WALK, "solid": SOLID, "anim": ANIM,
                                  "anim_frames": ANIM_FRAMES, "edges": edges, "tiles": index},
                                 indent=1) + "\n")
     print(OUT, atlas.size)

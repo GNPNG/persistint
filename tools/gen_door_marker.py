@@ -2,13 +2,14 @@
 
 Usage: python3 -I tools/gen_door_marker.py
 Inputs: none (palette hexes from prompts/STYLE.md 4.3-4.4).
-Output: project/assets/common/door_marker.png, a sprite sheet of 40x48 frames:
+Output: project/assets/common/door_marker.png, a sprite sheet of 160x192 frames (40x48 world
+px stored at 4x; door.gd shows it at scale 0.25):
   row 0  "open"    8 frames: a pink pill doormat with a white heart, the arrow above it bobbing
                    down and up once over the 8 frames (sin, 3 px)
   row 1  "locked"  the same with a lilac-grey mat and a padlock in place of the heart
-The mat is centred at frame (20, 36), which door.gd puts on the door's origin.
-Kawaii sticker look: warm-brown outline #8a5a5a, flat fill, white highlight. Drawn at 4x,
-downscaled with LANCZOS.
+The mat is centred at frame (80, 144) in file px (20, 36 world px), which door.gd puts on the
+door's origin. Sizes in the code are world px. Kawaii sticker look: warm-brown outline #8a5a5a,
+flat fill, white highlight. Drawn at 16x, downscaled with LANCZOS to 4x.
 """
 import math
 from pathlib import Path
@@ -17,7 +18,8 @@ from PIL import Image, ImageDraw
 
 OUT = Path(__file__).resolve().parent.parent / "project/assets/common/door_marker.png"
 INK = "#8a5a5a"
-K = 4
+O = 4   # file pixels per world pixel: sprites are stored at 4x their size on the map
+K = 16  # drawing pixels per world pixel (4x supersample over the file, LANCZOS down)
 W, H, FRAMES = 40, 48, 8
 
 
@@ -57,10 +59,10 @@ def frame(i, locked):
 
 def main():
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    sheet = Image.new("RGBA", (W * FRAMES, H * 2))
+    sheet = Image.new("RGBA", (W * O * FRAMES, H * O * 2))
     for row, locked in enumerate((False, True)):
         for i in range(FRAMES):
-            sheet.paste(frame(i, locked).resize((W, H), Image.LANCZOS), (i * W, row * H))
+            sheet.paste(frame(i, locked).resize((W * O, H * O), Image.LANCZOS), (i * W * O, row * H * O))
     sheet.save(OUT)
     print(OUT, sheet.size)
 

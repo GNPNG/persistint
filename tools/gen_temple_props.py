@@ -2,7 +2,8 @@
 
 Usage: python3 -I tools/gen_temple_props.py
 Inputs: none (palette hexes from prompts/STYLE.md 4.3-4.4 and 6.1; fixed seed).
-Outputs (project/assets/temple/):
+Outputs (project/assets/temple/; sizes in world px, each file stored at 4x and shown by the
+map builder at scale 0.25, so a 24x44 frame is 96x176 file px):
   temple_candles.png  sprite sheet, frame 24x44, 1 row (idle) x 4 columns (flame flicker);
                       origin at the foot of the stand (frame x 12, y 42)
   temple_urn.png      single 28x36 image, a cream urn of pink and white flowers; foot at y 34
@@ -15,7 +16,8 @@ Outputs (project/assets/temple/):
                       swelling and fading); centred
 The canon sheets have none of these, so they are drawn in the canon sticker look: warm-brown
 outline #8a5a5a, flat pastel fills, one highlight, gold #ffe3a8 / edge #e0b24a.
-Drawn at 4x and downscaled with LANCZOS.
+Drawn at 16x and downscaled with LANCZOS to 4x the map size (O); the map shows them at
+scale 0.25, so every size below is in world pixels and the files are 4x that.
 """
 import math
 import random
@@ -25,7 +27,8 @@ from PIL import Image, ImageDraw
 
 OUT = Path(__file__).resolve().parent.parent / "project/assets/temple"
 INK = "#8a5a5a"
-K = 4
+O = 4   # file pixels per world pixel: sprites are stored at 4x their size on the map
+K = 16  # drawing pixels per world pixel (4x supersample over the file, LANCZOS down)
 GOLD, GOLD_HI, GOLD_LO = "#ffe3a8", "#fff4c4", "#e0b24a"
 random.seed(14)
 
@@ -45,9 +48,9 @@ def sparkle(d, x, y, r, fill="#fff3a8", ink=GOLD_LO, w=0.6):
 
 
 def sheet(frames, w, h):
-    out = Image.new("RGBA", (w * len(frames), h))
+    out = Image.new("RGBA", (w * O * len(frames), h * O))
     for i, f in enumerate(frames):
-        out.paste(f.resize((w, h), Image.LANCZOS), (i * w, 0))
+        out.paste(f.resize((w * O, h * O), Image.LANCZOS), (i * w * O, 0))
     return out
 
 
@@ -169,10 +172,10 @@ def twinkle(frame):
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     sheet([candles(f) for f in range(4)], 24, 44).save(OUT / "temple_candles.png")
-    urn().resize((28, 36), Image.LANCZOS).save(OUT / "temple_urn.png")
-    plinth().resize((32, 14), Image.LANCZOS).save(OUT / "temple_plinth.png")
-    cushion().resize((30, 20), Image.LANCZOS).save(OUT / "temple_cushion.png")
-    shadow(24, 8, 110).resize((24, 8), Image.LANCZOS).save(OUT / "temple_shadow.png")
+    urn().resize((28 * O, 36 * O), Image.LANCZOS).save(OUT / "temple_urn.png")
+    plinth().resize((32 * O, 14 * O), Image.LANCZOS).save(OUT / "temple_plinth.png")
+    cushion().resize((30 * O, 20 * O), Image.LANCZOS).save(OUT / "temple_cushion.png")
+    shadow(24, 8, 110).resize((24 * O, 8 * O), Image.LANCZOS).save(OUT / "temple_shadow.png")
     sheet([twinkle(f) for f in range(6)], 12, 12).save(OUT / "temple_twinkle.png")
     print("wrote", OUT)
 

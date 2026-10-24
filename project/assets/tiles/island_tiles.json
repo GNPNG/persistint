@@ -1,5 +1,6 @@
 {
  "cell": 32,
+ "cell_px": 128,
  "walk": [
   "grass_a",
   "grass_b",
@@ -10,8 +11,10 @@
   "sprouts",
   "plaza",
   "floor",
+  "floor_b",
   "floor_alt",
   "floor_n",
+  "floor_nb",
   "rug_0_0",
   "rug_1_0",
   "rug_0_1",
@@ -63,7 +66,9 @@
  "edges": {
   "shallows": 4,
   "shore": 5,
-  "grass_edge": 6
+  "grass_edge": 6,
+  "path_edge": 7,
+  "paving_edge": 8
  },
  "tiles": {
   "grass_a": [
@@ -102,172 +107,180 @@
    8,
    0
   ],
-  "floor_alt": [
+  "floor_b": [
    9,
    0
   ],
-  "floor_n": [
+  "floor_alt": [
    10,
    0
   ],
-  "rug_0_0": [
+  "floor_n": [
    11,
    0
   ],
-  "rug_1_0": [
+  "floor_nb": [
    12,
    0
   ],
-  "rug_0_1": [
+  "rug_0_0": [
    13,
    0
   ],
-  "rug_1_1": [
+  "rug_1_0": [
    14,
    0
   ],
-  "rug_top_0_0": [
+  "rug_0_1": [
    15,
    0
   ],
-  "rug_top_1_0": [
+  "rug_1_1": [
    16,
    0
   ],
-  "rug_bot_0_0": [
+  "rug_top_0_0": [
    17,
    0
   ],
-  "rug_bot_1_0": [
+  "rug_top_1_0": [
    18,
    0
   ],
-  "dais_0_0": [
+  "rug_bot_0_0": [
    19,
    0
   ],
-  "dais_1_0": [
+  "rug_bot_1_0": [
    20,
    0
   ],
-  "dais_2_0": [
+  "dais_0_0": [
    21,
    0
   ],
-  "dais_3_0": [
+  "dais_1_0": [
    22,
    0
   ],
-  "dais_0_1": [
+  "dais_2_0": [
    23,
    0
   ],
-  "dais_1_1": [
+  "dais_3_0": [
    24,
    0
   ],
-  "dais_2_1": [
+  "dais_0_1": [
    25,
    0
   ],
-  "dais_3_1": [
+  "dais_1_1": [
    26,
    0
   ],
-  "dais_0_2": [
+  "dais_2_1": [
    27,
    0
   ],
-  "dais_1_2": [
+  "dais_3_1": [
    28,
    0
   ],
-  "dais_2_2": [
+  "dais_0_2": [
    29,
    0
   ],
-  "dais_3_2": [
+  "dais_1_2": [
    30,
    0
   ],
-  "door_s_0_0": [
+  "dais_2_2": [
    31,
    0
   ],
-  "door_s_1_0": [
+  "dais_3_2": [
    32,
    0
   ],
-  "stairs_w_0_0": [
+  "door_s_0_0": [
    33,
    0
   ],
-  "stairs_w_0_1": [
+  "door_s_1_0": [
    34,
    0
   ],
-  "pool_0_0": [
+  "stairs_w_0_0": [
    35,
-   1
+   0
   ],
-  "pool_1_0": [
+  "stairs_w_0_1": [
    36,
-   1
+   0
   ],
-  "pool_0_1": [
+  "pool_0_0": [
    37,
    1
   ],
-  "pool_1_1": [
+  "pool_1_0": [
    38,
    1
   ],
-  "wall": [
+  "pool_0_1": [
    39,
    1
   ],
-  "wall_cap": [
+  "pool_1_1": [
    40,
    1
   ],
-  "hedge": [
+  "wall": [
    41,
    1
   ],
-  "rock": [
+  "wall_cap": [
    42,
    1
   ],
-  "stripe": [
+  "hedge": [
    43,
    1
   ],
-  "gold_cap": [
+  "rock": [
    44,
    1
   ],
-  "wall_base": [
+  "stripe": [
    45,
    1
   ],
-  "wall_l": [
+  "gold_cap": [
    46,
    1
   ],
-  "wall_r": [
+  "wall_base": [
    47,
    1
   ],
-  "wall_s": [
+  "wall_l": [
    48,
    1
   ],
-  "wall_sl": [
+  "wall_r": [
    49,
    1
   ],
-  "wall_sr": [
+  "wall_s": [
    50,
+   1
+  ],
+  "wall_sl": [
+   51,
+   1
+  ],
+  "wall_sr": [
+   52,
    1
   ],
   "water": [

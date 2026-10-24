@@ -3,15 +3,16 @@
 Usage: python3 -I tools/gen_village_props.py
 Inputs: none (palette hexes from prompts/STYLE.md 4.3-4.4).
 Outputs (project/assets/island/):
-  mirror.png  single 26x40 image: the standing dressing mirror that opens the wardrobe
+  (sizes in world px; each file is stored at 4x, the map builder shows it at scale 0.25)
+  mirror.png  single 26x40 image (104x160 file): the standing dressing mirror that opens the wardrobe
               (scripts/mirror.gd); oval glass in a gold frame topped with a heart, on two
               little feet, with a contact shadow. Its foot line is y 37.
-  temple_pavilion.png  single 150x140 image: the temple seen from the village, a blue-and-white
+  temple_pavilion.png  single 150x140 image (600x560 file): the temple seen from the village, a blue-and-white
               striped pavilion with a gold dome (STYLE.md 5, "Temple"): a cream step, an arched
               blush door with a gold frame, two round windows, a gold cornice, a ribbed dome
               with a heart finial. The step's foot line is y 136, the door centred at x 75.
 Kawaii sticker look: warm-brown outline #8a5a5a, flat fills, one white highlight, gold
-#ffe3a8 with edge #e0b24a. Drawn at 4x and downscaled with LANCZOS.
+#ffe3a8 with edge #e0b24a. Drawn at 16x and downscaled with LANCZOS to 4x (O).
 """
 from pathlib import Path
 
@@ -19,7 +20,8 @@ from PIL import Image, ImageDraw
 
 OUT = Path(__file__).resolve().parent.parent / "project/assets/island"
 INK = "#8a5a5a"
-K = 4
+O = 4   # file pixels per world pixel: sprites are stored at 4x their size on the map
+K = 16  # drawing pixels per world pixel (4x supersample over the file, LANCZOS down)
 GOLD, GOLD_HI, GOLD_LO = "#ffe3a8", "#fff4c4", "#e0b24a"
 
 
@@ -114,8 +116,8 @@ def pavilion():
 
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
-    mirror().resize((26, 40), Image.LANCZOS).save(OUT / "mirror.png")
-    pavilion().resize((150, 140), Image.LANCZOS).save(OUT / "temple_pavilion.png")
+    mirror().resize((26 * O, 40 * O), Image.LANCZOS).save(OUT / "mirror.png")
+    pavilion().resize((150 * O, 140 * O), Image.LANCZOS).save(OUT / "temple_pavilion.png")
     print("wrote", OUT)
 
 

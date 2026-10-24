@@ -2,16 +2,19 @@ extends Area2D
 ## Door — proximity map transition, or a locked door with a bark.
 ## Also used for mini-game entrances (a mini-game is just another scene).
 ## Every door shows a little kawaii doormat with a bobbing arrow (assets/common/door_marker.png,
-## drawn by tools/gen_door_marker.py: 40x48 frames, row 0 "open" x 8, row 1 "locked"), names where it goes
+## drawn by tools/gen_door_marker.py: 160x192 frames stored at 4x, shown at 40x48; row 0 "open" x 8,
+## row 1 "locked"), names where it goes
 ## when hovered or when the player is close, and can be clicked: the player walks over
 ## and goes through, like approaching an NPC.
 
 const NEAR_DISTANCE := 72.0
 const MARKER_SHEET := "res://assets/common/door_marker.png"
-const MARKER_FRAME := Vector2i(40, 48)
+const MARKER_FRAME := Vector2i(160, 192)  # file px
+## The sheet is drawn at 4x; shown at a quarter, smoothly filtered.
+const MARKER_SCALE := 0.25
 const MARKER_FRAMES := 8
 ## The mat's centre in the frame, put on the door's origin.
-const MARKER_MAT := Vector2(20, 36)
+const MARKER_MAT := Vector2(80, 144)  # file px
 
 static var _marker_frames: SpriteFrames
 
@@ -55,7 +58,9 @@ func _ready() -> void:
 		_marker.name = "Marker"
 		_marker.sprite_frames = marker_frames()
 		_marker.centered = false
-		_marker.position = -MARKER_MAT
+		_marker.scale = Vector2.ONE * MARKER_SCALE
+		_marker.position = -MARKER_MAT * MARKER_SCALE
+		_marker.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 		add_child(_marker)
 		_marker.play("locked" if locked else "open")
 
