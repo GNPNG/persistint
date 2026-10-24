@@ -6,20 +6,38 @@ extends Node
 ## 2. Otherwise the line is spoken with the platform's text-to-speech (desktop OS voices;
 ##    the browser's speech synthesis in the HTML5 build), one voice per speaker.
 ## Dialogue Manager lines are spoken automatically as they appear.
+## Vocalizations (author 2026-10-24: text-to-speech "doesn't do a good job of the groaning
+## effects"): a sound written in square brackets, "[Uuunnngh.] Shamble.", is never read aloud.
+## It plays as a generated vocalization from audio/sfx (tools/gen_clone_sfx.py: groan_1-3, moan,
+## growl, picked by the sound's spelling) and the words follow, in order. Bubbles show the
+## sound without its brackets (display_text); clips are keyed on the words alone (spoken_text).
+## A line can be played through another audio bus: the clone children use "Clones" (pitched up
+## and distorted, default_bus_layout.tres) so their originals' clips come out as kid clones.
 
-## Every line handed to speak(), clip or text-to-speech (tests listen to it).
+## Every line handed to speak(), clip or text-to-speech (tests listen to it): the text as a
+## bubble shows it, brackets removed.
 signal spoke(speaker: String, text: String)
 
 const CLIP_DIR := "res://audio/voice"
+const SFX_DIR := "res://audio/sfx"
+const GROANS := ["groan_1", "groan_2", "groan_3"]
+
+static var _bracket := RegEx.create_from_string("\\[([^\\]]*)\\]")
+static var _spaces := RegEx.create_from_string("\\s+")
+static var _letters := RegEx.create_from_string("[^a-z]")
 
 var _player: AudioStreamPlayer
 var _voices: Array = []
 var _speaker_voice: Dictionary = {}  # speaker -> voice id
+var _queue: Array = []  # what is left to play of the current line: {"sfx": path} | {"say": text}
+var _pitch := 1.0
+var _speaker := ""
 
 
 func _ready() -> void:
 	_player = AudioStreamPlayer.new()
 	_player.bus = "Voice"
+	_player.finished.connect(_play_next)
 	add_child(_player)
 	if tts_available():
 		_voices = DisplayServer.tts_get_voices_for_language("en")
@@ -33,28 +51,112 @@ static func tts_available() -> bool:
 		and DisplayServer.get_name() != "headless"
 
 
-## Stable key for a spoken line; the clip generator names files with it.
+## The line as a bubble shows it: the brackets gone, the sounds kept ("Uuunnngh. Shamble.").
+static func display_text(text: String) -> String:
+	return _tidy(text.replace("[", "").replace("]", ""))
+
+
+## The words of the line alone, every bracketed sound removed ("Shamble.").
+static func spoken_text(text: String) -> String:
+	return _tidy(_bracket.sub(text, " ", true))
+
+
+## The bracketed sounds of the line, brackets kept, joined by spaces ("[Uuunnngh.] [Mrrh.]").
+static func brackets_of(text: String) -> String:
+	var out := PackedStringArray()
+	for m: RegExMatch in _bracket.search_all(text):
+		out.append("[%s]" % m.get_string(1).strip_edges())
+	return " ".join(out)
+
+
+## The line in playing order: {"sfx": vocalization name} and {"say": words} parts.
+static func parts(text: String) -> Array:
+	var out: Array = []
+	var pos := 0
+	for m: RegExMatch in _bracket.search_all(text):
+		var words := _tidy(text.substr(pos, m.get_start() - pos))
+		if words != "":
+			out.append({"say": words})
+		var sound := m.get_string(1).strip_edges()
+		if sound != "":
+			out.append({"sfx": sfx_for(sound)})
+		pos = m.get_end()
+	var rest := _tidy(text.substr(pos))
+	if rest != "":
+		out.append({"say": rest})
+	return out
+
+
+## The generated vocalization (audio/sfx/<name>.wav) for a bracketed sound, by its spelling:
+## g... a growl, m... a moan with the mouth shut, anything else one of the groans (always the
+## same one for the same spelling).
+static func sfx_for(sound: String) -> String:
+	var v := _letters.sub(sound.to_lower(), "", true)
+	if v.begins_with("g"):
+		return "growl"
+	if v.begins_with("m"):
+		return "moan"
+	return GROANS[absi(hash(v)) % GROANS.size()]
+
+
+static func sfx_path(sound: String) -> String:
+	return "%s/%s.wav" % [SFX_DIR, sfx_for(sound)]
+
+
+static func _tidy(s: String) -> String:
+	return _spaces.sub(s, " ", true).strip_edges()
+
+
+## Stable key for a spoken line (its words; bracketed sounds don't count); the clip generator
+## names files with it.
 static func line_key(speaker: String, text: String) -> String:
-	return ("%s|%s" % [speaker, text]).md5_text()
+	return ("%s|%s" % [speaker, spoken_text(text)]).md5_text()
 
 
 static func clip_path(speaker: String, text: String) -> String:
 	return "%s/%s.wav" % [CLIP_DIR, line_key(speaker, text)]
 
 
-func speak(text: String, pitch := 1.0, speaker := "") -> void:
-	if text.strip_edges().is_empty():
+## Speaks `text` as `speaker`: its bracketed sounds as vocalizations, its words as the
+## impersonated clip or text-to-speech (at `pitch`), in order, through audio bus `bus`.
+func speak(text: String, pitch := 1.0, speaker := "", bus := "Voice") -> void:
+	var shown := display_text(text)
+	if shown.is_empty():
 		return
-	spoke.emit(speaker, text)
-	var clip := clip_path(speaker, text)
-	if ResourceLoader.exists(clip):
-		_player.stream = load(clip)
-		_player.play()
-		return
-	if not tts_available():
-		return
-	DisplayServer.tts_stop()
-	DisplayServer.tts_speak(text, _voice_for(speaker), 50, clampf(pitch, 0.5, 2.0))
+	spoke.emit(speaker, shown)
+	_pitch = pitch
+	_speaker = speaker
+	_player.bus = bus if AudioServer.get_bus_index(bus) >= 0 else "Voice"
+	_player.stop()
+	if tts_available():
+		DisplayServer.tts_stop()
+	_queue = parts(text)
+	_play_next()
+
+
+## What is still to play of the current line (sounds and words), in order.
+func pending() -> Array:
+	return _queue.duplicate()
+
+
+func _play_next() -> void:
+	while not _queue.is_empty():
+		var part: Dictionary = _queue.pop_front()
+		if part.has("sfx"):
+			var path := "%s/%s.wav" % [SFX_DIR, part["sfx"]]
+			if ResourceLoader.exists(path):
+				_player.stream = load(path)
+				_player.play()
+				return  # finished -> the next part
+			continue
+		var clip := clip_path(_speaker, part["say"])
+		if ResourceLoader.exists(clip):
+			_player.stream = load(clip)
+			_player.play()
+			return
+		if tts_available():
+			DisplayServer.tts_speak(part["say"], _voice_for(_speaker), 50, clampf(_pitch, 0.5, 2.0))
+		# text-to-speech has no end we wait for: anything after it plays at once
 
 
 func _voice_for(speaker: String) -> String:

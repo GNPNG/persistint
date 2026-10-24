@@ -14,6 +14,13 @@ Outputs (project/assets/ruins/, the paths scripts/ruins/*.gd load; generated sta
                            rows    0 front (walking down), 1 side (facing right; flip for
                                    left), 2 back (walking up)
                            columns 0-1 idle (breathing), 2-5 walk (the shamble)
+                           row 3 front, the floss: columns 0-5, arms swinging side to side
+                                   together with the hips swinging the other way
+                           row 4 front, the dab: columns 0-2 (wind-up, the dab with one arm
+                                   bent across the face and the other straight up and out,
+                                   the hold)
+                         (the dances: author 2026-10-24, "make the zombies floss sometimes...
+                         Also dabbing"; a dancing clone is what the cubs pounce on)
   clone_polar_bear.png   sheet of 192x176 frames (24x22 world px at scale 1/8, feet on the
                          bottom edge):
                            rows 0 front, 1 side (facing right), 2 back: columns 0-1 idle,
@@ -298,6 +305,61 @@ def back_hair(p, kind, gx, hy, hair, hair_d):
     shine(p, gx - 6.6, hy - 7.6, gx - 0.6, hy - 1.6, 200, 250, hair)
 
 
+def arm(p, pts, fill=SKIN):
+    """An arm as a thick rounded stroke with the plum outline, a round hand at its end."""
+    p.line(pts, INK, 3.2)
+    p.circ(pts[-1][0], pts[-1][1], 2.05, INK, None)
+    p.line(pts, fill, 2.0)
+    p.circ(pts[-1][0], pts[-1][1], 1.5, fill, None)
+
+
+def dance_frame(kind, gown, move, k):
+    """Front view, the clone dancing: move "floss" frame k (0-5) or "dab" frame k (0-2)."""
+    p = Pen(CW, CH)
+    if move == "floss":
+        s = math.sin(2 * math.pi * k / 6)      # the arms' swing, -1..1
+        hip = -1.1 * s                          # the hips go the other way
+        bob = 0.4 if k % 3 == 0 else 0.0        # a little dip as the arms pass the body
+    else:
+        s, hip = 0.0, 0.0
+        bob = (0.0, 0.6, 0.4)[k]
+    gx = 12.0
+    p.ell(5.5, 31.8, 18.5, 34, (40, 30, 50, 70), None)  # contact shadow
+    for x in (gx - 2.6, gx + 2.6):  # feet planted
+        p.rect(x - 1.35, 26.8, x + 1.35, 32.4, SKIN, 1.0)
+        p.ell(x - 1.9, 31.0, x + 1.9, 33.3, SKIN)
+    top = 16.6 + bob
+    hem = 29.0 + bob * 0.3
+    bx = gx + hip  # the body (gown and head) swings with the hips
+    hi = tint(gown, 0.45)
+    p.poly(gown_shape(bx, top, hem, 4.4, 6.6), gown)
+    p.poly([(bx - 4.0, top + 2.2), (bx - 2.9, top + 1.4), (bx - 3.9, hem - 2.0), (bx - 5.2, hem - 2.2)], hi, None)
+    p.line([(bx - 1.6, top + 0.2), (bx, top + 1.8), (bx + 1.6, top + 0.2)], w=0.45)  # collar
+    p.line([(bx - 4.4, top + 6.6), (bx + 4.4, top + 6.6)], w=0.45)  # stitched seam
+    for x in (bx - 2.4, bx, bx + 2.4):
+        p.line([(x, top + 5.8), (x, top + 7.4)], w=0.4)
+    for sx in (-1, 1):  # puffed sleeves at the shoulders
+        p.ell(bx + sx * 4.6 - 2.0, top + 0.6, bx + sx * 4.6 + 2.0, top + 4.6, gown)
+    if move == "floss":
+        # both arms straight, swinging together past the hips; the far arm a shade darker
+        for sx, fill in ((-1, SKIN_D), (1, SKIN)):
+            sh = (bx + sx * 4.6, top + 2.6)
+            hand = (gx + s * 7.6 + sx * 1.3, top + 8.6 - abs(s) * 1.2)
+            arm(p, [sh, hand], fill)
+        head(p, kind, "front", bx, bob)
+    else:
+        hy = 9.6 + bob
+        if k == 0:  # wind-up: both arms out to the right, low
+            head(p, kind, "front", bx, bob)
+            for sx, fill in ((-1, SKIN_D), (1, SKIN)):
+                arm(p, [(bx + sx * 4.6, top + 2.6), (bx + 5.5 + sx * 2.4, top + 7.0)], fill)
+        else:  # the dab: the far arm straight up and out beside the head, the near arm bent across the face
+            arm(p, [(bx - 5.0, top + 2.2), (bx - 10.4, hy - 6.8)], SKIN_D)
+            head(p, kind, "front", bx, bob)
+            arm(p, [(bx + 4.6, top + 2.6), (bx + 0.4, hy + 3.4), (bx - 5.0, hy - 1.6)], SKIN)
+    return p.frame()
+
+
 def clone(kind, gown):
     frames = {}
     for r, view in enumerate(("front", "side", "back")):
@@ -305,7 +367,11 @@ def clone(kind, gown):
             frames[(r, c)] = clone_frame(kind, gown, view, None, c)
         for f in range(4):
             frames[(r, 2 + f)] = clone_frame(kind, gown, view, f)
-    sheet(frames, 6, 3, CW, CH).save(OUT / f"clone_{kind}.png")
+    for k in range(6):
+        frames[(3, k)] = dance_frame(kind, gown, "floss", k)
+    for k in range(3):
+        frames[(4, k)] = dance_frame(kind, gown, "dab", k)
+    sheet(frames, 6, 5, CW, CH).save(OUT / f"clone_{kind}.png")
 
 
 # ---------------------------------------------------------------- polar bear cubs
