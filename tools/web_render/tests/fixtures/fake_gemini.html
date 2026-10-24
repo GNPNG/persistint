@@ -71,6 +71,11 @@
     busy.appendChild(button('Stop response', 'Stop', () => {}));
     setTimeout(async () => {
       busy.innerHTML = '';
+      if (/CAPTCHA/.test(model)) {   // Google's check page replaces the app mid-generation
+        const f = document.createElement('iframe'); f.title = 'reCAPTCHA'; f.width = 300; f.height = 80;
+        document.body.appendChild(f);
+        return;
+      }
       const resp = document.createElement('model-response');
       // Text-only replies: a refusal, or a usage-limit notice (prompt contains REFUSE / LIMIT).
       const textOnly = /REFUSE/.test(model) ? "I can't generate that for you." : /LIMIT/.test(model) ? "You've reached your limit for music generation. Your limit resets tomorrow." : null;
@@ -87,14 +92,19 @@
         const blob = await new Promise((r) => c.toBlob(r, 'image/png'));
         const img = document.createElement('img'); img.src = URL.createObjectURL(blob); img.alt = 'Generated image';
         resp.appendChild(img);
-        actions.appendChild(button('Download full size image', 'Download', () => downloadBlob(blob, 'Gemini_Generated_Image.png')));
+        // SORRY: like the live app once Google flags the session, the full-size request is
+        // redirected to www.google.com/sorry (only visible as a CORS error) and nothing downloads.
+        const sorry = /SORRY/.test(model);
+        actions.appendChild(button('Download full size image', 'Download', () => (sorry
+          ? console.error("Access to fetch at 'https://www.google.com/sorry/index?continue=https://gemini.google.com/_/BardChatUi/data/batchexecute' from origin 'https://gemini.google.com' has been blocked by CORS policy")
+          : downloadBlob(blob, 'Gemini_Generated_Image.png'))));
       } else if (mode === 'video') {
         const blob = fakeMp4();
         const v = document.createElement('video'); v.src = URL.createObjectURL(blob); v.width = 320; v.height = 180; v.controls = true;
         resp.appendChild(v);
         const share = document.createElement('div'); share.style.display = 'none';
         share.appendChild(button('Download video', 'Download video', () => downloadBlob(blob, 'video.mp4')));
-        actions.appendChild(button('Share', 'Share', () => { share.style.display = 'block'; }));
+        actions.appendChild(button('Share', 'Share', () => { share.style.display = 'block'; actions.style.visibility = 'visible'; }));
         actions.appendChild(share);
       } else {
         const blob = fakeMp3();

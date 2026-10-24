@@ -3,7 +3,7 @@
 //
 //   TrackerClient       getQueue / start / end against the web app (shared secret, https only)
 //   LocalAttemptsLog    the same start / end interface, appending to a local JSONL file
-//   classifyOutcome     renderer error -> done | failed | quota | refused | timeout | selector | skipped
+//   classifyOutcome     renderer error -> done | failed | quota | refused | timeout | selector | skipped | blocked
 //   runTrackerLoop      the unattended loop: poll, throttle per kind, render, report, repeat
 //
 // No third-party imports, and fetch / clock / sleep are injectable, so the tests run against a
@@ -12,7 +12,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { inspect } from 'node:util';
 
-export const OUTCOMES = ['done', 'failed', 'quota', 'refused', 'timeout', 'selector', 'skipped'];
+export const OUTCOMES = ['done', 'failed', 'quota', 'refused', 'timeout', 'selector', 'skipped', 'blocked'];
 export const KINDS = ['image', 'video', 'music'];
 
 export class TrackerError extends Error {
@@ -98,6 +98,17 @@ export class TrackerClient {
     if (info.started) body.started = new Date(info.started).toISOString();
     if (info.note) body.note = this.redact(info.note);
     return this.#call('POST', this.url, body, `attempt_end ${idOf(asset)}`);
+  }
+
+  /**
+   * Make a row eligible again: Status Pending, Next Eligible cleared. With relabel {runId, from, to}
+   * (e.g. from 'quota' to 'blocked'), that run's Attempts entries for the asset get the new outcome,
+   * so a quota wrongly logged no longer holds the kind in its cooldown.
+   */
+  async reset(asset, { runId = '', from = '', to = '' } = {}) {
+    const body = { action: 'reset', asset_id: idOf(asset), kind: asset.kind };
+    if (runId) Object.assign(body, { run_id: runId, from_outcome: from, to_outcome: to });
+    return this.#call('POST', this.url, body, `reset ${idOf(asset)}`);
   }
 
   async #call(method, url, body, what) {
@@ -236,6 +247,8 @@ const has = (text, list) => { const t = String(text || '').toLowerCase().replace
  *   timeout  no result / no download in time, or a navigation timeout
  *   selector a step's selectors matched nothing
  *   skipped  assist mode, the author typed s
+ *   blocked  Google's check page ("unusual traffic" / reCAPTCHA, e.blocked): the session needs a
+ *            human, the asset is fine. The run stops; the row gets no cooldown and no retry count.
  *   failed   anything else
  */
 export function classifyOutcome(errOrResult, phrases = { quota: [], refused: [] }) {
@@ -245,6 +258,7 @@ export function classifyOutcome(errOrResult, phrases = { quota: [], refused: [] 
   const msg = String(e.message || '');
   const textOnly = e.textOnly || /finished without any media/.test(msg);
   const reply = e.replyText ?? msg;
+  if (e.blocked || /showing a check page|www\.google\.com\/sorry/.test(msg)) return 'blocked';
   if (e.abortRun || /usage limit notice/.test(msg)) return 'quota';
   if (textOnly) {
     if (has(reply, phrases.quota)) return 'quota';
@@ -278,6 +292,7 @@ export const fmtTime = (t) => `${new Date(t).toLocaleString()} (${new Date(t).to
  *   - otherwise the first eligible row of the kind that rendered least recently is rendered,
  *     wrapped in start() / end(). Then the queue is polled again.
  * When nothing is eligible: wait if the next eligible time is within maxWaitSec, else return.
+ * A "blocked" outcome (Google's check page) ends the run at once: reason 'blocked'.
  *
  * opts: client (TrackerClient or LocalAttemptsLog-like with getQueue), tasks, renderOne(task, row),
  *   kinds, only (Set of ids), force, limit, maxWaitSec, runId, surfaceFor(kind), phrases,
@@ -304,6 +319,13 @@ export async function runTrackerLoop(opts) {
     let res = null;
     try {
       res = await client.end(row, full);
+    } catch (e) {
+      // A web app deployed before 'blocked' existed rejects it. The run must still stop and say
+      // why; the row stays Rendering and is offered again after the stale-Rendering timeout.
+      if (info.outcome !== 'blocked' || !/unknown outcome/.test(String(e.message))) throw e;
+      log(`  !! the tracker web app does not know the outcome 'blocked' (deployed before this version); ` +
+        `${row.asset_id} was left as Rendering. Redeploy it: node tools/render_tracker/deploy.mjs`);
+      res = { status: 'Rendering (not updated)', next_eligible: null };
     } finally {
       if (localLog) await localLog.end(row, full).catch(() => {});
     }
@@ -378,6 +400,10 @@ export async function runTrackerLoop(opts) {
       const res = await finish(row, info);
       lastEnd[kind] = now();
       log(`  -> ${info.outcome}${info.error ? `: ${info.error.slice(0, 200)}` : ''}${res?.next_eligible ? ` (retry after ${fmtTime(ms(res.next_eligible))})` : ''}`);
+      if (info.outcome === 'blocked') {
+        log(`  !! Google is showing its check page; stopping the run (no more assets, no more browser work)`);
+        return { results, reason: 'blocked', nextEligible: null, capped: [], stopped: [...stopped] };
+      }
       if (info.outcome === 'quota') {
         stopped.add(kind);
         log(`  !! ${kind}: usage limit reached; no more ${kind} this run (the sheet applies its cooldown)`);
