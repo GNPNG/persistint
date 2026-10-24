@@ -787,9 +787,9 @@
   },
   {
     "speaker": "Daughter",
-    "text": "That's {{Cast.short(\"pony_butterscotch\")}}, that's {{Cast.short(\"pony_waffles\")}}, and that one's {{Cast.short(\"pony_daisy\")}}. Say hi, everybody.",
-    "key": "ae4231c0b942b761e92f1a24b468db37",
-    "clip": "res://audio/voice/ae4231c0b942b761e92f1a24b468db37.wav"
+    "text": "That's Butterscotch, that's Waffles, and that one's Daisy. Say hi, everybody.",
+    "key": "8e8f0a156429160149abe2b3a41c3fe8",
+    "clip": "res://audio/voice/8e8f0a156429160149abe2b3a41c3fe8.wav"
   },
   {
     "speaker": "Daughter",
@@ -871,9 +871,9 @@
   },
   {
     "speaker": "Daughter",
-    "text": "{{Cast.short(\"pony_waffles\")}} likes being watched. She does a little hop when she thinks you're looking.",
-    "key": "d60303d282ffd097ef4f64b21977974a",
-    "clip": "res://audio/voice/d60303d282ffd097ef4f64b21977974a.wav"
+    "text": "Waffles likes being watched. She does a little hop when she thinks you're looking.",
+    "key": "fcc4fb63a4cd242874b0c0dc7c68c5c3",
+    "clip": "res://audio/voice/fcc4fb63a4cd242874b0c0dc7c68c5c3.wav"
   },
   {
     "speaker": "Gloria",
@@ -961,9 +961,9 @@
   },
   {
     "speaker": "Priestess Betty",
-    "text": "Ah. {{Cast.short(\"initiate\")}}'s little offering. Set it by the icons.",
-    "key": "00e2cd7284894f99bf8d4aeb3a0d4d54",
-    "clip": "res://audio/voice/00e2cd7284894f99bf8d4aeb3a0d4d54.wav"
+    "text": "Ah. Gloria's little offering. Set it by the icons.",
+    "key": "2fb9c97e61f6b7d9bfe188835bcc9f04",
+    "clip": "res://audio/voice/2fb9c97e61f6b7d9bfe188835bcc9f04.wav"
   },
   {
     "speaker": "Priestess Betty",
@@ -1012,5 +1012,839 @@
     "text": "And all who don't, of course. That's rather the point of Them.",
     "key": "dbd4ee9a3a35930c7ae39671440cd14a",
     "clip": "res://audio/voice/dbd4ee9a3a35930c7ae39671440cd14a.wav"
+  },
+  {
+    "speaker": "epstein",
+    "text": "I'm not a sexual predator, I'm an 'offender.'",
+    "key": "0fec091cdc1d4688446ca4dfe32d94dc",
+    "clip": "res://audio/voice/0fec091cdc1d4688446ca4dfe32d94dc.wav"
+  },
+  {
+    "speaker": "epstein",
+    "text": "It's the difference between a murderer and a person who steals a bagel.",
+    "key": "5d3f4480734376c1320403b3e5b91393",
+    "clip": "res://audio/voice/5d3f4480734376c1320403b3e5b91393.wav"
+  },
+  {
+    "speaker": "epstein",
+    "text": "I just want you to know I'm not a pedophile.",
+    "key": "bc5fca0cb1f6a7b767ae62dea3a993f5",
+    "clip": "res://audio/voice/bc5fca0cb1f6a7b767ae62dea3a993f5.wav"
+  },
+  {
+    "speaker": "epstein",
+    "text": "Maybe the only thing worse than being called a pedophile is being called a hedge fund manager.",
+    "key": "89282e391bb5484f7b9fb9859eea7796",
+    "clip": "res://audio/voice/89282e391bb5484f7b9fb9859eea7796.wav"
+  },
+  {
+    "speaker": "epstein",
+    "text": "It's hard to believe that not so long ago people actually thought I was a good guy.",
+    "key": "c8cc14c703bab8efc5f35151c0b38edc",
+    "clip": "res://audio/voice/c8cc14c703bab8efc5f35151c0b38edc.wav"
+  },
+  {
+    "speaker": "epstein",
+    "text": "And now people are ashamed to say they knew me.",
+    "key": "170b62bab460c643c09d0745a5ce4d8c",
+    "clip": "res://audio/voice/170b62bab460c643c09d0745a5ce4d8c.wav"
+  },
+  {
+    "speaker": "epstein",
+    "text": "Ethics is always a complicated subject.",
+    "key": "73df37e0c5c127c40b291233d3e1e90d",
+    "clip": "res://audio/voice/73df37e0c5c127c40b291233d3e1e90d.wav"
+  },
+  {
+    "speaker": "epstein",
+    "text": "Men want to measure everything.",
+    "key": "bd37b7d070fb0ec8f03b5ce67028ba3c",
+    "clip": "res://audio/voice/bd37b7d070fb0ec8f03b5ce67028ba3c.wav"
+  },
+  {
+    "speaker": "epstein",
+    "text": "The devil scares me.",
+    "key": "5e33351401981654385996ad149f2c8a",
+    "clip": "res://audio/voice/5e33351401981654385996ad149f2c8a.wav"
+  },
+  {
+    "speaker": "bill_clinton",
+    "text": "There is nothing wrong with America that cannot be cured by what is right with America.",
+    "key": "f740c508ff83ed45bdf6b7bfb9dc664c",
+    "clip": "res://audio/voice/f740c508ff83ed45bdf6b7bfb9dc664c.wav"
+  },
+  {
+    "speaker": "bill_clinton",
+    "text": "But, by the words we speak and the faces we show the world, we force the spring.",
+    "key": "8915674730af3361660fb409a5b43309",
+    "clip": "res://audio/voice/8915674730af3361660fb409a5b43309.wav"
+  },
+  {
+    "speaker": "bill_clinton",
+    "text": "So today, we pledge that the era of deadlock and drift is over.",
+    "key": "c098bd113b6ccf2d71140a6e7c03a70b",
+    "clip": "res://audio/voice/c098bd113b6ccf2d71140a6e7c03a70b.wav"
+  },
+  {
+    "speaker": "bill_clinton",
+    "text": "The era of big government is over.",
+    "key": "0ddd3f4367e1ebd1c58ef3c2687e23e4",
+    "clip": "res://audio/voice/0ddd3f4367e1ebd1c58ef3c2687e23e4.wav"
+  },
+  {
+    "speaker": "bill_clinton",
+    "text": "But we can't go back to the era of fending for yourself.",
+    "key": "b46d51e209f7433528091686f575dcfb",
+    "clip": "res://audio/voice/b46d51e209f7433528091686f575dcfb.wav"
+  },
+  {
+    "speaker": "bill_clinton",
+    "text": "I did not have sexual relations with that woman, Miss Lewinsky.",
+    "key": "90e6df75be19f7ac691594f94695bc60",
+    "clip": "res://audio/voice/90e6df75be19f7ac691594f94695bc60.wav"
+  },
+  {
+    "speaker": "bill_clinton",
+    "text": "I never told anybody to lie, not a single time, never.",
+    "key": "4e8b45e7c481313d71337578a0d98464",
+    "clip": "res://audio/voice/4e8b45e7c481313d71337578a0d98464.wav"
+  },
+  {
+    "speaker": "bill_clinton",
+    "text": "It depends upon what the meaning of the word \"is\" is.",
+    "key": "1cceed4bbf0aaf65822e60afcde67804",
+    "clip": "res://audio/voice/1cceed4bbf0aaf65822e60afcde67804.wav"
+  },
+  {
+    "speaker": "bill_clinton",
+    "text": "It's arithmetic.",
+    "key": "bfcbcb1922f94d7f2e18a5a36073e3fe",
+    "clip": "res://audio/voice/bfcbcb1922f94d7f2e18a5a36073e3fe.wav"
+  },
+  {
+    "speaker": "bill_clinton",
+    "text": "We simply cannot afford to give the reins of government to someone who will double down on trickle down.",
+    "key": "1ed248ebb9ebfcd9738eea3c5c1d45c1",
+    "clip": "res://audio/voice/1ed248ebb9ebfcd9738eea3c5c1d45c1.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "human rights are women's rights and women's rights are human rights, once and for all.",
+    "key": "649a7cd686f8d31d8c820541e5213aba",
+    "clip": "res://audio/voice/649a7cd686f8d31d8c820541e5213aba.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "If there is one message that echoes forth from this conference, let it be that human rights are women's rights . . . . And women's rights are human rights, once and for all.",
+    "key": "fde4c897e35a84916f16f7199b5a174a",
+    "clip": "res://audio/voice/fde4c897e35a84916f16f7199b5a174a.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "It is time for us to say here in Beijing, and the world to hear, that it is no longer acceptable to discuss women's rights as separate from human rights.",
+    "key": "35ff4da2c7a871de62c20d9d2b8aa451",
+    "clip": "res://audio/voice/35ff4da2c7a871de62c20d9d2b8aa451.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "The great challenge of this conference is to give voice to women everywhere whose experiences go unnoticed, whose words go unheard.",
+    "key": "b2f6c3a90bec2a4e211babd7c0ade844",
+    "clip": "res://audio/voice/b2f6c3a90bec2a4e211babd7c0ade844.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "Those of us who have the opportunity to be here have the responsibility to speak for those who could not.",
+    "key": "c615599de00feccd683c15f318cfd05a",
+    "clip": "res://audio/voice/c615599de00feccd683c15f318cfd05a.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "These abuses have continued because, for too long, the history of women has been a history of silence.",
+    "key": "6c084e8f28ca686cec36a4d458399c2b",
+    "clip": "res://audio/voice/6c084e8f28ca686cec36a4d458399c2b.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "Let us not forget that among those rights are the right to speak freely. And the right to be heard.",
+    "key": "a33861c9fb241dad4f3ec99dbc822603",
+    "clip": "res://audio/voice/a33861c9fb241dad4f3ec99dbc822603.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "Every woman deserves the chance to realize her God-given potential.",
+    "key": "f1f253e64d22d9aeccf60e025cb42f41",
+    "clip": "res://audio/voice/f1f253e64d22d9aeccf60e025cb42f41.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "What we are learning around the world is that, if women are healthy and educated, their families will flourish.",
+    "key": "e32d379af6b7198d74f23b1c58b40d29",
+    "clip": "res://audio/voice/e32d379af6b7198d74f23b1c58b40d29.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "We need to understand that there is no one formula for how women should lead their lives.",
+    "key": "de6e64051dd505bd0b9ede46dd965a65",
+    "clip": "res://audio/voice/de6e64051dd505bd0b9ede46dd965a65.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "That is why we must respect the choices that each woman makes for herself and her family.",
+    "key": "fcdfbddcb49076dc8cb77a1afb4d28db",
+    "clip": "res://audio/voice/fcdfbddcb49076dc8cb77a1afb4d28db.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "Let this conference be our — and the world's — call to action.",
+    "key": "25ac29ac26c09a0fbbd5c7e2f9b664d4",
+    "clip": "res://audio/voice/25ac29ac26c09a0fbbd5c7e2f9b664d4.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "And to all the little girls who are watching this, never doubt that you are valuable and powerful and deserving of every chance and opportunity in the world to pursue and achieve your own dreams.",
+    "key": "a8d1823879ed9b161f0f6b00b95584b6",
+    "clip": "res://audio/voice/a8d1823879ed9b161f0f6b00b95584b6.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "please never stop believing that fighting for what’s right is worth it.",
+    "key": "3b86191298a12fed939917dbc168e808",
+    "clip": "res://audio/voice/3b86191298a12fed939917dbc168e808.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "We owe him an open mind and the chance to lead.",
+    "key": "f80647a5d0273a3058a5dab73e035298",
+    "clip": "res://audio/voice/f80647a5d0273a3058a5dab73e035298.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "Our constitutional democracy enshrines the peaceful transfer of power and we don’t just respect that, we cherish it.",
+    "key": "e0daf78272b013bb525c1edc450ddf03",
+    "clip": "res://audio/voice/e0daf78272b013bb525c1edc450ddf03.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "Our campaign was never about one person or even one election, it was about the country we love",
+    "key": "f284b0e5f2f094ff1af2ce4101cecb59",
+    "clip": "res://audio/voice/f284b0e5f2f094ff1af2ce4101cecb59.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "I know how disappointed you feel, because I feel it, too.",
+    "key": "3954caf8c5d4c0c7052774d16f735b37",
+    "clip": "res://audio/voice/3954caf8c5d4c0c7052774d16f735b37.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "the art of making what appears to be impossible possible",
+    "key": "5ceebc72ca5a3ff5be3c5f597d11f212",
+    "clip": "res://audio/voice/5ceebc72ca5a3ff5be3c5f597d11f212.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "We're not interested in social reconstruction; it's human reconstruction.",
+    "key": "ddef8a60a928fbf9bfc77938b20950db",
+    "clip": "res://audio/voice/ddef8a60a928fbf9bfc77938b20950db.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "Fear is always with us but we just don't have time for it.",
+    "key": "e3000df9777c6b3f883cc6f3b628f283",
+    "clip": "res://audio/voice/e3000df9777c6b3f883cc6f3b628f283.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "it's got about 18 million cracks in it.",
+    "key": "b342b0d965cbfe1d541d7a2434b97775",
+    "clip": "res://audio/voice/b342b0d965cbfe1d541d7a2434b97775.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "Although we weren't able to shatter that highest, hardest glass ceiling this time",
+    "key": "7305a57a0ab7a0a5d123e79ad12909fd",
+    "clip": "res://audio/voice/7305a57a0ab7a0a5d123e79ad12909fd.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "Our founders embraced the enduring truth that we are stronger together.",
+    "key": "773f17a5f083afe694dc10e89fa730c1",
+    "clip": "res://audio/voice/773f17a5f083afe694dc10e89fa730c1.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "So let's be stronger together my fellow Americans.",
+    "key": "aa9fcc3edd4b83896022abf331876520",
+    "clip": "res://audio/voice/aa9fcc3edd4b83896022abf331876520.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "Where families are strong, communities are safe, and yes—love trumps hate.",
+    "key": "f7fb60322d74d010f04e79b2d03a9f35",
+    "clip": "res://audio/voice/f7fb60322d74d010f04e79b2d03a9f35.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "A man you can bait with a tweet is not a man we can trust with nuclear weapons.",
+    "key": "a32271ea7afda11358c4e66a1a2091b7",
+    "clip": "res://audio/voice/a32271ea7afda11358c4e66a1a2091b7.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "When there are no ceilings, the sky's the limit.",
+    "key": "139ac989b54c66f06ddb08540b019280",
+    "clip": "res://audio/voice/139ac989b54c66f06ddb08540b019280.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "I will be a President for Democrats, Republicans, and Independents.",
+    "key": "bd23c13c491e04e9e7e35004f621e563",
+    "clip": "res://audio/voice/bd23c13c491e04e9e7e35004f621e563.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "Our country's motto is e pluribus unum: out of many, we are one.",
+    "key": "b004c04ab6aecb431e7feaa6a8007417",
+    "clip": "res://audio/voice/b004c04ab6aecb431e7feaa6a8007417.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "So don't let anyone tell you that our country is weak.",
+    "key": "e7e94d09a09be233640b7f2534f90f6b",
+    "clip": "res://audio/voice/e7e94d09a09be233640b7f2534f90f6b.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "Your cause is our cause.",
+    "key": "e70e785512e152694ddfa49c65be748a",
+    "clip": "res://audio/voice/e70e785512e152694ddfa49c65be748a.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "I'm running to make our economy work for you and for every American.",
+    "key": "ed5ea5bb35378f231d6fa8c927d5c52c",
+    "clip": "res://audio/voice/ed5ea5bb35378f231d6fa8c927d5c52c.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "America can't succeed unless you succeed.",
+    "key": "b9db90a8a07e75faf3ab80c035abdd26",
+    "clip": "res://audio/voice/b9db90a8a07e75faf3ab80c035abdd26.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "I'm not running for some Americans, but for all Americans.",
+    "key": "0ebff699950a57b609e0599747924a12",
+    "clip": "res://audio/voice/0ebff699950a57b609e0599747924a12.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "I want to be her champion and your champion.",
+    "key": "1f9e30f35f06158e491a05882ca2eb31",
+    "clip": "res://audio/voice/1f9e30f35f06158e491a05882ca2eb31.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "For everyone who's ever been knocked down, but refused to be knocked out.",
+    "key": "1933c79303ae67801a57f3bf17b1c990",
+    "clip": "res://audio/voice/1933c79303ae67801a57f3bf17b1c990.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "Prosperity can't be just for CEOs and hedge fund managers.",
+    "key": "88015f43792ecdb20c68a641970ca1cd",
+    "clip": "res://audio/voice/88015f43792ecdb20c68a641970ca1cd.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "But remember, it's not whether you get knocked down, it's whether you get back up.",
+    "key": "285102a1f5777f79d981652259e515ee",
+    "clip": "res://audio/voice/285102a1f5777f79d981652259e515ee.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "It's about lifting each other up, not tearing each other down.",
+    "key": "dee808b09df9b9fce5a90bfba1dd3964",
+    "clip": "res://audio/voice/dee808b09df9b9fce5a90bfba1dd3964.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "So instead of building walls, we're going to break down barriers.",
+    "key": "d03b0721e6fa3bc9f8eb2872c1e7f8fb",
+    "clip": "res://audio/voice/d03b0721e6fa3bc9f8eb2872c1e7f8fb.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "America is great, and we can do great things if we do them together.",
+    "key": "a2b46891d55b744e1eefcc2135ffa5ee",
+    "clip": "res://audio/voice/a2b46891d55b744e1eefcc2135ffa5ee.wav"
+  },
+  {
+    "speaker": "hillary_clinton",
+    "text": "I suppose I could have stayed home and baked cookies and had teas, but what I decided to do was to fulfill my profession which I entered before my husband was in public life.",
+    "key": "02dad77dc4e904123457fb4ec1df603d",
+    "clip": "res://audio/voice/02dad77dc4e904123457fb4ec1df603d.wav"
+  },
+  {
+    "speaker": "bill_gates",
+    "text": "If anything kills over 10 million people in the next few decades, it's most likely to be a highly infectious virus rather than a war.",
+    "key": "576271e784cc1d8ff49c4dec7c5d8c88",
+    "clip": "res://audio/voice/576271e784cc1d8ff49c4dec7c5d8c88.wav"
+  },
+  {
+    "speaker": "bill_gates",
+    "text": "Not missiles, but microbes.",
+    "key": "ee106634b8ae82d863a1afc8bf55a50e",
+    "clip": "res://audio/voice/ee106634b8ae82d863a1afc8bf55a50e.wav"
+  },
+  {
+    "speaker": "bill_gates",
+    "text": "We're not ready for the next epidemic.",
+    "key": "d9cac3751769e5fb428494156eba5e0b",
+    "clip": "res://audio/voice/d9cac3751769e5fb428494156eba5e0b.wav"
+  },
+  {
+    "speaker": "bill_gates",
+    "text": "The problem wasn't that there was a system that didn't work well enough. The problem was that we didn't have a system at all.",
+    "key": "bda68e60e559073a79bff515bfd39d07",
+    "clip": "res://audio/voice/bda68e60e559073a79bff515bfd39d07.wav"
+  },
+  {
+    "speaker": "bill_gates",
+    "text": "There's no need to panic. We don't have to hoard cans of spaghetti or go down into the basement.",
+    "key": "7e761036e4ffe06e5f15f8ae9da6c1e3",
+    "clip": "res://audio/voice/7e761036e4ffe06e5f15f8ae9da6c1e3.wav"
+  },
+  {
+    "speaker": "bill_gates",
+    "text": "But we need to get going, because time is not on our side.",
+    "key": "e5742ba4406a57227ad7f38b11cb1cb0",
+    "clip": "res://audio/voice/e5742ba4406a57227ad7f38b11cb1cb0.wav"
+  },
+  {
+    "speaker": "bill_gates",
+    "text": "If we start now, we can be ready for the next epidemic.",
+    "key": "9d0b3eee0d72433a8539bb6c949ec1a3",
+    "clip": "res://audio/voice/9d0b3eee0d72433a8539bb6c949ec1a3.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "What would a Good Feminist look like, in the eyes of my accusers?",
+    "key": "f845d2dc94758b77f7f99ad57d2670f3",
+    "clip": "res://audio/voice/f845d2dc94758b77f7f99ad57d2670f3.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "They're not angels, incapable of wrongdoing.",
+    "key": "6fac3d50d8f137b527938a5e9e081684",
+    "clip": "res://audio/voice/6fac3d50d8f137b527938a5e9e081684.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Nor do I believe that women are children, incapable of agency or of making moral decisions.",
+    "key": "7e5168d6b18571ffd24afe06d9160881",
+    "clip": "res://audio/voice/7e5168d6b18571ffd24afe06d9160881.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "We are grownups: We can make up our own minds, one way or the other.",
+    "key": "fed8931c3a14a2fd3d5e3b195b2adc9c",
+    "clip": "res://audio/voice/fed8931c3a14a2fd3d5e3b195b2adc9c.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "The aim of ideology is to eliminate ambiguity.",
+    "key": "aa9ca4cab5e021588f709e4db8731c82",
+    "clip": "res://audio/voice/aa9ca4cab5e021588f709e4db8731c82.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Fiction writers are particularly suspect because they write about human beings, and people are morally ambiguous.",
+    "key": "2d03020c68b5be408196189a237e9aad",
+    "clip": "res://audio/voice/2d03020c68b5be408196189a237e9aad.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "In times of extremes, extremists win.",
+    "key": "a1a1a8d8b8a5847d45263399227f9dbd",
+    "clip": "res://audio/voice/a1a1a8d8b8a5847d45263399227f9dbd.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "The #MeToo moment is a symptom of a broken legal system.",
+    "key": "35e0ef36153090b8076c2e45bad1b9b7",
+    "clip": "res://audio/voice/35e0ef36153090b8076c2e45bad1b9b7.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "We are acceptable neither to Right nor to Left.",
+    "key": "484c4a2b14ae8dd492645394ab07ba69",
+    "clip": "res://audio/voice/484c4a2b14ae8dd492645394ab07ba69.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "A war among women, as opposed to a war on women, is always pleasing to those who do not wish women well.",
+    "key": "f59dbbeb31ec704a751e259fee025f32",
+    "clip": "res://audio/voice/f59dbbeb31ec704a751e259fee025f32.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "There are powerful groups in North America pushing this agenda, but they are not usually considered feminists.",
+    "key": "4ecfdab1409e481a8af2de5df273d3ed",
+    "clip": "res://audio/voice/4ecfdab1409e481a8af2de5df273d3ed.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Are these Good Feminists fair-minded people?",
+    "key": "ce8918e2bc6d3246fb5ec977aacf42c8",
+    "clip": "res://audio/voice/ce8918e2bc6d3246fb5ec977aacf42c8.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Why have accountability and transparency been framed as antithetical to women's rights?",
+    "key": "44f9e6d90e70a6f5dae84a8ba2e0deb0",
+    "clip": "res://audio/voice/44f9e6d90e70a6f5dae84a8ba2e0deb0.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Endorsing basic human rights for everyone is not warring against women.",
+    "key": "9e65d53a992df97f7bcfc059736831e6",
+    "clip": "res://audio/voice/9e65d53a992df97f7bcfc059736831e6.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "In order to have rights for women you have to have rights period.",
+    "key": "48c7d739c2e092b23b1b0134702e6b62",
+    "clip": "res://audio/voice/48c7d739c2e092b23b1b0134702e6b62.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Women are human beings, radical though it may seem.",
+    "key": "4061ab6e434635897399f900beca0048",
+    "clip": "res://audio/voice/4061ab6e434635897399f900beca0048.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "If the state owns your body, they should pay.",
+    "key": "fe87614b87bfd174230284b3cfbcc861",
+    "clip": "res://audio/voice/fe87614b87bfd174230284b3cfbcc861.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "There's a great big hole in the road up ahead. Don't fall into it.",
+    "key": "d17a1f3d9ed787a3d4c1cfa349342c5b",
+    "clip": "res://audio/voice/d17a1f3d9ed787a3d4c1cfa349342c5b.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "“Why do men feel threatened by women?” I asked a male friend of mine.",
+    "key": "7f77d38278451c831ed54b7cdae0794d",
+    "clip": "res://audio/voice/7f77d38278451c831ed54b7cdae0794d.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "“They’re afraid women will laugh at them,” he said. “Undercut their world view.”",
+    "key": "679fa011cac79603d53a645344c4b709",
+    "clip": "res://audio/voice/679fa011cac79603d53a645344c4b709.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "“They’re afraid of being killed,” they said.",
+    "key": "970893e4aa0bdbcab2ee3a0cf68d7815",
+    "clip": "res://audio/voice/970893e4aa0bdbcab2ee3a0cf68d7815.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "So to sum it up, it's a joke-filled, fun-packed, rollicking adventure story about the downfall of the human race.",
+    "key": "6b8388f0412b2dd85f1d18e731e9498a",
+    "clip": "res://audio/voice/6b8388f0412b2dd85f1d18e731e9498a.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "But I think it's a cheering sort of book",
+    "key": "ffdf3b24684391de29c99c2a0f1af75f",
+    "clip": "res://audio/voice/ffdf3b24684391de29c99c2a0f1af75f.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Cheering.",
+    "key": "e79074a82693a78cd692e3b8289a131e",
+    "clip": "res://audio/voice/e79074a82693a78cd692e3b8289a131e.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "And being a cheerful person, I eliminate nothing but the human beings.",
+    "key": "a1b13cf8de5bd20f02bffa54873b7c38",
+    "clip": "res://audio/voice/a1b13cf8de5bd20f02bffa54873b7c38.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "This is a true story.",
+    "key": "2dcaa75f725ca37cfb20e4485a914c75",
+    "clip": "res://audio/voice/2dcaa75f725ca37cfb20e4485a914c75.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Let's pretend we're in the 14th century, and it's a map of the world, like that.",
+    "key": "a2acea2d1feb4aa7d3d79c2a3f2ab7ab",
+    "clip": "res://audio/voice/a2acea2d1feb4aa7d3d79c2a3f2ab7ab.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "That is, I'm not up on absolutely everything that's being done today.",
+    "key": "a5b7f4a155bab958b6cbc2f7230c6976",
+    "clip": "res://audio/voice/a5b7f4a155bab958b6cbc2f7230c6976.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Anyway, so that's what I did.",
+    "key": "1c197d50fc9a1e95ab023ef34faa4351",
+    "clip": "res://audio/voice/1c197d50fc9a1e95ab023ef34faa4351.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Anyway, I, in fact, grew up amongst the scientists.",
+    "key": "727df43c2cd5cf62e85d4f2652672479",
+    "clip": "res://audio/voice/727df43c2cd5cf62e85d4f2652672479.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "First of all, I couldn't do the smoking. It made me cough. I couldn't do the drinking. It made me throw up.",
+    "key": "793a9059c53cdc9fd2c487fc1da2c4e3",
+    "clip": "res://audio/voice/793a9059c53cdc9fd2c487fc1da2c4e3.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "First of all, not all Americans are alike.",
+    "key": "ade41740cd2b84ec557cd5ab2eeccf0c",
+    "clip": "res://audio/voice/ade41740cd2b84ec557cd5ab2eeccf0c.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Number one, you're very observant. You observe details.",
+    "key": "3a769aaba7d2a1f3d933038cee245266",
+    "clip": "res://audio/voice/3a769aaba7d2a1f3d933038cee245266.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "But let me ask you the following question.",
+    "key": "db2876634c59892219abbf45e266e45b",
+    "clip": "res://audio/voice/db2876634c59892219abbf45e266e45b.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Let me ask you a question about them.",
+    "key": "fe7903027a8fc04fbca93c461de365e0",
+    "clip": "res://audio/voice/fe7903027a8fc04fbca93c461de365e0.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "If I were them, I would reintroduce some predators to keep the beavers under control.",
+    "key": "0accfa496a78336036a2d7c8c3a66b92",
+    "clip": "res://audio/voice/0accfa496a78336036a2d7c8c3a66b92.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "If I were them, I would have kept more of that.",
+    "key": "c5feeda3650dbfdad16b780ea6455dd8",
+    "clip": "res://audio/voice/c5feeda3650dbfdad16b780ea6455dd8.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Those are the three people we follow. What was the question?",
+    "key": "a4ce93ed0ac1f88e8413e2402d6d37d3",
+    "clip": "res://audio/voice/a4ce93ed0ac1f88e8413e2402d6d37d3.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Anything else you'd like to know?",
+    "key": "677721e2fa96815b593418cd6abedae9",
+    "clip": "res://audio/voice/677721e2fa96815b593418cd6abedae9.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "That's a double question.",
+    "key": "77b697b88b3903fab3aa9e62eb18b532",
+    "clip": "res://audio/voice/77b697b88b3903fab3aa9e62eb18b532.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Funny you should ask.",
+    "key": "85c431f5c23175a151a445c467d4e58d",
+    "clip": "res://audio/voice/85c431f5c23175a151a445c467d4e58d.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "I'll repeat it into the mic so people will know what you asked, which will also give me a chance to reformulate the question.",
+    "key": "e869fc07164992691daafd27aa9e649a",
+    "clip": "res://audio/voice/e869fc07164992691daafd27aa9e649a.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "So I hope I've clarified them a little bit.",
+    "key": "16b9522ccab5dbe35cb4a1e351da8a72",
+    "clip": "res://audio/voice/16b9522ccab5dbe35cb4a1e351da8a72.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "I think you probably read that in a book that I wrote.",
+    "key": "e93184f113e4981184a51e5d141bc5c7",
+    "clip": "res://audio/voice/e93184f113e4981184a51e5d141bc5c7.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Well, there is a shocking piece of news for you.",
+    "key": "ddd3c96b69069ba16079ce52588e6778",
+    "clip": "res://audio/voice/ddd3c96b69069ba16079ce52588e6778.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Read any news lately?",
+    "key": "1064acac98016d428990eae06d99dca6",
+    "clip": "res://audio/voice/1064acac98016d428990eae06d99dca6.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Well, who can blame me?",
+    "key": "469d075ad4a65d56343bbe43b4d7a11b",
+    "clip": "res://audio/voice/469d075ad4a65d56343bbe43b4d7a11b.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "I'm glad we all have chairs today.",
+    "key": "295dd4fdd0558bb349e6fb2c7f21fa43",
+    "clip": "res://audio/voice/295dd4fdd0558bb349e6fb2c7f21fa43.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "There will be duct tape in the future.",
+    "key": "1a04b0de179ff2d3eda0e59ab98d7e94",
+    "clip": "res://audio/voice/1a04b0de179ff2d3eda0e59ab98d7e94.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "This is a skill I would advise everyone to acquire.",
+    "key": "cc07fbc277fbb1e7ef63918da43dfaba",
+    "clip": "res://audio/voice/cc07fbc277fbb1e7ef63918da43dfaba.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Not everybody can get those two ideas together in their heads.",
+    "key": "f3d0afa6ea6737f68075b5a21a644794",
+    "clip": "res://audio/voice/f3d0afa6ea6737f68075b5a21a644794.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "I don't like books at all in which everybody's happy all the time. They depress me, no end.",
+    "key": "753aa9cb9ce219c9068dc34f2401490a",
+    "clip": "res://audio/voice/753aa9cb9ce219c9068dc34f2401490a.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "I'm really old.",
+    "key": "76d912bbd7e7fffc1c0c7bbbaa50c04c",
+    "clip": "res://audio/voice/76d912bbd7e7fffc1c0c7bbbaa50c04c.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "I've never been able to type.",
+    "key": "758592b55dd0618e42bd9da56554e2df",
+    "clip": "res://audio/voice/758592b55dd0618e42bd9da56554e2df.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "I think I sold two copies and I thought, is this the glamorous literary life?",
+    "key": "e1d946a36443acc27887e543be2dd20e",
+    "clip": "res://audio/voice/e1d946a36443acc27887e543be2dd20e.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "I'm not very current.",
+    "key": "80cf61cb09cc45065081f00120452e38",
+    "clip": "res://audio/voice/80cf61cb09cc45065081f00120452e38.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Don't throw anything out. You never know when it might come in handy.",
+    "key": "331234f0d1709716b4423cfd3ded7b65",
+    "clip": "res://audio/voice/331234f0d1709716b4423cfd3ded7b65.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Don't worry about large issues. Worry about the page. The page is all you've got.",
+    "key": "c5611da7f0e88d3dd81ae74a5c20a80d",
+    "clip": "res://audio/voice/c5611da7f0e88d3dd81ae74a5c20a80d.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "And on that note, I will say thank you very much.",
+    "key": "a5b88f42631a4a2d7d7d155c0c36a166",
+    "clip": "res://audio/voice/a5b88f42631a4a2d7d7d155c0c36a166.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "There's a plus and a minus to everything. There's an up and a down to everything.",
+    "key": "6e2f949d290e438e0f1950632a086486",
+    "clip": "res://audio/voice/6e2f949d290e438e0f1950632a086486.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "We will see.",
+    "key": "181b48975f69770535af04d7f6d0fe69",
+    "clip": "res://audio/voice/181b48975f69770535af04d7f6d0fe69.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "I never solved their shoe problem, so I'm open to suggestions.",
+    "key": "daca9a5cd5471cb060d9784936208b0e",
+    "clip": "res://audio/voice/daca9a5cd5471cb060d9784936208b0e.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "I leave you with this problem.",
+    "key": "77635f28f57e3595644db23725a88e23",
+    "clip": "res://audio/voice/77635f28f57e3595644db23725a88e23.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "So it's always a struggle. It's a struggle. You work it out.",
+    "key": "e71fd515c4d7ad6df64b74b315258674",
+    "clip": "res://audio/voice/e71fd515c4d7ad6df64b74b315258674.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Oh dear, there's so many of them.",
+    "key": "ccc9c2be27ebdb59f1ada84c2afad6bb",
+    "clip": "res://audio/voice/ccc9c2be27ebdb59f1ada84c2afad6bb.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "If you have a problem, you can put it up there, and they will send you many answers, some of which will be right.",
+    "key": "90a3830aa73f5936a15fd7dd7822a889",
+    "clip": "res://audio/voice/90a3830aa73f5936a15fd7dd7822a889.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "So I leave them maybe in a difficult position.",
+    "key": "afc6a69e3f64247a90a8adad6f5e70c0",
+    "clip": "res://audio/voice/afc6a69e3f64247a90a8adad6f5e70c0.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "But I also leave the door open.",
+    "key": "1d99a9bc124aff8bf2a0866c41b26c09",
+    "clip": "res://audio/voice/1d99a9bc124aff8bf2a0866c41b26c09.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Happy endings. You can find them in the children's books.",
+    "key": "4bab20ffe7cb69ba39fe8a5d2fe95ad0",
+    "clip": "res://audio/voice/4bab20ffe7cb69ba39fe8a5d2fe95ad0.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Well, there you go.",
+    "key": "8cea1055223c38bff9e56abb8d2e8459",
+    "clip": "res://audio/voice/8cea1055223c38bff9e56abb8d2e8459.wav"
   }
 ]
