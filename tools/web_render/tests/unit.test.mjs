@@ -30,8 +30,8 @@ function pythonTasks() {
 test('prompt parsing matches render_all_assets.py on the real prompts/ tree', () => {
   const py = pythonTasks();
   const js = discoverTasks(undefined, { warn: () => {} }).map((t) => Object.fromEntries(FIELDS.map((k) => [k, t[k] ?? null])));
-  assert.equal(js.length, 45, 'expected 45 asset prompts');
-  assert.equal(py.length, 45);
+  assert.equal(js.length, 46, 'expected 46 asset prompts');
+  assert.equal(py.length, 46);
   assert.deepEqual(js, py);
 });
 
@@ -44,7 +44,7 @@ test('every asset has a drop extension matching its kind (png / mp4 / mp3)', () 
     assert.ok(t.drop_abs.startsWith(ROOT + path.sep) && t.drop.startsWith('prompts/'), t.drop);
     counts[t.kind] = (counts[t.kind] || 0) + 1;
   }
-  assert.deepEqual(counts, { image: 16, video: 9, music: 20 });
+  assert.deepEqual(counts, { image: 16, video: 10, music: 20 });
   assert.deepEqual(KIND_EXT, { image: '.png', video: '.mp4', music: '.mp3' });
 });
 

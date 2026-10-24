@@ -124,12 +124,36 @@ async function runBatch(tasks) {
   };
   const surfaceOf = (t) => selectors.surfaces[selectors.kinds[t.kind]];
   const file = path.join(RUNS_DIR, 'batch.json');
+  if (a['dry-run']) {
+    // No browser: what --submit would send (assets that have no recorded chat yet, --limit
+    // applied) and what --harvest would reopen.
+    let rec = {};
+    try { rec = JSON.parse(fs.readFileSync(file, 'utf8')); } catch { /* no batch file yet */ }
+    if (a.submit) {
+      let todo = selectTasks(tasks, { kind: a.kind, only: a.only, force: a.force }).filter((t) => !rec[t.id]?.chat);
+      if (a.limit !== undefined) todo = todo.slice(0, Number(a.limit));
+      console.log(`dry run: --submit would send ${todo.length}`);
+      for (const t of todo) console.log(`  [${t.kind}] ${t.id} -> ${t.drop}`);
+    }
+    if (a.harvest) {
+      const open = Object.entries(rec).filter(([k, v]) => !k.startsWith('_') && v?.chat && !v.harvested);
+      console.log(`dry run: --harvest would reopen ${open.length}`);
+      for (const [k, v] of open) console.log(`  ${k}  ${v.chat}`);
+    }
+    return;
+  }
   const b = await getBrowser(settings);
   const session = new Session(b.browser, settings);
   await session.init();
   try {
     if (a.submit) {
-      const todo = selectTasks(tasks, { kind: a.kind, only: a.only, force: a.force });
+      let todo = selectTasks(tasks, { kind: a.kind, only: a.only, force: a.force });
+      if (a.limit !== undefined) {
+        // --limit counts new sends only: assets that already have a chat are skipped by submitAll.
+        let rec = {};
+        try { rec = JSON.parse(fs.readFileSync(file, 'utf8')); } catch { /* no batch file yet */ }
+        todo = todo.filter((t) => !rec[t.id]?.chat).slice(0, Number(a.limit));
+      }
       const gap = a.gap === undefined ? 20 : Number(a.gap);
       await submitAll(session, { tasks: todo, surfaceOf, promptOf: (t) => drivers[t.kind].preparePrompt(t, surfaceOf(t)), file, gapMs: gap * 1000, wait: !!a.wait });
     }

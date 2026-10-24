@@ -1,6 +1,6 @@
 ---
 id: studio_intro
-tool: Gemini Veo (rendered by the author, 2026-10-24)
+tool: Gemini Veo
 drop: prompts/video/ui/assets/studio_intro.mp4
 game: project/assets/video/studio_intro.ogv
 audio: keep
@@ -15,7 +15,7 @@ wordmark. Any click or key skips it.
 
 ## Prompt
 
-Rendered by the author in Gemini and supplied as the finished file
+Rendered by the author in Gemini (Veo) on 2026-10-24 and supplied as the finished file
 (gemini_generated_video_c95987de.mp4); the prompt text was not recorded.
 
 ## Notes
