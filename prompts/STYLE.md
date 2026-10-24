@@ -185,7 +185,7 @@ Exact colours used by the generators and the game code:
 | Sand / sand pebbles | `#ffe9b8` / `#ffd3c2` |
 | Soil rows / sprouts | `#e0b48f` `#c99468` / `#9be07c` `#b4ee95` |
 | Plaza (paving) | rounded cobbles `#f7eaf1` `#f4e4ee` `#f9eff5` `#f2e1eb` in `#ead6e1` joints |
-| Floor / alt floor (temple checkerboard of 16 px marble slabs) | `#fff6e2` / `#ffe6ee`, grout `#efd9c4` |
+| Floor / alt floor (temple checkerboard, one polished 32 px marble slab per cell, gold diamond inlays where slabs meet) | `#fff6e2` / `#ffe6ee`, grout `#efd9c4`, inlay `#ffe3a8` edged `#e0b24a` |
 | Rug runner | `#ffb3c8` with `#ffe3a8` borders and pale hearts |
 | Water / foam | `#a9ddf2` / `#c6eefb`, white wave arcs |
 | Wall / wall cap | `#f1e2cd` brick with `#d9c3a5` mortar / `#f8efe0` |

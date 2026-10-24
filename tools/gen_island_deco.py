@@ -1,16 +1,28 @@
-"""Draw the kawaii island decoration (bubbly trees, flower clumps, hearts, sparkles) and put
-cute faces on the canon signs.
+"""Draw the kawaii island greenery: bubbly trees and flower clumps.
 
-Usage: python3 -I tools/gen_island_deco.py   (run after tools/cut_island_props.py)
-Writes project/assets/canon/deco_*.png; prop_sign_a/b get a face painted on the board.
+Usage: python3 -I tools/gen_island_deco.py
+Inputs:  none (palette hexes from prompts/STYLE.md: outline #8a5a5a, mint / blush / lilac
+         canopies, cream highlights; drawing is fully deterministic, no randomness).
+Outputs: project/assets/canon/deco_tree_a.png, deco_tree_b.png, deco_tree_c.png (160x208)
+         project/assets/canon/deco_flowers.png (144x88)
+The hearts and sparkles are canon cuts (tools/cut_island_props.py), not drawn here; the
+canon sheets have no trees or flower clumps, so these are drawn in the canon sticker look:
+warm-brown outline, flat pastel fills, one soft highlight per shape, rosy cheeks.
+
+Resolution: each sprite is designed on a grid of world pixels (tree 40x52, flowers 36x22),
+drawn at 16x and downscaled with LANCZOS to OUT_SCALE (4x) of its world size; the map
+builder (tools/build_island_maps.gd) shows it at its world size, so the GPU downsamples it
+smoothly with mipmaps. The paths stay under assets/canon/ because other areas load them there.
 """
+import math
 from pathlib import Path
 
 from PIL import Image, ImageDraw
 
 OUT = Path(__file__).resolve().parent.parent / "project/assets/canon"
 INK = "#8a5a5a"
-K = 4
+OUT_SCALE = 4   # file pixels per world pixel
+K = 16          # supersample: drawing pixels per world pixel
 
 
 def canvas(w, h):
@@ -19,75 +31,99 @@ def canvas(w, h):
 
 
 def done(im, w, h, name):
-    im.resize((w, h), Image.LANCZOS).save(OUT / f"{name}.png")
+    im.resize((w * OUT_SCALE, h * OUT_SCALE), Image.LANCZOS).save(OUT / f"{name}.png")
 
 
-def circle(d, x, y, r, fill, width=2):
-    d.ellipse([(x - r) * K, (y - r) * K, (x + r) * K, (y + r) * K], fill=fill, outline=INK, width=width * K // 2)
+def circle(d, x, y, r, fill, width=1.0):
+    d.ellipse([(x - r) * K, (y - r) * K, (x + r) * K, (y + r) * K], fill=fill,
+              outline=INK if width else None, width=round(width * K))
 
 
-def face(d, x, y, s=1.0):
-    for dx in (-3.2, 3.2):
-        circle(d, x + dx * s, y, 1.1 * s, INK, 0)
-    d.arc([(x - 1.6 * s) * K, (y - 0.4 * s) * K, (x + 1.6 * s) * K, (y + 3 * s) * K], 20, 160, fill=INK, width=K)
-    for dx in (-5.4, 5.4):
-        d.ellipse([(x + dx * s - 1.5 * s) * K, (y + 1.2 * s) * K, (x + dx * s + 1.5 * s) * K, (y + 3 * s) * K], fill="#ff9fb8")
+def blend(a, b, t):
+    a = [int(a[i:i + 2], 16) for i in (1, 3, 5)]
+    b = [int(b[i:i + 2], 16) for i in (1, 3, 5)]
+    return "#%02x%02x%02x" % tuple(round(x + (y - x) * t) for x, y in zip(a, b))
 
 
-def tree(name, canopy, trunk="#c8956d", cheeks=True):
+def face(d, x, y):
+    for dx in (-3.0, 3.0):
+        circle(d, x + dx, y, 1.0, INK, 0)
+        circle(d, x + dx + 0.35, y - 0.35, 0.33, "#ffffff", 0)
+    d.arc([(x - 1.4) * K, (y - 0.2) * K, (x + 1.4) * K, (y + 2.4) * K], 20, 160, fill=INK, width=round(0.7 * K))
+    for dx in (-5.0, 5.0):
+        d.ellipse([(x + dx - 1.5) * K, (y + 1.1) * K, (x + dx + 1.5) * K, (y + 2.7) * K], fill="#ff9fb8")
+
+
+def sparkle(d, x, y, r, fill="#ffffff"):
+    pts = []
+    for i in range(8):
+        rr = r if i % 2 == 0 else r * 0.32
+        ang = i * math.pi / 4
+        pts.append(((x + rr * math.sin(ang)) * K, (y - rr * math.cos(ang)) * K))
+    d.polygon(pts, fill=fill)
+
+
+def tree(name, canopy):
     w, h = 40, 52
     im, d = canvas(w, h)
-    d.rounded_rectangle([17 * K, 30 * K, 23 * K, 49 * K], 3 * K, fill=trunk, outline=INK, width=K)
-    for x, y, r in [(12, 24, 9), (28, 24, 9), (20, 14, 11), (20, 26, 11)]:
-        circle(d, x, y, r, canopy)
-    if cheeks:
-        face(d, 20, 24)
-    for x, y in [(30, 8), (8, 12)]:
-        d.polygon([(x * K, (y - 3) * K), ((x + 1) * K, (y - 1) * K), ((x + 3) * K, y * K), ((x + 1) * K, (y + 1) * K), (x * K, (y + 3) * K),
-                   ((x - 1) * K, (y + 1) * K), ((x - 3) * K, y * K), ((x - 1) * K, (y - 1) * K)], fill="#ffffff")
+    # Soft ground shadow, then the trunk with a highlight stripe.
+    d.ellipse([9 * K, 46.5 * K, 31 * K, 51 * K], fill=(138, 90, 90, 60))
+    d.rounded_rectangle([16.5 * K, 29 * K, 23.5 * K, 49 * K], round(3 * K), fill="#c8956d", outline=INK, width=K)
+    d.rounded_rectangle([18 * K, 32 * K, 19.4 * K, 46 * K], round(0.7 * K), fill="#e3b892")
+    # Canopy: four overlapping puffs; outlines first, fills on top so inner seams vanish.
+    puffs = [(11.5, 25, 9), (28.5, 25, 9), (20, 13.5, 11), (20, 26, 11)]
+    for x, y, r in puffs:
+        circle(d, x, y, r + 1.0, INK, 0)
+    shade = blend(canopy, INK, 0.12)
+    for x, y, r in puffs:
+        circle(d, x, y, r, shade, 0)
+    for x, y, r in puffs:
+        circle(d, x, y - 1.2, r - 0.8, canopy, 0)
+    # One soft highlight on the crown puff.
+    hl = blend(canopy, "#ffffff", 0.55)
+    d.ellipse([12.5 * K, 5.5 * K, 20 * K, 10.5 * K], fill=hl)
+    circle(d, 23, 7.2, 1.1, hl, 0)
+    face(d, 20, 24)
+    sparkle(d, 31.5, 8, 2.6)
+    sparkle(d, 7.5, 15, 2.0)
     done(im, w, h, name)
+
+
+def leaf(d, x, y, side):
+    """A pointed leaf from the stem at (x, y), leaning out to one side."""
+    pts = []
+    for i in range(25):
+        t = i / 24
+        a = t * math.pi * 2
+        lx = 2.6 * (1 - math.cos(a)) / 2 * 2  # 0..5.2 along the leaf
+        ly = 1.25 * math.sin(a)
+        ang = -0.55
+        rx = lx * math.cos(ang) - ly * math.sin(ang)
+        ry = lx * math.sin(ang) + ly * math.cos(ang)
+        pts.append(((x + side * rx) * K, (y + ry) * K))
+    d.polygon(pts, fill="#8fd18a", outline=INK, width=round(0.6 * K))
 
 
 def flowers():
     w, h = 36, 22
     im, d = canvas(w, h)
-    for x, y, c in [(8, 13, "#ff9fc0"), (18, 8, "#ffffff"), (28, 14, "#ffd36e")]:
-        d.line([x * K, (y + 2) * K, x * K, 20 * K], fill="#6fb85a", width=K)
-        for dx, dy in ((0, -3), (3, 0), (0, 3), (-3, 0)):
-            circle(d, x + dx, y + dy, 2.6, c, 1)
-        circle(d, x, y, 2.2, "#ffe27a", 1)
+    d.ellipse([3 * K, 18 * K, 33 * K, 21.6 * K], fill=(138, 90, 90, 50))
+    for x, side in ((8, -1), (8, 1), (18, -1), (18, 1), (28, -1), (28, 1)):  # leaves on the stems
+        leaf(d, x, 17.6 - (1.2 if side > 0 else 0), side)
+    petals = ((0, -2.8), (2.8, 0), (0, 2.8), (-2.8, 0), (2, -2), (2, 2), (-2, 2), (-2, -2))
+    for x, y, c in [(8, 11.5, "#ffb3cb"), (18, 7, "#ffffff"), (28, 12.5, "#ffd98a")]:
+        d.line([x * K, (y + 2) * K, x * K, 18.5 * K], fill="#6fb85a", width=round(1.1 * K))
+        for dx, dy in petals:
+            circle(d, x + dx * 0.95, y + dy * 0.95, 2.3, INK, 0)
+        for dx, dy in petals:
+            circle(d, x + dx * 0.95, y + dy * 0.95, 1.65, c, 0)
+        circle(d, x, y, 1.9, "#ffe27a", 0.6)
+        circle(d, x - 0.6, y - 0.7, 0.55, "#fff7d1", 0)
     done(im, w, h, "deco_flowers")
-
-
-def sparkle_heart():
-    im, d = canvas(14, 14)
-    for cx, cy in ((4.5, 5), (9.5, 5)):
-        d.ellipse([(cx - 4) * K, (cy - 4) * K, (cx + 3.2) * K, (cy + 3) * K], fill="#ff8fb1", outline=INK, width=K // 2)
-    d.polygon([(1.2 * K, 6.5 * K), (12.8 * K, 6.5 * K), (7 * K, 13 * K)], fill="#ff8fb1")
-    d.ellipse([3.5 * K, 3 * K, 5.5 * K, 4.6 * K], fill="#ffffff")
-    done(im, 14, 14, "deco_heart")
-    im, d = canvas(14, 14)
-    d.polygon([(7 * K, 0), (8.6 * K, 5.4 * K), (14 * K, 7 * K), (8.6 * K, 8.6 * K), (7 * K, 14 * K), (5.4 * K, 8.6 * K), (0, 7 * K), (5.4 * K, 5.4 * K)],
-              fill="#fff3a8", outline="#e0b24a", width=K // 2)
-    done(im, 14, 14, "deco_sparkle")
-
-
-def sign_faces():
-    for n in ("prop_sign_a", "prop_sign_b"):
-        im = Image.open(OUT / f"{n}.png").convert("RGBA")
-        big = im.resize((im.width * K, im.height * K), Image.LANCZOS)
-        d = ImageDraw.Draw(big)
-        # The boards sit in the upper ~55% of each cut; paint the face on the middle of the board.
-        cx, cy = im.width * 0.5, im.height * 0.27
-        face(d, cx, cy, im.width / 36)
-        im2 = big.resize(im.size, Image.LANCZOS)
-        im2.save(OUT / f"{n}.png")
 
 
 tree("deco_tree_a", "#a8e6a0")
 tree("deco_tree_b", "#ffc9de")
 tree("deco_tree_c", "#c9b8f2")
 flowers()
-sparkle_heart()
-sign_faces()
 print("deco done")
