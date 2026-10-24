@@ -1,0 +1,39 @@
+{
+  "source": [
+    "project/assets/characters/npc_initiate_rig.png"
+  ],
+  "cols": 8,
+  "rows": 3,
+  "src_frame": [
+    294,
+    478
+  ],
+  "scaled_frame": [
+    128,
+    208
+  ],
+  "frame": [
+    192,
+    272
+  ],
+  "pad": 32,
+  "scale": 4.0,
+  "world_h": 52.0,
+  "feet": 0.8529411752941176,
+  "world_h_padded": 68.0,
+  "edges": [
+    1,
+    2,
+    3
+  ],
+  "files": {
+    "edge1_white": "npc_initiate_edge1_white.png",
+    "edge1_cream": "npc_initiate_edge1_cream.png",
+    "edge2_white": "npc_initiate_edge2_white.png",
+    "edge2_cream": "npc_initiate_edge2_cream.png",
+    "edge3_white": "npc_initiate_edge3_white.png",
+    "edge3_cream": "npc_initiate_edge3_cream.png",
+    "shadow_soft": "npc_initiate_shadow_soft.png",
+    "shadow_hard": "npc_initiate_shadow_hard.png"
+  }
+}

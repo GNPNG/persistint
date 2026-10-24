@@ -1,0 +1,39 @@
+{
+  "source": [
+    "project/assets/canon/deco_tree_b.png"
+  ],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [
+    160,
+    208
+  ],
+  "scaled_frame": [
+    160,
+    208
+  ],
+  "frame": [
+    224,
+    272
+  ],
+  "pad": 32,
+  "scale": 4.0,
+  "world_h": 52.0,
+  "feet": 0.8823529411764706,
+  "world_h_padded": 68.0,
+  "edges": [
+    1,
+    2,
+    3
+  ],
+  "files": {
+    "edge1_white": "tree_b_edge1_white.png",
+    "edge1_cream": "tree_b_edge1_cream.png",
+    "edge2_white": "tree_b_edge2_white.png",
+    "edge2_cream": "tree_b_edge2_cream.png",
+    "edge3_white": "tree_b_edge3_white.png",
+    "edge3_cream": "tree_b_edge3_cream.png",
+    "shadow_soft": "tree_b_shadow_soft.png",
+    "shadow_hard": "tree_b_shadow_hard.png"
+  }
+}
