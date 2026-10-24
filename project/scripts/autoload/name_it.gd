@@ -95,6 +95,7 @@ func _show_tactic_step(beat_id: String, note := "") -> void:
 func _show_done(tactic: String) -> void:
 	var box := _panel()
 	_label(box, "%s %s" % [data["prompts"]["added"], tactic])
+	Music.event("name_it")  # the revelation sting (STYLE.md 2.2)
 	Voice.speak(tactic, 1.2)
 	_button(box, "OK", func() -> void: _layer.queue_free())
 

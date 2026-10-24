@@ -16,7 +16,7 @@ var _speaker_voice: Dictionary = {}  # speaker -> voice id
 
 func _ready() -> void:
 	_player = AudioStreamPlayer.new()
-	_player.bus = "Master"
+	_player.bus = "Voice"
 	add_child(_player)
 	if tts_available():
 		_voices = DisplayServer.tts_get_voices_for_language("en")
