@@ -3,7 +3,7 @@ extends Control
 ## Help & Support opens the support page on the site in the system browser.
 
 const FIRST_MAP := "res://scenes/maps/village.tscn"
-const SUPPORT_URL := "https://persistint-dataglut-org.pages.dev/support.html"
+const SUPPORT_URL := "https://persistint.dataglut.org/support.html"
 
 
 func _ready() -> void:
