@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ggp8dxnr088d"
-path="res://.godot/imported/gore_puddle.png-4a7ccea0de229547b567b20114ab0554.ctex"
+uid="uid://dnepysr4sxs55"
+path="res://.godot/imported/gore_puddle.png-cf7f3c66e06d7b44646a3adf5c9eb09b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/canon/gore_puddle.png"
-dest_files=["res://.godot/imported/gore_puddle.png-4a7ccea0de229547b567b20114ab0554.ctex"]
+source_file="res://assets/ruins/gore_puddle.png"
+dest_files=["res://.godot/imported/gore_puddle.png-cf7f3c66e06d7b44646a3adf5c9eb09b.ctex"]
 
 [params]
 
@@ -23,7 +23,7 @@ compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=false
+mipmaps/generate=true
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""

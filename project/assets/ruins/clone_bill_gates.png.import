@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cj6sf8i1oorb2"
-path="res://.godot/imported/gore_chunk.png-0f412cba441c85be06f6729900900c74.ctex"
+uid="uid://bbxoy2kpgtn8e"
+path="res://.godot/imported/clone_bill_gates.png-b08ea2fc99edc5b5e6ba5215557be71c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/canon/gore_chunk.png"
-dest_files=["res://.godot/imported/gore_chunk.png-0f412cba441c85be06f6729900900c74.ctex"]
+source_file="res://assets/ruins/clone_bill_gates.png"
+dest_files=["res://.godot/imported/clone_bill_gates.png-b08ea2fc99edc5b5e6ba5215557be71c.ctex"]
 
 [params]
 
@@ -23,7 +23,7 @@ compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=false
+mipmaps/generate=true
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""

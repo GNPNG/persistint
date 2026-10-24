@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bqa2cwctqnff0"
-path="res://.godot/imported/clone_hillary_clinton.png-8e7fa5f0d5d2bf32c8504baedf7aa8ed.ctex"
+uid="uid://ccgtspkpwuxmd"
+path="res://.godot/imported/gore_chunk.png-21b8a40f96070066fa6aef38216f5614.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/canon/clone_hillary_clinton.png"
-dest_files=["res://.godot/imported/clone_hillary_clinton.png-8e7fa5f0d5d2bf32c8504baedf7aa8ed.ctex"]
+source_file="res://assets/ruins/gore_chunk.png"
+dest_files=["res://.godot/imported/gore_chunk.png-21b8a40f96070066fa6aef38216f5614.ctex"]
 
 [params]
 
@@ -23,7 +23,7 @@ compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=false
+mipmaps/generate=true
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""

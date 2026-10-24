@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cms67wdrl2bj4"
-path="res://.godot/imported/clone_polar_bear.png-7c8cbdd2af0a121a0bcff054545679b8.ctex"
+uid="uid://cxxls7x5hyr1y"
+path="res://.godot/imported/clone_bill_clinton.png-61ca54a1a956d1cd243daac7e8a3dbbd.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/canon/clone_polar_bear.png"
-dest_files=["res://.godot/imported/clone_polar_bear.png-7c8cbdd2af0a121a0bcff054545679b8.ctex"]
+source_file="res://assets/ruins/clone_bill_clinton.png"
+dest_files=["res://.godot/imported/clone_bill_clinton.png-61ca54a1a956d1cd243daac7e8a3dbbd.ctex"]
 
 [params]
 
@@ -23,7 +23,7 @@ compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=false
+mipmaps/generate=true
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""

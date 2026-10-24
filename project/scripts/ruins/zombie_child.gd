@@ -6,7 +6,7 @@ extends "res://scripts/florida/clickable.gd"
 ## Every batch of an original shares one sprite; the designation reads the original's name
 ## through Cast ("Epstein clone, batch 7"). The spoken part of a bark is one of the original's
 ## own verified lines from data/quotes/<file>.json when that file exists; otherwise the groan itself.
-## Rig: assets/canon/clone_<original>.png (tools/gen_clone_children.py), front/side/back idle and
+## Rig: assets/ruins/clone_<original>.png (tools/gen_clone_children.py), front/side/back idle and
 ## walk through SheetRig; the node's origin sits 16 px above its feet like the player's.
 
 const ForbiddenKnowledge := preload("res://scripts/ruins/forbidden_knowledge.gd")
@@ -27,7 +27,7 @@ var _facing := "down"
 func _ready() -> void:
 	super()
 	add_to_group("zombie_clones")
-	var path := "res://assets/canon/clone_%s.png" % original
+	var path := "res://assets/ruins/clone_%s.png" % original
 	if ResourceLoader.exists(path):
 		sprite.sprite_frames = SheetRig.frames(load(path), SheetRig.CLONE)
 		sprite.play("idle_down")

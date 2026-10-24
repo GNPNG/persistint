@@ -3,12 +3,12 @@ extends "res://scripts/florida/clickable.gd"
 ## "cubs"): fluffy, round, identical, not zombies. Toddles around its patch, makes little
 ## bear sounds, and now and then pounces on a nearby zombie clone (CloneLab.pounce), then
 ## naps with a pink muzzle until it wakes up clean.
-## Rig: assets/canon/clone_polar_bear.png (tools/gen_clone_children.py) through SheetRig:
+## Rig: assets/ruins/clone_polar_bear.png (tools/gen_clone_children.py) through SheetRig:
 ## front/side/back idle and walk, smeared, chomp and nap; origin 16 px above the feet.
 
 const ForbiddenKnowledge := preload("res://scripts/ruins/forbidden_knowledge.gd")
 const SheetRig := preload("res://scripts/ruins/sheet_rig.gd")
-const SHEET := "res://assets/canon/clone_polar_bear.png"
+const SHEET := "res://assets/ruins/clone_polar_bear.png"
 const BUBBLE_BOTTOM := -9.0
 
 @export var batch := 1
