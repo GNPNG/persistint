@@ -1,7 +1,7 @@
 """Draw the tropical Florida Keys maps: ground backgrounds, standing props, garden items, fish.
 
 Usage: python3 -I tools/gen_florida_art.py
-Inputs: prompts/STYLE.md palette (via tools/florida_draw.py) and project/data/florida.json (the
+Inputs: dev/STYLE.md palette (via tools/florida_draw.py) and project/data/florida.json (the
 plants). The canon sheets hold no tropical scenery, so everything is drawn in their sticker
 look: warm-brown outline #8a5a5a, flat pastel fills with one highlight, faces on the big
 friendly things (STYLE.md 4.1), Florida's saturated accents (coral, hibiscus, bougainvillea,

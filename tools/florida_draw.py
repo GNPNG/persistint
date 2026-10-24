@@ -1,7 +1,7 @@
 """Shared drawing kit for the tropical Florida Keys generators (not run on its own).
 
 Imported by tools/gen_florida_art.py, tools/gen_florida_cast.py and tools/gen_florida_critters.py.
-Holds the Florida palette from prompts/STYLE.md 4.3/4.4 (warm-brown outline #8a5a5a, pink blush,
+Holds the Florida palette from dev/STYLE.md 4.3/4.4 (warm-brown outline #8a5a5a, pink blush,
 sea blue, turquoise, foam, coral and the Florida plant colours), a Pen that draws at a
 supersample factor with coordinates given in output pixels, the canon cut loader, the sticker
 finish (supersample then LANCZOS down) and the SpriteFrames writer every rigged sheet uses.
@@ -27,7 +27,7 @@ D = 4  # texture pixels per world pixel
 DISPLAY_SCALE = 1.0 / D
 sys.path.insert(0, str(ROOT / "tools"))
 
-# prompts/STYLE.md 4.3 / 4.4
+# dev/STYLE.md 4.3 / 4.4
 INK = "#8a5a5a"
 # The canon character drawings are lined darker than the island tiles; clothes and hair drawn
 # over a canon body use the body's own line colour (sampled from the canon turnaround).

@@ -1,7 +1,7 @@
 """Draw the kawaii island greenery: bubbly trees and flower clumps.
 
 Usage: python3 -I tools/gen_island_deco.py
-Inputs:  none (palette hexes from prompts/STYLE.md: outline #8a5a5a, mint / blush / lilac
+Inputs:  none (palette hexes from dev/STYLE.md: outline #8a5a5a, mint / blush / lilac
          canopies, cream highlights; drawing is fully deterministic, no randomness).
 Outputs: project/assets/canon/deco_tree_a.png, deco_tree_b.png, deco_tree_c.png (160x208)
          project/assets/canon/deco_flowers.png (144x88)

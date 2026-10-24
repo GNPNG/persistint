@@ -5,7 +5,7 @@ Inputs: the canon paper-doll body turnaround (front, side, back) cut at full res
 canon sheet by tools/cut_island_props.py (project/data/florida_canon.json, "bases"). Every
 person is that canon body with Florida hair, clothes and props drawn over it at the sheet's
 resolution in the canon line (warm-brown outline #8a5a5a, flat fills with one highlight,
-prompts/STYLE.md 4.3) and the Florida palette (4.4), then supersampled down (LANCZOS).
+dev/STYLE.md 4.3) and the Florida palette (4.4), then supersampled down (LANCZOS).
 Outputs (project/assets/florida/; frame sizes in world px, the PNG holds them at
 tools/florida_draw.D = 4 texture px per world px, e.g. 32x52 -> 128x208):
   npc_daughter.png / .tres     frame 32x52

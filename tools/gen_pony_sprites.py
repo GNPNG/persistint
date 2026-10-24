@@ -13,7 +13,7 @@ faces right, three-quarter side view), 4 columns x 2 rows.
   row 1 walk: four steps, legs swinging in diagonal pairs, body bobbing on the passing steps
 PonyDoll (scripts/florida/pony_doll.gd) stacks the parts as Sprite2D layers (hframes 4,
 vframes 2) and one AnimationPlayer drives every layer's frame: idle at 3 fps, walk at 8 fps.
-Kawaii sticker look from prompts/STYLE.md 4.3: warm-brown outline #8a5a5a, flat pastel fills
+Kawaii sticker look from dev/STYLE.md 4.3: warm-brown outline #8a5a5a, flat pastel fills
 with one highlight, dot eyes with a catch-light, pink blush, small smile. Drawn at 8x world
 size and LANCZOS-resized to 4x; deterministic. PonyDoll scales the layers back to 64x52.
 """

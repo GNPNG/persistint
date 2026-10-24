@@ -1,13 +1,13 @@
 """Draw the failed clone children of the bunker's clone hall and the polar bear cub batch as
 rigged sprite sheets, plus the kawaii gore bits a cub's pounce leaves behind.
 
-The clones are small, pale-green, shambling and kawaii (prompts/STYLE.md, "The clone children"):
+The clones are small, pale-green, shambling and kawaii (dev/STYLE.md, "The clone children"):
 one sheet per original (every batch of an original shares the same little face), told apart by
 hair and gown; stitches, a goo drip and one X eye on every one of them. The cubs are not
 zombies: fluffy, round, healthy.
 
 Usage: python3 -I tools/gen_clone_children.py
-Inputs: none (palette from prompts/STYLE.md; nothing random).
+Inputs: none (palette from dev/STYLE.md; nothing random).
 Outputs (project/assets/ruins/, the paths scripts/ruins/*.gd load; generated stand-ins, not canon cuts):
   clone_<original>.png   originals are cast ids in data/cast.json. Sheet of 192x272 frames
                          (24x34 world px at scale 1/8, feet on the bottom edge):

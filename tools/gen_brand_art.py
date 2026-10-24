@@ -12,7 +12,7 @@ Inputs:
                                                  dome (tools/gen_village_props.py)
 Outputs:
   project/assets/ui/title/wordmark.png       1600x480, transparent: PERSISTINT in rounded, bubbly
-                                             pastel letters (prompts/STYLE.md 4.8: pink, sky-blue
+                                             pastel letters (dev/STYLE.md 4.8: pink, sky-blue
                                              and mint letterforms, warm-brown outline #8a5a5a,
                                              white sticker outline, one white shine per letter),
                                              letters tilted and bobbing a little; the main menu

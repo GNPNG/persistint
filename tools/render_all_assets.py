@@ -4,7 +4,7 @@ Batch asset renderer and task queue for PERSISTINT prompts/.
 
 Each prompt file (prompts/**/<id>.md) has front matter (id, tool, drop, game) and a
 `## Prompt` section that is already self-contained (preamble + world line + subject +
-negatives; see prompts/STYLE.md). Rendered files go to the `drop:` path; then
+negatives; see dev/STYLE.md). Rendered files go to the `drop:` path; then
 tools/sync_rendered_assets.py copies them into project/.
 
 Usage (from anywhere; paths resolve against the repo root):

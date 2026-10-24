@@ -262,8 +262,8 @@ the special) are marked verified, and only those are used in the game;
 `tests/test_quotes_vv.gd` checks this. The exceptions are noted under
 [Content note](#content-note).
 
-**AI-generated assets.** Much of the art is generated. The canon reference sheets in `art/canon/`
-were made with NotebookLM and Gemini, and the game's character and paper-doll sprites are cut from
+**AI-generated assets.** Much of the art is generated. The canon reference sheets (private development
+material, kept encrypted under `dev/`) were made with NotebookLM and Gemini, and the game's character and paper-doll sprites are cut from
 those sheets. The planned music, key art and video are to be generated with Gemini (Lyria, image
 and Veo) from the prompts in `prompts/`. All voice clips, cloned or built-in, are generated with
 XTTS v2.

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Mechanical pre-flight check for the asset prompts in prompts/ (see prompts/STYLE.md, sections 11-12).
+"""Mechanical pre-flight check for the asset prompts in prompts/ (see dev/STYLE.md, sections 11-12).
 
 Checks every leaf prompt file (all prompts/**/*.md except STYLE.md and README.md):
   - front matter: id (= file name), tool (matches the type folder), drop (= <prompt dir>/assets/<id>.<ext>),
@@ -99,6 +99,12 @@ def main():
     seen = {"id": {}, "drop": {}, "game": {}}
     files = sorted(p for p in PROMPTS.rglob("*.md") if p.parent != PROMPTS)
     for path in files:
+        # A file whose front matter says `rendered: author` records a finished render the author
+        # supplied (the prompt text was not written here); it has nothing to check.
+        text0 = path.read_text(encoding="utf-8")
+        head = text0[4:].split("\n---", 1)[0] if text0.startswith("---\n") else ""
+        if re.search(r"^rendered: author$", head, re.M):
+            continue
         rel = path.relative_to(ROOT).as_posix()
         text = path.read_text()
 

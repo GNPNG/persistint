@@ -12,7 +12,7 @@ paper-doll part, so PaperDoll stacks them with canon body, dress and hair):
   (the "wear" parts of project/data/florida.json recipes).
 Shapes are laid out in doll units (the doll is 96 units tall, whatever the cut's pixel size),
 drawn at twice the canon cut's resolution in the canon character line colour with flat fills
-and one highlight (prompts/STYLE.md 4.3, Florida plant colours 4.4), then LANCZOS-resized to
+and one highlight (dev/STYLE.md 4.3, Florida plant colours 4.4), then LANCZOS-resized to
 the cut's size. Deterministic.
 """
 import math

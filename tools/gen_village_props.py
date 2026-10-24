@@ -1,7 +1,7 @@
 """Draw the village's own small props that have no canon source.
 
 Usage: python3 -I tools/gen_village_props.py
-Inputs: none (palette hexes from prompts/STYLE.md 4.3-4.4).
+Inputs: none (palette hexes from dev/STYLE.md 4.3-4.4).
 Outputs (project/assets/island/):
   (sizes in world px; each file is stored at 4x, the map builder shows it at scale 0.25)
   mirror.png  single 26x40 image (104x160 file): the standing dressing mirror that opens the wardrobe
