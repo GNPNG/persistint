@@ -184,7 +184,14 @@ else
   # Opening the project re-serialises project/project.godot (editor plugins, section order);
   # put the committed file back afterwards so a deploy does not dirty the tree.
   cp project/project.godot "$TMP/project.godot.orig"
-  trap 'cp "$TMP/project.godot.orig" "$ROOT/project/project.godot"; rm -rf "$TMP"' EXIT
+  cp project/export_presets.cfg "$TMP/export_presets.cfg.orig"
+  trap 'cp "$TMP/project.godot.orig" "$ROOT/project/project.godot"; cp "$TMP/export_presets.cfg.orig" "$ROOT/project/export_presets.cfg"; rm -rf "$TMP"' EXIT
+  if [[ -n "$CHANNEL" ]]; then
+    # Review scenes (scenes/test, scripts/test, assets/test) are excluded from the player build by
+    # the preset's exclude_filter; a review channel carries them, so clear the filter for this export.
+    sed -i 's#^exclude_filter=.*#exclude_filter=""#' project/export_presets.cfg
+    echo "review channel: test scenes and their assets included in this export"
+  fi
   untracked_before="$(git status --porcelain -- project | grep '^??' || true)"
   if [[ ! -d project/.godot ]]; then
     echo "project/.godot missing: importing first"
@@ -196,6 +203,7 @@ else
   godot --headless --path project --export-release Web "$EXPORT/index.html" >"$TMP/export.log" 2>&1 \
     || { tail -n 40 "$TMP/export.log"; die "godot export failed"; }
   cp "$TMP/project.godot.orig" project/project.godot
+  cp "$TMP/export_presets.cfg.orig" project/export_presets.cfg
   grep -E '^(ERROR|SCRIPT ERROR)' "$TMP/export.log" | head -n 20 || true
   untracked_after="$(git status --porcelain -- project | grep '^??' || true)"
   if [[ "$untracked_after" != "$untracked_before" ]]; then
