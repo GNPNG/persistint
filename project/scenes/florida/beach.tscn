@@ -78,7 +78,7 @@ offset = Vector2(0, 20)
 
 [node name="Rowboat" type="Sprite2D" parent="."]
 z_index = 3
-position = Vector2(736, 312)
+position = Vector2(736, 302)
 texture = ExtResource("7")
 scale = Vector2(0.25, 0.25)
 offset = Vector2(0, 32)
