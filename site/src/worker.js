@@ -24,6 +24,22 @@ function baseHeaders(name) {
 
 export default {
   async fetch(req, env, ctx) {
+    // Review channels on the trusted domain: /play/<channel>/... is proxied to the channel's own
+    // Pages project (<project>-<channel>.pages.dev, see deploy_site.sh --channel), so a test build
+    // never replaces the player-facing files and never asks a browser to trust a fresh host.
+    const rc = new URL(req.url).pathname.match(/^\/play\/([a-z0-9-]{1,24})\/(.*)$/);
+    if (rc && (env.REVIEW_CHANNELS || "edges").split(",").includes(rc[1])) {
+      if (req.method !== "GET" && req.method !== "HEAD") return new Response("Method not allowed", { status: 405, headers: { allow: "GET, HEAD" } });
+      const base = (env.REVIEW_PROJECT_BASE || "persistint-dataglut-org") + "-" + rc[1] + ".pages.dev";
+      const u0 = new URL(req.url);
+      const target = new URL("https://" + base + "/play/" + rc[2] + u0.search);
+      const r = await fetch(new Request(target, { method: req.method, headers: { accept: req.headers.get("accept") || "*/*", range: req.headers.get("range") || "" }, redirect: "manual" }));
+      const h = new Headers(r.headers);
+      const loc = h.get("location");
+      if (loc && loc.startsWith("/play/")) h.set("location", "/play/" + rc[1] + loc.slice("/play".length));
+      h.delete("content-security-policy"); h.set("x-review-channel", rc[1]);
+      return new Response(r.body, { status: r.status, headers: h });
+    }
     const url = new URL(req.url);
     const m = url.pathname.match(OVERSIZED);
     if (m) {
