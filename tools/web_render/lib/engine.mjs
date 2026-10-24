@@ -57,6 +57,13 @@ export class Session {
   }
 
   async newPage() {
+    // Author, 2026-10-24: keep the tab count down. In attach mode (the author's own window) reuse
+    // this session's tab, or the window's first tab, instead of opening a new tab per asset.
+    if (this.settings.browserURL) {
+      if (!this.page || this.page.isClosed()) this.page = (await this.browser.pages())[0] || await this.browser.newPage();
+      this.page.setDefaultTimeout(60_000);
+      return this.page;
+    }
     if (this.page && !this.page.isClosed()) await this.page.close().catch(() => {});
     const page = await this.browser.newPage();
     this.console = [];
@@ -180,6 +187,7 @@ export async function runSteps(session, steps, name, ctx = {}) {
         case 'goto': await session.goto(fill(st.url, ctx.vars || {})); break;
         case 'sleep': await sleep(st.ms); break;
         case 'press': await page.keyboard.press(st.key); break;
+        case 'type': await page.keyboard.type(fill(st.text, ctx.vars || {}), { delay: 40 }); break;
         default: {
           let handle;
           if (st.target === 'result') {
@@ -218,12 +226,14 @@ export async function insertText(session, selectors, text, ctx = {}) {
   await handle.click();
   // execCommand('insertText') goes through the browser's own editing path, so editors like
   // Quill update their model (synthetic input events and element.value = ... do not).
-  const ok = await handle.evaluate((el, t) => {
+  const append = !!ctx.append;
+  const ok = await handle.evaluate((el, t, append) => {
     const isField = el.tagName === 'TEXTAREA' || el.tagName === 'INPUT';
     const read = () => (isField ? el.value : el.innerText).replace(/\s+/g, ' ');
     const want = t.slice(0, 60).replace(/\s+/g, ' ');
     el.focus();
-    if (isField) el.select(); else document.execCommand('selectAll', false, null);
+    if (!append) { if (isField) el.select(); else document.execCommand('selectAll', false, null); }
+    else if (!isField) { const r = document.createRange(); r.selectNodeContents(el); r.collapse(false); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); }
     document.execCommand('insertText', false, t);
     if (read().includes(want)) return true;
     if (isField) {
@@ -236,7 +246,7 @@ export async function insertText(session, selectors, text, ctx = {}) {
       return read().includes(want);
     }
     return false;
-  }, text);
+  }, text, append);
   if (!ok) {
     log('    (execCommand insert did not take; typing instead)');
     await page.keyboard.down('Control'); await page.keyboard.press('a'); await page.keyboard.up('Control');
@@ -488,9 +498,15 @@ export async function renderOnSurface(session, surface, task, prompt, opts = {})
     await session.goto(surface.url);
     step = 'ready'; await waitReady(session, surface, ctx);
     step = 'open'; await runSteps(session, st.open, 'open', ctx);
-    step = 'mode'; await runSteps(session, st.mode, 'mode', ctx);
-    step = 'options'; await runSteps(session, st.options, 'options', ctx);
-    step = 'input'; await insertText(session, st.input, prompt, ctx);
+    if (surface.skillFirst) {
+      // The author's Gemini skill replaces the tool mode: pick it, then append the prompt after its chip.
+      step = 'skill'; await runSteps(session, st.skill, 'skill', ctx);
+      step = 'input'; await insertText(session, st.input, prompt, { ...ctx, append: true });
+    } else {
+      step = 'mode'; await runSteps(session, st.mode, 'mode', ctx);
+      step = 'options'; await runSteps(session, st.options, 'options', ctx);
+      step = 'input'; await insertText(session, st.input, prompt, ctx);
+    }
     baseline = (await resultInfo(session.page, st.result, surface.resultMinSize ?? 0)).count;
     const respBaseline = st.response ? (await responseInfo(session.page, st.response)).count : null;
     if (opts.assist) {
@@ -537,7 +553,7 @@ export async function toPngInPage(page, buf) {
   return Buffer.from(b64, 'base64');
 }
 
-async function finish(session, task, got, surface = {}) {
+export async function finish(session, task, got, surface = {}) {
   const log = session.log;
   if (task.kind === 'image') {
     const problems = checkImage(got.buf, task.aspect, surface.verify ?? {});

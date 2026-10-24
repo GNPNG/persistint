@@ -93,7 +93,7 @@ func _run() -> void:
 				root.get_node("DialogueManager").show_dialogue_balloon(load("res://dialogue/priestess.dialogue"), "start")
 			"choices":
 				var dm := root.get_node("DialogueManager")
-				var res: Resource = dm.create_resource_from_text("~ start\nPriestess Betty: Everyone contributes, initiate. What will you offer the Queen Mothers today?\n- I brought flowers from the garden, the pink ones you like.\n- Nothing. I am still thinking about what the offering is for.\n- Whatever the others are offering, but a little bit more of it.\n=> END")
+				var res: Resource = dm.create_resource_from_text("~ start\nPriestess Betty: Everyone contributes, initiate. What will you offer the Queen Mother today?\n- I brought flowers from the garden, the pink ones you like.\n- Nothing. I am still thinking about what the offering is for.\n- Whatever the others are offering, but a little bit more of it.\n=> END")
 				dm.show_dialogue_balloon(res, "start")
 			"crown":
 				# A crafted Florida wearable on the canon doll (assets/florida/acc_flower_crown.png).

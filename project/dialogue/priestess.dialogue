@@ -19,6 +19,6 @@ elif WorldState.has_flag("refused_offering")
 	{{Cast.full("priestess")}}: I heard you told {{Cast.full("initiate")}} "no thank you."
 	{{Cast.full("priestess")}}: What a fascinating phrase. We'll be watching your cycle with interest.
 	=> END
-{{Cast.full("priestess")}}: Welcome, initiate. The Queen Mothers see all who wish to be seen.
+{{Cast.full("priestess")}}: Welcome, initiate. The Queen Mother sees all who wish to be seen.
 {{Cast.full("priestess")}}: And all who don't, of course. That's rather the point of Them.
 => END

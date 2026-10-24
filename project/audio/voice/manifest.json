@@ -330,6 +330,306 @@
     "clip": "res://audio/voice/49f4a9479102be5ab47d0e314bc98d09.wav"
   },
   {
+    "speaker": "Gloria",
+    "text": "It's the Fourteenth! Everyone contributes. Everyone. I wore my good sash!",
+    "key": "59d349684ab86bec55685b915abfbc84",
+    "clip": "res://audio/voice/59d349684ab86bec55685b915abfbc84.wav"
+  },
+  {
+    "speaker": "Gloria",
+    "text": "One more sleep until the Fourteenth. I practiced my chants on the tomatoes.",
+    "key": "7e81f86f019602dbb319f94d4ae0909a",
+    "clip": "res://audio/voice/7e81f86f019602dbb319f94d4ae0909a.wav"
+  },
+  {
+    "speaker": "Gloria",
+    "text": "You just... said no. Politely. I keep thinking about it.",
+    "key": "80d0d51b2e67fd535f6326c0083acdb8",
+    "clip": "res://audio/voice/80d0d51b2e67fd535f6326c0083acdb8.wav"
+  },
+  {
+    "speaker": "Gloria",
+    "text": "I asked 'why' out loud today. The sky did not fall.",
+    "key": "9891899abfdc06ae39a4bf0846592382",
+    "clip": "res://audio/voice/9891899abfdc06ae39a4bf0846592382.wav"
+  },
+  {
+    "speaker": "Gloria",
+    "text": "The Priestess logged your offering. You're 'seen' now!",
+    "key": "ba8a58f13ccd55b9385ea5b470e79e72",
+    "clip": "res://audio/voice/ba8a58f13ccd55b9385ea5b470e79e72.wav"
+  },
+  {
+    "speaker": "Gloria",
+    "text": "The Gate is open! The cohort says so, so it must be the start of the month. Of cycle. Whichever.",
+    "key": "167f23b5625e9dc7719c9c83b55f2fe3",
+    "clip": "res://audio/voice/167f23b5625e9dc7719c9c83b55f2fe3.wav"
+  },
+  {
+    "speaker": "Gloria",
+    "text": "Training week. I memorized forty-one blood-art patterns. Devotion is mostly memorizing.",
+    "key": "3c97af1a94fd13f76e754845017d0a03",
+    "clip": "res://audio/voice/3c97af1a94fd13f76e754845017d0a03.wav"
+  },
+  {
+    "speaker": "Gloria",
+    "text": "The Fourteenth approaches! Everyone contributes. Everyone.",
+    "key": "78e79134056551beae453bc40db9bdf2",
+    "clip": "res://audio/voice/78e79134056551beae453bc40db9bdf2.wav"
+  },
+  {
+    "speaker": "Gloria",
+    "text": "Everyone is quiet after the Fourteenth. Nobody says why. We don't count the days since, either.",
+    "key": "d1eca617aae34315c6377cf93cc04162",
+    "clip": "res://audio/voice/d1eca617aae34315c6377cf93cc04162.wav"
+  },
+  {
+    "speaker": "Gloria",
+    "text": "I cried at breakfast and then got furious at the porridge. The Priestess says that's holiness. Isn't that nice?",
+    "key": "638c638cce400dc24cbca8698d38018b",
+    "clip": "res://audio/voice/638c638cce400dc24cbca8698d38018b.wav"
+  },
+  {
+    "speaker": "Gloria",
+    "text": "The festival was in the cool season last cycle. Now it's hot. Probably the weather is wrong.",
+    "key": "9f534297411278963dfc8002ef6879c6",
+    "clip": "res://audio/voice/9f534297411278963dfc8002ef6879c6.wav"
+  },
+  {
+    "speaker": "Gloria",
+    "text": "Good morning, sister! Have you been seen yet today?",
+    "key": "362f6911725696dcf48d624add1ae9e2",
+    "clip": "res://audio/voice/362f6911725696dcf48d624add1ae9e2.wav"
+  },
+  {
+    "speaker": "Gloria",
+    "text": "Lights out soon. The icons watch us sleep, which is very comforting.",
+    "key": "d21de6043daca3b06b96a43a8258fe11",
+    "clip": "res://audio/voice/d21de6043daca3b06b96a43a8258fe11.wav"
+  },
+  {
+    "speaker": "Priestess Betty",
+    "text": "Today the cohort rises as one. Do try to look luminous, dear. The icons are counting.",
+    "key": "494b9b416cf41114488d04afd530e0c9",
+    "clip": "res://audio/voice/494b9b416cf41114488d04afd530e0c9.wav"
+  },
+  {
+    "speaker": "Priestess Betty",
+    "text": "Tomorrow is the Fourteenth. Everything is ready, because I made it ready, because nobody else would.",
+    "key": "c78301804b8de7e9a84d784247f08d26",
+    "clip": "res://audio/voice/c78301804b8de7e9a84d784247f08d26.wav"
+  },
+  {
+    "speaker": "Priestess Betty",
+    "text": "The obedient simply glow, don't you think?",
+    "key": "f78e54db4867127c1e964594bd6d017f",
+    "clip": "res://audio/voice/f78e54db4867127c1e964594bd6d017f.wav"
+  },
+  {
+    "speaker": "Priestess Betty",
+    "text": "'No thank you.' What a fascinating phrase.",
+    "key": "1476312f780bd13f574b205329087933",
+    "clip": "res://audio/voice/1476312f780bd13f574b205329087933.wav"
+  },
+  {
+    "speaker": "Priestess Betty",
+    "text": "The Gate has opened, so the new cycle begins. The cohort agrees, and the cohort is never wrong. We checked each other.",
+    "key": "03e33a434915a0101d69965ef802d95a",
+    "clip": "res://audio/voice/03e33a434915a0101d69965ef802d95a.wav"
+  },
+  {
+    "speaker": "Priestess Betty",
+    "text": "The rites are scheduled for the days when the womb calls. Which, happily, are the days we've always held them.",
+    "key": "b56de434543076de29a8abed32f37a1a",
+    "clip": "res://audio/voice/b56de434543076de29a8abed32f37a1a.wav"
+  },
+  {
+    "speaker": "Priestess Betty",
+    "text": "No calendars, no thermometers, no 'tests.' Devices of domination. We count in blood, and blood does not lie.",
+    "key": "17677be72b93010767c3310c43c38920",
+    "clip": "res://audio/voice/17677be72b93010767c3310c43c38920.wav"
+  },
+  {
+    "speaker": "Priestess Betty",
+    "text": "The rite is done. If the Mothers' number does not grow, it is a failure of devotion. It is always a failure of devotion.",
+    "key": "5ca8a6060680af6756b9c6e364e5864d",
+    "clip": "res://audio/voice/5ca8a6060680af6756b9c6e364e5864d.wav"
+  },
+  {
+    "speaker": "Priestess Betty",
+    "text": "The sacred weeks. Everything feels unbearable and enormous. That is communion, dear. Do not take an aspirin.",
+    "key": "b1647ff5c5747b8c7a3687b6270e2a0b",
+    "clip": "res://audio/voice/b1647ff5c5747b8c7a3687b6270e2a0b.wav"
+  },
+  {
+    "speaker": "Priestess Betty",
+    "text": "Yes, the Fourteenth lands a little later each cycle. That is the cohort's business, not the sky's.",
+    "key": "ca71d6aa100d4bc332752fb88aed098b",
+    "clip": "res://audio/voice/ca71d6aa100d4bc332752fb88aed098b.wav"
+  },
+  {
+    "speaker": "Priestess Betty",
+    "text": "Anyone found measuring the tides at night will be asked to sit quietly for a very long time.",
+    "key": "0aefa5d063e7823e512c9a4b17105470",
+    "clip": "res://audio/voice/0aefa5d063e7823e512c9a4b17105470.wav"
+  },
+  {
+    "speaker": "Priestess Betty",
+    "text": "Stand straighter, dear. The icons are watching.",
+    "key": "46575e091a973073f8aa7be052fe3dcd",
+    "clip": "res://audio/voice/46575e091a973073f8aa7be052fe3dcd.wav"
+  },
+  {
+    "speaker": "Bruce",
+    "text": "They brought us the tonic early this morning. Festival day. I don't ask what's in it.",
+    "key": "0a998e69ddc4de8d493629c368ebc6a8",
+    "clip": "res://audio/voice/0a998e69ddc4de8d493629c368ebc6a8.wav"
+  },
+  {
+    "speaker": "Bruce",
+    "text": "Rites tomorrow. They'll collect us at sunset and return us by sunrise. Fine. The tomatoes can wait.",
+    "key": "ac1cbdc5121d21cc98eede6c1e08f59b",
+    "clip": "res://audio/voice/ac1cbdc5121d21cc98eede6c1e08f59b.wav"
+  },
+  {
+    "speaker": "Bruce",
+    "text": "Extra weeding today. Festival greens for the Fourteenth.",
+    "key": "cbaf5183994180e5f63c4933594b1d92",
+    "clip": "res://audio/voice/cbaf5183994180e5f63c4933594b1d92.wav"
+  },
+  {
+    "speaker": "Bruce",
+    "text": "They say the Gate is open, so they'll want us soon. Nobody's told us what day it is for a while.",
+    "key": "200027b5cc31a3c956283353a378df26",
+    "clip": "res://audio/voice/200027b5cc31a3c956283353a378df26.wav"
+  },
+  {
+    "speaker": "Bruce",
+    "text": "Watering the greenhouse. Glass houses, funny thing. Everyone can see in. Nobody looks.",
+    "key": "1826f95d35cf5081d22ee3f32356ee1d",
+    "clip": "res://audio/voice/1826f95d35cf5081d22ee3f32356ee1d.wav"
+  },
+  {
+    "speaker": "Bruce",
+    "text": "Back in the compound. The rite 'didn't take' again. They say I need more devotion. I garden. That's my devotion.",
+    "key": "450e287bf369aff6accba409df955cef",
+    "clip": "res://audio/voice/450e287bf369aff6accba409df955cef.wav"
+  },
+  {
+    "speaker": "Bruce",
+    "text": "The Priestesses are in their sacred weeks. Keep your head down and your trowel quiet.",
+    "key": "ddd7df96414257c51286126cb1f24486",
+    "clip": "res://audio/voice/ddd7df96414257c51286126cb1f24486.wav"
+  },
+  {
+    "speaker": "Bruce",
+    "text": "Tomatoes ripen when they ripen. The Calendar says otherwise. I trust the tomatoes.",
+    "key": "0c66c0faf982e0fc5769b5ece9f8126b",
+    "clip": "res://audio/voice/0c66c0faf982e0fc5769b5ece9f8126b.wav"
+  },
+  {
+    "speaker": "Bruce",
+    "text": "Morning shift. Four hundred seedlings and a watering can. Good thing I like peace and quiet.",
+    "key": "27a74bd14b2778e887c62113036353ac",
+    "clip": "res://audio/voice/27a74bd14b2778e887c62113036353ac.wav"
+  },
+  {
+    "speaker": "Bruce",
+    "text": "The tomatoes listen better than anyone on this island.",
+    "key": "be87682433f55d6e40e2828661589ed8",
+    "clip": "res://audio/voice/be87682433f55d6e40e2828661589ed8.wav"
+  },
+  {
+    "speaker": "Susan",
+    "text": "Festival. They'll parade the Mothers and I'll carry the baskets. Same as every cycle, but with ribbons.",
+    "key": "7674177d5d3266cacf0df66b7bf40890",
+    "clip": "res://audio/voice/7674177d5d3266cacf0df66b7bf40890.wav"
+  },
+  {
+    "speaker": "Susan",
+    "text": "Tomorrow they'll all be so sure. I'll be hauling water and counting tides, quietly.",
+    "key": "5d46593ab5473e87da72123f95d5ebfc",
+    "clip": "res://audio/voice/5d46593ab5473e87da72123f95d5ebfc.wav"
+  },
+  {
+    "speaker": "Susan",
+    "text": "Heard you refused. Sweetly, even. There's more of us than you'd think.",
+    "key": "7694af54e7f4da292f36f64d432eb5cc",
+    "clip": "res://audio/voice/7694af54e7f4da292f36f64d432eb5cc.wav"
+  },
+  {
+    "speaker": "Susan",
+    "text": "You arranged their little icons? The water still doesn't care.",
+    "key": "fb021e9dab1ac7ae50e7caa2a7435524",
+    "clip": "res://audio/voice/fb021e9dab1ac7ae50e7caa2a7435524.wav"
+  },
+  {
+    "speaker": "Susan",
+    "text": "Gate's open, they say. Another month, another 'maybe next time' for the likes of me.",
+    "key": "c291a91cb90ad2686789fbd15583345a",
+    "clip": "res://audio/voice/c291a91cb90ad2686789fbd15583345a.wav"
+  },
+  {
+    "speaker": "Susan",
+    "text": "Funny. They do their rites at the start of the cycle. Everyone I've ever known who got lucky, it was in the middle.",
+    "key": "e64470992f09e7ccc2e5c6cf22294957",
+    "clip": "res://audio/voice/e64470992f09e7ccc2e5c6cf22294957.wav"
+  },
+  {
+    "speaker": "Susan",
+    "text": "Rites are over and nobody's expecting. Nobody ever asks why. They ask who's to blame.",
+    "key": "f703f909755a3f9826b514e2cde6a941",
+    "clip": "res://audio/voice/f703f909755a3f9826b514e2cde6a941.wav"
+  },
+  {
+    "speaker": "Susan",
+    "text": "Everyone's weepy and snappish. They call it holy. I call it Tuesday.",
+    "key": "4a385c0be269f1554a7f030402150834",
+    "clip": "res://audio/voice/4a385c0be269f1554a7f030402150834.wav"
+  },
+  {
+    "speaker": "Susan",
+    "text": "The festival drifts. Every cycle it's a bit off. Nobody notices. Noticing needs measuring, and measuring's forbidden.",
+    "key": "499397db4be233c8ff94ee093c79d089",
+    "clip": "res://audio/voice/499397db4be233c8ff94ee093c79d089.wav"
+  },
+  {
+    "speaker": "Susan",
+    "text": "The tide's out. It goes out when the moon says, you know. I'm not saying anything. I'm just standing here.",
+    "key": "d7d09be373bdd31f3a82b4b3fd043caf",
+    "clip": "res://audio/voice/d7d09be373bdd31f3a82b4b3fd043caf.wav"
+  },
+  {
+    "speaker": "Susan",
+    "text": "Water doesn't care what the Calendar says. Neither do I, much.",
+    "key": "f6b471049fad00225857f4c525c7edb2",
+    "clip": "res://audio/voice/f6b471049fad00225857f4c525c7edb2.wav"
+  },
+  {
+    "speaker": "Hannah",
+    "text": "Last brush of the day. Then a carrot each, and goodnight, and goodnight, and goodnight.",
+    "key": "02a1028e87f5892b7aa1cc322446d735",
+    "clip": "res://audio/voice/02a1028e87f5892b7aa1cc322446d735.wav"
+  },
+  {
+    "speaker": "Hannah",
+    "text": "Shh, they're sleepy. I'm just doing her mane one more time. She likes it.",
+    "key": "cf287832f29dadc2e0e8926086b6129c",
+    "clip": "res://audio/voice/cf287832f29dadc2e0e8926086b6129c.wav"
+  },
+  {
+    "speaker": "Hannah",
+    "text": "You came back! I saved you the sparkly brush. It doesn't do anything. It's just sparkly.",
+    "key": "068e0c92677637e3bf09066b36a9a4ba",
+    "clip": "res://audio/voice/068e0c92677637e3bf09066b36a9a4ba.wav"
+  },
+  {
+    "speaker": "Hannah",
+    "text": "Hi! I'm doing the tangly bit of her mane. Slow and gentle, from the bottom up.",
+    "key": "f45df37ee6125b923228299aeb0f27e8",
+    "clip": "res://audio/voice/f45df37ee6125b923228299aeb0f27e8.wav"
+  },
+  {
     "speaker": "Father",
     "text": "Back again. Good. The tide's kind this afternoon.",
     "key": "729a8a9e68e31b9178180d81bf24e945",
@@ -703,9 +1003,9 @@
   },
   {
     "speaker": "Priestess Betty",
-    "text": "Welcome, initiate. The Queen Mothers see all who wish to be seen.",
-    "key": "54aa3c6592680fff9443c2a0f659d55b",
-    "clip": "res://audio/voice/54aa3c6592680fff9443c2a0f659d55b.wav"
+    "text": "Welcome, initiate. The Queen Mother sees all who wish to be seen.",
+    "key": "1c62d248fb4873b43437771c1cb98163",
+    "clip": "res://audio/voice/1c62d248fb4873b43437771c1cb98163.wav"
   },
   {
     "speaker": "Priestess Betty",
