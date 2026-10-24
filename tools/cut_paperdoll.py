@@ -10,6 +10,10 @@ the game can stack them at one origin:
     head and its bottom set on the chin.
   - accessory: scaled by "scale" and placed at "anchor" relative to the head.
 White background and hair face openings become transparent.
+Layers keep the sheet's resolution (the shared canvas is 721x760 px for the current sheet): no downscale, so
+the doll stays smooth illustration. Code scales it to its display size (player.gd fits it to
+48 world px tall; PaperDoll fits its rect).
+Outputs: project/assets/canon/<part>.png for every part in the data file.
 """
 import json
 import sys
@@ -116,12 +120,9 @@ x0 = min(ox for _, ox, _ in layers.values())
 y0 = min(oy for _, _, oy in layers.values())
 x1 = max(ox + im.width for im, ox, _ in layers.values())
 y1 = max(oy + im.height for im, _, oy in layers.values())
-height = CFG["height"]
-factor = height / (y1 - y0)
 OUT.mkdir(parents=True, exist_ok=True)
 for name, (img, ox, oy) in layers.items():
     canvas = Image.new("RGBA", (x1 - x0, y1 - y0))
     canvas.alpha_composite(img, (ox - x0, oy - y0))
-    canvas = canvas.resize((round(canvas.width * factor), height), Image.LANCZOS)
     canvas.save(OUT / f"{name}.png")
     print(name, canvas.size)

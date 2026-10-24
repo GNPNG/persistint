@@ -1,50 +1,214 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene format=3]
 
 [ext_resource type="Script" path="res://scripts/map.gd" id="1"]
-[ext_resource type="Texture2D" path="res://assets/placeholder/bg_florida_aquarium.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/florida/bg_florida_aquarium.png" id="2"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="3"]
-[ext_resource type="PackedScene" path="res://scenes/maps/door.tscn" id="4"]
-[ext_resource type="PackedScene" path="res://scenes/florida/critter.tscn" id="5"]
+[ext_resource type="SpriteFrames" path="res://assets/florida/fish.tres" id="4"]
+[ext_resource type="Script" path="res://scripts/florida/fish.gd" id="5"]
+[ext_resource type="Texture2D" path="res://assets/florida/prop_bench.png" id="6"]
+[ext_resource type="Texture2D" path="res://assets/florida/prop_palm_potted.png" id="7"]
+[ext_resource type="PackedScene" path="res://scenes/maps/door.tscn" id="8"]
+[ext_resource type="PackedScene" path="res://scenes/florida/critter.tscn" id="9"]
 
 [sub_resource type="NavigationPolygon" id="navpoly"]
-vertices = PackedVector2Array(60, 290, 900, 290, 900, 520, 60, 520)
-polygons = [PackedInt32Array(0, 1, 2, 3)]
-outlines = [PackedVector2Array(60, 290, 900, 290, 900, 520, 60, 520)]
+vertices = PackedVector2Array(40, 66, 224, 66, 736, 66, 920, 66, 40, 124, 224, 124, 736, 124, 920, 124, 40, 356, 224, 356, 736, 356, 920, 356, 40, 526, 224, 526, 736, 526, 920, 526)
+polygons = [PackedInt32Array(0, 1, 5, 4), PackedInt32Array(1, 2, 6, 5), PackedInt32Array(2, 3, 7, 6), PackedInt32Array(4, 5, 9, 8), PackedInt32Array(6, 7, 11, 10), PackedInt32Array(8, 9, 13, 12), PackedInt32Array(9, 10, 14, 13), PackedInt32Array(10, 11, 15, 14)]
 
 [node name="Aquarium" type="Node2D"]
+texture_filter = 4
+y_sort_enabled = true
 script = ExtResource("1")
 map_size = Vector2(960, 540)
 
 [node name="Background" type="Sprite2D" parent="."]
+z_index = -1
 texture = ExtResource("2")
+scale = Vector2(0.25, 0.25)
 centered = false
 
 [node name="Nav" type="NavigationRegion2D" parent="."]
 navigation_polygon = SubResource("navpoly")
 
 [node name="spawn_default" type="Marker2D" parent="."]
-position = Vector2(480, 400)
+position = Vector2(470, 366)
 
 [node name="spawn_from_beach" type="Marker2D" parent="."]
-position = Vector2(160, 480)
+position = Vector2(480, 470)
 
 [node name="Player" parent="." instance=ExtResource("3")]
-position = Vector2(480, 400)
+z_index = 3
+position = Vector2(470, 366)
 
-[node name="BeachDoor" parent="." instance=ExtResource("4")]
-position = Vector2(120, 500)
+[node name="Fish1" type="AnimatedSprite2D" parent="."]
+z_index = 1
+position = Vector2(320, 200)
+sprite_frames = ExtResource("4")
+animation = &"swim_coral"
+script = ExtResource("5")
+colour = "coral"
+swim_range = 50.0
+
+[node name="Fish2" type="AnimatedSprite2D" parent="."]
+z_index = 1
+position = Vector2(420, 290)
+sprite_frames = ExtResource("4")
+animation = &"swim_mango"
+script = ExtResource("5")
+colour = "mango"
+swim_range = 50.0
+
+[node name="Fish3" type="AnimatedSprite2D" parent="."]
+z_index = 1
+position = Vector2(560, 210)
+sprite_frames = ExtResource("4")
+animation = &"swim_lilac"
+script = ExtResource("5")
+colour = "lilac"
+swim_range = 50.0
+
+[node name="Fish4" type="AnimatedSprite2D" parent="."]
+z_index = 1
+position = Vector2(640, 280)
+sprite_frames = ExtResource("4")
+animation = &"swim_coral"
+script = ExtResource("5")
+colour = "coral"
+swim_range = 50.0
+
+[node name="Fish5" type="AnimatedSprite2D" parent="."]
+z_index = 1
+position = Vector2(380, 170)
+sprite_frames = ExtResource("4")
+animation = &"swim_lilac"
+script = ExtResource("5")
+colour = "lilac"
+swim_range = 50.0
+
+[node name="Fish6" type="AnimatedSprite2D" parent="."]
+z_index = 1
+position = Vector2(600, 300)
+sprite_frames = ExtResource("4")
+animation = &"swim_mango"
+script = ExtResource("5")
+colour = "mango"
+swim_range = 50.0
+
+[node name="Fish7" type="AnimatedSprite2D" parent="."]
+z_index = 1
+position = Vector2(300, 280)
+sprite_frames = ExtResource("4")
+animation = &"swim_mango"
+script = ExtResource("5")
+colour = "mango"
+swim_range = 50.0
+
+[node name="Fish8" type="AnimatedSprite2D" parent="."]
+z_index = 1
+position = Vector2(680, 200)
+sprite_frames = ExtResource("4")
+animation = &"swim_coral"
+script = ExtResource("5")
+colour = "coral"
+swim_range = 50.0
+
+[node name="Bench1" type="Sprite2D" parent="."]
+z_index = 3
+position = Vector2(330, 378)
+texture = ExtResource("6")
+scale = Vector2(0.25, 0.25)
+offset = Vector2(0, 44)
+
+[node name="Bench2" type="Sprite2D" parent="."]
+z_index = 3
+position = Vector2(630, 378)
+texture = ExtResource("6")
+scale = Vector2(0.25, 0.25)
+offset = Vector2(0, 44)
+
+[node name="Bench3" type="Sprite2D" parent="."]
+z_index = 3
+position = Vector2(150, 278)
+texture = ExtResource("6")
+scale = Vector2(0.25, 0.25)
+offset = Vector2(0, 44)
+
+[node name="Bench4" type="Sprite2D" parent="."]
+z_index = 3
+position = Vector2(810, 278)
+texture = ExtResource("6")
+scale = Vector2(0.25, 0.25)
+offset = Vector2(0, 44)
+
+[node name="Palm1" type="Sprite2D" parent="."]
+z_index = 3
+position = Vector2(40, 78)
+texture = ExtResource("7")
+scale = Vector2(0.25, 0.25)
+offset = Vector2(0, -4)
+
+[node name="Palm2" type="Sprite2D" parent="."]
+z_index = 3
+position = Vector2(920, 78)
+texture = ExtResource("7")
+scale = Vector2(0.25, 0.25)
+offset = Vector2(0, -4)
+
+[node name="Palm3" type="Sprite2D" parent="."]
+z_index = 3
+position = Vector2(40, 508)
+texture = ExtResource("7")
+scale = Vector2(0.25, 0.25)
+offset = Vector2(0, -4)
+
+[node name="Palm4" type="Sprite2D" parent="."]
+z_index = 3
+position = Vector2(920, 508)
+texture = ExtResource("7")
+scale = Vector2(0.25, 0.25)
+offset = Vector2(0, -4)
+
+[node name="Palm5" type="Sprite2D" parent="."]
+z_index = 3
+position = Vector2(180, 378)
+texture = ExtResource("7")
+scale = Vector2(0.25, 0.25)
+offset = Vector2(0, -4)
+
+[node name="Palm6" type="Sprite2D" parent="."]
+z_index = 3
+position = Vector2(780, 378)
+texture = ExtResource("7")
+scale = Vector2(0.25, 0.25)
+offset = Vector2(0, -4)
+
+[node name="Palm7" type="Sprite2D" parent="."]
+z_index = 3
+position = Vector2(230, 88)
+texture = ExtResource("7")
+scale = Vector2(0.25, 0.25)
+offset = Vector2(0, -4)
+
+[node name="Palm8" type="Sprite2D" parent="."]
+z_index = 3
+position = Vector2(730, 88)
+texture = ExtResource("7")
+scale = Vector2(0.25, 0.25)
+offset = Vector2(0, -4)
+
+[node name="BeachDoor" parent="." instance=ExtResource("8")]
+position = Vector2(480, 512)
 target_scene = "res://scenes/florida/beach.tscn"
 target_spawn = "spawn_from_aquarium"
 exit_label = "Back to the Beach"
 
-[node name="Mermaid1" parent="." instance=ExtResource("5")]
-position = Vector2(300, 130)
+[node name="Mermaid1" parent="." instance=ExtResource("9")]
+position = Vector2(400, 300)
 kind = "mermaid"
 nickname = "mermaid_marina"
-wander = Rect2(140, 70, 260, 110)
+wander = Rect2(290, 280, 160, 34)
 
-[node name="Mermaid2" parent="." instance=ExtResource("5")]
-position = Vector2(640, 150)
+[node name="Mermaid2" parent="." instance=ExtResource("9")]
+position = Vector2(580, 296)
 kind = "mermaid"
 nickname = "mermaid_lagoon"
-wander = Rect2(480, 70, 300, 110)
+wander = Rect2(520, 276, 150, 36)
