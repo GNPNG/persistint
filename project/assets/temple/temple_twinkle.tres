@@ -1,0 +1,53 @@
+[gd_resource type="SpriteFrames" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/temple/temple_twinkle.png" id="1_0s55s"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mnj3q"]
+atlas = ExtResource("1_0s55s")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7umf4"]
+atlas = ExtResource("1_0s55s")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_oyekq"]
+atlas = ExtResource("1_0s55s")
+region = Rect2(96, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m7ahd"]
+atlas = ExtResource("1_0s55s")
+region = Rect2(144, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hbfa8"]
+atlas = ExtResource("1_0s55s")
+region = Rect2(192, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qr31p"]
+atlas = ExtResource("1_0s55s")
+region = Rect2(240, 0, 48, 48)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mnj3q")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7umf4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_oyekq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m7ahd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hbfa8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qr31p")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 7.0
+}]
