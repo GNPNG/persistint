@@ -52,6 +52,11 @@ Tools, by exact name:
 - `ssh {build_host} {job}` for precomputes that would overload the laptop.
 - `{tool_manager} install`, `{tool_manager} exec -- {cmd}`, `{tool_manager} mcp` (its MCP server); `{fallback_installer} install {tool}`; `{process_manager} start|list|logs`.
 
+
+### 4.x Agent identities in the tracker (added 2026-10-24)
+
+Every agent sets `BEADS_ACTOR` (or passes `bd --actor`) so tickets, comments and audit rows name the session that wrote them. Base names are host plus runtime: `cc-win11` (Claude Code under Windows 11, the browser lead) and `cc-wsl2` (Claude Code under WSL2 on the laptop, the coordinator). A task-specific identity appends a hyphen and a role token (`cc-win11-testing`, `cc-win11-assets`, `cc-wsl2-deploy`, `cc-wsl2-render`); work is assigned to those names (`bd update <id> --assignee cc-win11-testing`) and each agent pulls its queue with `bd ready --assignee <name>`. Handoff between hosts is therefore an assignee change plus a comment, not a message. Decision recorded in the author's words: "append a '-' and a role token for that, and then in beads we can assign work that way."
+
 ## 5. Procedure
 
 1. **Take the standup note.** When the owner sends a note while work is running, read it as product-owner input. Put the text verbatim in a comment on the issue it concerns (create one if none), then act or schedule. Check: `bd show {id}` shows the owner's words before any paraphrase.
