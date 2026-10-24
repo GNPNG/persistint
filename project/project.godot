@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Persistint"
-config/version="0.1.0"
+config/version="0.2.0"
 run/main_scene="res://scenes/ui/studio_intro.tscn"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 boot_splash/bg_color=Color(0.992157, 0.964706, 0.890196, 1)
