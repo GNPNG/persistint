@@ -9,9 +9,10 @@ extends Node2D
 
 const ForbiddenKnowledge := preload("res://scripts/ruins/forbidden_knowledge.gd")
 const ZombieScene := preload("res://scenes/ruins/zombie_child.tscn")
+const RuinsDecor := preload("res://scripts/ruins/ruins_decor.gd")
 const FLAG := "clones_eaten"
 const SFX_GAP := 0.35  # seconds between the pounce's sound effects
-const GORE_SCALE := 0.75  # gore_*.png are drawn at two texels per world pixel (gen_clone_children.py)
+const GORE_SCALE := 0.1875  # gore_*.png are drawn at eight texels per world pixel (gen_clone_children.py)
 
 var gore: Node2D
 
@@ -20,6 +21,7 @@ func _ready() -> void:
 	gore = Node2D.new()
 	gore.name = "Gore"
 	gore.z_index = 2  # flying bits over everyone; the puddle goes under (below)
+	RuinsDecor.smooth(gore)
 	add_child(gore)
 	if DisplayServer.get_name() != "headless":
 		_schedule()
@@ -201,5 +203,5 @@ func _burst(spot: Vector2, texture: Texture2D, amount: int, color: Color, ramp: 
 
 
 func _tex(name_: String) -> Texture2D:
-	var path := "res://assets/canon/%s.png" % name_
+	var path := "res://assets/ruins/%s.png" % name_
 	return load(path) if ResourceLoader.exists(path) else null

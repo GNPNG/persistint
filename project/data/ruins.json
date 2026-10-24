@@ -1,6 +1,6 @@
 {
 	"_note": "Room titles, ambient lines, props and Forbidden Knowledge text are adapted from Story Structure: the repurposed bunker and clone lab (L88-95), the Great Biological Misreading (L70-78), banned counting and measuring (L126, L428). The bunker/clone-lab rooms, props and cat stickers are author-directed additions written in the sources' voice. The failed clone batches (and the polar bear batch that took) are author-directed additions: names are cast ids written as {cast_id} in text and filled from data/cast.json; spoken clone lines come from data/quotes/*.json.",
-	"_props_note": "Room props: 'kind' is the texture id (project/assets/ruins/<kind>.png from tools/gen_ruins_art.py, or a canon cut project/assets/canon/<kind>.png); x, y are the prop's feet (bottom centre) in world pixels; 'place' is 'wall' (hung on the wall band, behind everyone) or 'floor' (painted flat on the floor), otherwise it stands and sorts by its feet; 'text' is what the player reads on hovering it. 'floor' and 'wall' name the room's tiles in assets/ruins/ruins_tiles.png (scripts/ruins/ruins_decor.gd).",
+	"_props_note": "Room props: 'kind' is the texture id (project/assets/ruins/<kind>.png from tools/gen_ruins_art.py, or a canon cut project/assets/canon/<kind>.png); x, y are the prop's feet (bottom centre) in world pixels; 'place' is 'wall' (hung on the wall band, behind everyone) or 'floor' (painted flat on the floor), otherwise it stands and sorts by its feet; 'text' is what the player reads on hovering it. 'h' (optional) is the world height a canon cut is shown at (canon cuts keep the sheet's resolution; scripts/ruins/ruins_decor.gd CANON_HEIGHT has the defaults). 'floor' and 'wall' name the room's tiles in assets/ruins/ruins_tiles.png (scripts/ruins/ruins_decor.gd).",
 	"rooms": {
 		"wreck": {
 			"scene": "res://scenes/ruins/ruins_wreck.tscn",
@@ -593,13 +593,13 @@
 					"kind": "ruins_tank",
 					"x": 300,
 					"y": 382,
-					"text": "tank"
+					"text": ""
 				},
 				{
 					"kind": "ruins_tank",
 					"x": 390,
 					"y": 382,
-					"text": "tank"
+					"text": ""
 				},
 				{
 					"kind": "ruins_puddle",
@@ -755,7 +755,7 @@
 			"room": "core",
 			"title": "A Wall Calendar",
 			"text": "Squares all the same size, none of them red. Days were counted before blood was, and they did not drift.",
-			"icon": "icon_calendar"
+			"icon": "prop_calendar"
 		},
 		{
 			"id": "fk_bunker_1",
