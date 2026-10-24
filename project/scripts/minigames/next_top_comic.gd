@@ -16,6 +16,15 @@ const DIALOGUE_PATH := "res://dialogue/next_top_comic.dialogue"
 const GAME_ID := "next_top_comic"
 const MAX_SLOTS := 40  # response slots in the .dialogue file
 const Flashbacks := preload("res://scripts/chapters/flashbacks.gd")
+## Who is on stage (stand-in figures from tools/gen_stage_hosts.py, named by their nameplates):
+## the emcee stage left, the player at the mic, the host stage right; feet and height in screen px.
+const EMCEE_ART := "res://assets/ui/stage/host_emcee.png"
+const HOST_ART := "res://assets/ui/stage/host_comic.png"
+const EMCEE_SPOT := Vector3(112, 262, 110)
+const PLAYER_SPOT := Vector3(366, 262, 104)
+const HOST_SPOT := Vector3(530, 262, 110)
+## The front rows of the audience, drawn over the stage (tools/gen_ui_art.py comedy_audience).
+const AUDIENCE_ART := "res://assets/ui/backdrops/comedy_audience.png"
 
 var data: Dictionary = {}
 var emcee: Dictionary = {}
@@ -37,12 +46,30 @@ func _ready() -> void:
 			var entry := joke.duplicate()
 			entry["by"] = id
 			pool.append(entry)
+	_stage()
 	if autostart:
 		DialogueManager.dialogue_ended.connect(_on_dialogue_ended, CONNECT_ONE_SHOT)
 		var balloon := DialogueManager.show_dialogue_balloon(load(DIALOGUE_PATH), "start", [self])
 		# The dialogue has fixed response slots; only the filled ones are shown.
 		for menu in balloon.find_children("*", "DialogueResponsesMenu", true, false):
 			menu.hide_failed_responses = true
+
+
+func _stage() -> void:
+	var spots := [[StageFigure.host(EMCEE_ART, emcee.get("emcee", "")), EMCEE_SPOT],
+		[StageFigure.player_doll(StageFigure.current_outfit()), PLAYER_SPOT],
+		[StageFigure.host(HOST_ART, data.get("host", "")), HOST_SPOT]]
+	for pair: Array in spots:
+		add_child(pair[0])
+		pair[0].place(pair[1].x, pair[1].y, pair[1].z)
+	var crowd := TextureRect.new()
+	crowd.name = "Audience"
+	crowd.texture = load(AUDIENCE_ART)
+	crowd.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	crowd.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	crowd.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	crowd.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(crowd)
 
 
 func host_name() -> String:

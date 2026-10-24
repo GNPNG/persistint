@@ -8,6 +8,11 @@ extends Control
 const DATA_PATH := "res://data/interview.json"
 const DIALOGUE_PATH := "res://dialogue/interview.dialogue"
 const Chapters := preload("res://scripts/chapters/chapters.gd")
+## Who sits on the set: the host's stand-in figure (tools/gen_stage_hosts.py) by the left
+## armchair and the player, the guest, by the right one; feet and height in screen px.
+const HOST_ART := "res://assets/ui/stage/host_talk.png"
+const HOST_SPOT := Vector3(196, 262, 112)
+const GUEST_SPOT := Vector3(444, 262, 104)
 
 var data: Dictionary = {}
 var autostart := true
@@ -18,12 +23,22 @@ var chosen: Array = []
 
 func _ready() -> void:
 	data = _load(DATA_PATH)
+	_stage()
 	if autostart:
 		DialogueManager.dialogue_ended.connect(_on_dialogue_ended, CONNECT_ONE_SHOT)
 		var balloon := DialogueManager.show_dialogue_balloon(load(DIALOGUE_PATH), "start", [self])
 		# The dialogue has fixed answer slots; only the ones this question fills are shown.
 		for menu in balloon.find_children("*", "DialogueResponsesMenu", true, false):
 			menu.hide_failed_responses = true
+
+
+func _stage() -> void:
+	var host := StageFigure.host(HOST_ART, data.get("host", ""))
+	add_child(host)
+	host.place(HOST_SPOT.x, HOST_SPOT.y, HOST_SPOT.z)
+	var guest := StageFigure.player_doll(StageFigure.current_outfit())
+	add_child(guest)
+	guest.place(GUEST_SPOT.x, GUEST_SPOT.y, GUEST_SPOT.z)
 
 
 func host_name() -> String:

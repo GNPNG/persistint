@@ -5,7 +5,8 @@ chapter card.
 Usage: python3 -I tools/gen_ui_art.py   (run after tools/cut_island_props.py and
                                         tools/gen_village_props.py: it reads their art)
 
-Inputs:  project/assets/canon/{prop_ship,prop_bunker,prop_pillar_orb,
+Inputs:  project/assets/canon/{npc_mother_back,npc_priestess_back,npc_initiate_back,
+         npc_barren_back,prop_ship,prop_bunker,prop_pillar_orb,
          deco_tree_a,deco_tree_b,deco_tree_c,deco_flowers,deco_heart,deco_sparkle}.png,
          project/assets/island/temple_pavilion.png (the striped gold-domed temple on the title)
 Outputs (all static, no animation frames):
@@ -15,7 +16,10 @@ Outputs (all static, no animation frames):
                                         comedy_stage (Next Top Comic), runway (Hottest of the HOT),
                                         ship_cabin (get-ready chains), fog_sea (The Landing),
                                         temple_altar (ritual puzzle); ship_cutaway (2400x600) is the
-                                        Landing's station map
+                                        Landing's station map; comedy_audience is a transparent
+                                        overlay (the front rows, over the performers)
+                                        Audiences are the canon caste women's back views
+                                        (npc_<caste>_back.png), cut at the shoulders
   project/assets/ui/title/title_screen_plain.png              (2560x1440)
       stand-in for prompts/image/ui/title/title_screen_plain.md (the main menu background)
   project/assets/ui/chapter_cards/chapter_card_before_the_wreck.png  (2560x1440)
@@ -349,18 +353,48 @@ def spotlight(im, x, top, bottom, spread, alpha=60):
     im.alpha_composite(down(lay, W, H))
 
 
-def audience(d, y, rng, count, cols=("#7a5a8a", "#8a6a9a", "#6a5080")):
-    for i in range(count):
-        x = (i + .5) * W / count + rng.uniform(-6, 6)
-        c = rng.choice(cols)
-        r = rng.uniform(13, 16)
-        yy = y + rng.uniform(-3, 4)
-        ell(d, x - r, yy - r, x + r, yy + r * 2.2, c)            # shoulders + head silhouette
-        ell(d, x - r * .7, yy - r * 1.9, x + r * .7, yy - r * .4, c)
-        if rng.random() < .5:                                      # a bun or a bow
-            ell(d, x - 4, yy - r * 2.3, x + 4, yy - r * 1.7, c)
-        else:
-            heart(d, x + r * .5, yy - r * 1.6, 3, PINK, None, shine=False)
+AUDIENCE = ("npc_mother_back", "npc_priestess_back", "npc_initiate_back", "npc_barren_back")
+
+
+def audience_member(name, height, seated=0.56):
+    """A canon caste back view (the women of the caste sheet, seen from behind) cut at the
+    shoulders: the top `seated` of the figure, `height` units tall, seated in a row."""
+    im = Image.open(CANON / f"{name}.png").convert("RGBA")
+    im = im.crop((0, 0, im.width, round(im.height * seated)))
+    h = max(1, round(height * O))
+    return im.resize((max(1, round(im.width * h / im.height)), h), Image.LANCZOS)
+
+
+def audience(out, xs, base_y, height, rng, flashes=False, seat=("#c0587e", "#a84a6c")):
+    """A row of audience members (canon back views) on an output image, sitting in theatre
+    seats whose backs (rounded, velvet, warm-brown outline) hide where the figures are cut;
+    the figures cut on base_y (units), one at each x; optional camera-flash sparkles."""
+    d = ImageDraw.Draw(out)
+    for x in xs:
+        who = audience_member(rng.choice(AUDIENCE), height * rng.uniform(.94, 1.04))
+        if rng.random() < .5:
+            who = who.transpose(Image.FLIP_LEFT_RIGHT)
+        x += rng.uniform(-3, 3)
+        stamp(out, who, x, base_y)
+        w, top, bottom = who.width / O * .86, base_y - height * .2, base_y + height * .14
+        d.rounded_rectangle([(x - w / 2) * O, top * O, (x + w / 2) * O, bottom * O], radius=w * .3 * O,
+                            fill=seat[0], outline=INK, width=max(1, round(O * .8)))
+        d.rounded_rectangle([(x - w / 2 + 3) * O, (top + 3) * O, (x + w / 2 - 3) * O, (top + 7) * O],
+                            radius=2 * O, fill=seat[1])
+        if flashes and rng.random() < .3:
+            fx, fy, r = (x + rng.uniform(-8, 8)) * O, (base_y - height - 6) * O, rng.uniform(4, 7) * O
+            pts = [(0, -r), (r * .28, -r * .28), (r, 0), (r * .28, r * .28), (0, r), (-r * .28, r * .28), (-r, 0), (-r * .28, -r * .28)]
+            d.polygon([(fx + a, fy + b) for a, b in pts], fill=WHITE)
+
+
+def comedy_audience():
+    """The comedy club's front rows as an overlay drawn over the performers (the women in the
+    audience, from behind), its heads above the dialogue box's top edge (y 278)."""
+    rng = random.Random(29)
+    out = Image.new("RGBA", (W * O, H * O))
+    audience(out, [40 + i * 70 for i in range(9)], 300, 52, rng)
+    audience(out, [75 + i * 70 for i in range(8)], 318, 56, rng)
+    return out
 
 
 def talk_show_set():
@@ -466,7 +500,6 @@ def comedy_stage():
     for sx in (270, 370):
         sparkle(d, sx, 50, 8, None, SPARK)
     curtains(d, "#e86a92", "#d05a80", 80)
-    audience(d, 300, rng, 9)
     out = down(im, W, H)
     spotlight(out, 320, 0, 236, 90, 40)
     return out
@@ -491,20 +524,17 @@ def runway():
         for side in (-1, 1):
             x = 320 + side * (60 + t * 140)
             ell(d, x - 2 - t * 2, y - 2 - t * 2, x + 2 + t * 2, y + 2 + t * 2, SPARK, SPARK_EDGE, .5)
-    # audience both sides, with camera flashes
-    for side in (-1, 1):
-        for row in range(3):
-            for j in range(4):
-                x = 320 + side * (190 + j * 34 + row * 10)
-                y = 200 + row * 46
-                c = ["#4a3a5e", "#5a4a6e", "#6a5080"][row]
-                ell(d, x - 14, y - 6, x + 14, y + 30, c)
-                ell(d, x - 10, y - 28, x + 10, y - 6, c)
-                if rng.random() < .35:
-                    sparkle(d, x + rng.uniform(-10, 10), y - 30, rng.uniform(5, 9), WHITE, None)
     curtains(d, "#b07ac0", "#9a68aa", 56)
     out = down(im, W, H)
     spotlight(out, 320, 0, 300, 70, 70)
+    # the audience either side of the runway (canon back views), rows rising away from the
+    # front, all above the dialogue box (y 278), with camera flashes
+    for row, (base, height) in enumerate(((204, 34), (240, 40), (276, 46))):
+        n = 3 + row
+        for side in (-1, 1):
+            xs = [320 + side * (150 + row * 18 + j * (36 + row * 4)) for j in range(n)]
+            audience(out, [x for x in xs if 64 < x < W - 64], base, height, rng, flashes=True,
+                     seat=("#8a5a9a", "#74488a"))
     return out
 
 
@@ -774,6 +804,7 @@ if __name__ == "__main__":
     use_scale(BACKDROP_SCALE)
     save(talk_show_set(), "ui/backdrops/talk_show_set.png")
     save(comedy_stage(), "ui/backdrops/comedy_stage.png")
+    save(comedy_audience(), "ui/backdrops/comedy_audience.png")
     save(runway(), "ui/backdrops/runway.png")
     save(ship_cabin(), "ui/backdrops/ship_cabin.png")
     save(ship_cutaway(), "ui/backdrops/ship_cutaway.png")
