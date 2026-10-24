@@ -5,7 +5,7 @@ extends SceneTree
 ## [filter] is an optional comma-separated list of shot names, or one substring ("ruins");
 ## only matching shots are taken; without it every shot is taken.
 ## The run never touches the player's save: WorldState is pointed at <out_dir>/save.json and
-## seeded with a fixed state (SEED) so every run shoots the same thing.
+## seeded with a fixed state (SEED) so every run shoots the same thing. Music is off.
 
 ## Island chapter, two pieces recovered (the Landing flashback unlocked and active for its
 ## card), one tactic named, so the journal, chapter card and flashback card all have content.
@@ -73,6 +73,11 @@ func _run() -> void:
 	ws.flags = SEED.duplicate(true)
 	ws.save()
 	root.get_node("GameClock").restore()
+	# Shots are silent: no music crossfades between scenes (with the dummy audio driver a
+	# crossfade's stream swap can stall the run).
+	var music := root.get_node("Music")
+	music.stop()
+	music.data = {}
 	await _wait(5)
 	for shot: Array in SHOTS:
 		if filter != "" and not (shot[0] in filter.split(",") or (not "," in filter and filter in shot[0])):
