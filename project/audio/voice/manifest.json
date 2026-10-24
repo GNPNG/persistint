@@ -1003,9 +1003,9 @@
   },
   {
     "speaker": "Priestess Betty",
-    "text": "Welcome, initiate. The Queen Mothers see all who wish to be seen.",
-    "key": "54aa3c6592680fff9443c2a0f659d55b",
-    "clip": "res://audio/voice/54aa3c6592680fff9443c2a0f659d55b.wav"
+    "text": "Welcome, initiate. The Queen Mother sees all who wish to be seen.",
+    "key": "1c62d248fb4873b43437771c1cb98163",
+    "clip": "res://audio/voice/1c62d248fb4873b43437771c1cb98163.wav"
   },
   {
     "speaker": "Priestess Betty",
