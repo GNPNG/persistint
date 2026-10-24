@@ -58,6 +58,7 @@ PUBLIC="$SITE/public"
 CONFIG="$SITE/site.config.json"
 MAX_ASSET_BYTES=26214400          # Cloudflare Workers static assets: 25 MiB per file
 MAX_R2_PUT_BYTES=314572800        # wrangler r2 object put: 300 MiB per object
+PART_BYTES=$((24 * 1024 * 1024))  # oversized_mode gzip: part size for a file whose gzip is still over 25 MiB
 COMPAT_DATE="2026-10-01"          # pinned so wrangler.toml stays deterministic
 WRANGLER=(npx -y wrangler@4)
 export WRANGLER_SEND_METRICS=false
@@ -175,6 +176,9 @@ else
     echo "project/.godot missing: importing first"
     godot --headless --path project --import >"$TMP/import.log" 2>&1 || { tail -n 40 "$TMP/import.log"; die "godot --import failed"; }
   fi
+  # The main menu shows this build id next to the version (res://build.json, gitignored; the Web
+  # preset's include_filter "*.json" packs it).
+  printf '{"build": "%s"}\n' "$BUILD_ID" > project/build.json
   godot --headless --path project --export-release Web "$EXPORT/index.html" >"$TMP/export.log" 2>&1 \
     || { tail -n 40 "$TMP/export.log"; die "godot export failed"; }
   cp "$TMP/project.godot.orig" project/project.godot
@@ -198,8 +202,13 @@ else
     bytes="$(stat -c %s "$p")"
     if is_oversized "$f" && [[ "$OVERSIZED_MODE" == gzip ]]; then
       gz="$(gzip -9 -n -c "$p" | wc -c)"
-      where="static $f.gz ($(human "$gz") gzip)"
-      ((gz <= MAX_ASSET_BYTES)) || { where="GZIP STILL OVER LIMIT ($gz B)"; over=1; }
+      if ((gz <= MAX_ASSET_BYTES)); then
+        where="static $f.gz ($(human "$gz") gzip)"
+      else
+        # Already-compressed content (the .pck with its MP3s) doesn't shrink: ship it in parts the
+        # worker joins back into one response.
+        where="static parts $f.partNN ($(( (bytes + PART_BYTES - 1) / PART_BYTES )) x <= $(human "$PART_BYTES"); gzip would be $(human "$gz"))"
+      fi
     elif is_oversized "$f"; then
       where="R2 $BUILD_BUCKET/$BUILD_ID/$f"
       ((bytes <= MAX_R2_PUT_BYTES)) || { where="TOO BIG FOR r2 object put"; over=1; }
@@ -226,7 +235,21 @@ else
   while IFS= read -r -d '' p; do
     f="${p#"$EXPORT"/}"
     if is_oversized "$f"; then
-      [[ "$OVERSIZED_MODE" == gzip ]] && gzip -9 -n -c "$p" >"$PLAY/$BUILD_ID/$f.gz"
+      if [[ "$OVERSIZED_MODE" == gzip ]]; then
+        gzip -9 -n -c "$p" >"$PLAY/$BUILD_ID/$f.gz"
+        if (($(stat -c %s "$PLAY/$BUILD_ID/$f.gz") > MAX_ASSET_BYTES)); then
+          rm -f "$PLAY/$BUILD_ID/$f.gz"
+          split -b "$PART_BYTES" -d -a 2 "$p" "$PLAY/$BUILD_ID/$f.part"
+          python3 -I - "$PLAY/$BUILD_ID" "$f" "$(stat -c %s "$p")" <<'PY2'
+import json, os, sys
+d, name, size = sys.argv[1], sys.argv[2], int(sys.argv[3])
+parts = sorted(x for x in os.listdir(d) if x.startswith(name + ".part") and x[len(name) + 5:].isdigit())
+assert sum(os.path.getsize(os.path.join(d, x)) for x in parts) == size, "parts do not add up"
+with open(os.path.join(d, name + ".parts.json"), "w") as fh:
+    json.dump({"size": size, "parts": parts}, fh)
+PY2
+        fi
+      fi
       continue
     fi
     mkdir -p "$PLAY/$BUILD_ID/$(dirname "$f")"
@@ -375,27 +398,63 @@ for f in "${OVERSIZED[@]}"; do NAMES_RE+="${NAMES_RE:+|}${f//./\\.}"; done
 const TYPES = { wasm: "application/wasm", pck: "application/octet-stream", js: "text/javascript" };
 const OVERSIZED = /^\/play\/([\w.-]+)\/($NAMES_RE)\$/;
 
-// oversized_mode "gzip": the file ships as static <name>.gz; it is served with
-// Content-Encoding: gzip (encodeBody "manual" passes the bytes through) and the browser
-// inflates it.
+// oversized_mode "gzip": a file ships either as static <name>.gz, served with
+// Content-Encoding: gzip (encodeBody "manual" passes the bytes through, the browser inflates
+// it), or, when even its gzip is over the 25 MiB static-file limit (the .pck: its MP3s don't
+// compress), as static parts <name>.part00, .part01, ... listed in <name>.parts.json
+// ({"size": bytes, "parts": [names]}), streamed back to back as one response of that length.
+// Pages answers a missing file with the HTML landing page, so each lookup checks the type.
+const isHtml = (r) => (r.headers.get("content-type") || "").includes("text/html");
+
+function baseHeaders(name) {
+  const h = new Headers();
+  h.set("content-type", TYPES[name.split(".").pop()] || "application/octet-stream");
+  h.set("cache-control", "public, max-age=31536000, immutable");
+  h.set("x-content-type-options", "nosniff");
+  h.set("strict-transport-security", "max-age=31536000");
+  return h;
+}
+
 export default {
-  async fetch(req, env) {
+  async fetch(req, env, ctx) {
     const url = new URL(req.url);
     const m = url.pathname.match(OVERSIZED);
     if (m) {
       if (req.method !== "GET" && req.method !== "HEAD") {
         return new Response("Method not allowed", { status: 405, headers: { allow: "GET, HEAD" } });
       }
-      const gz = await env.ASSETS.fetch(new Request(new URL(url.pathname + ".gz", url)));
-      if (!gz.ok) return new Response("Not found", { status: 404 });
-      const h = new Headers();
-      h.set("content-type", TYPES[m[2].split(".").pop()] || "application/octet-stream");
+      const asset = (suffix) => env.ASSETS.fetch(new Request(new URL(url.pathname + suffix, url)));
+      const man = await asset(".parts.json");
+      let info = null;
+      if (man.ok && !isHtml(man)) {
+        try { info = await man.json(); } catch { info = null; }
+      }
+      if (info && Number.isSafeInteger(info.size) && Array.isArray(info.parts) && info.parts.length) {
+        const h = baseHeaders(m[2]);
+        h.set("content-length", String(info.size));
+        if (req.method === "HEAD") return new Response(null, { headers: h });
+        const { readable, writable } = new FixedLengthStream(info.size);
+        const dir = url.pathname.slice(0, url.pathname.lastIndexOf("/") + 1);
+        ctx.waitUntil((async () => {
+          try {
+            for (const part of info.parts) {
+              const r = await env.ASSETS.fetch(new Request(new URL(dir + part, url)));
+              if (!r.ok || isHtml(r)) throw new Error("missing part " + part);
+              await r.body.pipeTo(writable, { preventClose: true });
+            }
+            await writable.close();
+          } catch (e) {
+            await writable.abort(e);
+          }
+        })());
+        return new Response(readable, { headers: h });
+      }
+      const gz = await asset(".gz");
+      if (!gz.ok || isHtml(gz)) return new Response("Not found", { status: 404 });
+      const h = baseHeaders(m[2]);
       h.set("content-encoding", "gzip");
-      h.set("cache-control", "public, max-age=31536000, immutable");
       const etag = gz.headers.get("etag");
       if (etag) h.set("etag", etag);
-      h.set("x-content-type-options", "nosniff");
-      h.set("strict-transport-security", "max-age=31536000");
       return new Response(req.method === "HEAD" ? null : gz.body, { headers: h, encodeBody: "manual" });
     }
     return env.ASSETS.fetch(req);
@@ -440,7 +499,7 @@ EOF
   fi
 } >"$SITE/src/worker.js"
 if [[ "$OVERSIZED_MODE" == gzip ]]; then
-  echo "worker routes: ${OVERSIZED[*]:-(none)} -> static .gz"
+  echo "worker routes: ${OVERSIZED[*]:-(none)} -> static .gz, or static parts when the gzip is over 25 MiB"
 else
   echo "worker routes: ${OVERSIZED[*]:-(none)} -> R2 ${BUILD_BUCKET:-(none)}"
 fi

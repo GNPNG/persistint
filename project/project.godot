@@ -10,10 +10,9 @@ config_version=5
 
 [application]
 
-config/version="0.1.0"
-
 config/name="Persistint"
-run/main_scene="res://scenes/ui/main_menu.tscn"
+config/version="0.1.0"
+run/main_scene="res://scenes/ui/studio_intro.tscn"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 boot_splash/bg_color=Color(0.992157, 0.964706, 0.890196, 1)
 boot_splash/stretch_mode=0
@@ -47,7 +46,6 @@ window/size/viewport_height=360
 window/size/window_width_override=1280
 window/size/window_height_override=720
 window/stretch/mode="canvas_items"
-window/stretch/aspect="keep"
 
 [editor_plugins]
 

@@ -11,8 +11,8 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { validateSelectors } from '../lib/config.mjs';
 import { findChrome, launchAndConnect } from '../lib/browser.mjs';
-import { Session, DEBUG_DIR } from '../lib/engine.mjs';
-import { sniffExt } from '../lib/media.mjs';
+import { Session, DEBUG_DIR, capture, finish, resultInfo } from '../lib/engine.mjs';
+import { sniffExt, imageSize, checkImage } from '../lib/media.mjs';
 import image from '../drivers/image.mjs';
 import video from '../drivers/video.mjs';
 import music from '../drivers/music.mjs';
@@ -49,7 +49,7 @@ before(async () => {
 
 after(async () => {
   if (b) await b.close();
-  fs.rmSync(tmp, { recursive: true, force: true });
+  fs.rmSync(tmp, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 });
 });
 
 const task = (id, kind, ext) => ({
@@ -81,7 +81,10 @@ test('video: Share > Download video menu through CDP download events', { skip: !
   const r = await video.render(session, cfg.surfaces.fake_video, t);
   assert.equal(r.route, 'download');
   assert.equal(sniffExt(fs.readFileSync(t.drop_abs)), '.mp4');
-  assert.deepEqual(fs.readdirSync(path.join(tmp, 'downloads')), [], 'temp download was moved out');
+  // Only this session's downloads are checked: the folder can briefly hold Chrome temp files of
+  // other downloads (seen while another Chrome ran on the machine).
+  const left = fs.readdirSync(path.join(tmp, 'downloads'));
+  for (const guid of session.downloads.keys()) assert.ok(!left.includes(guid) && !left.includes(`${guid}.crdownload`), `temp download ${guid} was moved out`);
 });
 
 test('music: in-page fetch of the blob: src', { skip: !chromeOk && skipReason, timeout: 180_000 }, async () => {
@@ -137,4 +140,79 @@ test('a usage-limit notice fails at wait and asks the run to stop', { skip: !chr
     if (e.debugDir) fs.rmSync(e.debugDir, { recursive: true, force: true });
     return true;
   });
+});
+
+// ---------------------------------------------------------------- Google's check page
+
+test('check page mid-generation (reCAPTCHA iframe) stops at wait as "blocked"', { skip: !chromeOk && skipReason, timeout: 60_000 }, async () => {
+  const t = { ...task('smoke_captcha', 'image', '.png'), prompt: 'CAPTCHA this one.' };
+  await assert.rejects(image.render(session, cfg.surfaces.fake_image, t), (e) => {
+    assert.equal(e.step, 'wait');
+    assert.equal(e.blocked, true);
+    assert.equal(e.abortRun, true);
+    assert.match(e.message, /check page.*inspect\.mjs --keep 300/);
+    assert.equal(classifyOutcome(e, phrases), 'blocked', 'tracker outcome');
+    if (e.debugDir) fs.rmSync(e.debugDir, { recursive: true, force: true });
+    return true;
+  });
+  assert.ok(!fs.existsSync(t.drop_abs));
+});
+
+test('download redirected to www.google.com/sorry fails at once as "blocked", not after downloadMs', { skip: !chromeOk && skipReason, timeout: 60_000 }, async () => {
+  const t = { ...task('smoke_sorry', 'image', '.png'), prompt: 'SORRY this one.' };
+  let t0;
+  const surface = { ...cfg.surfaces.fake_image, capture: ['download'] };
+  await assert.rejects((async () => { t0 = Date.now(); return image.render(session, surface, t); })(), (e) => {
+    assert.equal(e.step, 'capture');
+    assert.equal(e.blocked, true);
+    assert.equal(e.abortRun, true);
+    assert.match(e.message, /google\.com\/sorry/);
+    assert.equal(classifyOutcome(e, phrases), 'blocked');
+    if (e.debugDir) fs.rmSync(e.debugDir, { recursive: true, force: true });
+    return true;
+  });
+  assert.ok(Date.now() - t0 < 12_000, `took ${Date.now() - t0} ms (downloadMs is 15 s; generation 1.5 s)`);
+  assert.ok(!fs.existsSync(t.drop_abs));
+});
+
+// ---------------------------------------------------------------- the live image result DOM
+
+test('gemini_image (real selectors.json) captures from the live result DOM: hover, Download full size, verify, PNG', { skip: !chromeOk && skipReason, timeout: 120_000 }, async () => {
+  const real = loadSelectors().surfaces.gemini_image;
+  await session.newPage();
+  await session.goto(pathToFileURL(path.join(HERE, 'fixtures/gemini_image_result.html')).href);
+  // Stand in for the app: a loaded preview in the <img>, and a full-size JPEG (16:9, noisy so it
+  // is well over 20 KB) saved as a browser download when the real download button is clicked.
+  await session.page.evaluate(async () => {
+    const draw = (w, h) => {
+      const c = document.createElement('canvas'); c.width = w; c.height = h;
+      const g = c.getContext('2d'); const d = g.createImageData(w, h);
+      for (let i = 0; i < d.data.length; i += 4) { d.data[i] = (i * 7) % 255; d.data[i + 1] = Math.random() * 255; d.data[i + 2] = 180; d.data[i + 3] = 255; }
+      g.putImageData(d, 0, 0); return c;
+    };
+    const img = document.querySelector('generated-image img.image');
+    img.src = draw(688, 384).toDataURL('image/png');
+    await img.decode();
+    const full = await new Promise((r) => draw(1376, 768).toBlob(r, 'image/jpeg', 0.92));
+    window.__clicks = 0;
+    document.querySelector("download-generated-image-button button[aria-label='Download full size image']").addEventListener('click', () => {
+      window.__clicks++;
+      const a = document.createElement('a'); a.href = URL.createObjectURL(full); a.download = 'Gemini_Generated_Image.jpeg'; document.body.appendChild(a); a.click(); a.remove();
+    });
+  });
+  const surface = { ...real, timeouts: { ...real.timeouts, stepMs: 5000, downloadMs: 20_000 } };
+  const info = await resultInfo(session.page, real.steps.result, real.resultMinSize);
+  assert.equal(info.count, 1, 'the generated <img> is the result (avatars and icons are not)');
+  assert.equal(info.tag, 'img');
+  const got = await capture(session, surface, { vars: { aspect: '16:9' }, stepMs: 5000 });
+  assert.equal(got.route, 'download');
+  assert.equal(await session.page.evaluate(() => window.__clicks), 1, 'the Download full size button was clicked once');
+  assert.equal(sniffExt(got.buf), '.jpg');
+  const t = { ...task('smoke_gemini_dom', 'image', '.png'), aspect: '16:9' };
+  const r = await finish(session, t, got, surface);
+  const buf = fs.readFileSync(t.drop_abs);
+  assert.equal(sniffExt(buf), '.png', 're-encoded to PNG');
+  assert.deepEqual(imageSize(buf), { w: 1376, h: 768, ext: '.png' });
+  assert.deepEqual(checkImage(buf, '16:9'), [], 'passes the default image checks (>= 20 KB, >= 512 px, ratio)');
+  assert.equal(r.route, 'download');
 });

@@ -15,6 +15,7 @@
         "input": [".ql-editor[contenteditable='true']"],
         "submit": [{ "action": "click", "selectors": ["::-p-aria(Launch rocket)", "::-p-aria(Send message)"] }],
         "busy": ["::-p-aria(Stop response)"],
+        "blocked": ["iframe[title='reCAPTCHA']"],
         "result": ["model-response img"],
         "download": [
           { "action": "hover", "target": "result", "afterMs": 200 },

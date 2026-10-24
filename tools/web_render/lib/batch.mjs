@@ -6,6 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {
   StepError, waitReady, runSteps, insertText, resultInfo, waitForResult, capture, finish,
+  blockedError, markIfBlocked, checkPageShowing,
 } from './engine.mjs';
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -43,14 +44,22 @@ async function submitOne(session, surface, task, prompt) {
     await runSteps(session, st.options, 'options', ctx);
     await insertText(session, st.input, prompt, ctx);
   }
+  const sorryAtSend = session.sorry.length;
   await runSteps(session, st.submit, 'submit', ctx);
   // Author, 2026-10-24: stay on this chat until the generation has really started (Gemini's Stop
   // button shows, or its reply is on the page) before recording it and moving on. Leaving earlier
   // can abandon the send, and the chat id is only final once the reply has begun.
   const deadline = Date.now() + 180_000;
   while (Date.now() < deadline) {
+    // Google's check page instead of a generation: stop now, not after the 3 min.
+    const check = await checkPageShowing(session.page, st.blocked);
+    if (check) throw blockedError('submit', check);
     const url = session.page.url();
     const started = await session.page.$('model-response') || await anyVisibleSel(session.page, st.busy);
+    if (!started && session.sorry.length > sorryAtSend) {
+      // The send's request was redirected to the check page, so no generation will start.
+      throw blockedError('submit', `the send was redirected to www.google.com/sorry (${session.sorry.length - sorryAtSend}x)`);
+    }
     if (CHAT_RE.test(url) && started && await session.page.$('user-query')) {
       await sleep(5000);
       return session.page.url().split('?')[0];
@@ -181,6 +190,7 @@ export async function submitAll(session, { tasks, surfaceOf, promptOf, file, gap
         }
       }
     } catch (e) {
+      markIfBlocked(session, e);
       const dir = await session.dumpDebug(t.id, e).catch(() => null);
       log(`  !! ${t.id}: ${e.message.split('\n')[0]}${dir ? ` (debug: ${dir})` : ''}`);
       if (e.abortRun) throw e;
@@ -221,7 +231,8 @@ export async function harvestAll(session, { tasks, surfaceOf, file, log = consol
       const st = surface.steps;
       if ((await resultInfo(session.page, st.result, surface.resultMinSize ?? 0)).count === 0) {
         // Still generating (or the reply is still loading): wait a little, then move on.
-        await waitForResult(session, surface, 0, 60_000, 0).catch(() => {});
+        // A check page or a usage-limit notice still stops the run; only the wait itself is let go.
+        await waitForResult(session, surface, 0, 60_000, 0).catch((e) => { if (e.abortRun) throw e; });
       }
       if ((await resultInfo(session.page, st.result, surface.resultMinSize ?? 0)).count === 0) {
         log('    not ready yet (still generating, or no result in this chat)');
@@ -242,6 +253,7 @@ export async function harvestAll(session, { tasks, surfaceOf, file, log = consol
         log(`  !! ${id}: downloaded, but the chat was not deleted: ${e.message.split('\n')[0]}`);
       }
     } catch (e) {
+      markIfBlocked(session, e);
       log(`  !! ${id}: ${e.message.split('\n')[0]}`);
       left.push(id);
       if (e.abortRun) throw e;

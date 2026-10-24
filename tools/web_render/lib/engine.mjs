@@ -15,6 +15,23 @@ export class StepError extends Error {
   constructor(step, message) { super(`[${step}] ${message}`); this.step = step; }
 }
 
+/** Google's "unusual traffic" interstitial (www.google.com/sorry/...), as a page URL or an RPC redirect. */
+export const SORRY_RE = /^https:\/\/(www\.)?google\.[a-z.]+\/sorry\//i;
+const SORRY_IN_TEXT_RE = /https:\/\/(www\.)?google\.[a-z.]+\/sorry\//i;
+
+export const BLOCKED_HINT = 'Solve it by hand in the dedicated profile (node inspect.mjs --keep 300), then run again.';
+
+/**
+ * Google's check page needs a human: the error stops the whole run (abortRun) and is recorded as
+ * its own outcome "blocked" (lib/tracker.mjs), never as a quota, so the asset gets no cooldown.
+ */
+export function blockedError(step, what) {
+  const e = new StepError(step, `Google is showing a check page (${what}), e.g. "unusual traffic" with a reCAPTCHA. ${BLOCKED_HINT}`);
+  e.blocked = true;
+  e.abortRun = true;
+  return e;
+}
+
 // ------------------------------------------------------------------ session
 
 export class Session {
@@ -27,6 +44,7 @@ export class Session {
     this.seq = 0;
     this.page = null;
     this.console = [];
+    this.sorry = [];   // www.google.com/sorry/ hits on the current page (requests, redirects, console)
   }
 
   async init() {
@@ -52,7 +70,7 @@ export class Session {
     });
     this.cdp.on('Browser.downloadProgress', (e) => {
       const d = this.downloads.get(e.guid);
-      if (d) d.state = e.state;
+      if (d) { d.state = e.state; if (e.receivedBytes) d.bytes = e.receivedBytes; }
     });
   }
 
@@ -61,17 +79,38 @@ export class Session {
     // this session's tab, or the window's first tab, instead of opening a new tab per asset.
     if (this.settings.browserURL) {
       if (!this.page || this.page.isClosed()) this.page = (await this.browser.pages())[0] || await this.browser.newPage();
+      this.#watch(this.page);
       this.page.setDefaultTimeout(60_000);
       return this.page;
     }
     if (this.page && !this.page.isClosed()) await this.page.close().catch(() => {});
     const page = await this.browser.newPage();
-    this.console = [];
-    page.on('console', (m) => this.console.push(`[${m.type()}] ${m.text()}`));
-    page.on('pageerror', (e) => this.console.push(`[pageerror] ${e.message}`));
+    this.#watch(page);
     page.setDefaultTimeout(60_000);
     this.page = page;
     return page;
+  }
+
+  /**
+   * Start a fresh console log and check-page count for the next asset, and attach the listeners
+   * to `page` once (a reused attach-mode tab keeps the listeners it already has).
+   */
+  #watched = new WeakSet();
+  #watch(page) {
+    this.console = [];
+    this.sorry = [];
+    if (this.#watched.has(page)) return;
+    this.#watched.add(page);
+    page.on('console', (m) => {
+      const text = m.text();
+      this.console.push(`[${m.type()}] ${text}`);
+      // A fetch that Google redirected to its check page fails CORS and is only reported here.
+      if (SORRY_IN_TEXT_RE.test(text)) this.sorry.push('console');
+    });
+    page.on('pageerror', (e) => this.console.push(`[pageerror] ${e.message}`));
+    // The app's background RPCs (batchexecute) are 302'd to www.google.com/sorry/ while the page
+    // itself still looks fine; that is the first sign of the check page.
+    page.on('request', (r) => { try { if (SORRY_RE.test(r.url())) this.sorry.push('request'); } catch { /* ignore */ } });
   }
 
   async goto(url) {
@@ -82,16 +121,28 @@ export class Session {
     await this.page.goto(url, { waitUntil: 'domcontentloaded', timeout: 120_000 });
   }
 
-  /** Wait for a download that started after `sinceSeq` to complete; returns its bytes. */
-  async waitForDownload(sinceSeq, timeoutMs) {
+  /**
+   * Wait for a download that started after `sinceSeq` to complete; returns its bytes.
+   * `sorrySince`: the length of this.sorry when the download was asked for. If Google redirects a
+   * request to its check page after that and no download has begun, the download will never come
+   * (the app's full-size request was blocked), so this fails at once with a blocked error.
+   */
+  async waitForDownload(sinceSeq, timeoutMs, { sorrySince = null } = {}) {
     const deadline = Date.now() + timeoutMs;
     while (Date.now() < deadline) {
+      if (sorrySince !== null && this.sorry.length > sorrySince && ![...this.downloads.values()].some((d) => d.seq > sinceSeq)) {
+        throw blockedError('capture', 'the download request was redirected to www.google.com/sorry');
+      }
       for (const [guid, d] of this.downloads) {
         if (d.seq <= sinceSeq) continue;
         if (d.state === 'canceled') throw new Error(`download ${d.name} was canceled`);
         if (d.state === 'completed') {
           const file = path.join(this.localDownloadDir, guid);
-          for (let i = 0; i < 20 && !fs.existsSync(file); i++) await sleep(250);
+          // Chrome can report "completed" while the bytes are still in <guid>.crdownload and
+          // <guid> is an empty placeholder; wait for the rename (and the full size) first.
+          const size = () => { try { return fs.statSync(file).size; } catch { return -1; } };
+          const settled = () => size() >= 0 && !fs.existsSync(`${file}.crdownload`) && (!d.bytes || size() === d.bytes);
+          for (let i = 0; i < 40 && !settled(); i++) await sleep(250);
           const buf = fs.readFileSync(file);
           fs.rmSync(file, { force: true });
           return { buf, name: d.name, mime: null };
@@ -173,6 +224,28 @@ async function anyVisible(page, selectors) {
     for (const h of hs) if (await isVisible(h)) return sel;
   }
   return null;
+}
+
+/**
+ * Whatever failed (typically a download that never started, or a control that never appeared), if
+ * Google was redirecting this page's requests to its check page meanwhile, the session needs a
+ * human, not a retry of the asset: mark `e` blocked (and abortRun). Returns `e`.
+ */
+export function markIfBlocked(session, e) {
+  if (e && !e.blocked && session?.sorry?.length) {
+    e.blocked = true;
+    e.abortRun = true;
+    e.message = `${String(e.message).split('\n')[0]} -- while Google was redirecting this page's requests to its check page ` +
+      `(www.google.com/sorry, ${session.sorry.length}x). ${BLOCKED_HINT}`;
+  }
+  return e;
+}
+
+/** The check page is showing now: steps.blocked is visible, or the tab is on www.google.com/sorry. */
+export async function checkPageShowing(page, blockedSelectors) {
+  const sel = await anyVisible(page, blockedSelectors);
+  if (sel) return sel;
+  return SORRY_RE.test(page.url()) ? 'the page went to www.google.com/sorry' : null;
 }
 
 // ------------------------------------------------------------------ steps
@@ -324,6 +397,9 @@ export async function waitForResult(session, surface, baseline, timeoutMs, respB
   const t0 = Date.now();
   let lastLog = t0, prevSrc = null, stable = 0, quietSince = null;
   while (Date.now() - t0 < timeoutMs) {
+    const blockedSel = await anyVisible(page, st.blocked);
+    if (blockedSel) throw blockedError('wait', blockedSel);
+    if (SORRY_RE.test(page.url())) throw blockedError('wait', 'the page went to www.google.com/sorry');
     const info = await resultInfo(page, st.result, surface.resultMinSize ?? 0);
     const busy = await anyVisible(page, st.busy);
     if (info.count > baseline && info.ready && !busy) {
@@ -382,9 +458,10 @@ export async function capture(session, surface, ctx) {
     try {
       if (route === 'download') {
         const since = session.seq;
+        const sorrySince = session.sorry.length;
         const resultH = await resultHandle(session.page, surface.steps.result, surface.resultMinSize ?? 0);
         await runSteps(session, surface.steps.download, 'download', { ...ctx, resultHandle: resultH });
-        return { ...(await session.waitForDownload(since, surface.timeouts?.downloadMs ?? 180_000)), route };
+        return { ...(await session.waitForDownload(since, surface.timeouts?.downloadMs ?? 180_000, { sorrySince })), route };
       }
       if (route === 'src') {
         const info = await resultInfo(session.page, surface.steps.result, surface.resultMinSize ?? 0);
@@ -392,6 +469,7 @@ export async function capture(session, surface, ctx) {
         return { ...(await fetchSrc(session.page, info.src)), route };
       }
     } catch (e) {
+      if (e.blocked) throw e;   // no other route can get past Google's check page
       errs.push(`${route}: ${e.message.split('\n')[0]}`);
       session.log(`    (capture route ${route} failed: ${e.message.split('\n')[0]})`);
     }
@@ -463,12 +541,8 @@ export async function waitReady(session, surface, ctx = {}) {
   const deadline = Date.now() + (surface.timeouts?.readyMs ?? 60_000);
   do {
     const blockedSel = await anyVisible(page, st.blocked);
-    if (blockedSel) {
-      const e = new StepError('ready', `Google is showing a check page (${blockedSel}), e.g. "unusual traffic" with a reCAPTCHA. ` +
-        'Solve it by hand in the dedicated profile (node inspect.mjs --keep 300), then run again.');
-      e.abortRun = true;
-      throw e;
-    }
+    if (blockedSel) throw blockedError('ready', blockedSel);
+    if (SORRY_RE.test(page.url())) throw blockedError('ready', 'the page went to www.google.com/sorry');
     for (const sel of st.input) {
       let hs = [];
       try { hs = await page.$$(fill(sel, ctx.vars || {})); } catch { continue; }
@@ -525,6 +599,7 @@ export async function renderOnSurface(session, surface, task, prompt, opts = {})
     return await finish(session, task, got, surface);
   } catch (e) {
     if (!e.step) e.step = step;
+    markIfBlocked(session, e);
     const dir = await session.dumpDebug(task.id, e).catch(() => null);
     log(`  !! ${task.id}: failed at ${e.step}: ${e.message.split('\n')[0]}`);
     if (dir) log(`     debug saved to ${path.relative(process.cwd(), dir) || dir}`);
