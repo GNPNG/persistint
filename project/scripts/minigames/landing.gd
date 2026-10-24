@@ -155,9 +155,11 @@ func go_to(name: String) -> void:
 	station = name
 	for child in _controls.get_children():
 		child.queue_free()
+	var shown := {}
 	for c: Dictionary in data.get("commands", []):
-		if c["station"] != name:
+		if c["station"] != name or shown.has(c["control"]):
 			continue
+		shown[c["control"]] = true     # several commands share a control; one button for each
 		var b := Button.new()
 		b.text = c["control"]
 		b.custom_minimum_size = Vector2(72, 18)
