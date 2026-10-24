@@ -57,6 +57,13 @@ export class Session {
   }
 
   async newPage() {
+    // Author, 2026-10-24: keep the tab count down. In attach mode (the author's own window) reuse
+    // this session's tab, or the window's first tab, instead of opening a new tab per asset.
+    if (this.settings.browserURL) {
+      if (!this.page || this.page.isClosed()) this.page = (await this.browser.pages())[0] || await this.browser.newPage();
+      this.page.setDefaultTimeout(60_000);
+      return this.page;
+    }
     if (this.page && !this.page.isClosed()) await this.page.close().catch(() => {});
     const page = await this.browser.newPage();
     this.console = [];

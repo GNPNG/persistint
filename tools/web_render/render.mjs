@@ -121,7 +121,8 @@ async function runBatch(tasks) {
     }
     if (a.harvest) await harvestAll(session, { tasks: a.only ? tasks.filter((t) => a.only.split(',').map((x) => x.trim()).includes(t.id)) : tasks, surfaceOf, file });
   } finally {
-    if (session.page && !session.page.isClosed()) await session.page.close().catch(() => {});
+    // Attach mode reuses the window's tab: leave it open; only disconnect.
+    if (!settings.browserURL && session.page && !session.page.isClosed()) await session.page.close().catch(() => {});
     if (b.close) await b.close().catch(() => {});
   }
   if (a.sync && a.harvest) spawnSync('python3', [path.join(ROOT, 'tools/sync_rendered_assets.py')], { stdio: 'inherit' });
