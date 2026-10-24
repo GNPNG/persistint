@@ -3,20 +3,19 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://jmoq7tly06ga"
-path.s3tc="res://.godot/imported/sea_foam.png-a10e693c748ce1112c154ce44ec88fc9.s3tc.ctex"
+path="res://.godot/imported/sea_foam.png-a10e693c748ce1112c154ce44ec88fc9.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://assets/florida/sea_foam.png"
-dest_files=["res://.godot/imported/sea_foam.png-a10e693c748ce1112c154ce44ec88fc9.s3tc.ctex"]
+dest_files=["res://.godot/imported/sea_foam.png-a10e693c748ce1112c154ce44ec88fc9.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.9
 compress/uastc_level=0

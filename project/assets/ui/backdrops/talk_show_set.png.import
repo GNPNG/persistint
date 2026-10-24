@@ -3,20 +3,19 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://310hksagvxck"
-path.s3tc="res://.godot/imported/talk_show_set.png-fb086e7974687e020ebe6da3b9438c96.s3tc.ctex"
+path="res://.godot/imported/talk_show_set.png-fb086e7974687e020ebe6da3b9438c96.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://assets/ui/backdrops/talk_show_set.png"
-dest_files=["res://.godot/imported/talk_show_set.png-fb086e7974687e020ebe6da3b9438c96.s3tc.ctex"]
+dest_files=["res://.godot/imported/talk_show_set.png-fb086e7974687e020ebe6da3b9438c96.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.9
 compress/uastc_level=0

@@ -3,20 +3,19 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cfepujxd5q4ih"
-path.s3tc="res://.godot/imported/prop_fence_a.png-427f4cb5f3f512c329a6ae144ae2270b.s3tc.ctex"
+path="res://.godot/imported/prop_fence_a.png-427f4cb5f3f512c329a6ae144ae2270b.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://assets/canon/prop_fence_a.png"
-dest_files=["res://.godot/imported/prop_fence_a.png-427f4cb5f3f512c329a6ae144ae2270b.s3tc.ctex"]
+dest_files=["res://.godot/imported/prop_fence_a.png-427f4cb5f3f512c329a6ae144ae2270b.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.9
 compress/uastc_level=0

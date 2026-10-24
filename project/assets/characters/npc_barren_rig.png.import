@@ -3,20 +3,19 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://comosl0x4ab3k"
-path.s3tc="res://.godot/imported/npc_barren_rig.png-e34713a49fed67f32e72b6abd952bdaf.s3tc.ctex"
+path="res://.godot/imported/npc_barren_rig.png-e34713a49fed67f32e72b6abd952bdaf.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://assets/characters/npc_barren_rig.png"
-dest_files=["res://.godot/imported/npc_barren_rig.png-e34713a49fed67f32e72b6abd952bdaf.s3tc.ctex"]
+dest_files=["res://.godot/imported/npc_barren_rig.png-e34713a49fed67f32e72b6abd952bdaf.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.9
 compress/uastc_level=0

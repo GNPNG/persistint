@@ -3,20 +3,19 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://couc6lg0j8upk"
-path.s3tc="res://.godot/imported/hair_braids_rig.png-1c230170ca4597a6cbcf5f24a3fc3941.s3tc.ctex"
+path="res://.godot/imported/hair_braids_rig.png-1c230170ca4597a6cbcf5f24a3fc3941.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://assets/characters/player/hair_braids_rig.png"
-dest_files=["res://.godot/imported/hair_braids_rig.png-1c230170ca4597a6cbcf5f24a3fc3941.s3tc.ctex"]
+dest_files=["res://.godot/imported/hair_braids_rig.png-1c230170ca4597a6cbcf5f24a3fc3941.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.9
 compress/uastc_level=0

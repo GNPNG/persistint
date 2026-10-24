@@ -3,20 +3,19 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b7in6axcur8p1"
-path.s3tc="res://.godot/imported/dress_uniform_rig.png-8c09d35d804078b81d72efbd98f0e66c.s3tc.ctex"
+path="res://.godot/imported/dress_uniform_rig.png-8c09d35d804078b81d72efbd98f0e66c.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://assets/characters/player/dress_uniform_rig.png"
-dest_files=["res://.godot/imported/dress_uniform_rig.png-8c09d35d804078b81d72efbd98f0e66c.s3tc.ctex"]
+dest_files=["res://.godot/imported/dress_uniform_rig.png-8c09d35d804078b81d72efbd98f0e66c.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.9
 compress/uastc_level=0

@@ -3,20 +3,19 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://pnm5ks586wlo"
-path.s3tc="res://.godot/imported/comedy_stage.png-bbada639002c1ee65218e9b94d49a58f.s3tc.ctex"
+path="res://.godot/imported/comedy_stage.png-bbada639002c1ee65218e9b94d49a58f.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://assets/ui/backdrops/comedy_stage.png"
-dest_files=["res://.godot/imported/comedy_stage.png-bbada639002c1ee65218e9b94d49a58f.s3tc.ctex"]
+dest_files=["res://.godot/imported/comedy_stage.png-bbada639002c1ee65218e9b94d49a58f.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=0.9
 compress/uastc_level=0
