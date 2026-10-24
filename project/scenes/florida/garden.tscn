@@ -1,83 +1,261 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene format=3]
 
 [ext_resource type="Script" path="res://scripts/map.gd" id="1"]
-[ext_resource type="Texture2D" path="res://assets/placeholder/bg_florida_garden.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/florida/bg_florida_garden.png" id="2"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="3"]
-[ext_resource type="PackedScene" path="res://scenes/maps/door.tscn" id="4"]
-[ext_resource type="PackedScene" path="res://scenes/florida/garden_plot.tscn" id="5"]
-[ext_resource type="PackedScene" path="res://scenes/florida/seed_bag.tscn" id="6"]
-[ext_resource type="PackedScene" path="res://scenes/florida/craft_bench.tscn" id="7"]
-[ext_resource type="PackedScene" path="res://scenes/florida/critter.tscn" id="8"]
+[ext_resource type="Texture2D" path="res://assets/florida/prop_house.png" id="4"]
+[ext_resource type="Texture2D" path="res://assets/florida/prop_fence_picket.png" id="5"]
+[ext_resource type="Texture2D" path="res://assets/florida/prop_palm_a.png" id="6"]
+[ext_resource type="Texture2D" path="res://assets/florida/prop_palm_b.png" id="7"]
+[ext_resource type="Texture2D" path="res://assets/florida/prop_tree_mango.png" id="8"]
+[ext_resource type="Texture2D" path="res://assets/florida/prop_tree_key_lime.png" id="9"]
+[ext_resource type="Texture2D" path="res://assets/florida/prop_bush_hibiscus.png" id="10"]
+[ext_resource type="Texture2D" path="res://assets/florida/prop_bush_bougainvillea.png" id="11"]
+[ext_resource type="Texture2D" path="res://assets/florida/prop_birdbath.png" id="12"]
+[ext_resource type="Texture2D" path="res://assets/florida/prop_garden_arch.png" id="13"]
+[ext_resource type="PackedScene" path="res://scenes/maps/door.tscn" id="14"]
+[ext_resource type="PackedScene" path="res://scenes/florida/garden_plot.tscn" id="15"]
+[ext_resource type="PackedScene" path="res://scenes/florida/seed_bag.tscn" id="16"]
+[ext_resource type="PackedScene" path="res://scenes/florida/craft_bench.tscn" id="17"]
+[ext_resource type="PackedScene" path="res://scenes/florida/critter.tscn" id="18"]
 
 [sub_resource type="NavigationPolygon" id="navpoly"]
-vertices = PackedVector2Array(60, 170, 900, 170, 900, 520, 60, 520)
+vertices = PackedVector2Array(40, 210, 920, 210, 920, 526, 40, 526)
 polygons = [PackedInt32Array(0, 1, 2, 3)]
-outlines = [PackedVector2Array(60, 170, 900, 170, 900, 520, 60, 520)]
+outlines = [PackedVector2Array(40, 210, 920, 210, 920, 526, 40, 526)]
 
 [node name="Garden" type="Node2D"]
+texture_filter = 4
+y_sort_enabled = true
 script = ExtResource("1")
 map_size = Vector2(960, 540)
 
 [node name="Background" type="Sprite2D" parent="."]
+z_index = -1
 texture = ExtResource("2")
+scale = Vector2(0.25, 0.25)
 centered = false
 
 [node name="Nav" type="NavigationRegion2D" parent="."]
 navigation_polygon = SubResource("navpoly")
 
 [node name="spawn_default" type="Marker2D" parent="."]
-position = Vector2(480, 470)
+position = Vector2(630, 290)
 
 [node name="spawn_from_beach" type="Marker2D" parent="."]
-position = Vector2(160, 480)
+position = Vector2(205, 470)
 
 [node name="Player" parent="." instance=ExtResource("3")]
-position = Vector2(480, 470)
+z_index = 3
+position = Vector2(630, 290)
 
-[node name="BeachDoor" parent="." instance=ExtResource("4")]
-position = Vector2(120, 500)
+[node name="House" type="Sprite2D" parent="."]
+z_index = 3
+position = Vector2(480, 176)
+texture = ExtResource("4")
+scale = Vector2(0.25, 0.25)
+offset = Vector2(0, -192)
+
+[node name="FenceL0" type="Sprite2D" parent="."]
+z_index = 3
+position = Vector2(72, 184)
+texture = ExtResource("5")
+scale = Vector2(0.25, 0.25)
+offset = Vector2(0, 44)
+
+[node name="FenceL1" type="Sprite2D" parent="."]
+z_index = 3
+position = Vector2(136, 184)
+texture = ExtResource("5")
+scale = Vector2(0.25, 0.25)
+offset = Vector2(0, 44)
+
+[node name="FenceL2" type="Sprite2D" parent="."]
+z_index = 3
+position = Vector2(200, 184)
+texture = ExtResource("5")
+scale = Vector2(0.25, 0.25)
+offset = Vector2(0, 44)
+
+[node name="FenceL3" type="Sprite2D" parent="."]
+z_index = 3
+position = Vector2(264, 184)
+texture = ExtResource("5")
+scale = Vector2(0.25, 0.25)
+offset = Vector2(0, 44)
+
+[node name="FenceL4" type="Sprite2D" parent="."]
+z_index = 3
+position = Vector2(328, 184)
+texture = ExtResource("5")
+scale = Vector2(0.25, 0.25)
+offset = Vector2(0, 44)
+
+[node name="FenceR0" type="Sprite2D" parent="."]
+z_index = 3
+position = Vector2(632, 184)
+texture = ExtResource("5")
+scale = Vector2(0.25, 0.25)
+offset = Vector2(0, 44)
+
+[node name="FenceR1" type="Sprite2D" parent="."]
+z_index = 3
+position = Vector2(696, 184)
+texture = ExtResource("5")
+scale = Vector2(0.25, 0.25)
+offset = Vector2(0, 44)
+
+[node name="FenceR2" type="Sprite2D" parent="."]
+z_index = 3
+position = Vector2(760, 184)
+texture = ExtResource("5")
+scale = Vector2(0.25, 0.25)
+offset = Vector2(0, 44)
+
+[node name="FenceR3" type="Sprite2D" parent="."]
+z_index = 3
+position = Vector2(824, 184)
+texture = ExtResource("5")
+scale = Vector2(0.25, 0.25)
+offset = Vector2(0, 44)
+
+[node name="FenceR4" type="Sprite2D" parent="."]
+z_index = 3
+position = Vector2(888, 184)
+texture = ExtResource("5")
+scale = Vector2(0.25, 0.25)
+offset = Vector2(0, 44)
+
+[node name="Palm1" type="Sprite2D" parent="."]
+z_index = 3
+position = Vector2(28, 200)
+texture = ExtResource("6")
+scale = Vector2(0.25, 0.25)
+offset = Vector2(0, -104)
+
+[node name="Palm2" type="Sprite2D" parent="."]
+z_index = 3
+position = Vector2(934, 204)
+texture = ExtResource("7")
+scale = Vector2(0.25, 0.25)
+offset = Vector2(0, -88)
+
+[node name="Mango1" type="Sprite2D" parent="."]
+z_index = 3
+position = Vector2(150, 296)
+texture = ExtResource("8")
+scale = Vector2(0.25, 0.25)
+offset = Vector2(0, -28)
+
+[node name="KeyLime1" type="Sprite2D" parent="."]
+z_index = 3
+position = Vector2(820, 350)
+texture = ExtResource("9")
+scale = Vector2(0.25, 0.25)
+offset = Vector2(0, -28)
+
+[node name="Mango2" type="Sprite2D" parent="."]
+z_index = 3
+position = Vector2(896, 510)
+texture = ExtResource("8")
+scale = Vector2(0.25, 0.25)
+offset = Vector2(0, -28)
+flip_h = true
+
+[node name="KeyLime2" type="Sprite2D" parent="."]
+z_index = 3
+position = Vector2(40, 448)
+texture = ExtResource("9")
+scale = Vector2(0.25, 0.25)
+offset = Vector2(0, -28)
+flip_h = true
+
+[node name="Bush1" type="Sprite2D" parent="."]
+z_index = 3
+position = Vector2(330, 460)
+texture = ExtResource("10")
+scale = Vector2(0.25, 0.25)
+offset = Vector2(0, 36)
+
+[node name="Bush2" type="Sprite2D" parent="."]
+z_index = 3
+position = Vector2(640, 470)
+texture = ExtResource("11")
+scale = Vector2(0.25, 0.25)
+offset = Vector2(0, 36)
+
+[node name="Bush3" type="Sprite2D" parent="."]
+z_index = 3
+position = Vector2(760, 228)
+texture = ExtResource("10")
+scale = Vector2(0.25, 0.25)
+offset = Vector2(0, 36)
+
+[node name="Bush4" type="Sprite2D" parent="."]
+z_index = 3
+position = Vector2(250, 228)
+texture = ExtResource("11")
+scale = Vector2(0.25, 0.25)
+offset = Vector2(0, 36)
+
+[node name="Birdbath" type="Sprite2D" parent="."]
+z_index = 3
+position = Vector2(700, 408)
+texture = ExtResource("12")
+scale = Vector2(0.25, 0.25)
+offset = Vector2(0, 32)
+
+[node name="Arch" type="Sprite2D" parent="."]
+z_index = 3
+position = Vector2(160, 518)
+texture = ExtResource("13")
+scale = Vector2(0.25, 0.25)
+offset = Vector2(0, -24)
+
+[node name="BeachDoor" parent="." instance=ExtResource("14")]
+position = Vector2(160, 512)
 target_scene = "res://scenes/florida/beach.tscn"
 target_spawn = "spawn_from_garden"
 exit_label = "Back to the Beach"
 
-[node name="Plot1" parent="." instance=ExtResource("5")]
-position = Vector2(400, 240)
+[node name="Plot1" parent="." instance=ExtResource("15")]
+position = Vector2(410, 262)
 plot_id = "p1"
 
-[node name="Plot2" parent="." instance=ExtResource("5")]
-position = Vector2(480, 240)
+[node name="Plot2" parent="." instance=ExtResource("15")]
+position = Vector2(480, 262)
 plot_id = "p2"
 
-[node name="Plot3" parent="." instance=ExtResource("5")]
-position = Vector2(560, 240)
+[node name="Plot3" parent="." instance=ExtResource("15")]
+position = Vector2(550, 262)
 plot_id = "p3"
 
-[node name="Plot4" parent="." instance=ExtResource("5")]
-position = Vector2(400, 310)
+[node name="Plot4" parent="." instance=ExtResource("15")]
+position = Vector2(410, 334)
 plot_id = "p4"
 
-[node name="Plot5" parent="." instance=ExtResource("5")]
-position = Vector2(480, 310)
+[node name="Plot5" parent="." instance=ExtResource("15")]
+position = Vector2(480, 334)
 plot_id = "p5"
 
-[node name="Plot6" parent="." instance=ExtResource("5")]
-position = Vector2(560, 310)
+[node name="Plot6" parent="." instance=ExtResource("15")]
+position = Vector2(550, 334)
 plot_id = "p6"
 
-[node name="SeedBag" parent="." instance=ExtResource("6")]
-position = Vector2(300, 250)
+[node name="SeedBag" parent="." instance=ExtResource("16")]
+position = Vector2(318, 286)
 
-[node name="CraftBench" parent="." instance=ExtResource("7")]
-position = Vector2(700, 260)
+[node name="CraftBench" parent="." instance=ExtResource("17")]
+position = Vector2(704, 300)
 
-[node name="Crab" parent="." instance=ExtResource("8")]
-position = Vector2(250, 400)
+[node name="Crab" parent="." instance=ExtResource("18")]
+position = Vector2(250, 410)
 kind = "crab"
 nickname = "crab_pebble"
-wander = Rect2(180, 360, 120, 80)
+wander = Rect2(190, 380, 120, 70)
 
-[node name="Gull" parent="." instance=ExtResource("8")]
-position = Vector2(780, 400)
+[node name="Gull" parent="." instance=ExtResource("18")]
+position = Vector2(780, 440)
 kind = "gull"
 nickname = "gull_pickle"
-wander = Rect2(700, 350, 140, 80)
+wander = Rect2(700, 410, 150, 70)

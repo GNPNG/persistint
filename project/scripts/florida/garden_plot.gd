@@ -1,6 +1,7 @@
 extends "res://scripts/florida/clickable.gd"
 ## GardenPlot — one patch of soil. Empty: plants the seed in the bag. Growing: waters it.
-## Ready: picks it. Plants grow with the days (GameClock).
+## Ready: picks it. Plants grow with the days (GameClock). Art: assets/florida/plot_empty,
+## plot_growing and plot_ready_<plant> (tools/gen_florida_art.py).
 
 @export var plot_id := ""
 
@@ -19,11 +20,12 @@ func state() -> String:
 
 func refresh() -> void:
 	var s := state()
-	var path := "res://assets/placeholder/plot_%s.png" % s
+	var p := Florida.plot(plot_id)
+	if s == "ready" and not p.is_empty():
+		s = "ready_%s" % p["plant"]
+	var path := "res://assets/florida/plot_%s.png" % s
 	if ResourceLoader.exists(path):
 		sprite.texture = load(path)
-	var p := Florida.plot(plot_id)
-	sprite.modulate = Color.WHITE if p.is_empty() else Color(Florida.data()["plants"][p["plant"]]["color"]).lerp(Color.WHITE, 0.5)
 
 
 func interact() -> void:

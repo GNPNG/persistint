@@ -18,12 +18,10 @@ const LOOK_DISTANCE := 96.0
 static var _barks: Dictionary = {}
 static var _rigs: Dictionary = {}  # sheet path -> SpriteFrames
 
-var rig: AnimatedSprite2D
-
 @export var npc_id := ""
 @export var display_name := ""
 @export var caste := "initiate"  # mother | priestess | initiate | drone | barren
-@export var sprite_texture := ""  # assets/placeholder texture name
+@export var sprite_texture := ""  # art name: a rigged <name>.tres sheet or a <name>.png, see _load_art
 @export var dialogue_path := ""  # e.g. res://dialogue/offering.dialogue
 @export var dialogue_title := "start"
 @export var voice_pitch := 1.0
@@ -33,6 +31,10 @@ var rig: AnimatedSprite2D
 @export var hide_if_flag := ""
 
 @onready var bubble: Label = $BarkBubble
+
+## The rigged sheet when the art has one; see _load_art.
+var rig: AnimatedSprite2D
+var _player_near: Node2D
 
 
 func _ready() -> void:
@@ -44,15 +46,9 @@ func _ready() -> void:
 			var parsed: Variant = JSON.parse_string(f.get_as_text())
 			if parsed is Dictionary:
 				_barks = parsed
-	if sprite_texture != "" and ResourceLoader.exists(RIG_PATH % sprite_texture):
-		_build_rig()
-	elif sprite_texture != "":
-		# Canon art (cut from the NotebookLM sheets) wins over the placeholders.
-		for dir in ["canon", "placeholder"]:
-			var path := "res://assets/%s/%s.png" % [dir, sprite_texture]
-			if ResourceLoader.exists(path):
-				$Sprite2D.texture = load(path)
-				break
+	if sprite_texture != "":
+		_load_art()
+	bubble.z_index = 20
 	bubble.hide()
 	input_event.connect(_on_input_event)
 	$Proximity.body_entered.connect(_on_proximity_entered)
@@ -60,6 +56,33 @@ func _ready() -> void:
 	_apply_presence()
 	if show_if_flag != "" or hide_if_flag != "":
 		WorldState.flag_changed.connect(_on_flag_changed)
+
+
+## Art lookup, first match wins: a caste rig sheet (assets/characters/<name>_rig.png), then in
+## canon, florida and placeholder a SpriteFrames <name>.tres (a rigged sheet) before a still
+## <name>.png. Canon art (cut from the canon sheets) wins over area art and placeholders.
+func _load_art() -> void:
+	if ResourceLoader.exists(RIG_PATH % sprite_texture):
+		_build_rig()
+		return
+	for dir in ["canon", "florida", "placeholder"]:
+		var frames_path := "res://assets/%s/%s.tres" % [dir, sprite_texture]
+		if ResourceLoader.exists(frames_path):
+			rig = AnimatedSprite2D.new()
+			rig.name = "Rig"
+			rig.sprite_frames = load(frames_path)
+			# Sheets drawn above world resolution say how far to scale down (tools/florida_draw.py).
+			rig.scale = Vector2.ONE * float(rig.sprite_frames.get_meta(&"display_scale", 1.0))
+			add_child(rig)
+			move_child(rig, $Sprite2D.get_index())
+			$Sprite2D.hide()
+			rig.play("idle_front")
+			rig.frame = randi() % rig.sprite_frames.get_frame_count("idle_front")
+			return
+		var path := "res://assets/%s/%s.png" % [dir, sprite_texture]
+		if ResourceLoader.exists(path):
+			$Sprite2D.texture = load(path)
+			return
 
 
 func _build_rig() -> void:
@@ -107,22 +130,24 @@ static func rig_frames(path: String) -> SpriteFrames:
 	return sf
 
 
+## A rigged NPC turns to look at the player standing near it.
 func _process(_delta: float) -> void:
 	if rig == null or not visible:
 		return
 	var player := get_tree().get_first_node_in_group("player") as Node2D
-	var dir := "down"
-	var flip := false
+	var d := Vector2.ZERO
 	if player and player.global_position.distance_to(global_position) <= LOOK_DISTANCE:
-		var d := player.global_position - global_position
-		if absf(d.x) > absf(d.y) * 1.2:
-			dir = "left"
-			flip = d.x > 0.0
-		elif d.y < 0.0:
-			dir = "up"
-	rig.flip_h = flip
-	if rig.animation != "idle_" + dir:
-		rig.play("idle_" + dir)
+		d = player.global_position - global_position
+	var side := absf(d.x) > absf(d.y) * 1.2
+	var anim: String
+	if rig.sprite_frames.has_animation("idle_down"):
+		anim = "idle_left" if side else ("idle_up" if d.y < 0.0 else "idle_down")
+		rig.flip_h = side and d.x > 0.0
+	else:
+		anim = "idle_side" if side else ("idle_back" if d.y < 0.0 else "idle_front")
+		rig.flip_h = side and d.x < 0.0
+	if rig.animation != anim:
+		rig.play(anim)
 
 
 ## True when the flags say this NPC is here right now.
@@ -172,11 +197,13 @@ func interact() -> void:
 
 func _on_proximity_entered(body: Node2D) -> void:
 	if body.is_in_group("player"):
+		_player_near = body
 		_show_bubble(current_bark())
 
 
 func _on_proximity_exited(body: Node2D) -> void:
 	if body.is_in_group("player"):
+		_player_near = null
 		bubble.hide()
 
 

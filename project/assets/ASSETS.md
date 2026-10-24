@@ -7,12 +7,21 @@ change. Rows are sorted by path.
 
 | Path | Id | Generator | Frame layout | Stands in for prompt |
 |---|---|---|---|---|
+| `project/assets/canon/acc_bow.png` | acc_bow | `tools/cut_paperdoll.py` art/canon/gemini/Gemini_Generated_Image_ktfw47ktfw47ktfw.jpg (project/data/paperdoll_parts.json) | still, 721x760 shared paper-doll frame (sheet resolution) | - |
+| `project/assets/canon/body_base.png` | body_base | `tools/cut_paperdoll.py` art/canon/gemini/Gemini_Generated_Image_ktfw47ktfw47ktfw.jpg (project/data/paperdoll_parts.json) | still, 721x760 shared paper-doll frame (sheet resolution) | - |
 | `project/assets/canon/deco_flowers.png` | deco_flowers | `tools/gen_island_deco.py` | single 144x88 (4x of 36x22 world px), foot at bottom | - |
 | `project/assets/canon/deco_heart.png` | deco_heart | `tools/cut_island_props.py` (dev/art PERSISTINT overview, crop in project/data/island_props.json) | single 39x39 at source resolution, shown 14 px tall, foot at bottom | - |
 | `project/assets/canon/deco_sparkle.png` | deco_sparkle | `tools/cut_island_props.py` (dev/art PERSISTINT overview, crop in project/data/island_props.json) | single 37x41 at source resolution, shown 14 px tall, foot at bottom | - |
 | `project/assets/canon/deco_tree_a.png` | deco_tree_a | `tools/gen_island_deco.py` | single 160x208 (4x of 40x52 world px), foot at bottom | - |
 | `project/assets/canon/deco_tree_b.png` | deco_tree_b | `tools/gen_island_deco.py` | single 160x208 (4x of 40x52 world px), foot at bottom | - |
 | `project/assets/canon/deco_tree_c.png` | deco_tree_c | `tools/gen_island_deco.py` | single 160x208 (4x of 40x52 world px), foot at bottom | - |
+| `project/assets/canon/dress_robe.png` | dress_robe | `tools/cut_paperdoll.py` art/canon/gemini/Gemini_Generated_Image_ktfw47ktfw47ktfw.jpg (project/data/paperdoll_parts.json) | still, 721x760 shared paper-doll frame (sheet resolution) | - |
+| `project/assets/canon/dress_uniform.png` | dress_uniform | `tools/cut_paperdoll.py` art/canon/gemini/Gemini_Generated_Image_ktfw47ktfw47ktfw.jpg (project/data/paperdoll_parts.json) | still, 721x760 shared paper-doll frame (sheet resolution) | - |
+| `project/assets/canon/dress_white.png` | dress_white | `tools/cut_paperdoll.py` art/canon/gemini/Gemini_Generated_Image_ktfw47ktfw47ktfw.jpg (project/data/paperdoll_parts.json) | still, 721x760 shared paper-doll frame (sheet resolution) | - |
+| `project/assets/canon/hair_braids.png` | hair_braids | `tools/cut_paperdoll.py` art/canon/gemini/Gemini_Generated_Image_ktfw47ktfw47ktfw.jpg (project/data/paperdoll_parts.json) | still, 721x760 shared paper-doll frame (sheet resolution) | - |
+| `project/assets/canon/hair_crown.png` | hair_crown | `tools/cut_paperdoll.py` art/canon/gemini/Gemini_Generated_Image_ktfw47ktfw47ktfw.jpg (project/data/paperdoll_parts.json) | still, 721x760 shared paper-doll frame (sheet resolution) | - |
+| `project/assets/canon/hair_pigtails.png` | hair_pigtails | `tools/cut_paperdoll.py` art/canon/gemini/Gemini_Generated_Image_ktfw47ktfw47ktfw.jpg (project/data/paperdoll_parts.json) | still, 721x760 shared paper-doll frame (sheet resolution) | - |
+| `project/assets/canon/hair_short.png` | hair_short | `tools/cut_paperdoll.py` art/canon/gemini/Gemini_Generated_Image_ktfw47ktfw47ktfw.jpg (project/data/paperdoll_parts.json) | still, 721x760 shared paper-doll frame (sheet resolution) | - |
 | `project/assets/canon/npc_barren.png` | npc_barren | `tools/cut_canon_sprites.sh` (canon caste sheet 4bzs) | 263x441 canon cut at source resolution, barren NPC front view (the default the game loads) | - |
 | `project/assets/canon/npc_barren_back.png` | npc_barren_back | `tools/cut_canon_sprites.sh` (canon caste sheet 4bzs) | 263x440 canon cut at source resolution, barren NPC back view | - |
 | `project/assets/canon/npc_barren_front.png` | npc_barren_front | `tools/cut_canon_sprites.sh` (canon caste sheet 4bzs) | 263x441 canon cut at source resolution, barren NPC front view | - |
@@ -52,6 +61,83 @@ change. Rows are sorted by path.
 | `project/assets/characters/npc_mother_rig.png` | npc_mother_rig | `tools/gen_npc_rigs.py` (from the full-resolution canon cuts) | 8x3 frames of 295x480 (32x52 world px, feet at 50/52); rows down / left / up; cols 0-3 idle, 4-7 walk | - |
 | `project/assets/characters/npc_priestess_rig.png` | npc_priestess_rig | `tools/gen_npc_rigs.py` (from the full-resolution canon cuts) | 8x3 frames of 294x478 (32x52 world px, feet at 50/52); rows down / left / up; cols 0-3 idle, 4-7 walk | - |
 | `project/assets/common/door_marker.png` | door_marker | `tools/gen_door_marker.py` | 160x192 frames (40x48 world px at 4x), mat centre (80, 144); row 0 open x 8 (arrow bob), row 1 locked x 1 | - |
+| `project/assets/florida/acc_bougainvillea_wreath.png` | acc_bougainvillea_wreath | `tools/gen_florida_wearables.py` (on the canon paper-doll frame) | still, 721x760 canon paper-doll frame (sheet resolution) | - |
+| `project/assets/florida/acc_flower_crown.png` | acc_flower_crown | `tools/gen_florida_wearables.py` (on the canon paper-doll frame) | still, 721x760 canon paper-doll frame (sheet resolution) | - |
+| `project/assets/florida/acc_plumeria_lei.png` | acc_plumeria_lei | `tools/gen_florida_wearables.py` (on the canon paper-doll frame) | still, 721x760 canon paper-doll frame (sheet resolution) | - |
+| `project/assets/florida/acc_shell_garland.png` | acc_shell_garland | `tools/gen_florida_wearables.py` (on the canon paper-doll frame) | still, 721x760 canon paper-doll frame (sheet resolution) | - |
+| `project/assets/florida/bg_florida_aquarium.png` | bg_florida_aquarium | `tools/gen_florida_art.py` (pool floor shells: canon shell_scallop/conch/spiral from project/data/florida_canon.json, cut at sheet resolution) | still, 4 texture px per world px; scenes scale 0.25 | - |
+| `project/assets/florida/bg_florida_beach.png` | bg_florida_beach | `tools/gen_florida_art.py` | still, 4 texture px per world px; scenes scale 0.25; the surf on its water line is sea_foam | - |
+| `project/assets/florida/bg_florida_garden.png` | bg_florida_garden | `tools/gen_florida_art.py` | still, 4 texture px per world px; scenes scale 0.25 | - |
+| `project/assets/florida/bg_florida_stable.png` | bg_florida_stable | `tools/gen_florida_art.py` | still, 4 texture px per world px; scenes scale 0.25 | - |
+| project/assets/florida/crab.png (+ crab.tres) | crab | `tools/gen_florida_critters.py` | 24x18 world px (96x72 texture); row 0 idle, row 1 walk, 4 cols; .tres idle/walk; .tres metadata display_scale 0.25 | - |
+| `project/assets/florida/craft_bench.png` | craft_bench | `tools/gen_florida_art.py` | still, 4 texture px per world px; scenes scale 0.25 | - |
+| project/assets/florida/dolphin.png (+ dolphin.tres) | dolphin | `tools/gen_florida_critters.py` | 48x32 world px (192x128 texture); row 0 idle, row 1 walk (swim), 4 cols; .tres idle/walk; .tres metadata display_scale 0.25 | - |
+| project/assets/florida/fish.png (+ fish.tres) | fish | `tools/gen_florida_art.py` | 16x12 world px (64x48 texture); rows coral/mango/lilac, cols 0-2 swim, 3 wave; .tres swim_*/wave_*; .tres metadata display_scale 0.25 | - |
+| project/assets/florida/gull.png (+ gull.tres) | gull | `tools/gen_florida_critters.py` | 24x24 world px (96x96 texture); row 0 idle, row 1 walk (hop), 4 cols; .tres idle/walk; .tres metadata display_scale 0.25 | - |
+| project/assets/florida/mermaid.png (+ mermaid.tres) | mermaid | `tools/gen_florida_cast.py` (on the canon body turnaround, sheet ekiw) | 36x50 world px (144x200 texture); row 0 idle, row 1 walk (swim), 4 cols; .tres idle/walk; .tres metadata display_scale 0.25 | - |
+| project/assets/florida/npc_daughter.png (+ npc_daughter.tres) | npc_daughter | `tools/gen_florida_cast.py` (on the canon body turnaround, sheet ekiw) | 32x52 world px (128x208 texture); rows front/side/back, 4 idle cols; .tres idle_front/side/back; .tres metadata display_scale 0.25 | - |
+| project/assets/florida/npc_father.png (+ npc_father.tres) | npc_father | `tools/gen_florida_cast.py` (on the canon body turnaround, sheet ekiw) | 36x62 world px (144x248 texture); rows front/side/back, 4 idle cols; .tres idle_front/side/back; .tres metadata display_scale 0.25 | - |
+| project/assets/florida/npc_stable_friend.png (+ npc_stable_friend.tres) | npc_stable_friend | `tools/gen_florida_cast.py` (on the canon body turnaround, sheet ekiw) | 32x52 world px (128x208 texture); rows front/side/back, 4 idle cols; .tres idle_front/side/back; .tres metadata display_scale 0.25 | - |
+| `project/assets/florida/plot_empty.png` | plot_empty | `tools/gen_florida_art.py` | still, 4 texture px per world px; scenes scale 0.25 | - |
+| `project/assets/florida/plot_growing.png` | plot_growing | `tools/gen_florida_art.py` | still, 4 texture px per world px; scenes scale 0.25 | - |
+| `project/assets/florida/plot_ready_bougainvillea.png` | plot_ready_bougainvillea | `tools/gen_florida_art.py` | still, 4 texture px per world px; scenes scale 0.25 | - |
+| `project/assets/florida/plot_ready_coconut.png` | plot_ready_coconut | `tools/gen_florida_art.py` | still, 4 texture px per world px; scenes scale 0.25 | - |
+| `project/assets/florida/plot_ready_guava.png` | plot_ready_guava | `tools/gen_florida_art.py` | still, 4 texture px per world px; scenes scale 0.25 | - |
+| `project/assets/florida/plot_ready_hibiscus.png` | plot_ready_hibiscus | `tools/gen_florida_art.py` | still, 4 texture px per world px; scenes scale 0.25 | - |
+| `project/assets/florida/plot_ready_key_lime.png` | plot_ready_key_lime | `tools/gen_florida_art.py` | still, 4 texture px per world px; scenes scale 0.25 | - |
+| `project/assets/florida/plot_ready_mango.png` | plot_ready_mango | `tools/gen_florida_art.py` | still, 4 texture px per world px; scenes scale 0.25 | - |
+| `project/assets/florida/plot_ready_plumeria.png` | plot_ready_plumeria | `tools/gen_florida_art.py` | still, 4 texture px per world px; scenes scale 0.25 | - |
+| `project/assets/florida/plot_ready_sea_grape.png` | plot_ready_sea_grape | `tools/gen_florida_art.py` | still, 4 texture px per world px; scenes scale 0.25 | - |
+| `project/assets/florida/pony_acc_blanket.png` | pony_acc_blanket | `tools/gen_pony_sprites.py` | 64x52 world px (256x208 texture); 4 cols x 2 rows: row 0 idle, row 1 walk (PonyDoll AnimationPlayer) | - |
+| `project/assets/florida/pony_acc_bow.png` | pony_acc_bow | `tools/gen_pony_sprites.py` | 64x52 world px (256x208 texture); 4 cols x 2 rows: row 0 idle, row 1 walk (PonyDoll AnimationPlayer) | - |
+| `project/assets/florida/pony_acc_flower_crown.png` | pony_acc_flower_crown | `tools/gen_pony_sprites.py` | 64x52 world px (256x208 texture); 4 cols x 2 rows: row 0 idle, row 1 walk (PonyDoll AnimationPlayer) | - |
+| `project/assets/florida/pony_acc_hibiscus.png` | pony_acc_hibiscus | `tools/gen_pony_sprites.py` | 64x52 world px (256x208 texture); 4 cols x 2 rows: row 0 idle, row 1 walk (PonyDoll AnimationPlayer) | - |
+| `project/assets/florida/pony_body_cloud.png` | pony_body_cloud | `tools/gen_pony_sprites.py` | 64x52 world px (256x208 texture); 4 cols x 2 rows: row 0 idle, row 1 walk (PonyDoll AnimationPlayer) | - |
+| `project/assets/florida/pony_body_honey.png` | pony_body_honey | `tools/gen_pony_sprites.py` | 64x52 world px (256x208 texture); 4 cols x 2 rows: row 0 idle, row 1 walk (PonyDoll AnimationPlayer) | - |
+| `project/assets/florida/pony_body_lilac.png` | pony_body_lilac | `tools/gen_pony_sprites.py` | 64x52 world px (256x208 texture); 4 cols x 2 rows: row 0 idle, row 1 walk (PonyDoll AnimationPlayer) | - |
+| `project/assets/florida/pony_body_mint.png` | pony_body_mint | `tools/gen_pony_sprites.py` | 64x52 world px (256x208 texture); 4 cols x 2 rows: row 0 idle, row 1 walk (PonyDoll AnimationPlayer) | - |
+| `project/assets/florida/pony_body_peach.png` | pony_body_peach | `tools/gen_pony_sprites.py` | 64x52 world px (256x208 texture); 4 cols x 2 rows: row 0 idle, row 1 walk (PonyDoll AnimationPlayer) | - |
+| `project/assets/florida/pony_mane_braids_lavender.png` | pony_mane_braids_lavender | `tools/gen_pony_sprites.py` | 64x52 world px (256x208 texture); 4 cols x 2 rows: row 0 idle, row 1 walk (PonyDoll AnimationPlayer) | - |
+| `project/assets/florida/pony_mane_braids_rose.png` | pony_mane_braids_rose | `tools/gen_pony_sprites.py` | 64x52 world px (256x208 texture); 4 cols x 2 rows: row 0 idle, row 1 walk (PonyDoll AnimationPlayer) | - |
+| `project/assets/florida/pony_mane_braids_sky.png` | pony_mane_braids_sky | `tools/gen_pony_sprites.py` | 64x52 world px (256x208 texture); 4 cols x 2 rows: row 0 idle, row 1 walk (PonyDoll AnimationPlayer) | - |
+| `project/assets/florida/pony_mane_braids_sunshine.png` | pony_mane_braids_sunshine | `tools/gen_pony_sprites.py` | 64x52 world px (256x208 texture); 4 cols x 2 rows: row 0 idle, row 1 walk (PonyDoll AnimationPlayer) | - |
+| `project/assets/florida/pony_mane_curly_lavender.png` | pony_mane_curly_lavender | `tools/gen_pony_sprites.py` | 64x52 world px (256x208 texture); 4 cols x 2 rows: row 0 idle, row 1 walk (PonyDoll AnimationPlayer) | - |
+| `project/assets/florida/pony_mane_curly_rose.png` | pony_mane_curly_rose | `tools/gen_pony_sprites.py` | 64x52 world px (256x208 texture); 4 cols x 2 rows: row 0 idle, row 1 walk (PonyDoll AnimationPlayer) | - |
+| `project/assets/florida/pony_mane_curly_sky.png` | pony_mane_curly_sky | `tools/gen_pony_sprites.py` | 64x52 world px (256x208 texture); 4 cols x 2 rows: row 0 idle, row 1 walk (PonyDoll AnimationPlayer) | - |
+| `project/assets/florida/pony_mane_curly_sunshine.png` | pony_mane_curly_sunshine | `tools/gen_pony_sprites.py` | 64x52 world px (256x208 texture); 4 cols x 2 rows: row 0 idle, row 1 walk (PonyDoll AnimationPlayer) | - |
+| `project/assets/florida/pony_mane_flowing_lavender.png` | pony_mane_flowing_lavender | `tools/gen_pony_sprites.py` | 64x52 world px (256x208 texture); 4 cols x 2 rows: row 0 idle, row 1 walk (PonyDoll AnimationPlayer) | - |
+| `project/assets/florida/pony_mane_flowing_rose.png` | pony_mane_flowing_rose | `tools/gen_pony_sprites.py` | 64x52 world px (256x208 texture); 4 cols x 2 rows: row 0 idle, row 1 walk (PonyDoll AnimationPlayer) | - |
+| `project/assets/florida/pony_mane_flowing_sky.png` | pony_mane_flowing_sky | `tools/gen_pony_sprites.py` | 64x52 world px (256x208 texture); 4 cols x 2 rows: row 0 idle, row 1 walk (PonyDoll AnimationPlayer) | - |
+| `project/assets/florida/pony_mane_flowing_sunshine.png` | pony_mane_flowing_sunshine | `tools/gen_pony_sprites.py` | 64x52 world px (256x208 texture); 4 cols x 2 rows: row 0 idle, row 1 walk (PonyDoll AnimationPlayer) | - |
+| `project/assets/florida/pony_sparkle.png` | pony_sparkle | `tools/gen_pony_sprites.py` | 64x52 world px (256x208 texture); 4 cols x 2 rows: row 0 idle, row 1 walk (PonyDoll AnimationPlayer) | - |
+| `project/assets/florida/pony_spots.png` | pony_spots | `tools/gen_pony_sprites.py` | 64x52 world px (256x208 texture); 4 cols x 2 rows: row 0 idle, row 1 walk (PonyDoll AnimationPlayer) | - |
+| `project/assets/florida/prop_aquarium.png` | prop_aquarium | `tools/gen_florida_art.py` | still, 4 texture px per world px; scenes scale 0.25 | - |
+| `project/assets/florida/prop_barn.png` | prop_barn | `tools/gen_florida_art.py` | still, 4 texture px per world px; scenes scale 0.25 | - |
+| `project/assets/florida/prop_bench.png` | prop_bench | `tools/gen_florida_art.py` | still, 4 texture px per world px; scenes scale 0.25 | - |
+| `project/assets/florida/prop_birdbath.png` | prop_birdbath | `tools/gen_florida_art.py` | still, 4 texture px per world px; scenes scale 0.25 | - |
+| `project/assets/florida/prop_bush_bougainvillea.png` | prop_bush_bougainvillea | `tools/gen_florida_art.py` | still, 4 texture px per world px; scenes scale 0.25 | - |
+| `project/assets/florida/prop_bush_hibiscus.png` | prop_bush_hibiscus | `tools/gen_florida_art.py` | still, 4 texture px per world px; scenes scale 0.25 | - |
+| `project/assets/florida/prop_dune_grass.png` | prop_dune_grass | `tools/gen_florida_art.py` | still, 4 texture px per world px; scenes scale 0.25 | - |
+| `project/assets/florida/prop_fence_paddock.png` | prop_fence_paddock | `tools/gen_florida_art.py` | still, 4 texture px per world px; scenes scale 0.25 | - |
+| `project/assets/florida/prop_fence_picket.png` | prop_fence_picket | `tools/gen_florida_art.py` | still, 4 texture px per world px; scenes scale 0.25 | - |
+| `project/assets/florida/prop_garden_arch.png` | prop_garden_arch | `tools/gen_florida_art.py` | still, 4 texture px per world px; scenes scale 0.25 | - |
+| `project/assets/florida/prop_hay.png` | prop_hay | `tools/gen_florida_art.py` | still, 4 texture px per world px; scenes scale 0.25 | - |
+| `project/assets/florida/prop_house.png` | prop_house | `tools/gen_florida_art.py` | still, 4 texture px per world px; scenes scale 0.25 | - |
+| `project/assets/florida/prop_palm_a.png` | prop_palm_a | `tools/gen_florida_art.py` | still, 4 texture px per world px; scenes scale 0.25 | - |
+| `project/assets/florida/prop_palm_b.png` | prop_palm_b | `tools/gen_florida_art.py` | still, 4 texture px per world px; scenes scale 0.25 | - |
+| `project/assets/florida/prop_palm_potted.png` | prop_palm_potted | `tools/gen_florida_art.py` | still, 4 texture px per world px; scenes scale 0.25 | - |
+| `project/assets/florida/prop_rowboat.png` | prop_rowboat | `tools/gen_florida_art.py` | still, 4 texture px per world px; scenes scale 0.25 | - |
+| `project/assets/florida/prop_sandcastle.png` | prop_sandcastle | `tools/gen_florida_art.py` | still, 4 texture px per world px; scenes scale 0.25 | - |
+| `project/assets/florida/prop_sign_stable.png` | prop_sign_stable | `tools/gen_florida_art.py` | still, 4 texture px per world px; scenes scale 0.25 | - |
+| `project/assets/florida/prop_tree_key_lime.png` | prop_tree_key_lime | `tools/gen_florida_art.py` | still, 4 texture px per world px; scenes scale 0.25 | - |
+| `project/assets/florida/prop_tree_mango.png` | prop_tree_mango | `tools/gen_florida_art.py` | still, 4 texture px per world px; scenes scale 0.25 | - |
+| `project/assets/florida/prop_trough.png` | prop_trough | `tools/gen_florida_art.py` | still, 4 texture px per world px; scenes scale 0.25 | - |
+| `project/assets/florida/prop_umbrella.png` | prop_umbrella | `tools/gen_florida_art.py` | still, 4 texture px per world px; scenes scale 0.25 | - |
+| project/assets/florida/sea_foam.png (+ sea_foam.tres) | sea_foam | `tools/gen_florida_art.py` | sheet, frame 960x120 world px (3840x480 texture), one frame per row, rows 0-5; .tres lap (rows 0-5 at 5 fps, loop), metadata display_scale 0.25; AnimatedSprite2D at world (0, 180) in beach.tscn, top-left anchor, scale 0.25 | - |
+| `project/assets/florida/seed_bag.png` | seed_bag | `tools/gen_florida_art.py` | still, 4 texture px per world px; scenes scale 0.25 | - |
+| `project/assets/florida/shell_conch.png` | shell_conch | `tools/cut_island_props.py` project/data/florida_canon.json (canon tide scroll, sheet 481b) | still, canon sheet resolution; shown 11 world px tall | - |
+| `project/assets/florida/shell_scallop.png` | shell_scallop | `tools/cut_island_props.py` project/data/florida_canon.json (canon tide scroll, sheet 481b) | still, canon sheet resolution; shown 11 world px tall | - |
+| `project/assets/florida/shell_spiral.png` | shell_spiral | `tools/cut_island_props.py` project/data/florida_canon.json (canon tide scroll, sheet 481b) | still, canon sheet resolution; shown 11 world px tall | - |
 | `project/assets/island/mirror.png` | mirror | `tools/gen_village_props.py` | single 104x160 (26x40 world px at 4x), foot y 148 | - |
 | `project/assets/island/temple_pavilion.png` | temple_pavilion | `tools/gen_village_props.py` | single 600x560 (150x140 world px at 4x), foot y 544, door at x 300 | - |
 | `project/assets/ruins/clone_bill_clinton.png` | clone_bill_clinton | `tools/gen_clone_children.py` | 192x272 frames (24x34 world px); rows front/side(right; flip for left)/back; cols 0-1 idle, 2-5 walk; scale 1/8, SpriteFrames via scripts/ruins/sheet_rig.gd | - |

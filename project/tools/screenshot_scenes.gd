@@ -32,6 +32,7 @@ const SHOTS := [
 	["florida_stable", "res://scenes/florida/stable.tscn", ""],
 	["florida_aquarium", "res://scenes/florida/aquarium.tscn", ""],
 	["beach_talk", "res://scenes/florida/beach.tscn", "near_npc"],
+	["beach_crown", "res://scenes/florida/beach.tscn", "crown"],
 	["chapter_end", "res://scenes/chapters/chapter_end.tscn", ""],
 	["next_top_comic", "res://scenes/minigames/next_top_comic.tscn", ""],
 	["hottest_of_the_hot", "res://scenes/minigames/hottest_of_the_hot.tscn", ""],
@@ -71,6 +72,10 @@ func _run() -> void:
 				var dm := root.get_node("DialogueManager")
 				var res: Resource = dm.create_resource_from_text("~ start\nPriestess Betty: Everyone contributes, initiate. What will you offer the Queen Mothers today?\n- I brought flowers from the garden, the pink ones you like.\n- Nothing. I am still thinking about what the offering is for.\n- Whatever the others are offering, but a little bit more of it.\n=> END")
 				dm.show_dialogue_balloon(res, "start")
+			"crown":
+				# A crafted Florida wearable on the canon doll (assets/florida/acc_flower_crown.png).
+				root.get_node("WorldState").set_flag("outfit_accessory", "acc_flower_crown")
+				current_scene.get_tree().get_first_node_in_group("player").refresh_outfit()
 			"near_npc":
 				var p := current_scene.get_tree().get_first_node_in_group("player") as Node2D
 				for n in current_scene.find_children("*", "", true, false):
@@ -110,6 +115,8 @@ func _run() -> void:
 		var path := "%s/%s%s.png" % [out_dir, prefix, shot[0]]
 		img.save_png(path)
 		print("saved ", path, " ", img.get_size())
+		if shot[2] == "crown":
+			root.get_node("WorldState").set_flag("outfit_accessory", "none")
 		for b in root.get_children():
 			if b is CanvasLayer and b.get_parent() == root:
 				b.queue_free()

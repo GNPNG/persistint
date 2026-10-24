@@ -2,10 +2,14 @@ class_name PaperDoll
 extends Control
 ## PaperDoll — layered sprite doll (DESIGN.md: paper-doll reused by wardrobe (kind) and
 ## makeover (judged)). Give it an outfit {slot: part_id}; layers stack in LAYERS order.
-## Part art comes from assets/canon when it exists, else assets/placeholder.
+## Part art comes from the canon set when it has every worn part, else assets/placeholder.
+## The canon set is the canon cuts (assets/canon) plus area parts drawn on the canon doll frame
+## (assets/florida: the crafted Florida wearables, tools/gen_florida_wearables.py).
 
 const LAYERS: Array[String] = ["body", "dress", "hair", "accessory"]
 const ART_DIRS: Array[String] = ["res://assets/canon/%s.png", "res://assets/placeholder/%s.png"]
+## Extra folders searched for a part, after the set's own folder, keyed by the set's pattern.
+const ART_EXTRA := {"res://assets/canon/%s.png": ["res://assets/florida/%s.png"]}
 ## What the player wears before any outfit_* flag is set (player and wardrobe agree on it).
 const DEFAULT_OUTFIT := {"body": "body_base", "dress": "dress_white", "hair": "hair_braids", "accessory": "none"}
 
@@ -41,12 +45,20 @@ static func art_dir_for(parts: Array) -> String:
 	for pattern in ART_DIRS:
 		var complete := true
 		for part_id: String in parts:
-			if part_id != "" and part_id != "none" and not ResourceLoader.exists(pattern % part_id):
+			if part_id != "" and part_id != "none" and not ResourceLoader.exists(part_path(pattern, part_id)):
 				complete = false
 				break
 		if complete:
 			return pattern
 	return ART_DIRS[-1]
+
+
+## Where a part's art lives within the set art_dir_for chose.
+static func part_path(pattern: String, part_id: String) -> String:
+	for extra: String in ART_EXTRA.get(pattern, []):
+		if not ResourceLoader.exists(pattern % part_id) and ResourceLoader.exists(extra % part_id):
+			return extra % part_id
+	return pattern % part_id
 
 
 func _apply() -> void:
@@ -55,5 +67,5 @@ func _apply() -> void:
 	var pattern := art_dir_for(outfit.values())
 	for slot: String in _layers:
 		var part_id: String = outfit.get(slot, "none")
-		var path := pattern % part_id
+		var path := part_path(pattern, part_id)
 		_layers[slot].texture = load(path) if part_id != "none" and ResourceLoader.exists(path) else null

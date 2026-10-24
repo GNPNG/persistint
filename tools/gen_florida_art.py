@@ -1,933 +1,1008 @@
-"""Draw the tropical Florida Keys art: the beach, garden (the house and its yard) and aquarium
-backgrounds, the Father, the Daughter, Hannah, the critters, the mermaid and the garden props.
+"""Draw the tropical Florida Keys maps: ground backgrounds, standing props, garden items, fish.
 
 Usage: python3 -I tools/gen_florida_art.py
-Writes project/assets/placeholder/ (the same file names the scenes already load):
-bg_florida_beach.png, bg_florida_garden.png, bg_florida_aquarium.png, npc_father.png,
-npc_daughter.png, npc_stable_friend.png, crab.png, gull.png, dolphin.png, mermaid.png,
-shell.png, seed_bag.png, craft_bench.png, plot_empty.png, plot_growing.png, plot_ready.png.
+Inputs: prompts/STYLE.md palette (via tools/florida_draw.py) and project/data/florida.json (the
+plants). The canon sheets hold no tropical scenery, so everything is drawn in their sticker
+look: warm-brown outline #8a5a5a, flat pastel fills with one highlight, faces on the big
+friendly things (STYLE.md 4.1), Florida's saturated accents (coral, hibiscus, bougainvillea,
+mango, key lime, turquoise). Sizes below are world px; every PNG is written at
+tools/florida_draw.D (4) texture px per world px. Props and items are drawn at 8x and
+backgrounds at 6x world size, then LANCZOS-resized. Every random choice comes from a
+fixed-seed random.Random.
 
-People are built from the canon art so they match the rest of the cast: the Daughter, Hannah
-and the mermaid are the canon paper-doll body (assets/canon/body_base.png) with a canon hair
-part, recoloured, and Florida clothes drawn on top; the Father is the canon man
-(npc_drone_front.png) in a coral hibiscus shirt and a straw hat. Everything else is drawn in the
-kawaii sticker look of prompts/STYLE.md 4.3 (warm-brown outline #8a5a5a, flat fills with one
-highlight, dot eyes with a catch-light, pink blush) in the Florida palette of 4.4: sea blue,
-turquoise, foam, coral, hibiscus, bougainvillea, key lime, mango, plumeria, coconut.
-Florida is the most saturated world and nothing in it is wrong.
+Outputs, all in project/assets/florida/:
+  bg_florida_beach.png, bg_florida_garden.png, bg_florida_aquarium.png, bg_florida_stable.png
+      960x540 world px (3840x2160 texture) ground only (sea, sand, lawn, paths, floors, the dock and the tank wall);
+      everything a person can stand in front of or behind is a prop below.
+  Props (the bottom edge is where the prop stands; scenes y-sort them with the people):
+      prop_palm_a, prop_palm_b (76 wide), prop_tree_mango, prop_tree_key_lime, prop_bush_hibiscus,
+      prop_bush_bougainvillea, prop_dune_grass, prop_umbrella, prop_rowboat, prop_aquarium,
+      prop_garden_arch, prop_sign_stable, prop_sandcastle, prop_house, prop_fence_picket,
+      prop_birdbath, prop_bench, prop_palm_potted, prop_barn, prop_fence_paddock, prop_hay,
+      prop_trough
+  Garden items: plot_empty, plot_growing, plot_ready_<plant> (one per plant in
+      project/data/florida.json), seed_bag, craft_bench
+  fish.png + fish.tres: frame 16x12 world px (64x48 texture); rows 0 coral, 1 mango, 2 lilac; columns 0-2 swim
+      (tail wiggle), 3 fin wave. Animations swim_<colour> (frames 0,1,2,1 at 5 fps) and
+      wave_<colour> (frames 3,0 at 2 fps). Faces right; anchor: frame centre.
+  sea_foam.png + sea_foam.tres: the beach's surf line, animated. Frame 960x120 world px
+      (3840x480 texture), one frame per row, rows 0-5 (one column); animation "lap" plays
+      rows 0-5 at 5 fps, looping: the foam line and a turquoise wash slide up to 7 world px
+      over the wet sand and back. Placed at world (0, 180) over bg_florida_beach, top-left
+      anchor; the dock is cut out so its posts stay on top.
+The aquarium pool's floor shows the canon shells (project/data/florida_canon.json 'props',
+cut at full resolution through tools/cut_island_props.py) on a little sand patch.
 """
+import json
 import math
 import random
+import sys
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFilter
-
-ROOT = Path(__file__).resolve().parent.parent
-OUT = ROOT / "project/assets/placeholder"
-CANON = ROOT / "project/assets/canon"
-INK = "#8a5a5a"
-BLUSH = "#ff9fb8"
-K = 4
-
-SEA = "#80b0d0"
-TURQ = "#70d0c0"
-FOAM = "#e0f0f0"
-CORAL = "#f08060"
-HIBISCUS = "#ff9ad0"
-BOUG = "#e0408a"
-LIME = "#d8f07a"
-MANGO = "#ffb347"
-PLUMERIA = "#fff1b8"
-COCONUT = "#b08a5a"
-LEAF = "#7cc46a"
-LEAF_DK = "#5aa85a"
-SAND = "#f6e2b0"
-SAND_DK = "#ead09a"
-
-
-def rgb(h):
-    return tuple(int(h[i:i + 2], 16) for i in (1, 3, 5))
-
-
-def mix(a, b, t):
-    a, b = rgb(a), rgb(b)
-    return "#" + "".join(f"{round(a[i] + (b[i] - a[i]) * t):02x}" for i in range(3))
-
-
-class Pen:
-    """Draws at S times the output size; every coordinate is given in output pixels."""
-
-    def __init__(self, im, s):
-        self.im, self.s, self._d = im, s, ImageDraw.Draw(im)
-        self._overlay = None
-
-    @property
-    def d(self):
-        return self._overlay[1] if self._overlay else self._d
-
-    def _begin(self, fill):
-        """Translucent fills (shadows, glare, bubbles) are drawn on an overlay and blended."""
-        alpha = None
-        if isinstance(fill, str) and len(fill) == 9:
-            alpha = int(fill[7:], 16)
-        elif isinstance(fill, tuple) and len(fill) == 4:
-            alpha = fill[3]
-        if alpha is not None and alpha < 255 and self.im.mode == "RGBA":
-            ov = Image.new("RGBA", self.im.size)
-            self._overlay = (ov, ImageDraw.Draw(ov))
-        return self
-
-    def _end(self):
-        if self._overlay:
-            self.im.alpha_composite(self._overlay[0])
-            self._overlay = None
-
-    def _w(self, width):
-        return max(1, round(width * self.s)) if width else 0
-
-    def ell(self, x, y, rx, ry, fill, width=1.0, outline=INK):
-        s = self.s
-        self._begin(fill).d.ellipse([(x - rx) * s, (y - ry) * s, (x + rx) * s, (y + ry) * s], fill=fill,
-                                    outline=outline if width else None, width=self._w(width))
-        self._end()
-
-    def rect(self, x0, y0, x1, y1, fill, rad=0, width=1.0, outline=INK):
-        s = self.s
-        self._begin(fill).d.rounded_rectangle([x0 * s, y0 * s, x1 * s, y1 * s], rad * s, fill=fill,
-                                              outline=outline if width else None, width=self._w(width))
-        self._end()
-
-    def poly(self, pts, fill, width=1.0, outline=INK):
-        self._begin(fill).d.polygon([(x * self.s, y * self.s) for x, y in pts], fill=fill,
-                                    outline=outline if width else None, width=self._w(width))
-        self._end()
-
-    def line(self, pts, fill=INK, width=1.0):
-        self._begin(fill).d.line([(x * self.s, y * self.s) for x, y in pts], fill=fill, width=self._w(width), joint="curve")
-        self._end()
-
-    def arc(self, x0, y0, x1, y1, a0, a1, fill=INK, width=1.0):
-        s = self.s
-        self.d.arc([x0 * s, y0 * s, x1 * s, y1 * s], a0, a1, fill=fill, width=self._w(width))
-
-    def chord(self, x0, y0, x1, y1, a0, a1, fill, width=1.0):
-        s = self.s
-        self.d.chord([x0 * s, y0 * s, x1 * s, y1 * s], a0, a1, fill=fill, outline=INK, width=self._w(width))
-
-    def face(self, x, y, sc=1.0):
-        for dx in (-3.2, 3.2):
-            self.ell(x + dx * sc, y, 1.1 * sc, 1.2 * sc, INK, 0)
-            self.ell(x + dx * sc + 0.35 * sc, y - 0.45 * sc, 0.4 * sc, 0.4 * sc, "#ffffff", 0)
-        self.arc(x - 1.5 * sc, y - 0.2 * sc, x + 1.5 * sc, y + 2.6 * sc, 20, 160, INK, 0.7 * sc)
-        for dx in (-5.3, 5.3):
-            self.ell(x + dx * sc, y + 2 * sc, 1.5 * sc, 0.9 * sc, BLUSH, 0)
-
-    def sparkle(self, x, y, r, fill="#ffffff", outline=None):
-        pts = [(x, y - r), (x + r * 0.28, y - r * 0.28), (x + r, y), (x + r * 0.28, y + r * 0.28), (x, y + r),
-               (x - r * 0.28, y + r * 0.28), (x - r, y), (x - r * 0.28, y - r * 0.28)]
-        self.poly(pts, fill, 0.5 if outline else 0, outline or INK)
-
-    def hibiscus(self, x, y, r, color=HIBISCUS):
-        for a in range(5):
-            ang = a * 2 * math.pi / 5 - math.pi / 2
-            self.ell(x + r * 0.62 * math.cos(ang), y + r * 0.62 * math.sin(ang), r * 0.55, r * 0.55, color, 0.8)
-        self.ell(x, y, r * 0.28, r * 0.28, "#ffe27a", 0)
-
-    def plumeria(self, x, y, r):
-        for a in range(5):
-            ang = a * 2 * math.pi / 5
-            self.ell(x + r * 0.55 * math.cos(ang), y + r * 0.55 * math.sin(ang), r * 0.5, r * 0.38, "#ffffff", 0.6)
-        self.ell(x, y, r * 0.3, r * 0.3, "#ffd36e", 0)
-
-
-def canvas(w, h, s=K, bg=(0, 0, 0, 0)):
-    im = Image.new("RGBA", (w * s, h * s), bg)
-    return im, Pen(im, s)
-
-
-def save(im, w, h, name, rgb_only=False):
-    out = im.resize((w, h), Image.LANCZOS)
-    if rgb_only:
-        out = out.convert("RGB")
-    out.save(OUT / f"{name}.png")
-    return out
-
-
-# ---------------------------------------------------------------- people
-
-def canon(name):
-    return Image.open(CANON / f"{name}.png").convert("RGBA")
-
-
-def recolor(part, target, keep_dark=True):
-    """Recolour a canon part to `target`, keeping its shading (relative luminance) and line art."""
-    src = part.load()
-    out = part.copy()
-    dst = out.load()
-    tr, tg, tb = rgb(target)
-    lums = [(0.3 * r + 0.59 * g + 0.11 * b) / 255 for r, g, b, a in part.getdata() if a > 200]
-    fills = [v for v in lums if v >= 0.33] or [0.5]
-    mean = sum(fills) / len(fills)
-    for y in range(part.height):
-        for x in range(part.width):
-            r, g, b, a = src[x, y]
-            if a == 0:
-                continue
-            lum = (0.3 * r + 0.59 * g + 0.11 * b) / 255
-            if keep_dark and lum < 0.33:  # outline: warm it slightly, keep it dark
-                dst[x, y] = (int(r * 0.9 + 20), int(g * 0.8), int(b * 0.8), a)
-                continue
-            f = max(0.6, min(1.35, 1 + (lum / mean - 1) * 1.2))
-            dst[x, y] = (min(255, int(tr * f)), min(255, int(tg * f)), min(255, int(tb * f)), a)
-    return out
-
-
-def doll(hair, hair_color, clothes, extras_front=None):
-    """Canon body + recoloured canon hair + drawn clothes, on the 91x96 paper-doll frame."""
-    base = Image.new("RGBA", (91 * K, 96 * K))
-    body = canon("body_base").resize((91 * K, 96 * K), Image.LANCZOS)
-    base.alpha_composite(body)
-    p = Pen(base, K)
-    clothes(p)
-    h = recolor(canon(hair), hair_color).resize((91 * K, 96 * K), Image.LANCZOS)
-    base.alpha_composite(h)
-    if extras_front:
-        extras_front(Pen(base, K))
-    return base
-
-
-def finish_person(big, height, name):
-    """Trim to the drawn figure and scale so it stands `height` px tall (feet at the bottom)."""
-    box = big.getbbox()
-    fig = big.crop(box)
-    w = max(1, round(fig.width * height / fig.height))
-    out = fig.resize((w, height), Image.LANCZOS)
-    out.save(OUT / f"{name}.png")
-    return out
-
-
-def sun_hat(p, color, band, cx=46, top=1):
-    p.ell(cx, top + 12, 31, 7, color, 1.4)
-    p.chord(cx - 17, top, cx + 17, top + 24, 180, 360, color, 1.4)
-    p.line([(cx - 16, top + 10), (cx + 16, top + 10)], band, 3)
-    p.arc(cx - 26, top + 7, cx + 26, top + 17, 10, 170, mix(color, INK, 0.25), 0.8)
-
-
-def sundress(p, color, trim, flowers=None):
-    # straps, bodice, a flared skirt to the knee
-    for x in (40, 52):
-        p.line([(x, 51), (x, 56)], color, 2.4)
-    p.poly([(36, 56), (56, 56), (59, 66), (67, 82), (25, 82), (33, 66)], color, 1.2)
-    p.line([(26, 80), (66, 80)], trim, 2)
-    p.line([(35, 64), (57, 64)], mix(color, INK, 0.2), 1)
-    if flowers:
-        for fx, fy in flowers:
-            p.hibiscus(fx, fy, 3.2, "#ffffff" if color != "#ffffff" else HIBISCUS)
-
-
-def daughter():
-    def clothes(p):
-        sundress(p, "#ffd36e", "#ffffff", [(38, 72), (52, 75), (45, 69)])
-
-    def front(p):
-        sun_hat(p, PLUMERIA, HIBISCUS)
-        p.hibiscus(62, 11, 4.5)
-        # her stone bucket (two hundred stones, keeps fifty)
-        p.poly([(64, 66), (78, 66), (76, 80), (66, 80)], "#70d0c0", 1.2)
-        p.arc(64, 58, 78, 74, 180, 360, INK, 1.2)
-        for sx, sy in ((68, 66), (72, 65), (75, 67)):
-            p.ell(sx, sy, 2, 1.4, "#c8c0b8", 0.6)
-        p.line([(70.5, 65), (73.5, 65)], "#ffffff", 0.7)
-        p.line([(65, 72), (77, 72)], "#ffffff", 1.2)
-
-    big = doll("hair_pigtails", "#a8703e", clothes, front)
-    return finish_person(big, 40, "npc_daughter")
-
-
-def hannah():
-    def clothes(p):
-        sundress(p, TURQ, "#ffffff", [(40, 74), (53, 71)])
-
-    def front(p):
-        sun_hat(p, "#fff6dc", BOUG)
-        # the pink pony brush in her hand
-        p.rect(66, 62, 82, 69, HIBISCUS, 2.5, 1.2)
-        for bx in range(68, 81, 3):
-            p.line([(bx, 69), (bx, 72)], "#fff1e6", 1.2)
-
-    big = doll("hair_braids", "#f2c45a", clothes, front)
-    return finish_person(big, 40, "npc_stable_friend")
-
-
-def mermaid():
-    def clothes(p):
-        # shell top
-        for x in (40, 52):
-            p.ell(x, 59, 5, 4, "#ffb0c8", 1)
-            p.line([(x - 3, 57), (x, 62), (x + 3, 57)], "#ff86a8", 0.6)
-
-    def front(p):
-        # a turquoise tail in place of the legs, curling to a fin
-        p.poly([(31, 66), (61, 66), (60, 78), (54, 88), (50, 92), (42, 92), (36, 86), (32, 76)], TURQ, 1.3)
-        for i, y in enumerate((72, 78, 84)):
-            for x in range(36 + i * 2, 58 - i * 2, 6):
-                p.arc(x - 3, y - 3, x + 3, y + 3, 10, 170, mix(TURQ, INK, 0.25), 0.7)
-        p.poly([(46, 90), (30, 96), (36, 89), (46, 88), (56, 89), (62, 96)], "#a8e8dc", 1.2)
-        p.hibiscus(31, 22, 5, "#c8a0f0")
-        for bx, by, r in ((74, 30, 3), (79, 20, 2), (72, 14, 1.6)):
-            p.ell(bx, by, r, r, "#e8fbff", 0.6, "#80b0d0")
-
-    big = doll("hair_braids", "#b898ec", clothes, None)
-    # hide the legs under the tail: clear everything below the hips first
-    px = big.load()
-    for y in range(75 * K, 96 * K):
-        for x in range(91 * K):
-            px[x, y] = (0, 0, 0, 0)
-    front(Pen(big, K))
-    return finish_person(big, 40, "mermaid")
-
-
-def father():
-    """The canon man in a coral hibiscus shirt, rolled khaki trousers and a straw fishing hat,
-    holding a flat skipping stone."""
-    src = canon("npc_drone_front")
-    S = 8
-    big = src.resize((src.width * S, src.height * S), Image.NEAREST)
-    px = big.load()
-    w, h = big.size
-    for y in range(int(19 * S), int(34 * S)):
-        for x in range(w):
-            r, g, b, a = px[x, y]
-            if a < 40:
-                continue
-            # the beige work shirt: light, low-saturation pixels
-            if r > 140 and r - b < 60 and g > 120:
-                lum = (r + g + b) / 765
-                c = rgb(CORAL)
-                f = 0.75 + (lum - 0.62) * 1.6
-                px[x, y] = (min(255, int(c[0] * f)), min(255, int(c[1] * f)), min(255, int(c[2] * f)), a)
-    for y in range(int(33 * S), h):
-        for x in range(w):
-            r, g, b, a = px[x, y]
-            if a < 40:
-                continue
-            if 100 < r < 200 and r - b < 80 and r > g:  # brown work trousers -> khaki
-                lum = (r + g + b) / 765
-                c = rgb("#e6cf98")
-                f = 0.7 + (lum - 0.38) * 1.4
-                px[x, y] = (min(255, int(c[0] * f)), min(255, int(c[1] * f)), min(255, int(c[2] * f)), a)
-    p = Pen(big, S)
-    for fx, fy in ((7.5, 24), (14.5, 27), (10.5, 30.5), (16, 22.5)):  # hibiscus print
-        for a in range(5):
-            ang = a * 2 * math.pi / 5
-            p.ell(fx + 0.9 * math.cos(ang), fy + 0.9 * math.sin(ang), 0.7, 0.7, "#fff1e6", 0)
-        p.ell(fx, fy, 0.35, 0.35, "#ffd36e", 0)
-    # straw fishing hat
-    p.ell(11, 6.2, 11.5, 2.4, "#f2d58a", 0.4)
-    p.chord(4.6, 0.2, 17.4, 11.6, 180, 360, "#f2d58a", 0.4)
-    p.line([(4.9, 5.0), (17.1, 5.0)], "#70d0c0", 1.0)
-    p.arc(2, 4.2, 20, 8.2, 15, 165, "#c9a85a", 0.25)
-    # flat grey skipping stone in his hand
-    p.ell(20.2, 32, 1.8, 1.1, "#c8c0b8", 0.35)
-    p.line([(19, 31.8), (21.4, 31.8)], "#ffffff", 0.3)
-    canvas_big = Image.new("RGBA", (26 * S, 50 * S))
-    canvas_big.alpha_composite(big, (2 * S, 2 * S))
-    res = canvas_big.resize((26, 50), Image.LANCZOS)
-    res = res.crop(res.getbbox())
-    res.save(OUT / "npc_father.png")
-    return res
-
-
-# ---------------------------------------------------------------- critters and props
-
-def crab():
-    im, p = canvas(22, 16)
-    for side in (-1, 1):
-        for i in range(3):
-            x0 = 11 + side * (4 + i * 1.6)
-            p.line([(x0, 10), (x0 + side * 3, 13.5 + i * 0.3)], INK, 1.3)
-            p.line([(x0, 10), (x0 + side * 3, 13.5 + i * 0.3)], CORAL, 0.6)
-        p.line([(11 + side * 5, 8), (11 + side * 8, 5)], INK, 1.4)
-        p.ell(11 + side * 8.6, 4, 2.4, 2.2, CORAL, 0.7)
-        p.line([(11 + side * 8.6, 3), (11 + side * 10.5, 2)], INK, 0.6)
-        p.line([(11 + side * 2.2, 6.5), (11 + side * 2.6, 3.5)], INK, 0.7)
-        p.ell(11 + side * 2.6, 3, 1.2, 1.2, "#ffffff", 0.6)
-        p.ell(11 + side * 2.6, 3.1, 0.55, 0.6, INK, 0)
-    p.ell(11, 9, 6.5, 4.4, CORAL, 0.8)
-    p.ell(9.2, 7.4, 2, 0.9, "#ffb49a", 0)
-    p.arc(9.5, 8.6, 12.5, 11, 20, 160, INK, 0.5)
-    for dx in (-3.6, 3.6):
-        p.ell(11 + dx, 10.2, 1.1, 0.6, BLUSH, 0)
-    save(im, 22, 16, "crab")
-
-
-def gull():
-    im, p = canvas(22, 20)
-    p.line([(9, 15), (9, 19)], "#ffb347", 0.8)
-    p.line([(12, 15), (12, 19)], "#ffb347", 0.8)
-    p.ell(10.5, 12, 6.5, 4.6, "#ffffff", 0.8)
-    p.poly([(4.5, 10), (12, 9.5), (14, 13), (6, 14)], "#c9d6e0", 0.7)
-    p.poly([(3, 11), (5.5, 10.5), (5, 13.5)], "#8a98a8", 0.6)
-    p.ell(15, 7, 4, 3.8, "#ffffff", 0.8)
-    p.poly([(18.4, 6.6), (21.8, 7.6), (18.4, 8.8)], "#ffb347", 0.6)
-    p.ell(16.2, 6.3, 0.75, 0.85, INK, 0)
-    p.ell(16.4, 6.0, 0.28, 0.28, "#ffffff", 0)
-    p.ell(16.6, 8.6, 1.1, 0.6, BLUSH, 0)
-    save(im, 22, 20, "gull")
-
-
-def dolphin():
-    """A round bottlenose dolphin mid-leap: curved back, short beak, big smile."""
-    im, p = canvas(44, 26)
-    p.poly([(6, 9), (1, 3.5), (3, 9.5), (1, 15), (6, 11.5)], "#7aa8d8", 0.8)  # tail flukes
-    body = []
-    for i in range(0, 181, 10):  # a curved, plump body arcing over the water
-        t = math.radians(i)
-        body.append((6 + 30 * (1 - math.cos(t)) / 2 * 1.0 + 0.0, 10.5 - 6.5 * math.sin(t)))
-    lower = [(36, 16.5), (30, 19.5), (20, 19.5), (11, 15.5), (6, 11.5)]
-    p.poly(body + [(38, 9), (43, 11.5), (42.5, 13), (37.5, 14)] + lower, "#8cc4ec", 1)
-    p.poly([(12, 15.2), (20, 18.2), (30, 18.2), (36.5, 14.6), (31, 15.6), (20, 15.8)], "#eaf6ff", 0)
-    p.poly([(18, 5.2), (21, 0.8), (25.5, 4.2)], "#7aa8d8", 0.8)  # dorsal fin
-    p.poly([(24, 17.5), (21.5, 23.5), (28.5, 18.5)], "#7aa8d8", 0.8)  # flipper
-    p.ell(32.6, 9.4, 1.15, 1.25, INK, 0)
-    p.ell(33.0, 8.9, 0.42, 0.42, "#ffffff", 0)
-    p.arc(35, 9.8, 42.6, 14.2, 20, 160, INK, 0.6)
-    p.ell(34.0, 12.2, 1.5, 0.85, BLUSH, 0)
-    p.ell(18, 6.8, 5, 1.1, "#c4e4fa", 0)
-    for x, y, r in ((40, 3, 1.2), (37, 1.5, 0.8)):
-        p.ell(x, y, r, r, "#e8fbff", 0.5, "#80b0d0")
-    save(im, 44, 26, "dolphin")
-
-
-def shell():
-    im, p = canvas(14, 13)
-    p.poly([(7, 1), (13, 5.5), (11.5, 10.5), (7, 12), (2.5, 10.5), (1, 5.5)], "#ffd2dc", 0.8)
-    for x in (3.5, 5.3, 7, 8.7, 10.5):
-        p.line([(7, 11.2), (x, 3.2 + abs(x - 7) * 0.5)], "#f7a0b8", 0.55)
-    p.rect(5, 10.5, 9, 12.6, "#ffc0cf", 0.8, 0.6)
-    p.ell(5, 4.6, 1, 0.7, "#ffffff", 0)
-    save(im, 14, 13, "shell")
-
-
-def seed_bag():
-    im, p = canvas(22, 26)
-    p.poly([(4, 7), (18, 7), (20, 23), (11, 25), (2, 23)], "#f2d58a", 1)
-    p.poly([(5, 4), (17, 4), (18, 8), (4, 8)], "#e0b860", 1)
-    p.line([(4.5, 8.4), (17.5, 8.4)], BOUG, 1.4)
-    p.ell(11, 16, 5.5, 5.5, "#fff6dc", 0.8)
-    p.hibiscus(11, 16, 4)
-    p.line([(11, 4), (9, 0.8)], LEAF_DK, 0.9)
-    p.ell(8.6, 1.4, 1.6, 1, LEAF, 0.5)
-    for sx, sy in ((5, 21), (16.5, 20), (14, 23)):
-        p.ell(sx, sy, 0.7, 0.5, "#b08a5a", 0)
-    save(im, 22, 26, "seed_bag")
-
-
-def craft_bench():
-    im, p = canvas(44, 32)
-    for x in (6, 38):
-        p.rect(x - 2, 14, x + 2, 31, "#c98f5a", 1, 0.9)
-    p.rect(3, 20, 41, 23, "#d9a26a", 1, 0.8)
-    p.rect(1, 10, 43, 16, "#e8b47c", 2, 1)
-    p.line([(4, 12), (40, 12)], "#f6cf9c", 0.8)
-    # what's on the bench: a jar of shells, flowers, a lime and a mango, string for garlands
-    p.rect(7, 2, 14, 11, "#dff6f6", 1.5, 0.8)
-    p.ell(9.4, 8, 1.6, 1.2, "#ffd2dc", 0.4)
-    p.ell(11.6, 6, 1.4, 1, "#ffe0b0", 0.4)
-    p.hibiscus(19, 8, 3.2)
-    p.plumeria(25, 9, 2.8)
-    p.ell(31, 9, 2.4, 2.2, LIME, 0.7)
-    p.ell(36.5, 8.6, 3, 2.6, MANGO, 0.7)
-    p.ell(35.6, 7.6, 0.9, 0.6, "#fff0c8", 0)
-    p.line([(13, 14), (22, 14.6), (30, 13.8)], BOUG, 0.6)
-    p.ell(22, 26, 5.5, 4, "#fff1e6", 0.8)  # a basket of crafts underneath
-    p.hibiscus(20, 24.5, 2.2)
-    p.ell(24.4, 25, 1.4, 1, "#ffd2dc", 0.4)
-    save(im, 44, 32, "craft_bench")
-
-
-def plots():
-    def base():
-        im, p = canvas(34, 26)
-        p.rect(1, 6, 33, 25, "#c98f5a", 3, 1)
-        p.rect(3, 8, 31, 22.5, "#8a5e3c", 2.5, 0)
-        for y in (11, 15, 19):
-            p.line([(5, y), (29, y)], "#9e6f48", 1)
-            p.line([(5, y + 0.9), (29, y + 0.9)], "#764e30", 0.5)
-        return im, p
-
-    im, p = base()
-    for x, y in ((8, 13), (17, 17), (25, 12)):
-        p.ell(x, y, 0.8, 0.6, "#c9a070", 0)
-    save(im, 34, 26, "plot_empty")
-    im, p = base()
-    for x in (10, 17, 24):
-        p.line([(x, 17), (x, 12)], LEAF_DK, 1)
-        p.ell(x - 2.2, 11, 2.4, 1.3, LEAF, 0.6)
-        p.ell(x + 2.2, 10.4, 2.4, 1.3, LEAF, 0.6)
-    save(im, 34, 26, "plot_growing")
-    im, p = base()
-    for x in (17, 9, 25):
-        p.line([(x, 18), (x, 8)], LEAF_DK, 1.2)
-        p.ell(x - 3, 13, 3, 1.5, LEAF, 0.6)
-        p.ell(x + 3, 12, 3, 1.5, LEAF, 0.6)
-    p.hibiscus(9, 6, 4)
-    p.hibiscus(25, 6, 4, BOUG)
-    p.hibiscus(17, 4.5, 4.4, MANGO)
-    p.sparkle(30, 2.5, 2.2, "#fff3a8", "#e0b24a")
-    save(im, 34, 26, "plot_ready")
-
-
-# ---------------------------------------------------------------- shared scenery
-
-BG_S = 2  # backgrounds are drawn at 2x and scaled down to 960x540
-
-
-def palm(p, x, y, lean=1, height=120, scale=1.0):
-    """A friendly palm: bumpy coconut-brown trunk, a crown of leaves, three coconuts."""
-    hgt = height * scale
-    top = (x + 22 * lean * scale, y - hgt)
-    p.ell(x, y + 2, 20 * scale, 6 * scale, "#00000022", 0)
-    n = int(10 * scale) + 4
-    for i in range(n):
-        t = i / (n - 1)
-        cx = x + 22 * lean * scale * t * t
-        cy = y - hgt * t
-        rr = (9 - 3 * t) * scale
-        p.ell(cx, cy, rr, 7 * scale, COCONUT if i % 2 else "#c09a68", 1.5)
-    for ang in (-175, -140, -105, -75, -40, -5, 155, 25):
-        a = math.radians(ang)
-        tip = (top[0] + 60 * scale * math.cos(a), top[1] + 34 * scale * math.sin(a) + 20 * scale)
-        mid = (top[0] + 28 * scale * math.cos(a), top[1] + 16 * scale * math.sin(a) - 6 * scale)
-        side = (-math.sin(a) * 15 * scale, math.cos(a) * 10 * scale)
-        col = LEAF if ang % 2 else LEAF_DK
-        p.poly([top, (mid[0] + side[0], mid[1] + side[1]), tip, (mid[0] - side[0], mid[1] - side[1])], col, 1.5)
-        p.line([top, mid, tip], mix(col, INK, 0.3), 1)
-    for dx, dy in ((-6, 6), (5, 7), (0, 12)):
-        p.ell(top[0] + dx * scale, top[1] + dy * scale, 5 * scale, 5 * scale, "#9a6a3a", 1.5)
-
-
-def bush(p, x, y, r, flower=HIBISCUS, n=3, seed=0):
-    rnd = random.Random(seed)
-    p.ell(x, y + r * 0.5, r * 1.3, r * 0.35, "#00000018", 0)
-    for dx, dy, rr in ((-r * 0.6, 0, r * 0.7), (r * 0.6, 0, r * 0.7), (0, -r * 0.35, r * 0.8)):
-        p.ell(x + dx, y + dy, rr, rr * 0.85, LEAF, 1.5)
-    p.ell(x - r * 0.3, y - r * 0.55, r * 0.3, r * 0.15, "#a8e090", 0)
-    for i in range(n):
-        p.hibiscus(x + rnd.uniform(-r, r) * 0.9, y + rnd.uniform(-r * 0.8, r * 0.2), max(4, r * 0.28), flower)
-
-
-def sand_texture(p, rnd, x0, y0, x1, y1, n):
+from PIL import Image, ImageFilter
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))  # -I leaves tools/ off the path
+import florida_draw as fd  # noqa: E402
+from florida_draw import INK, WHITE, Pen, mix  # noqa: E402
+
+K = 8  # prop drawing scale (world px -> drawing px)
+BG_S = 6  # background drawing scale
+PLANTS = json.loads((fd.ROOT / "project/data/florida.json").read_text())["plants"]
+CLEAR = fd.alpha(WHITE, 0)  # outline-only redraw
+
+
+def prop(name, w, h, draw):
+    im, p = fd.canvas(w, h, K)
+    draw(p, w, h)
+    fd.save(fd.finish(im, w, h), name)
+
+
+# ================================================================== trees and plants
+
+def palm_drawing(lean=1.0, fronds_seed=0):
+    """A coconut palm: one smooth tapered trunk curving up (ring marks, a highlight down the
+    lit side, a small face), a crown of saw-edged fronds and a cluster of coconuts."""
+    def draw(p, w, h):
+        base_x = w / 2 - lean * 6
+        top_x, top_y = w / 2 + lean * 8, 26
+        bark = fd.mix(fd.COCONUT, WHITE, 0.32)
+        bark_dk = fd.mix(fd.COCONUT, INK, 0.12)
+
+        def spine(t):
+            return base_x + (top_x - base_x) * (t ** 1.6), h - 3 - (h - 3 - top_y) * t
+
+        def radius(t):
+            return 4.8 - t * 1.9 + (1 - t) ** 6 * 1.6  # flares a little at the foot
+
+        n = 24
+        left, right = [], []
+        for i in range(n + 1):
+            t = i / n
+            x, y = spine(t)
+            x2, y2 = spine(min(1, t + 0.01))
+            dx, dy = x2 - x, y2 - y
+            ln = math.hypot(dx, dy) or 1
+            nx, ny = -dy / ln, dx / ln
+            r = radius(t)
+            left.append((x - nx * r, y - ny * r))
+            right.append((x + nx * r, y + ny * r))
+        p.ell(base_x, h - 2.6, 9, 2.4, fd.alpha(INK, 0x30), 0)  # shadow
+        p.poly(left + list(reversed(right)), bark, 1.0)
+        # lit side
+        hi = [(x + (rx - x) * 0.18, y) for (x, y), (rx, _) in zip(left[2:-2], right[2:-2])]
+        p.line(hi, fd.alpha(WHITE, 0x70), 1.1)
+        # ring marks: shallow chevrons across the trunk
+        for i in range(1, 12):
+            t = i / 12
+            x, y = spine(t)
+            r = radius(t) - 0.5
+            p.line([(x - r, y - 0.7), (x, y + 0.6), (x + r, y - 0.7)], bark_dk, 0.55)
+        t = 0.38
+        fx_, fy_ = spine(t)
+        p.face(fx_, fy_ - 1, 0.5)
+        # fronds: saw-edged leaves fanning out and drooping from the crown
+        rnd = random.Random(fronds_seed)
+        fronds = []
+        for a in (-172, -140, -108, -76, -44, -12, 18, 200, 160):
+            a += rnd.uniform(-5, 5)
+            fronds.append((a, rnd.uniform(24, 30)))
+        fronds.sort(key=lambda f: -math.sin(math.radians(f[0])))  # back (upward) fronds first
+        for a, L in fronds:
+            rad = math.radians(a)
+            droop = 9 + 5 * abs(math.cos(rad))
+            ex, ey = top_x + math.cos(rad) * L, top_y + math.sin(rad) * L * 0.6 + droop
+            mx, my = top_x + math.cos(rad) * L * 0.55, top_y + math.sin(rad) * L * 0.5 - 4
+            col = "#79cf86" if math.sin(rad) < -0.3 else "#62bd74"
+
+            def bez(t):
+                return ((1 - t) ** 2 * top_x + 2 * (1 - t) * t * mx + t * t * ex,
+                        (1 - t) ** 2 * top_y + 2 * (1 - t) * t * my + t * t * ey)
+            steps = 26
+            up, down = [], []
+            for k in range(steps + 1):
+                t = k / steps
+                bx, by = bez(t)
+                bx2, by2 = bez(min(1, t + 0.02))
+                dx, dy = bx2 - bx, by2 - by
+                ln = math.hypot(dx, dy) or 1
+                nx, ny = -dy / ln, dx / ln
+                base_w = math.sin(min(1, t * 1.15) * math.pi) * 4.6 + 0.4
+                tooth = 1.0 if k % 2 else 0.74  # leaflet tips
+                wd = base_w * (tooth if 0 < k < steps else 1)
+                up.append((bx + nx * wd, by + ny * wd))
+                down.append((bx - nx * wd * 0.9, by - ny * wd * 0.9))
+            p.poly(up + list(reversed(down)), col, 0.85)
+            rib = [bez(k / 8) for k in range(9)]
+            p.line(rib, fd.mix(col, INK, 0.28), 0.5)
+            p.line([(x + 0.0, y - 0.9) for x, y in rib[1:6]], fd.alpha(WHITE, 0x60), 0.7)
+        for dx, dy in ((-2.6, 3.0), (2.4, 3.4), (0, 5.2)):
+            p.ell(top_x + dx, top_y + dy, 2.7, 2.7, "#a07850", 0.8)
+            p.ell(top_x + dx - 0.8, top_y + dy - 0.9, 0.85, 0.7, "#c8a070", 0)
+    return draw
+
+
+def fruit_tree(canopy, fruit, fruit_hi, leaf_dk):
+    """Canon-style bubbly tree (three or four circles, a face) bearing Florida fruit."""
+    def draw(p, w, h):
+        cx = w / 2
+        p.rect(cx - 3.2, h - 22, cx + 3.2, h - 1.5, fd.TRUNK, 2, 0.9)
+        p.line([(cx - 1, h - 18), (cx - 1, h - 6)], fd.mix(fd.TRUNK, INK, 0.25), 0.5)
+        p.blob([(cx - 10, 22, 11), (cx + 10, 22, 11), (cx, 14, 12.5), (cx, 26, 12)], canopy, 1.0)
+        p.ell(cx - 8, 12, 4, 2.4, fd.mix(canopy, WHITE, 0.45), 0)
+        p.arc(cx + 6, 20, 5, 3, 200, 300, leaf_dk, 0.5)
+        p.face(cx, 25, 0.62)
+        for x, y in ((cx - 13, 18), (cx + 13, 26), (cx - 6, 33), (cx + 9, 12), (cx + 15, 16), (cx - 15, 29)):
+            p.ell(x, y, 2.4, 2.6, fruit, 0.7)
+            p.ell(x - 0.7, y - 0.9, 0.7, 0.6, fruit_hi, 0)
+        p.sparkle(cx + 14, 6, 2.4, WHITE, None)
+    return draw
+
+
+def _hib(p, x, y, c):
+    p.hibiscus(x, y, 3.2, c, 0.5)
+
+
+def _boug(p, x, y, c):
+    for dx, dy in ((-1.6, 0), (1.6, 0.4), (0, -1.5), (0.2, 1.6)):
+        p.ell(x + dx, y + dy, 1.7, 1.5, c, 0.45)
+    p.ell(x, y, 0.7, 0.7, WHITE, 0)
+
+
+def bush(flower_fn, color):
+    def draw(p, w, h):
+        cx = w / 2
+        p.blob([(cx - 8, h - 9, 7), (cx + 8, h - 9, 7), (cx, h - 13, 8.5), (cx, h - 7, 7)], fd.HEDGE, 1.0)
+        p.ell(cx - 5, h - 17, 3, 1.6, fd.mix(fd.HEDGE, WHITE, 0.4), 0)
+        for x, y in ((cx - 9, h - 11), (cx + 1, h - 16), (cx + 9, h - 9), (cx - 1, h - 7)):
+            flower_fn(p, x, y, color)
+    return draw
+
+
+def dune_grass(p, w, h):
+    rnd = random.Random(3)
+    for i in range(7):
+        x = 3 + i * (w - 6) / 6
+        top = rnd.uniform(1, 5)
+        lean = rnd.uniform(-3, 3)
+        p.line([(x, h - 1), (x + lean, top)], "#9ccb7a", 1.4)
+        p.line([(x, h - 1), (x + lean, top)], "#c2e59b", 0.6)
+        if i % 2:
+            p.ell(x + lean, top - 1, 1.1, 2.0, "#e8d79a", 0.5)
+
+
+# ================================================================== beach props
+
+def umbrella(p, w, h):
+    cx = w / 2
+    p.line([(cx, 14), (cx + 1, h - 2)], INK, 1.6)
+    p.line([(cx, 14), (cx + 1, h - 2)], WHITE, 0.7)
+    canopy = [(cx - 19, 18)]
+    for i in range(9):
+        a = math.pi + i / 8 * math.pi
+        canopy.append((cx + math.cos(a) * 19, 16 + math.sin(a) * 12))
+    canopy.append((cx + 19, 18))
+    p.poly(canopy, WHITE, 1.0)
+    for k in range(4):  # coral stripes
+        a0 = math.pi + (2 * k) / 8 * math.pi
+        a1 = math.pi + (2 * k + 1) / 8 * math.pi
+        seg = [(cx, 5)]
+        for j in range(5):
+            a = a0 + (a1 - a0) * j / 4
+            seg.append((cx + math.cos(a) * 18.4, 16 + math.sin(a) * 11.4))
+        seg += [(cx + math.cos(a1) * 18.4, 18), (cx + math.cos(a0) * 18.4, 18)]
+        p.poly(seg, fd.CORAL, 0)
+    for i in range(8):  # scalloped rim
+        x = cx - 17 + i * 34 / 7
+        p.ell(x, 18, 2.6, 2.0, fd.CORAL if i % 2 == 0 else WHITE, 0.6)
+    p.poly(canopy, CLEAR, 1.0)
+    p.ell(cx, 4.6, 1.8, 1.8, fd.FLOWER_YELLOW, 0.6)
+    p.ell(cx - 9, 10, 4, 1.6, fd.alpha(WHITE, 0xa0), 0)
+    p.face(cx, 13.5, 0.55)
+
+
+def rowboat(p, w, h):
+    """The Father's boat pulled up on the sand (the way back to the village); bow to the right."""
+    hull = [(4, 12), (w - 4, 9), (w - 10, 22), (12, 24)]
+    p.poly([(x, y + 1.5) for x, y in hull], fd.alpha(INK, 0x40), 0)
+    p.poly(hull, WHITE, 1.0)
+    p.poly([(5, 13), (w - 5, 10), (w - 7, 15), (7, 18)], fd.CORAL, 0)
+    p.poly(hull, CLEAR, 1.0)
+    p.poly([(9, 11), (w - 9, 9), (w - 13, 13.5), (12, 15)], "#e4c597", 0.8)
+    for x in (22, 36):
+        p.line([(x, 10.5), (x + 1, 14.5)], fd.WOOD, 1.4)
+    p.line([(18, 6), (44, 18)], INK, 1.5)  # oar
+    p.line([(18, 6), (44, 18)], fd.WOOD, 0.8)
+    p.ell(44.5, 18.5, 3, 1.6, fd.WOOD, 0.7)
+    p.face(w - 18, 18.5, 0.55)
+    p.ell(w - 30, 19, 1.4, 1.4, fd.TURQ, 0.4)
+
+
+def aquarium_building(p, w, h):
+    cx = w / 2
+    p.poly([(cx - 4, 18), (cx + 6, 2), (cx + 10, 18)], fd.TURQ, 1.0)  # a fin on the dome
+    p.ell(cx, 34, 52, 26, "#9fd6ef", 1.1)
+    p.ell(cx - 22, 24, 14, 5, fd.alpha(WHITE, 0x90), 0)
+    for i in range(5):
+        x = cx - 40 + i * 20
+        p.arc(cx, 34, abs(x - cx) + 4, 26, 190, 350, fd.mix("#9fd6ef", INK, 0.2), 0.5)
+    p.rect(cx - 62, 36, cx + 62, h - 4, "#e9f7fb", 4, 1.1)
+    p.rect(cx - 62, h - 16, cx + 62, h - 4, "#cfe9f4", 3, 0)
+    p.rect(cx - 62, 36, cx + 62, h - 4, CLEAR, 4, 1.1)
+    band = [(cx - 62 + i * 124 / 24, 46 + math.sin(i * 0.9) * 1.4) for i in range(25)]
+    p.poly(band + [(cx + 62, 54), (cx - 62, 54)], fd.TURQ, 0)
+    # porthole windows with fish: the building's eyes
+    for x in (cx - 38, cx + 38):
+        p.ell(x, 66, 11, 11, "#f6d98c", 1.0)
+        p.ell(x, 66, 8, 8, "#7fc6ea", 0.8)
+        p.ell(x - 2.5, 63, 2.4, 1.6, fd.alpha(WHITE, 0xb0), 0)
+        p.ell(x + 1, 68, 3, 2, fd.MANGO, 0.5)
+        p.poly([(x - 2, 68), (x - 5, 66), (x - 5, 70)], fd.MANGO, 0.5)
+        p.ell(x, 81, 5, 2.2, fd.BLUSH, 0)
+    p.arc(cx, 72, 7, 4, 20, 160, INK, 0.9)
+    p.rect(cx - 13, 78, cx + 13, h - 4, "#7fc6ea", 12, 1.0)  # arched door
+    p.line([(cx, 80), (cx, h - 4)], INK, 0.8)
+    p.ell(cx - 4, 92, 1.1, 1.1, "#f6d98c", 0.4)
+    p.ell(cx + 4, 92, 1.1, 1.1, "#f6d98c", 0.4)
+    for x, y, r in ((cx + 50, 22, 2.6), (cx + 56, 12, 1.8), (cx - 52, 18, 2.0)):
+        p.ell(x, y, r, r, fd.alpha(WHITE, 0xc0), 0.5, "#7fb8d8")
+    p.rect(cx - 16, 26, cx + 16, 38, "#ffb3c8", 4, 0.9)  # sign: a fish, no text
+    p.ell(cx + 1, 32, 5, 3, fd.MANGO, 0.6)
+    p.poly([(cx - 4, 32), (cx - 8, 29), (cx - 8, 35)], fd.MANGO, 0.6)
+    p.ell(cx + 3, 31.4, 0.6, 0.6, INK, 0)
+    for x in (cx - 50, cx + 50):
+        p.rect(x - 8, h - 14, x + 8, h - 5, fd.CORAL, 2, 0.8)
+        p.hibiscus(x - 3, h - 15, 3, fd.HIBISCUS, 0.5)
+        p.hibiscus(x + 4, h - 16, 2.6, fd.FLOWER_YELLOW, 0.5)
+
+
+def garden_arch(p, w, h):
+    for x in (6, w - 6):
+        p.rect(x - 3, 12, x + 3, h - 1, WHITE, 1.5, 0.9)
+    p.arc(w / 2, 16, w / 2 - 6, 14, 180, 360, INK, 7.2)
+    p.arc(w / 2, 16, w / 2 - 6, 14, 180, 360, WHITE, 5.4)
+    rnd = random.Random(8)
+    for i in range(16):
+        a = math.pi + i / 15 * math.pi
+        p.ell(w / 2 + math.cos(a) * (w / 2 - 6) + rnd.uniform(-2, 2), 16 + math.sin(a) * 14 + rnd.uniform(-2, 2),
+              2.4, 2.0, fd.HEDGE, 0.5)
+    for i in range(9):
+        a = math.pi + (i + 0.5) / 9 * math.pi
+        _boug(p, w / 2 + math.cos(a) * (w / 2 - 6), 15 + math.sin(a) * 14, fd.BOUG if i % 2 else fd.HIBISCUS)
+    for x in (6, w - 6):
+        for y in (24, 34, 44):
+            p.ell(x + (1.5 if y % 20 else -1.5), y, 2.2, 1.8, fd.HEDGE, 0.5)
+        _boug(p, x, 30, fd.BOUG)
+        _boug(p, x + 1, 42, fd.HIBISCUS)
+
+
+def sign_stable(p, w, h):
+    cx = w / 2
+    p.ell(cx, h - 2, 6, 1.6, fd.alpha(INK, 0x30), 0)
+    p.rect(cx - 2, 12, cx + 2, h - 1, fd.WOOD, 1, 0.9)
+    p.poly([(2, 6), (w - 6, 5), (w - 1, 11), (w - 6, 17), (2, 16)], "#e9c79a", 1.0)
+    # a horseshoe and a heart: the ponies are this way
+    p.arc(9, 11, 4, 4, 160, 380, INK, 2.2)
+    p.arc(9, 11, 4, 4, 160, 380, "#c8ccd8", 1.2)
+    p.heart(17, 11, 3.0, fd.HEART, 0.4)
+
+
+def sandcastle(p, w, h):
+    sand, dk = "#f3d9a0", "#d9b77a"
+    p.rect(3, 12, w - 3, h - 2, sand, 2, 0.9)
+    for x in (4, w / 2 - 4, w - 12):
+        p.rect(x, 5, x + 8, 14, sand, 1.5, 0.9)
+        for k in range(3):
+            p.rect(x + k * 3, 3.4, x + k * 3 + 2, 6, sand, 0.4, 0.6)
+    p.rect(w / 2 - 3, h - 9, w / 2 + 3, h - 2, dk, 3, 0.7)
+    p.line([(w / 2, 6), (w / 2, 2)], INK, 0.6)
+    p.poly([(w / 2, 1.5), (w / 2 + 5, 3), (w / 2, 4.5)], fd.HIBISCUS, 0.4)
+    p.ell(6, h - 4, 1.4, 1, "#ffb3c8", 0.4)
+    p.face(w / 2, 15.5, 0.45)
+
+
+# ================================================================== garden props
+
+def house(p, w, h):
+    """The house up from the beach: a Keys cottage with a porch, pastel turquoise siding, white
+    trim, a coral tin roof, shutters and flower boxes. It smiles."""
+    cx = w / 2
+    wall_top, porch = 50, h - 22
+    p.poly([(cx - 128, h - 6), (cx + 128, h - 6), (cx + 124, h - 2), (cx - 124, h - 2)], fd.alpha(INK, 0x30), 0)
+    p.rect(cx - 118, wall_top, cx + 118, porch, "#9fe0dc", 2, 1.2)
+    for y in range(wall_top + 7, porch, 7):  # siding
+        p.line([(cx - 116, y), (cx + 116, y)], fd.mix("#9fe0dc", INK, 0.18), 0.5, False)
+    p.poly([(cx - 132, wall_top + 4), (cx - 96, 6), (cx + 96, 6), (cx + 132, wall_top + 4)], fd.CORAL, 1.2)
+    for i in range(1, 16):
+        p.line([(cx - 96 + i * 192 / 16, 8), (cx - 132 + i * 264 / 16, wall_top + 2)], fd.mix(fd.CORAL, INK, 0.22), 0.6, False)
+    p.line([(cx - 96, 6), (cx + 96, 6)], fd.mix(fd.CORAL, WHITE, 0.4), 1.2)
+    p.rect(cx - 134, wall_top + 2, cx + 134, wall_top + 7, WHITE, 2, 1.0)
+    # porch deck, steps, posts, railings
+    p.rect(cx - 124, porch - 2, cx + 124, h - 8, "#f3e2c4", 1.5, 1.1)
+    for x in range(int(cx - 120), int(cx + 121), 10):
+        p.line([(x, porch), (x, h - 9)], fd.mix("#f3e2c4", INK, 0.15), 0.5, False)
+    p.rect(cx - 16, h - 9, cx + 16, h - 1, "#ead2ae", 1, 1.0)
+    p.line([(cx - 16, h - 5), (cx + 16, h - 5)], INK, 0.6)
+    for x in (cx - 120, cx - 60, cx + 60, cx + 120, cx - 18, cx + 18):
+        p.rect(x - 2, wall_top + 8, x + 2, porch, WHITE, 1, 0.8)
+    for x0, x1 in ((cx - 120, cx - 18), (cx + 18, cx + 120)):
+        p.line([(x0, porch - 14), (x1, porch - 14)], INK, 2.2)
+        p.line([(x0, porch - 14), (x1, porch - 14)], WHITE, 1.2)
+        for x in range(int(x0) + 4, int(x1), 6):
+            p.line([(x, porch - 13), (x, porch - 2)], WHITE, 1.2)
+            p.line([(x, porch - 13), (x, porch - 2)], fd.alpha(INK, 0x60), 0.3)
+    # coral door with a round window, a heart over it
+    p.rect(cx - 12, wall_top + 18, cx + 12, porch - 1, fd.CORAL, 3, 1.0)
+    p.ell(cx, wall_top + 28, 5, 5, "#d8f2fb", 0.8)
+    p.ell(cx + 7, wall_top + 44, 1.2, 1.2, "#f6d98c", 0.4)
+    p.heart(cx, wall_top + 12, 3.2, fd.HEART, 0.5)
+    # windows with shutters and flower boxes; the two by the door are its eyes
+    for x in (cx - 88, cx - 46, cx + 46, cx + 88):
+        p.rect(x - 11, wall_top + 14, x + 11, wall_top + 36, "#d8f2fb", 2, 1.0)
+        p.line([(x, wall_top + 14), (x, wall_top + 36)], WHITE, 1.2)
+        p.line([(x - 11, wall_top + 25), (x + 11, wall_top + 25)], WHITE, 1.2)
+        p.ell(x - 5, wall_top + 18, 3, 1.5, fd.alpha(WHITE, 0xb0), 0)
+        for s in (-1, 1):
+            p.rect(x + s * 13 - 3, wall_top + 13, x + s * 13 + 3, wall_top + 37, "#ffb3c8", 1, 0.8)
+        p.rect(x - 12, wall_top + 36, x + 12, wall_top + 41, fd.WOOD, 1, 0.8)
+        for k in range(4):
+            p.hibiscus(x - 8 + k * 5.3, wall_top + 35, 2.2, fd.HIBISCUS if k % 2 else fd.FLOWER_YELLOW, 0.4)
+    for x in (cx - 46, cx + 46):
+        p.ell(x, wall_top + 28, 2.2, 2.6, INK, 0)
+        p.ell(x + 0.8, wall_top + 27, 0.8, 0.8, WHITE, 0)
+    for x in (cx - 30, cx + 30):
+        p.ell(x, wall_top + 44, 4.5, 2.2, fd.BLUSH, 0)
+    for x in (cx - 26, cx + 26):  # porch lanterns
+        p.line([(x, wall_top + 8), (x, wall_top + 13)], INK, 0.6)
+        p.ell(x, wall_top + 15, 2.4, 2.8, "#fff1b8", 0.7)
+
+
+def fence_picket(p, w, h):
+    p.rect(0, 8, w, 11, WHITE, 1, 0.8)
+    p.rect(0, 15, w, 18, WHITE, 1, 0.8)
+    for i in range(8):
+        x = 4 + i * (w - 8) / 7
+        p.poly([(x - 2.6, h - 1), (x - 2.6, 4), (x, 1), (x + 2.6, 4), (x + 2.6, h - 1)], WHITE, 0.8)
+    for x in (4 + 2 * (w - 8) / 7, 4 + 5 * (w - 8) / 7):
+        p.hibiscus(x + 3, 9, 2.4, fd.HIBISCUS, 0.4)
+        p.ell(x - 3, 13, 1.8, 1.2, fd.HEDGE, 0.4)
+
+
+def birdbath(p, w, h):
+    cx = w / 2
+    p.poly([(cx - 3, 10), (cx + 3, 10), (cx + 4, h - 4), (cx - 4, h - 4)], "#f2ecf6", 0.9)
+    p.ell(cx, h - 3, 7, 2.2, "#f2ecf6", 0.9)
+    p.ell(cx, 8, 9.5, 3.6, "#f2ecf6", 0.9)
+    p.ell(cx, 7.4, 7.5, 2.4, fd.WATER, 0.6)
+    p.ell(cx - 3, 6.8, 2, 0.8, WHITE, 0)
+    p.sparkle(cx + 6, 2, 1.8, WHITE, None)
+
+
+# ================================================================== aquarium props
+
+def bench(p, w, h):
+    for x in (8, w - 8):
+        p.rect(x - 2.5, 10, x + 2.5, h - 1, fd.WOOD, 1, 0.8)
+    p.rect(2, 3, w - 2, 12, "#e2b886", 2, 1.0)
+    for k in range(1, 4):
+        p.line([(2 + k * (w - 4) / 4, 4), (2 + k * (w - 4) / 4, 11)], fd.mix("#e2b886", INK, 0.2), 0.5)
+    p.rect(5, 1, w - 5, 7, "#ffb3c8", 3, 0.8)
+    for k in range(5):
+        p.heart(10 + k * (w - 20) / 4, 4, 1.4, WHITE, 0)
+
+
+def palm_potted(p, w, h):
+    cx = w / 2
+    p.poly([(cx - 9, h - 13), (cx + 9, h - 13), (cx + 7, h - 1), (cx - 7, h - 1)], fd.CORAL, 0.9)
+    p.rect(cx - 10, h - 15, cx + 10, h - 11, fd.mix(fd.CORAL, WHITE, 0.3), 1.5, 0.8)
+    p.face(cx, h - 7, 0.45)
+    p.line([(cx, h - 14), (cx + 1, 14)], INK, 2.6)
+    p.line([(cx, h - 14), (cx + 1, 14)], fd.COCONUT, 1.6)
+    for a in (-170, -135, -100, -70, -35, -5):
+        rad = math.radians(a)
+        ex, ey = cx + 1 + math.cos(rad) * 13, 14 + math.sin(rad) * 9 + 7
+        mx, my = cx + 1 + math.cos(rad) * 7, 14 + math.sin(rad) * 6
+        nx, ny = -math.sin(rad), math.cos(rad)
+        p.poly([(cx + 1, 14), (mx + nx * 4.2, my + ny * 4.2), (ex, ey), (mx - nx * 1.4, my - ny * 1.4)], "#7fd08a", 0.8)
+        p.line([(cx + 1, 14), (ex, ey)], "#5fae6c", 0.4)
+
+
+# ================================================================== stable props
+
+def barn(p, w, h):
+    """The pony stable: a big friendly barn with a face, a hay loft and flower boxes."""
+    cx = w / 2
+    wall_top = 54
+    p.poly([(cx - 124, h - 5), (cx + 124, h - 5), (cx + 120, h - 1), (cx - 120, h - 1)], fd.alpha(INK, 0x30), 0)
+    p.rect(cx - 112, wall_top, cx + 112, h - 3, "#f4a6a0", 3, 1.2)
+    for x in range(int(cx - 104), int(cx + 105), 8):
+        p.line([(x, wall_top + 2), (x, h - 5)], fd.mix("#f4a6a0", INK, 0.14), 0.5, False)
+    p.poly([(cx - 126, wall_top + 6), (cx - 70, 16), (cx, 2), (cx + 70, 16), (cx + 126, wall_top + 6)], "#e07a7a", 1.2)
+    p.line([(cx - 70, 16), (cx, 2), (cx + 70, 16)], fd.mix("#e07a7a", WHITE, 0.4), 1.0)
+    p.rect(cx - 128, wall_top + 2, cx + 128, wall_top + 8, WHITE, 2, 1.0)
+    p.rect(cx - 16, 22, cx + 16, 46, "#c98f5a", 3, 1.0)  # hay loft
+    p.rect(cx - 13, 34, cx + 13, 46, "#ffe27a", 2, 0.6)
+    for x in range(int(cx - 12), int(cx + 13), 3):
+        p.line([(x, 34), (x + 1, 31)], "#e0b24a", 0.6)
+    p.heart(cx, 28, 3.2, fd.HEART, 0.5)
+    p.rect(cx - 30, wall_top + 26, cx + 30, h - 3, "#c98f5a", 3, 1.1)  # double door
+    for x0, x1 in ((cx - 30, cx), (cx, cx + 30)):
+        p.line([(x0 + 3, wall_top + 29), (x1 - 3, h - 6)], WHITE, 1.4)
+        p.line([(x1 - 3, wall_top + 29), (x0 + 3, h - 6)], WHITE, 1.4)
+    p.line([(cx, wall_top + 26), (cx, h - 3)], INK, 0.9)
+    for x in (cx - 70, cx + 70):  # window eyes with flower boxes
+        p.rect(x - 18, wall_top + 14, x + 18, wall_top + 40, "#fff6dc", 4, 1.0)
+        p.ell(x + (4 if x < cx else -4), wall_top + 27, 4, 5, INK, 0)
+        p.ell(x + (5.4 if x < cx else -2.6), wall_top + 25, 1.4, 1.4, WHITE, 0)
+        p.rect(x - 20, wall_top + 40, x + 20, wall_top + 46, fd.WOOD, 1.5, 0.8)
+        for k in range(5):
+            p.hibiscus(x - 15 + k * 7.5, wall_top + 40, 2.6, fd.HIBISCUS if k % 2 else fd.FLOWER_YELLOW, 0.4)
+        p.ell(x, wall_top + 54, 7, 3.2, fd.BLUSH, 0)
+    p.arc(cx, wall_top + 16, 9, 5, 20, 160, INK, 1.0)
+    p.arc(cx, wall_top + 20, 4, 4, 160, 380, INK, 2.2)  # horseshoe over the door
+    p.arc(cx, wall_top + 20, 4, 4, 160, 380, "#c8ccd8", 1.2)
+
+
+def fence_paddock(p, w, h):
+    for y in (6, 13):
+        p.rect(0, y, w, y + 3.6, WHITE, 1.2, 0.8)
+    for x in (4, w / 2, w - 4):
+        p.rect(x - 2.6, 1, x + 2.6, h - 1, WHITE, 1.2, 0.8)
+
+
+def hay(p, w, h):
+    p.rect(1, 4, w - 1, h - 1, "#ffe27a", 4, 1.0)
+    for y in (8, 13, 17):
+        p.line([(4, y), (w - 4, y)], "#e0b24a", 0.6, False)
+    for x in (9, w - 9):
+        p.line([(x, 4), (x, h - 1)], "#c98f5a", 1.0, False)
+    for x in range(3, w - 2, 3):
+        p.line([(x, 5), (x + 1, 2.5)], "#e0b24a", 0.5)
+    p.face(w / 2, 12, 0.5)
+
+
+def trough(p, w, h):
+    p.poly([(2, 6), (w - 2, 6), (w - 5, h - 2), (5, h - 2)], fd.WOOD, 1.0)
+    p.ell(w / 2, 6.5, w / 2 - 2, 3.2, "#8fd3e8", 0.8)
+    p.ell(w / 2 - 6, 6, 4, 1.2, WHITE, 0)
+    p.line([(4, 11), (w - 4, 11)], fd.mix(fd.WOOD, INK, 0.25), 0.5)
+
+
+# ================================================================== garden items
+
+def plot_base(p, w, h, top):
+    """A soft mound of tilled soil ringed with little white stones; three ridged rows."""
+    cx, cy = w / 2, (top + h - 3) / 2
+    rx, ry = w / 2 - 3, (h - 3 - top) / 2
+    p.ell(cx, h - 3, rx + 1, 3, fd.alpha(INK, 0x30), 0)
+    p.ell(cx, cy, rx, ry, fd.SOIL_DK, 0.9)
+    p.ell(cx, cy - 0.6, rx - 1.6, ry - 1.6, fd.SOIL, 0)
+    for k in (-1, 0, 1):
+        y = cy + k * ry * 0.5
+        half = math.sqrt(max(0.0, 1 - (k * 0.5) ** 2)) * (rx - 4)
+        for i in range(6):
+            x = cx - half + (2 * half) * (i + 0.5) / 6
+            p.ell(x, y, half / 6.4, 1.3, fd.mix(fd.SOIL, WHITE, 0.25), 0)
+            p.ell(x, y + 1.2, half / 7, 0.6, fd.SOIL_DK, 0)
+    for i in range(14):
+        a = i / 14 * 2 * math.pi
+        p.ell(cx + math.cos(a) * (rx + 0.5), cy + math.sin(a) * (ry + 0.5), 1.6, 1.2, "#f6efe6", 0.45)
+
+
+def plot_empty(p, w, h):
+    plot_base(p, w, h, h - 20)
+    p.ell(w / 2 + 7, h - 15, 1.6, 1.2, fd.alpha(WHITE, 0xc0), 0.3, "#7fb8d8")  # a drop of water
+
+
+def plot_growing(p, w, h):
+    plot_base(p, w, h, h - 20)
+    for x in (10, 18, 26):
+        y = h - 10
+        p.line([(x, y), (x, y - 6)], "#6cbf5a", 0.9)
+        p.ell(x - 2.6, y - 7, 2.8, 1.7, fd.SPROUT, 0.5)
+        p.ell(x + 2.6, y - 8, 2.8, 1.7, fd.SPROUT_HI, 0.5)
+    p.ell(30, h - 18, 1.4, 1.4, fd.alpha(WHITE, 0xc0), 0.3, "#7fb8d8")
+
+
+def plot_ready(plant):
+    """The bed with the grown plant, in its own colour from florida.json."""
+    color = PLANTS[plant]["color"]
+
+    def draw(p, w, h):
+        plot_base(p, w, h, h - 20)
+        cx, base = w / 2, h - 12
+        hi = mix(color, WHITE, 0.45)
+        if plant in ("hibiscus", "bougainvillea", "plumeria"):
+            p.blob([(cx - 7, base - 7, 6), (cx + 7, base - 7, 6), (cx, base - 12, 7)], fd.HEDGE, 0.9)
+            for x, y in ((cx - 8, base - 9), (cx + 7, base - 10), (cx, base - 16), (cx - 1, base - 6)):
+                if plant == "hibiscus":
+                    p.hibiscus(x, y, 3.4, color, 0.5)
+                elif plant == "bougainvillea":
+                    _boug(p, x, y, color)
+                else:
+                    p.plumeria(x, y, 3.2, 0.45)
+        elif plant == "coconut":
+            p.line([(cx, base), (cx + 1, base - 15)], INK, 2.4)
+            p.line([(cx, base), (cx + 1, base - 15)], fd.COCONUT, 1.4)
+            for a in (-160, -120, -60, -20):
+                rad = math.radians(a)
+                p.poly([(cx + 1, base - 15), (cx + 1 + math.cos(rad) * 9, base - 15 + math.sin(rad) * 6 + 5),
+                        (cx + 1 + math.cos(rad) * 5, base - 17 + math.sin(rad) * 3)], "#7fd08a", 0.7)
+            for dx in (-2, 2):
+                p.ell(cx + 1 + dx, base - 12.5, 2.3, 2.3, color, 0.6)
+        else:  # fruiting shrubs: sea grape, key lime, guava, mango
+            p.line([(cx, base), (cx, base - 6)], fd.TRUNK, 1.4)
+            p.blob([(cx - 7, base - 9, 6), (cx + 7, base - 9, 6), (cx, base - 14, 7)], fd.LEAF_MINT, 0.9)
+            for x, y in ((cx - 8, base - 9), (cx + 7, base - 7), (cx + 2, base - 15), (cx - 3, base - 12), (cx + 9, base - 13)):
+                if plant == "sea_grape":
+                    for dx, dy in ((0, 0), (1.4, 1.2), (-1.4, 1.2), (0, 2.4)):
+                        p.ell(x + dx, y + dy, 1.2, 1.2, color, 0.4)
+                else:
+                    p.ell(x, y, 2.2, 2.4, color, 0.6)
+                    p.ell(x - 0.6, y - 0.8, 0.6, 0.6, hi, 0)
+        p.sparkle(w - 5, 4, 2.4)
+    return draw
+
+
+def seed_bag(p, w, h):
+    cx = w / 2
+    p.ell(cx, h - 2, 9, 1.8, fd.alpha(INK, 0x30), 0)
+    p.poly([(cx - 8, 8), (cx + 8, 8), (cx + 10, h - 6), (cx + 6, h - 2), (cx - 6, h - 2), (cx - 10, h - 6)], "#e8cfa0", 1.0)
+    p.poly([(cx - 8, 8), (cx - 6, 4), (cx - 2, 7), (cx + 2, 3.5), (cx + 6, 7), (cx + 8, 8)], "#e8cfa0", 1.0)
+    p.line([(cx - 8, 9.5), (cx + 8, 9.5)], fd.CORAL, 1.2)
+    for x, y in ((cx - 3, 5.5), (cx + 1, 6), (cx + 4, 5.2)):
+        p.ell(x, y, 1.1, 0.8, "#a07850", 0.3)
+    p.rect(cx - 6, 12, cx + 6, h - 6, WHITE, 2, 0.7)
+    p.hibiscus(cx, 16.5, 3.2, fd.HIBISCUS, 0.4)
+    p.face(cx, h - 9, 0.4)
+
+
+def craft_bench(p, w, h):
+    p.ell(w / 2, h - 2, w / 2 - 2, 2.4, fd.alpha(INK, 0x30), 0)
+    for x in (6, w - 6):
+        p.rect(x - 2.5, 14, x + 2.5, h - 2, fd.WOOD, 1, 0.9)
+    p.line([(6, h - 9), (w - 6, h - 9)], fd.WOOD, 1.6)
+    p.rect(1, 9, w - 1, 16, "#e2b886", 2, 1.0)
+    p.line([(3, 12.5), (w - 3, 12.5)], fd.mix("#e2b886", INK, 0.2), 0.5)
+    # things being made: a flower crown, a shell garland, a key lime, a jar of sea grape jelly
+    p.arc(12, 8, 6, 2.8, 0, 360, fd.HEDGE, 1.4)
+    for k in range(5):
+        a = k / 5 * 2 * math.pi
+        p.hibiscus(12 + math.cos(a) * 6, 8 + math.sin(a) * 2.8, 1.8, fd.HIBISCUS if k % 2 else fd.FLOWER_YELLOW, 0.3)
+    for k in range(4):
+        p.ell(24 + k * 3.2, 8.4 + (k % 2) * 0.8, 1.5, 1.3, "#ffd3c2", 0.4)
+    p.ell(37, 7, 2.4, 2.4, fd.KEY_LIME, 0.6)
+    p.rect(41, 1.5, 47, 9, fd.SEA_GRAPE, 1.5, 0.7)
+    p.rect(41, 0.5, 47, 2.6, "#f4e3c6", 1, 0.5)
+    p.ell(42.6, 4, 0.8, 1.6, fd.alpha(WHITE, 0xb0), 0)
+    p.face(w / 2, 19.5, 0.45)
+
+
+# ================================================================== fish sheet
+
+def fish_sheet():
+    fw, fh = 16, 12
+    cols = [("coral", fd.CORAL), ("mango", fd.MANGO), ("lilac", "#c9a8f0")]
+    D = fd.D
+    out = Image.new("RGBA", (fw * 4 * D, fh * 3 * D))
+    for r, (_, col) in enumerate(cols):
+        for c in range(4):
+            im, p = fd.canvas(fw, fh, 8)
+            wig = (-1, 0, 1, 0)[c]
+            p.poly([(4, 6), (0.6, 2.4 + wig), (1.8, 6), (0.6, 9.6 + wig)], mix(col, WHITE, 0.25), 0.6)
+            p.ell(8.5, 6, 5.4, 4.0, col, 0.7)
+            p.ell(7.4, 4.4, 2.2, 1.0, mix(col, WHITE, 0.5), 0)
+            p.poly([(7, 2.4), (9.8, 0.8), (10.4, 2.6)], mix(col, WHITE, 0.25), 0.5)
+            if c == 3:  # waving a fin back at you
+                p.poly([(8, 7), (5.6, 3.2), (9.6, 6)], mix(col, WHITE, 0.4), 0.5)
+            else:
+                p.poly([(8, 7), (6, 9.6), (9.6, 8)], mix(col, WHITE, 0.4), 0.5)
+            p.ell(11.4, 5.4, 0.8, 0.9, INK, 0)
+            p.ell(11.7, 5.0, 0.3, 0.3, WHITE, 0)
+            p.arc(12.2, 6.6, 0.9, 0.6, 20, 160, INK, 0.35)
+            p.ell(10.6, 7.0, 0.9, 0.5, fd.BLUSH, 0)
+            out.alpha_composite(fd.finish(im, fw, fh), (c * fw * D, r * fh * D))
+    fd.save(out, "fish")
+    anims = []
+    for r, (cname, _) in enumerate(cols):
+        anims.append((f"swim_{cname}", r, [0, 1, 2, 1], 5, True))
+        anims.append((f"wave_{cname}", r, [3, 0], 2, True))
+    fd.write_frames("fish", fw, fh, anims)
+
+
+# ================================================================== backgrounds
+
+class Ground:
+    """A 960x540 ground painting drawn at BG_S times scale."""
+
+    def __init__(self, color):
+        self.im = Image.new("RGBA", (960 * BG_S, 540 * BG_S), color)
+        self.p = Pen(self.im, BG_S)
+
+    def save(self, name):
+        fd.save(self.im.resize((960 * fd.D, 540 * fd.D), Image.LANCZOS), name, rgb_only=True)
+
+
+def speckle(p, rnd, box, n, colors, r=(0.6, 1.4)):
+    x0, y0, x1, y1 = box
     for _ in range(n):
         x, y = rnd.uniform(x0, x1), rnd.uniform(y0, y1)
-        c = rnd.choice([SAND_DK, "#fff4d6", "#e8c890", "#f0d8a8"])
-        p.ell(x, y, rnd.uniform(0.8, 1.8), rnd.uniform(0.6, 1.2), c, 0)
+        rr = rnd.uniform(*r)
+        p.ell(x, y, rr, rr * 0.75, rnd.choice(colors), 0)
 
 
-def gradient(im, y0, y1, top, bottom, s):
-    d = ImageDraw.Draw(im)
-    for y in range(int(y0 * s), int(y1 * s)):
-        t = (y - y0 * s) / max(1, (y1 - y0) * s)
-        d.line([(0, y), (im.width, y)], fill=mix(top, bottom, t))
+def clover_patch(p, x, y, col=fd.GRASS_DK):
+    for dx, dy in ((-1.6, 0), (1.6, 0), (0, -1.6)):
+        p.ell(x + dx, y + dy, 1.6, 1.6, col, 0.4, "#79b45f")
 
 
-def wave_edge(p, y, amp, period, x0, x1, fill, phase=0.0):
-    pts = [(x0, -10)]
-    x = x0
-    while x <= x1:
-        pts.append((x, y + amp * math.sin((x / period) * 2 * math.pi + phase)))
-        x += 4
-    pts.append((x1, -10))
-    p.poly(pts, fill, 0)
+def grass_tuft(p, x, y, col="#9fd585"):
+    for dx, h in ((-2, 4), (0, 6), (2, 4.5)):
+        p.line([(x + dx * 0.4, y), (x + dx, y - h)], col, 1.0)
 
 
-# ---------------------------------------------------------------- beach
+def stone(p, x, y, r=5):
+    p.ell(x, y, r, r * 0.62, "#f6efe6", 0.8)
+    p.ell(x - r * 0.3, y - r * 0.2, r * 0.35, r * 0.18, WHITE, 0)
+
+
+def flower_cluster(p, x, y, rnd):
+    """A clump of tropical flowers on the lawn (about 36x22 world px, standing on y): rounded
+    leaves, then hibiscus and plumeria heads in the Florida colours."""
+    for dx, ang in ((-4, 200), (-2, 228), (0, 256), (1, 284), (3, 312), (4, 338), (0, 180), (1, 360)):
+        rad = math.radians(ang + rnd.uniform(-6, 6))
+        bx, by = x + dx, y - 1
+        L, W = rnd.uniform(10, 12.5), 3.0
+        ux, uy, nx, ny = math.cos(rad), math.sin(rad) * 0.8, -math.sin(rad), math.cos(rad)
+        pts = []
+        for k in range(13):  # almond leaf: tip to tip down one side and back up the other
+            t = k / 12
+            pts.append((bx + ux * L * t + nx * W * math.sin(t * math.pi), by + uy * L * t + ny * W * math.sin(t * math.pi)))
+        for k in range(11, 0, -1):
+            t = k / 12
+            pts.append((bx + ux * L * t - nx * W * math.sin(t * math.pi), by + uy * L * t - ny * W * math.sin(t * math.pi)))
+        col = rnd.choice(["#8fd88f", "#7fcf86", "#9ce29a"])
+        p.poly(pts, col, 0.7)
+        p.line([(bx, by), (bx + ux * L * 0.8, by + uy * L * 0.8)], fd.mix(col, INK, 0.3), 0.4)
+    heads = [(-7, -7, 4.2), (0, -11, 4.6), (7, -7, 4.0), (-3, -3, 3.8), (4, -2, 3.6)]
+    rnd.shuffle(heads)
+    for i, (dx, dy, r) in enumerate(heads):
+        if i % 2:
+            p.plumeria(x + dx, y + dy, r, 0.5)
+        else:
+            p.hibiscus(x + dx, y + dy, r, rnd.choice([fd.HIBISCUS, fd.BOUG, fd.FLOWER_YELLOW, fd.CORAL]), 0.55)
+
+
+def wavy(y0, amp, period, phase, x0=-10, x1=970, step=6):
+    return [(x, y0 + math.sin(x / period * 2 * math.pi + phase) * amp + math.sin(x / (period * 2.7) + phase) * amp * 0.6)
+            for x in range(x0, x1 + 1, step)]
+
+
+DOCK = (588, 624, 96, 284)  # x0, x1, top, bottom of the beach dock (world px)
+
+
+def beach_shore():
+    """The beach's water line, pulled up on the right where the aquarium stands on its sandy point."""
+    return [(x, y - 60 * min(1, max(0, (x - 760) / 80))) for x, y in wavy(268, 6, 220, 0.6)]
+
+
+FOAM_Y, FOAM_H, FOAM_FRAMES = 180, 120, 6
+
+
+def sea_foam_sheet():
+    """The surf on the beach: per frame the foam line and a turquoise wash sit d world px further
+    up the wet sand (d eases 0 -> 7 -> 0 over the loop), with a lighter second wave behind."""
+    shore = beach_shore()
+    back = wavy(262, 5, 180, 2.0, -10, 760)
+    fw, fh = 960 * fd.D, FOAM_H * fd.D
+    sheet = Image.new("RGBA", (fw, fh * FOAM_FRAMES))
+    dx0, dx1, dtop, dbot = DOCK
+    for k in range(FOAM_FRAMES):
+        rnd = random.Random(700 + k)
+        d = 7 * (1 - math.cos(2 * math.pi * k / FOAM_FRAMES)) / 2
+        im = Image.new("RGBA", (960 * BG_S, FOAM_H * BG_S))
+        p = Pen(im, BG_S, oy=-FOAM_Y)
+        edge = [(x, y + d) for x, y in shore]
+        p.poly([(x, y + 2) for x, y in shore] + list(reversed(edge)), fd.alpha("#9be6d6", 0x9a), 0)
+        p.line(edge, fd.alpha("#bfeee4", 0xe0), 6)
+        p.line([(x, y - 1) for x, y in edge], WHITE, 3.4)
+        for x, y in edge[::5]:
+            p.ell(x + rnd.uniform(-2, 2), y + 1, rnd.uniform(3, 5), 1.6, WHITE, 0)
+        for x, y in edge[2::9]:
+            p.ell(x, y - 3, 0.9, 0.9, fd.alpha(WHITE, 0xc0), 0)
+        p.line([(x, y - 9 + d * 0.5) for x, y in back], fd.alpha(WHITE, 0x90), 1.4)
+        # the dock stays on top: clear its planks and post tops from the strip
+        cp = Pen(im, BG_S, oy=-FOAM_Y)
+        cp.rect(dx0 - 0.6, FOAM_Y - 10, dx1 + 0.6, dbot + 0.6, (0, 0, 0, 0), 2, 0)
+        for y in range(dtop + 4, dbot, 36):
+            for x in (dx0 + 1, dx1 - 1):
+                cp.ell(x, y, 3.8, 3.8, (0, 0, 0, 0), 0)
+        sheet.alpha_composite(im.resize((fw, fh), Image.LANCZOS), (0, k * fh))
+    fd.save(sheet, "sea_foam")
+    fd.write_frames("sea_foam", 960, FOAM_H, [("lap", 0, [(0, r) for r in range(FOAM_FRAMES)], 5, True)])
+
 
 def beach_bg():
-    """Shoreline seen from above: turquoise sea across the top (the dolphins swim at y 70-180),
-    a foam line, then warm sand where everyone walks (nav from y 230). Paths and props mark the
-    doors: the garden arbour (x 120), the stable path (x 300), the aquarium pavilion (x 840) and
-    the little jetty with the boat back to the island (x 480, y 380)."""
-    w, h = 960, 540
-    rnd = random.Random(7)
-    im = Image.new("RGBA", (w * BG_S, h * BG_S), SAND)
-    p = Pen(im, BG_S)
-    sand_texture(p, rnd, 0, 200, w, h, 2600)
-    # wet sand, foam and sea
-    wave_edge(p, 214, 6, 160, 0, w, "#e4cf9c")
-    wave_edge(p, 205, 6, 160, 0, w, "#ffffff", 0.4)
-    sea = Image.new("RGBA", im.size)
-    gradient(sea, 0, 205, "#3fa8c8", "#70d8c8", BG_S)
-    mask = Image.new("L", im.size, 0)
-    mp = Pen(mask, BG_S)
-    wave_edge(mp, 200, 6, 160, 0, w, 255, 0.4)
-    im.paste(sea, (0, 0), mask)
-    # shallows band and foam ripples
-    for i, (y, a) in enumerate(((186, 5), (164, 4), (140, 4), (110, 3), (78, 3), (44, 3))):
-        pts = []
-        for x in range(-10, w + 10, 6):
-            pts.append((x, y + a * math.sin(x / (70 + i * 15) * 2 * math.pi + i)))
-        col = "#ffffff" if i == 0 else mix("#bff4ee", "#7fd0dc", i / 6)
-        for j in range(0, len(pts) - 1, 1):
-            if (j // (6 + i)) % 3 != 2:
-                p.line([pts[j], pts[j + 1]], col, 2.5 if i == 0 else 1.6)
-    for _ in range(70):  # sun glitter
-        x, y = rnd.uniform(0, w), rnd.uniform(10, 190)
-        p.sparkle(x, y, rnd.uniform(2, 4.5), "#ffffff")
-    # coral and rocks in the shallows
-    for x, y in ((60, 150), (420, 175), (705, 168)):
-        p.ell(x, y, 16, 7, "#5ab8c0", 0)
-        p.ell(x - 6, y - 2, 6, 4, "#ff9a8a", 0.8)
-        p.ell(x + 6, y, 5, 3.5, "#c8a0f0", 0.8)
-    # mangroves along the left edge ("out past the mangroves")
-    for mx, my in ((-8, 196), (40, 212)):
-        for k in range(-3, 4):
-            p.arc(mx + k * 7 - 10, my - 12, mx + k * 7 + 10, my + 14, 200, 340, "#8a6a48", 2)
-        p.ell(mx, my - 20, 34, 18, "#4fa060", 1.5)
-        p.ell(mx + 20, my - 30, 22, 14, LEAF, 1.5)
-
-    # aquarium pavilion, top right: pastel walls, dolphin-blue dome, a door on the sand
-    ax, ay = 840, 236
-    p.ell(ax, ay + 6, 92, 14, "#00000020", 0)
-    p.rect(ax - 80, ay - 80, ax + 80, ay, "#e8f8f8", 10, 2)
-    p.chord(ax - 70, ay - 140, ax + 70, ay - 30, 180, 360, "#7ab8e0", 2)
-    for k in range(-2, 3):
-        p.arc(ax - 70 + 70 - 14 + k * 26, ay - 135, ax - 70 + 70 + 14 + k * 26, ay - 30, 200, 340, "#9fd0ee", 1.5)
-    p.rect(ax - 80, ay - 86, ax + 80, ay - 76, TURQ, 4, 2)
-    for wx in (ax - 52, ax + 52):  # porthole windows with a fish each
-        p.ell(wx, ay - 46, 15, 15, "#bfeaf6", 2)
-        p.ell(wx, ay - 46, 11, 11, "#8fd3e8", 0)
-        p.poly([(wx - 6, ay - 46), (wx + 2, ay - 50), (wx + 6, ay - 46), (wx + 2, ay - 42)], MANGO, 0.8)
-        p.poly([(wx - 6, ay - 46), (wx - 10, ay - 50), (wx - 10, ay - 42)], MANGO, 0.8)
-    p.rect(ax - 18, ay - 50, ax + 18, ay, "#5aa8c8", 8, 2)
-    p.line([(ax, ay - 48), (ax, ay)], INK, 1)
-    p.chord(ax - 26, ay - 112, ax + 26, ay - 78, 180, 360, "#ffffff", 1.5)  # dolphin emblem
-    p.poly([(ax - 16, ay - 86), (ax - 4, ay - 98), (ax + 12, ay - 96), (ax + 18, ay - 90), (ax + 4, ay - 90)], "#7ab8e0", 1)
-    p.sparkle(ax + 74, ay - 120, 6, "#fff3a8", "#e0b24a")
-
-    # garden arbour, top left: a white arch dripping with bougainvillea and a stepping path
-    gx, gy = 120, 240
-    for sx, sy in ((gx - 4, gy + 8), (gx + 6, gy + 26), (gx - 2, gy + 44)):
-        p.ell(sx, sy, 9, 5, "#e8dcc8", 1)
-    for side in (-1, 1):
-        p.rect(gx + side * 30 - 4, gy - 64, gx + side * 30 + 4, gy - 2, "#ffffff", 3, 1.5)
-    p.arc(gx - 34, gy - 98, gx + 34, gy - 30, 180, 360, INK, 9)
-    p.arc(gx - 34, gy - 98, gx + 34, gy - 30, 180, 360, "#ffffff", 6)
-    for i in range(12):
-        a = math.pi + i * math.pi / 11
-        p.hibiscus(gx + 32 * math.cos(a), gy - 64 + 34 * math.sin(a), 5.5, BOUG if i % 2 else HIBISCUS)
-    for side in (-1, 1):
-        for k in range(3):
-            p.ell(gx + side * 30, gy - 50 + k * 16, 7, 6, LEAF, 1)
-            p.hibiscus(gx + side * 32, gy - 46 + k * 16, 4, BOUG)
-    bush(p, gx - 64, gy - 6, 22, HIBISCUS, 3, 1)
-    bush(p, gx + 70, gy - 8, 20, PLUMERIA, 3, 2)
-
-    # stable path at x 300: a sandy track, a horseshoe on a post, hoofprints
-    sx, sy = 300, 238
-    p.poly([(sx - 24, sy - 46), (sx + 24, sy - 46), (sx + 30, sy + 10), (sx - 30, sy + 10)], "#e8cf98", 0)
-    p.rect(sx + 30, sy - 70, sx + 36, sy, "#c98f5a", 2, 1.5)
-    p.rect(sx + 18, sy - 82, sx + 48, sy - 62, "#e8b47c", 4, 1.5)
-    p.arc(sx + 25, sy - 80, sx + 41, sy - 64, 200, 340, "#f0f0f0", 3)
-    p.arc(sx + 25, sy - 80, sx + 41, sy - 64, 200, 340, "#a0a8b0", 1)
-    for hx, hy in ((sx - 8, sy - 30), (sx + 6, sy - 14), (sx - 6, sy + 2)):
-        p.arc(hx - 4, hy - 4, hx + 4, hy + 4, 200, 340, "#c8ac78", 1.6)
-    p.ell(sx - 40, sy - 30, 20, 12, LEAF, 1.5)
-    p.ell(sx - 50, sy - 40, 14, 10, LEAF_DK, 1.5)
-
-    # the little jetty and rowboat back to the island, under the village exit (480, 380)
-    jx, jy = 480, 380
-    p.ell(jx + 2, jy + 22, 46, 8, "#00000018", 0)
-    p.poly([(jx - 40, jy + 4), (jx + 40, jy + 4), (jx + 30, jy + 22), (jx - 30, jy + 22)], "#ffffff", 1.5)
-    p.poly([(jx - 40, jy + 4), (jx + 40, jy + 4), (jx + 34, jy + 13), (jx - 34, jy + 13)], CORAL, 0)
-    p.line([(jx - 40, jy + 4), (jx + 40, jy + 4)], INK, 1.5)
-    p.line([(jx - 28, jy + 8), (jx + 28, jy + 8)], "#ffffff", 1.4)
-    p.line([(jx - 52, jy + 2), (jx - 26, jy - 14)], "#c98f5a", 3)  # an oar resting
-    p.ell(jx - 28, jy - 13, 6, 3, "#c98f5a", 1)
-
-    # a beach umbrella and towel, a sandcastle, starfish and shells, footprints
-    ux, uy = 700, 300
-    p.ell(ux + 30, uy + 20, 52, 14, "#00000018", 0)
-    p.rect(ux - 20, uy + 2, ux + 40, uy + 30, "#ffffff", 4, 1.5)
-    for k in range(4):
-        p.rect(ux - 20 + k * 15, uy + 2, ux - 13 + k * 15, uy + 30, TURQ, 0, 0)
-    p.rect(ux - 20, uy + 2, ux + 40, uy + 30, None, 4, 1.5)
-    p.line([(ux + 10, uy + 10), (ux + 2, uy - 60)], "#ffffff", 3)
-    for k in range(6):
-        a0 = 180 + k * 30
-        col = CORAL if k % 2 else "#fff6dc"
-        p.d.pieslice([(ux + 2 - 46) * BG_S, (uy - 84) * BG_S, (ux + 2 + 46) * BG_S, (uy - 36) * BG_S],
-                     a0, a0 + 30, fill=col, outline=INK, width=2 * BG_S)
-    p.ell(ux + 2, uy - 62, 3, 3, "#ffe27a", 1)
-    cx, cy = 180, 430  # sandcastle with a flag
-    p.rect(cx - 22, cy - 10, cx + 22, cy + 8, "#e8c890", 3, 1.5)
-    for tx in (cx - 16, cx, cx + 16):
-        p.rect(tx - 6, cy - 22, tx + 6, cy - 6, "#f0d4a0", 2, 1.5)
-    p.line([(cx, cy - 22), (cx, cy - 36)], INK, 1)
-    p.poly([(cx, cy - 36), (cx + 10, cy - 32), (cx, cy - 28)], HIBISCUS, 1)
-    p.rect(cx + 26, cy - 4, cx + 40, cy + 8, TURQ, 2, 1.2)  # bucket
-    for x, y, c in ((880, 470, MANGO), (90, 340, CORAL), (560, 300, "#ff9ab8")):
-        pts = []
-        for i in range(10):
-            r = 9 if i % 2 == 0 else 4
-            a = -math.pi / 2 + i * math.pi / 5
-            pts.append((x + r * math.cos(a), y + r * math.sin(a)))
-        p.poly(pts, c, 1.2)
+    """Sea across the top (deep blue to turquoise shallows), foam, wet sand, warm dry sand with
+    starfish and shells, two towels, the dock out into the water, footprints, dune grass."""
+    rnd = random.Random(101)
+    g = Ground(fd.SAND)
+    shore = beach_shore()
+    bands = [(0, "#7ec3e6"), (70, "#88cdea"), (140, "#8fd6e8"), (200, "#86dccf"), (240, "#9be6d6")]
+    sea = Image.new("RGBA", g.im.size)
+    sp = Pen(sea, BG_S)
+    for i, (y, col) in enumerate(bands):
+        nxt = bands[i + 1][0] if i + 1 < len(bands) else 600
+        sp.poly([(-10, y), (970, y), (970, nxt + 4), (-10, nxt + 4)], col, 0)
+    sea = sea.filter(ImageFilter.GaussianBlur(18 * BG_S))  # soft gradient between the bands
+    mask = Image.new("RGBA", g.im.size)
+    Pen(mask, BG_S).poly([(-10, -10)] + shore + [(970, -10)], WHITE, 0)
+    g.im = Image.composite(sea, g.im, mask.getchannel("A"))
+    p = g.p = Pen(g.im, BG_S)
+    for _ in range(70):  # wave arcs and sun glints
+        x, y = rnd.uniform(0, 960), rnd.uniform(10, 230)
+        if not (x > 790 and y > 170):
+            p.arc(x, y, rnd.uniform(5, 9), 2.2, 200, 340, fd.alpha(WHITE, 0xb0), 1.0)
     for _ in range(26):
-        x, y = rnd.uniform(30, 930), rnd.uniform(250, 530)
-        p.ell(x, y, 3, 2, rnd.choice(["#fff1e6", "#ffd2dc", "#ffe0b0"]), 0.8)
-    for i in range(9):  # footprints wandering from the jetty to the water
-        x, y = 420 - i * 14, 360 - i * 14 + (4 if i % 2 else -4)
-        p.ell(x, y, 2.4, 3.4, "#e6cc94", 0)
-    # palms framing both sides
-    palm(p, 30, 520, 1, 150, 1.0)
-    palm(p, 930, 510, -1, 140, 1.0)
-    palm(p, 600, 238, 1, 90, 0.75)
-    bush(p, 60, 520, 26, BOUG, 4, 3)
-    bush(p, 900, 530, 24, HIBISCUS, 4, 4)
-    save(im, w, h, "bg_florida_beach", True)
+        x, y = rnd.uniform(0, 960), rnd.uniform(10, 220)
+        if not (x > 790 and y > 160):
+            p.sparkle(x, y, rnd.uniform(1.6, 2.8), WHITE, None)
+    wet = [(x, y + 16) for x, y in shore]
+    p.poly(shore + list(reversed(wet)), "#f3d9a6", 0)
+    p.line(shore, "#bfeee4", 7)  # the water's edge; the foam on it is the sea_foam sheet
+    # the dock: planks on posts out into the water, where the Father ties up
+    dx0, dx1, dtop, _ = DOCK
+    for y in (110, 160, 210, 250):
+        for x in (dx0 + 2, dx1 - 2):
+            p.ell(x, y + 8, 3.4, 2.2, fd.alpha("#5f97b8", 0x80), 0)
+            p.rect(x - 2.6, y - 2, x + 2.6, y + 8, "#a7744c", 1, 0.8)
+    p.rect(dx0, dtop, dx1, 284, "#d6a774", 2, 1.2)
+    for y in range(dtop + 6, 284, 7):
+        p.line([(dx0 + 1, y), (dx1 - 1, y)], fd.mix("#d6a774", INK, 0.3), 0.7, False)
+    p.rect(dx0 + 2, dtop + 2, dx0 + 8, 282, fd.alpha(WHITE, 0x40), 1, 0)
+    p.rect(dx1 - 4, dtop + 2, dx1 - 1, 282, fd.alpha("#a7744c", 0x90), 1, 0)
+    for y in range(dtop + 4, 284, 36):  # post tops along both edges
+        for x in (dx0 + 1, dx1 - 1):
+            p.ell(x, y, 3.2, 3.2, "#c08a5c", 0.9)
+            p.ell(x - 0.8, y - 0.8, 1.1, 1.1, "#e2b886", 0)
+    p.arc(dx0 + 12, dtop + 10, 7, 4, 0, 180, "#e9d49b", 1.4)  # a coil of rope
+    p.ell(dx0 + 22, dtop + 30, 5, 3.6, "#9fd6ef", 0.9)  # a bait bucket
+    p.ell(dx0 + 22, dtop + 29, 3.6, 1.6, "#7fc6ea", 0)
+    speckle(p, rnd, (0, 280, 960, 540), 900, ["#ffe0a6", "#fff4d6", fd.SAND_PEB, "#f8d9a0"], (0.6, 1.5))
+    # beach towels laid flat under the umbrella
+    for x, y, c1, rot in ((352, 446, fd.TURQ, 0), (402, 452, "#ffb3c8", 1)):
+        p.poly([(x - 14, y - 22 + rot * 3), (x + 14, y - 24 + rot * 3), (x + 16, y + 18), (x - 12, y + 20)], c1, 1.0)
+        for k in range(4):
+            yy = y - 16 + k * 10 + rot * 2
+            p.poly([(x - 13, yy), (x + 15, yy - 1), (x + 15, yy + 4), (x - 13, yy + 5)], WHITE, 0)
+    for x, y in ((150, 470), (690, 500), (880, 420), (250, 380), (520, 330)):  # starfish
+        pts = [(x + math.cos(-math.pi / 2 + k * math.pi / 5) * (5 if k % 2 == 0 else 2.2),
+                y + math.sin(-math.pi / 2 + k * math.pi / 5) * (5 if k % 2 == 0 else 2.2)) for k in range(10)]
+        p.poly(pts, rnd.choice([fd.CORAL, "#ff9fc0", fd.MANGO]), 0.8)
+        p.ell(x, y, 0.8, 0.8, WHITE, 0)
+    for x, y in ((90, 300), (330, 315), (760, 310), (470, 520), (610, 470), (210, 520), (930, 520)):
+        p.ell(x, y, 2.4, 1.8, rnd.choice(["#fff1e6", "#ffd3c2", "#f7c6d8"]), 0.6)
+    for i in range(9):  # footprints from the boat up the beach
+        p.ell(500 - i * 9 + (3 if i % 2 else -3), 360 + i * 14, 1.6, 2.4, fd.alpha("#e2bf86", 0xc0), 0)
+    # stepping stones toward the garden (left), the stable (left of centre), the aquarium (right)
+    for x, y in ((40, 352), (70, 346), (100, 340), (226, 334), (254, 330), (280, 327), (780, 316), (806, 320), (832, 318)):
+        stone(p, x, y, 5)
+    for x in range(0, 960, 26):
+        if not 430 < x < 560:
+            grass_tuft(p, x + rnd.uniform(-6, 6), 540 - rnd.uniform(0, 8))
+    g.save("bg_florida_beach")
 
-
-# ---------------------------------------------------------------- garden (the house and its yard)
 
 def garden_bg():
-    """The yard behind the house: the Keys-style house on stilts along the top with a porch,
-    lime and mango trees, a white picket fence, lush lawn, a tilled bed for the six plots
-    (400-560 x 240-310) and a shell path down to the beach gate (x 120, y 500)."""
-    w, h = 960, 540
-    rnd = random.Random(11)
-    im = Image.new("RGBA", (w * BG_S, h * BG_S), "#a8e08c")
-    p = Pen(im, BG_S)
-    gradient(im, 0, 60, "#9fdcf0", "#cfeff6", BG_S)
-    # back hedge and trees behind the house
-    for x in range(-20, 980, 70):
-        p.ell(x, 70, 50, 34, LEAF_DK if (x // 70) % 2 else "#6abf62", 1.5)
-    palm(p, 40, 170, 1, 140, 0.9)
-    palm(p, 930, 175, -1, 130, 0.9)
-    # the house: pastel turquoise on white stilts, coral tin roof, porch with railings
-    hx0, hx1, hy0, hy1 = 210, 660, 22, 150
-    p.ell((hx0 + hx1) / 2, hy1 + 6, (hx1 - hx0) / 2 + 20, 10, "#00000022", 0)
-    for sx in range(hx0 + 10, hx1, 56):
-        p.rect(sx - 4, hy1 - 20, sx + 4, hy1 + 6, "#ffffff", 2, 1.5)
-    p.rect(hx0, hy0 + 26, hx1, hy1 - 14, "#a8e4e0", 6, 2)
-    for y in range(hy0 + 36, hy1 - 14, 9):  # clapboard siding
-        p.line([(hx0 + 4, y), (hx1 - 4, y)], "#8fd0cc", 1)
-    p.poly([(hx0 - 20, hy0 + 32), ((hx0 + hx1) / 2, hy0 - 26), (hx1 + 20, hy0 + 32)], CORAL, 2)
-    for k in range(1, 16):
-        x = hx0 - 20 + k * (hx1 - hx0 + 40) / 16
-        top_y = hy0 - 26 + abs(x - (hx0 + hx1) / 2) * 58 / ((hx1 - hx0) / 2 + 20)
-        p.line([(x, top_y + 3), (x, hy0 + 30)], "#d86a50", 1)
-    for wx in (hx0 + 60, hx0 + 160, hx1 - 160, hx1 - 60):  # shuttered windows
-        p.rect(wx - 18, hy0 + 46, wx + 18, hy0 + 82, "#fff6dc", 3, 1.5)
-        p.line([(wx, hy0 + 46), (wx, hy0 + 82)], INK, 1)
-        p.line([(wx - 18, hy0 + 64), (wx + 18, hy0 + 64)], INK, 1)
-        for s in (-1, 1):
-            p.rect(wx + s * 22 - 4, hy0 + 44, wx + s * 22 + 4, hy0 + 84, CORAL, 2, 1.2)
-        p.rect(wx - 20, hy0 + 84, wx + 20, hy0 + 92, "#c98f5a", 2, 1.2)  # window box
-        for fx in range(wx - 15, wx + 16, 8):
-            p.hibiscus(fx, hy0 + 84, 3.4, BOUG if fx % 3 else HIBISCUS)
-    dx = (hx0 + hx1) / 2
-    p.rect(dx - 20, hy0 + 52, dx + 20, hy1 - 14, "#f08060", 6, 2)  # the front door
-    p.ell(dx + 12, hy0 + 90, 2.4, 2.4, "#ffe27a", 0.8)
-    p.ell(dx, hy0 + 66, 9, 7, "#bfeaf6", 1.2)
-    # porch with railings and steps down to the yard
-    p.rect(hx0 - 6, hy1 - 16, hx1 + 6, hy1 - 6, "#ffffff", 2, 1.5)
-    for x in range(int(hx0), int(hx1) + 1, 12):
-        if abs(x - dx) > 26:
-            p.line([(x, hy1 - 30), (x, hy1 - 16)], "#ffffff", 2.2)
-    p.line([(hx0, hy1 - 30), (dx - 26, hy1 - 30)], "#ffffff", 3)
-    p.line([(dx + 26, hy1 - 30), (hx1, hy1 - 30)], "#ffffff", 3)
-    for k in range(3):
-        p.rect(dx - 26 + k * 2, hy1 - 6 + k * 7, dx + 26 - k * 2, hy1 + 1 + k * 7, "#f6e6c8", 2, 1.2)
-    # a rocking chair and a pitcher of key lime lemonade on the porch
-    p.rect(hx0 + 20, hy1 - 46, hx0 + 44, hy1 - 18, "#c98f5a", 4, 1.5)
-    p.rect(hx1 - 50, hy1 - 34, hx1 - 22, hy1 - 18, "#ffffff", 2, 1.2)
-    p.rect(hx1 - 44, hy1 - 50, hx1 - 32, hy1 - 34, LIME, 3, 1.2)
-    # key lime and mango trees in the yard corners
-    for tx, ty, fruit in ((760, 150, LIME), (840, 120, MANGO), (150, 130, MANGO)):
-        p.rect(tx - 5, ty - 10, tx + 5, ty + 20, COCONUT, 2, 1.5)
-        for ox, oy, r in ((-18, -18, 20), (18, -18, 20), (0, -34, 22), (0, -12, 22)):
-            p.ell(tx + ox, ty + oy, r, r * 0.9, LEAF if ox else "#6abf62", 1.5)
-        for ox, oy in ((-16, -14), (12, -26), (20, -8), (-4, -36), (2, -6)):
-            p.ell(tx + ox, ty + oy, 4.4, 4, fruit, 1)
-    # picket fence along the top of the yard (behind the walkable lawn)
-    for x in range(0, w + 1, 18):
-        if hx0 - 10 < x < hx1 + 10:
-            continue
-        p.poly([(x - 5, 186), (x - 5, 160), (x, 153), (x + 5, 160), (x + 5, 186)], "#ffffff", 1.4)
-    for y in (166, 178):
-        p.line([(0, y), (hx0 - 10, y)], "#ffffff", 3)
-        p.line([(hx1 + 10, y), (w, y)], "#ffffff", 3)
-    for x in range(10, w, 46):  # bougainvillea along the fence
-        if hx0 - 20 < x < hx1 + 20:
-            continue
-        p.hibiscus(x, 160 + (x * 7) % 14, 6, BOUG)
-        p.ell(x + 12, 172, 9, 6, LEAF, 1)
-    # lawn texture
-    for _ in range(1400):
-        x, y = rnd.uniform(0, w), rnd.uniform(160, h)
-        c = rnd.choice(["#98d47c", "#b8ea9c", "#8cca72"])
-        p.line([(x, y), (x + rnd.uniform(-1.5, 1.5), y - rnd.uniform(2, 4))], c, 1)
-    for _ in range(60):
-        x, y = rnd.uniform(0, w), rnd.uniform(190, h)
-        p.plumeria(x, y, 2.4) if rnd.random() < 0.5 else p.ell(x, y, 2, 2, "#ffe27a", 0.6)
-    # the tilled bed for the six plots, with a timber edge
-    p.rect(352, 196, 608, 352, "#c98f5a", 10, 2)
-    p.rect(360, 204, 600, 344, "#9a6c46", 8, 0)
-    for y in range(214, 340, 12):
-        p.line([(368, y), (592, y)], "#8a5e3c", 1.4)
-    # watering can by the bed, a wheelbarrow of soil
-    p.rect(616, 318, 642, 342, "#7ab8e0", 4, 1.5)
-    p.line([(642, 324), (656, 312)], INK, 4)
-    p.line([(642, 324), (656, 312)], "#7ab8e0", 2.4)
-    p.arc(618, 306, 640, 330, 200, 340, INK, 2)
-    # stepping-shell path from the lawn down to the beach gate (bottom left)
-    for i in range(10):
-        t = i / 9
-        x = 470 - 350 * t + 30 * math.sin(t * 3)
-        y = 400 + 100 * t
-        p.ell(x, y, 13, 7, "#f2e6d0", 1.2)
-        p.ell(x - 3, y - 2, 4, 1.5, "#ffffff", 0)
-    # beach gate: two posts with hibiscus and a peek of sand
-    p.poly([(80, 540), (160, 540), (150, 516), (90, 516)], SAND, 0)
-    for gx in (84, 156):
-        p.rect(gx - 6, 470, gx + 6, 540, "#ffffff", 3, 1.5)
-        p.hibiscus(gx, 466, 7)
-    for x in range(0, 78, 18):
-        p.poly([(x - 5, 540), (x - 5, 506), (x, 499), (x + 5, 506), (x + 5, 540)], "#ffffff", 1.4)
-    # flower borders and bushes
-    for x, y, f, s in ((300, 420, HIBISCUS, 1), (700, 430, BOUG, 2), (860, 300, PLUMERIA, 3),
-                       (240, 220, HIBISCUS, 4), (900, 470, MANGO, 5), (60, 300, BOUG, 6), (640, 520, HIBISCUS, 7)):
-        bush(p, x, y, 24, f, 4, s)
-    # a birdbath for the gull, a hammock between two palms on the right
-    bx, by = 800, 360
-    p.rect(bx - 4, by - 8, bx + 4, by + 16, "#e8e0d8", 2, 1.2)
-    p.ell(bx, by - 10, 20, 7, "#e8e0d8", 1.5)
-    p.ell(bx, by - 11, 15, 4.6, "#8fd3e8", 0)
-    p.rect(bx - 12, by + 14, bx + 12, by + 20, "#e8e0d8", 2, 1.2)
-    save(im, w, h, "bg_florida_garden", True)
+    """The yard: lawn up to the house porch, a path from the beach gate, the beds' patch of
+    soil, flower borders and the canon flower clusters."""
+    rnd = random.Random(202)
+    g = Ground(fd.GRASS)
+    p = g.p
+    p.rect(-10, -10, 970, 54, "#a6dc8a", 0, 0)
+    for x in range(-20, 980, 46):
+        p.ell(x, 36, 34, 26, fd.HEDGE, 1.0)
+    for x in range(10, 980, 46):
+        p.ell(x, 26, 6, 3, fd.mix(fd.HEDGE, WHITE, 0.35), 0)
+    speckle(p, rnd, (0, 60, 960, 540), 700, [fd.GRASS_DK, fd.GRASS_HI, "#b8e59a"], (0.8, 1.8))
+    for _ in range(80):
+        clover_patch(p, rnd.uniform(10, 950), rnd.uniform(70, 530))
+    for _ in range(120):
+        grass_tuft(p, rnd.uniform(0, 960), rnd.uniform(70, 540))
+    path = [(150, 545), (200, 470), (300, 420), (420, 330), (470, 250), (480, 196)]
+    p.line(path, fd.PATH_PEB, 34)
+    p.line(path, fd.PATH, 28)
+    for i in range(len(path) - 1):
+        (x0, y0), (x1, y1) = path[i], path[i + 1]
+        for t in (0.25, 0.75):
+            stone(p, x0 + (x1 - x0) * t + rnd.uniform(-4, 4), y0 + (y1 - y0) * t, 6)
+    p.line([(470, 300), (640, 300), (700, 290)], fd.PATH_PEB, 22)
+    p.line([(470, 300), (640, 300), (700, 290)], fd.PATH, 17)
+    for x, y in ((372, 230), (588, 230), (372, 368), (588, 368), (480, 386)):  # stepping stones by the beds
+        stone(p, x, y, 5)
+    for x in range(30, 940, 22):
+        if not 430 < x < 530:
+            p.hibiscus(x + rnd.uniform(-3, 3), 196 + rnd.uniform(-3, 3), 3.6, rnd.choice([fd.HIBISCUS, fd.FLOWER_YELLOW, fd.BOUG]), 0.6)
+    for x, y in ((90, 140), (250, 330), (720, 420), (860, 300), (640, 500), (60, 420), (330, 500), (900, 470)):
+        flower_cluster(p, x, y, rnd)
+    g.save("bg_florida_garden")
 
 
-# ---------------------------------------------------------------- aquarium
+POOL = (240, 140, 720, 340)  # the show pool, also used by the aquarium scene's navmesh
+
 
 def aquarium_bg():
-    """The aquarium show: a big glass pool across the top (the mermaids swim at y 70-180) with
-    coral, sea grass, fish and light shafts; a sunny tiled deck below (nav from y 290) with
-    bleacher benches, potted palms and a rope rail."""
-    w, h = 960, 540
-    rnd = random.Random(23)
-    im = Image.new("RGBA", (w * BG_S, h * BG_S), "#f2fbfb")
-    p = Pen(im, BG_S)
-    # sun-bleached boardwalk deck: long planks with staggered joints and nail dots
-    for row, ty in enumerate(range(250, h, 16)):
-        p.rect(0, ty, w, ty + 16, "#f2dcb4" if row % 2 else "#ecd4a8", 0, 0)
-        p.line([(0, ty), (w, ty)], "#d8b888", 1)
-        off = (row * 97) % 160
-        for jx in range(off, w, 160):
-            p.line([(jx, ty), (jx, ty + 16)], "#d8b888", 1)
-            p.ell(jx + 4, ty + 8, 0.9, 0.9, "#c8a070", 0)
-            p.ell(jx - 4, ty + 8, 0.9, 0.9, "#c8a070", 0)
-        for _ in range(6):
-            gx = rnd.uniform(0, w)
-            p.line([(gx, ty + 5), (gx + rnd.uniform(20, 50), ty + 5)], "#e4c89a", 0.8)
-    # pool frame
-    p.rect(20, 4, 940, 256, "#ffffff", 22, 2.5)
-    pool = Image.new("RGBA", im.size)
-    gradient(pool, 0, 250, "#5ec4dc", "#2f86b8", BG_S)
-    mask = Image.new("L", im.size, 0)
-    Pen(mask, BG_S).rect(34, 16, 926, 242, 255, 16, 0)
-    im.paste(pool, (0, 0), mask)
-    # light shafts
-    shafts = Image.new("RGBA", im.size)
-    sp = Pen(shafts, BG_S)
-    for x in (120, 300, 520, 760):
-        sp.poly([(x, 16), (x + 50, 16), (x + 110, 242), (x + 40, 242)], (255, 255, 255, 40), 0)
-    shafts = shafts.filter(ImageFilter.GaussianBlur(6 * BG_S))
-    im.paste(shafts, (0, 0), Image.composite(shafts, Image.new("RGBA", im.size), mask))
-    # sand floor of the pool, coral, sea grass, shells
-    floor = Image.new("RGBA", im.size)
-    Pen(floor, BG_S).ell(480, 252, 470, 34, "#f0dcae", 0)
-    im.paste(floor, (0, 0), Image.composite(floor, Image.new("RGBA", im.size), mask))
-    for x in range(50, 920, 38):
-        hgt = rnd.uniform(30, 70)
-        p.line([(x, 236), (x + 8 * math.sin(x), 236 - hgt / 2), (x - 4, 236 - hgt)], "#4fb878", 4)
-    for cx, col in ((110, "#ff8a9a"), (330, MANGO), (610, "#c8a0f0"), (850, CORAL)):
-        for k in range(5):
-            a = math.radians(-150 + k * 30)
-            p.line([(cx, 238), (cx + 26 * math.cos(a), 238 + 34 * math.sin(a))], INK, 7)
-            p.line([(cx, 238), (cx + 26 * math.cos(a), 238 + 34 * math.sin(a))], col, 4.6)
-            p.ell(cx + 26 * math.cos(a), 238 + 34 * math.sin(a), 4, 4, col, 1)
-    for x in (200, 460, 720):  # treasure: a sunken heart-shaped shell, a little castle
-        p.ell(x, 232, 10, 6, "#ffd2dc", 1.2)
-    p.rect(470, 196, 506, 236, "#f6c8d8", 3, 1.5)
-    for tx in (470, 488, 500):
-        p.rect(tx, 186, tx + 8, 200, "#f6c8d8", 1, 1.2)
-    p.chord(480, 214, 496, 236, 180, 360, "#2f86b8", 1.2)
-    # fish that wave back
-    for fx, fy, col, d in ((180, 60, MANGO, 1), (240, 90, "#ff9ab8", 1), (690, 70, LIME, -1),
-                           (420, 140, "#ffe27a", -1), (820, 150, MANGO, -1), (560, 40, "#ff9ab8", 1)):
-        p.ell(fx, fy, 10, 6, col, 1.2)
-        p.poly([(fx - 9 * d, fy), (fx - 17 * d, fy - 6), (fx - 17 * d, fy + 6)], col, 1.2)
-        p.ell(fx + 5 * d, fy - 1, 1.4, 1.4, INK, 0)
-        p.line([(fx + 1 * d, fy + 2), (fx - 1 * d, fy + 5)], "#ffffff", 1.2)
-    for _ in range(60):  # bubbles
-        x, y, r = rnd.uniform(40, 920), rnd.uniform(20, 230), rnd.uniform(1.5, 5)
-        p.ell(x, y, r, r, "#e8fbff80", 1, "#e8fbff")
-    # glass glare and the pool's rim
-    for x in (60, 500):
-        p.line([(x, 30), (x + 40, 30)], "#ffffff90", 4)
-        p.line([(x, 42), (x + 18, 42)], "#ffffff90", 3)
-    p.rect(20, 238, 940, 262, "#ffffff", 8, 2.5)
-    p.line([(30, 250), (930, 250)], "#c8eaf0", 2)
-    for x in range(60, 921, 120):
-        p.ell(x, 250, 5, 5, TURQ, 1)
-    # rope rail in front of the pool
-    for x in range(40, 940, 110):
-        p.rect(x - 4, 270, x + 4, 300, "#c98f5a", 2, 1.4)
-        p.ell(x, 268, 6, 4, "#e8b47c", 1.2)
-    for x in range(40, 830, 110):
-        p.arc(x, 260, x + 110, 300, 20, 160, CORAL, 3)
-    # bleachers: pastel benches facing the pool
-    for row, (y, col) in enumerate(((410, "#ffb8c8"), (462, "#9fdcea"), (514, "#ffe08a"))):
-        for x0, x1 in ((90, 400), (560, 900)):
-            p.ell((x0 + x1) / 2, y + 30, (x1 - x0) / 2 + 6, 6, "#00000018", 0)
-            for lx in (x0 + 16, x1 - 16, (x0 + x1) / 2):  # legs
-                p.rect(lx - 4, y + 14, lx + 4, y + 30, "#c98f5a", 2, 1.2)
-            p.rect(x0, y + 8, x1, y + 20, mix(col, INK, 0.18), 5, 1.6)  # seat front
-            p.rect(x0, y, x1, y + 12, col, 6, 1.8)  # seat top
-            p.line([(x0 + 8, y + 4), (x1 - 8, y + 4)], "#ffffff", 2)
-            for cx in range(int(x0) + 30, int(x1) - 20, 62):  # a cushion every few seats
-                p.ell(cx, y + 5, 9, 4, "#ffffff", 1)
-                p.ell(cx, y + 5, 3, 1.8, col, 0)
-    # potted palms and a cooler of drinks
-    for x, y in ((40, 380), (920, 380), (480, 540)):
-        p.rect(x - 16, y - 10, x + 16, y + 14, CORAL, 4, 1.5)
-        palm(p, x, y - 12, 1 if x < 480 else -1, 60, 0.55)
-    p.rect(470, 300, 520, 330, "#7ab8e0", 4, 1.5)
-    p.rect(468, 296, 522, 304, "#ffffff", 2, 1.2)
-    # a few sparkles on the water's surface
-    for _ in range(14):
-        p.sparkle(rnd.uniform(60, 900), rnd.uniform(20, 60), rnd.uniform(2, 4), "#ffffff")
-    save(im, w, h, "bg_florida_aquarium", True)
+    """The aquarium show room seen from above: a pale boardwalk floor, the back wall with
+    portholes onto the sea, and the big round-cornered show pool in the middle where the
+    mermaids swim (turquoise water, light ripples, coral and sea grass, canon shells on a sand patch)."""
+    rnd = random.Random(303)
+    g = Ground("#f4e3c6")
+    p = g.p
+    for y in range(0, 545, 18):  # floor boards
+        p.rect(-4, y, 964, y + 18, "#f1dcb8" if (y // 18) % 2 else "#f6e5c6", 0, 0)
+        p.line([(-4, y), (964, y)], fd.mix("#f1dcb8", INK, 0.2), 0.8, False)
+        for x in range(0 if (y // 18) % 2 else 60, 980, 120):
+            p.line([(x, y), (x, y + 18)], fd.mix("#f1dcb8", INK, 0.2), 0.7, False)
+    # back wall: aqua with a wave stripe and portholes looking out to sea
+    p.rect(-10, -10, 970, 58, "#c9eef0", 0, 1.2)
+    band = [(x, 40 + math.sin(x / 30) * 2.4) for x in range(-10, 975, 6)]
+    p.poly(band + [(970, 58), (-10, 58)], fd.TURQ, 0)
+    p.line([(-10, 58), (970, 58)], INK, 1.2)
+    for x in range(80, 960, 160):
+        p.ell(x, 22, 13, 13, "#f6d98c", 1.1)
+        p.ell(x, 22, 9.5, 9.5, "#8fd8f0", 0.9)
+        p.line([(x - 9, 25), (x + 9, 25)], "#c6eefb", 1.4)
+        p.ell(x - 3, 18, 2.6, 1.6, fd.alpha(WHITE, 0xb0), 0)
+    for x in range(160, 960, 160):  # little fish decals between them
+        p.ell(x, 24, 7, 4, fd.CORAL if (x // 160) % 2 else fd.MANGO, 0.9)
+        p.poly([(x - 6, 24), (x - 11, 20), (x - 11, 28)], fd.CORAL if (x // 160) % 2 else fd.MANGO, 0.9)
+        p.ell(x + 3, 23, 0.9, 0.9, INK, 0)
+    # the show pool
+    x0, y0, x1, y1 = POOL
+    p.rect(x0 - 16, y0 - 16, x1 + 16, y1 + 16, "#ffffff", 70, 1.4)
+    p.rect(x0 - 8, y0 - 8, x1 + 8, y1 + 8, fd.alpha("#c6eefb", 0xff), 62, 0)
+    water = Image.new("RGBA", g.im.size)
+    wp = Pen(water, BG_S)
+    for i in range(12):
+        t = i / 11
+        wp.rect(x0 + i * 6, y0 + i * 5, x1 - i * 6, y1 - i * 5, mix("#8fe0e0", "#58b8dc", t), max(10, 56 - i * 4), 0)
+    water = water.filter(ImageFilter.GaussianBlur(6 * BG_S))
+    clip = Image.new("RGBA", g.im.size)
+    Pen(clip, BG_S).rect(x0, y0, x1, y1, WHITE, 56, 0)
+    g.im.alpha_composite(Image.composite(water, Image.new("RGBA", g.im.size), clip.getchannel("A")))
+    p = g.p = Pen(g.im, BG_S)
+    p.rect(x0, y0, x1, y1, CLEAR, 56, 1.2)
+    for _ in range(40):  # light ripples
+        x, y = rnd.uniform(x0 + 30, x1 - 30), rnd.uniform(y0 + 20, y1 - 20)
+        p.arc(x, y, rnd.uniform(6, 12), rnd.uniform(2, 3.5), 200, 340, fd.alpha(WHITE, 0x90), 1.0)
+    # coral and sea grass along the pool's floor edge
+    for x, y, col in ((290, 175, fd.CORAL), (680, 180, "#ff9fc0"), (300, 310, "#c9a8f0"), (660, 305, fd.MANGO),
+                      (420, 320, "#ff9fc0"), (560, 160, "#c9a8f0")):
+        for a in (-50, -90, -130):
+            rad = math.radians(a)
+            ex, ey = x + math.cos(rad) * 10, y + math.sin(rad) * 12
+            p.line([(x, y), (ex, ey)], INK, 4.4)
+            p.line([(x, y), (ex, ey)], col, 2.6)
+            p.ell(ex, ey, 2.4, 2.4, col, 0.8)
+    for x, y in ((360, 160), (610, 320), (700, 240), (262, 240)):
+        for k in range(3):
+            pts = [(x + k * 5 + math.sin(j) * 2, y - j * 5) for j in range(5)]
+            p.line(pts, "#6cbf8a", 3)
+            p.line(pts, "#8fdca8", 1.4)
+    # a little sand patch on the pool floor with the canon shells from the tide scroll
+    patch = mix("#f6e6c0", "#58b8dc", 0.12)
+    p.blob([(470, 250, 22), (496, 246, 20), (484, 258, 18)], patch, 0.8, mix(patch, INK, 0.3))
+    for x, y, r in ((452, 256, 2.4), (510, 254, 2.0), (500, 262, 1.6), (462, 244, 1.4)):
+        p.ell(x, y, r, r * 0.7, "#fff4dc", 0.5, mix(patch, INK, 0.3))
+    for name, cx, cy, wide in (("shell_scallop", 470, 246, 18), ("shell_conch", 494, 252, 15),
+                               ("shell_spiral", 482, 236, 11)):
+        sh = fd.canon_prop(name)
+        sw = round(wide * BG_S)
+        sh = sh.resize((sw, round(sh.height * sw / sh.width)), Image.LANCZOS)
+        g.im.alpha_composite(sh, (round(cx * BG_S - sh.width / 2), round(cy * BG_S - sh.height / 2)))
+    p.sparkle(504, 238, 3.2, fd.SPARK, fd.GOLD)
+    for _ in range(40):
+        r = rnd.uniform(1.4, 3.2)
+        p.ell(rnd.uniform(x0 + 30, x1 - 30), rnd.uniform(y0 + 20, y1 - 20), r, r, fd.alpha(WHITE, 0x80), 0.6, "#c6eefb")
+    # a long rug from the door up to the pool
+    p.rect(440, 372, 520, 545, "#ffb3c8", 0, 1.0)
+    for y in range(388, 545, 26):
+        p.heart(480, y, 4, "#ffd0e0", 0)
+    p.line([(446, 372), (446, 545)], "#ffe3a8", 2)
+    p.line([(514, 372), (514, 545)], "#ffe3a8", 2)
+    g.save("bg_florida_aquarium")
 
+
+def stable_bg():
+    """Out back of the house: lawn, a soft sandy paddock for the stalls, the path from the
+    barn door down to the gate and the beach."""
+    rnd = random.Random(404)
+    g = Ground(fd.GRASS)
+    p = g.p
+    p.rect(-10, -10, 970, 64, "#a6dc8a", 0, 0)
+    for x in range(-20, 980, 52):
+        p.ell(x, 40, 38, 28, fd.HEDGE, 1.0)
+    speckle(p, rnd, (0, 60, 960, 540), 600, [fd.GRASS_DK, fd.GRASS_HI], (0.8, 1.8))
+    for _ in range(70):
+        clover_patch(p, rnd.uniform(10, 950), rnd.uniform(70, 530))
+    for _ in range(90):
+        grass_tuft(p, rnd.uniform(0, 960), rnd.uniform(70, 540))
+    paddock = [(70, 220), (890, 220), (920, 300), (900, 480), (820, 500), (140, 500), (60, 470), (40, 300)]
+    p.poly(paddock, "#efd9a6", 0)
+    p.line(paddock + [paddock[0]], "#e2c48a", 3)
+    speckle(p, rnd, (90, 230, 870, 490), 300, ["#e8cd94", "#f7e6bd"], (0.8, 1.8))
+    for _ in range(40):
+        p.arc(rnd.uniform(100, 860), rnd.uniform(240, 480), 2.4, 2.4, 200, 340, "#d9bb80", 1.0)
+    for _ in range(60):
+        x, y, a = rnd.uniform(100, 860), rnd.uniform(240, 480), rnd.uniform(0, math.pi)
+        p.line([(x, y), (x + math.cos(a) * 4, y + math.sin(a) * 2)], "#f2d06a", 0.8)
+    path = [(480, 200), (480, 300), (476, 420), (480, 545)]
+    p.line(path, fd.PATH_PEB, 30)
+    p.line(path, fd.PATH, 24)
+    for y in (240, 300, 360, 420, 480, 525):
+        stone(p, 480 + rnd.uniform(-5, 5), y, 5)
+    for x, y in ((120, 120), (840, 130), (60, 520), (900, 520), (300, 150), (660, 150)):
+        flower_cluster(p, x, y, rnd)
+    g.save("bg_florida_stable")
+
+
+# ================================================================== main
 
 def main():
-    OUT.mkdir(parents=True, exist_ok=True)
-    father()
-    daughter()
-    hannah()
-    mermaid()
-    crab()
-    gull()
-    dolphin()
-    shell()
-    seed_bag()
-    craft_bench()
-    plots()
+    prop("prop_palm_a", 76, 96, palm_drawing(1.0, 1))
+    prop("prop_palm_b", 76, 88, palm_drawing(-1.0, 2))
+    prop("prop_tree_mango", 48, 58, fruit_tree(fd.LEAF_MINT, fd.MANGO, "#ffd9a0", "#7fbf7a"))
+    prop("prop_tree_key_lime", 48, 58, fruit_tree("#9ddc8e", fd.KEY_LIME, "#f4ffd0", "#6fb06a"))
+    prop("prop_bush_hibiscus", 34, 26, bush(_hib, fd.HIBISCUS))
+    prop("prop_bush_bougainvillea", 34, 26, bush(_boug, fd.BOUG))
+    prop("prop_dune_grass", 24, 16, dune_grass)
+    prop("prop_umbrella", 42, 52, umbrella)
+    prop("prop_rowboat", 64, 28, rowboat)
+    prop("prop_aquarium", 140, 120, aquarium_building)
+    prop("prop_garden_arch", 44, 56, garden_arch)
+    prop("prop_sign_stable", 26, 34, sign_stable)
+    prop("prop_sandcastle", 32, 24, sandcastle)
+    prop("prop_house", 276, 140, house)
+    prop("prop_fence_picket", 64, 22, fence_picket)
+    prop("prop_birdbath", 22, 28, birdbath)
+    prop("prop_bench", 80, 22, bench)
+    prop("prop_palm_potted", 30, 46, palm_potted)
+    prop("prop_barn", 260, 160, barn)
+    prop("prop_fence_paddock", 80, 22, fence_paddock)
+    prop("prop_hay", 32, 22, hay)
+    prop("prop_trough", 40, 18, trough)
+    prop("plot_empty", 36, 28, plot_empty)
+    prop("plot_growing", 36, 30, plot_growing)
+    for plant in PLANTS:
+        prop(f"plot_ready_{plant}", 36, 40, plot_ready(plant))
+    prop("seed_bag", 22, 28, seed_bag)
+    prop("craft_bench", 52, 30, craft_bench)
+    fish_sheet()
     beach_bg()
+    sea_foam_sheet()
     garden_bg()
     aquarium_bg()
-    print("Florida art written to", OUT)
+    stable_bg()
+    print("Florida art written to", fd.OUT)
 
 
 if __name__ == "__main__":

@@ -1,20 +1,27 @@
 """Cut island props (buildings, fences, signs, temple icons) from the canon sheets.
 
-Usage: python3 -I tools/cut_island_props.py
-Reads project/data/island_props.json: each prop names a sheet under art/canon, a crop
+Usage: python3 -I tools/cut_island_props.py [data.json]
+Reads project/data/island_props.json (or the given data file, e.g.
+project/data/florida_canon.json): each prop names a sheet under art/canon, a crop
 "WxH+X+Y" in full-resolution pixels, and a background mode:
   white  - clear near-white background (edge-connected, plus large enclosed gaps)
   fuzz   - flood the colour found at the crop corners (tolerance "tol")
   ellipse- keep only the inscribed ellipse (round seals)
-Output: project/assets/canon/<name>.png at the sheet's own resolution (trimmed, background
-removed, never rescaled). "height" is the prop's display height in world pixels: the map
-builder (tools/build_island_maps.gd) scales the sprite to it, so the full-resolution cut is
-downsampled smoothly by the GPU (mipmaps) instead of being shrunk here.
+  outlined - keep the shape closed by the warm-brown outline (pixels darker than "ink", default
+           150) with its inside filled, opened by "open" px to drop thin strings; for drawings
+           that sit on a coloured picture rather than on the sheet's white
+Output: <data "out" dir, default project/assets/canon>/<name>.png at the sheet's own
+resolution (trimmed, background removed, never rescaled). "height" is the prop's display
+height in world pixels (null for bases that generators draw over): the consumer scales the
+sprite to it, so the full-resolution cut is downsampled smoothly by the GPU (mipmaps) instead
+of being shrunk here. The cut() function is imported by the art generators that build on
+canon drawings at full resolution.
 Sheets are looked up under art/canon/*/ and dev/art/ (the world-building overview, which is
 kept in the git-crypt dev/ tree). A prop whose sheet is missing (a checkout without the
 git-crypt key) is skipped and its committed PNG stays.
 """
 import json
+import sys
 from pathlib import Path
 
 import numpy as np
@@ -22,8 +29,6 @@ from PIL import Image
 from scipy import ndimage
 
 ROOT = Path(__file__).resolve().parent.parent
-CFG = json.loads((ROOT / "project/data/island_props.json").read_text())
-OUT = ROOT / "project/assets/canon"
 sheets = {}
 
 
@@ -50,7 +55,14 @@ def cut(spec):
     w, h = map(int, size.split("x"))
     rgb = rgb[int(y):int(y) + h, int(x):int(x) + w]
     mode = spec.get("mode", "white")
-    if mode == "ellipse":
+    if mode == "outlined":
+        ink = rgb.max(axis=2) < spec.get("ink", 150)
+        lab, n = ndimage.label(ndimage.binary_closing(ink, iterations=2))
+        sizes = ndimage.sum(np.ones_like(ink), lab, range(1, n + 1))
+        keep = ndimage.binary_fill_holes(lab == int(np.argmax(sizes)) + 1)
+        keep = ndimage.binary_opening(keep, iterations=spec.get("open", 4))
+        keep = ndimage.binary_dilation(keep, iterations=1)
+    elif mode == "ellipse":
         yy, xx = np.mgrid[:h, :w]
         keep = ((xx - w / 2) / (w / 2)) ** 2 + ((yy - h / 2) / (h / 2)) ** 2 <= 1
     else:
@@ -81,11 +93,19 @@ def cut(spec):
     return img.crop(img.getchannel("A").point(lambda a: 255 if a > 20 else 0).getbbox())
 
 
-OUT.mkdir(parents=True, exist_ok=True)
-for name, spec in CFG["props"].items():
-    if sheet_path(spec["sheet"]) is None:
-        print(name, "skipped: sheet", spec["sheet"], "not found (or still encrypted)")
-        continue
-    im = cut(spec)
-    im.save(OUT / f"{name}.png")
-    print(name, im.size)
+def main():
+    data = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "project/data/island_props.json"
+    cfg = json.loads(data.read_text())
+    out = ROOT / cfg.get("out", "project/assets/canon")
+    out.mkdir(parents=True, exist_ok=True)
+    for name, spec in cfg["props"].items():
+        if sheet_path(spec["sheet"]) is None:
+            print(name, "skipped: sheet", spec["sheet"], "not found (or still encrypted)")
+            continue
+        im = cut(spec)
+        im.save(out / f"{name}.png")
+        print(name, im.size)
+
+
+if __name__ == "__main__":
+    main()

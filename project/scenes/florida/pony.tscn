@@ -18,6 +18,7 @@ script = ExtResource("2")
 shape = SubResource("click")
 
 [node name="BarkBubble" type="Label" parent="."]
+z_index = 20
 offset_left = -80.0
 offset_top = -66.0
 offset_right = 80.0
