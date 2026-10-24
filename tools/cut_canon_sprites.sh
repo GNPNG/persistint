@@ -13,7 +13,8 @@
 #   prop_scroll.png         the tide/moon scroll (a Forbidden Knowledge pickup in the ruins)
 # Each cut is crop + background removal (flood fill from the border) + trim, nothing else:
 # no resize, so the sprite keeps the sheet's full resolution and the game scales it to its
-# display size with smooth (mipmapped) filtering. Deterministic: same sheet, same PNGs.
+# display size with smooth (mipmapped) filtering. Deterministic: same sheet, same PNGs (with
+# ImageMagick 7.1.2-31 and the versions in tools/requirements-art.txt).
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 CASTES="${1:-$(ls "$ROOT"/art/canon/gemini/Gemini_Generated_Image_4bzs*.jpg)}"

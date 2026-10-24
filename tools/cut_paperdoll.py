@@ -1,6 +1,8 @@
 """Cut aligned paper-doll layers from the Gemini paper-doll sheet.
 
-Usage: python3 -I tools/cut_paperdoll.py <sheet.jpg>
+Usage: python3 -I tools/cut_paperdoll.py [sheet.jpg]
+  (default: art/canon/gemini/Gemini_Generated_Image_ktfw47ktfw47ktfw.jpg, the paper-doll sheet)
+Deterministic: with the versions in tools/requirements-art.txt it reproduces the committed PNGs.
 
 Reads project/data/paperdoll_parts.json. Every layer is placed on one shared canvas so
 the game can stack them at one origin:
@@ -28,7 +30,8 @@ CFG = json.loads((ROOT / "project/data/paperdoll_parts.json").read_text())
 OUT = ROOT / "project/assets/canon"
 WHITE = CFG.get("white_threshold", 232)
 
-sheet = np.asarray(Image.open(sys.argv[1]).convert("RGB"))
+SHEET = sys.argv[1] if len(sys.argv) > 1 else ROOT / "art/canon/gemini/Gemini_Generated_Image_ktfw47ktfw47ktfw.jpg"
+sheet = np.asarray(Image.open(SHEET).convert("RGB"))
 
 
 def cut(spec):
