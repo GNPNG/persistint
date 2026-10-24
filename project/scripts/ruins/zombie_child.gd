@@ -12,6 +12,7 @@ extends "res://scripts/florida/clickable.gd"
 const ForbiddenKnowledge := preload("res://scripts/ruins/forbidden_knowledge.gd")
 const SheetRig := preload("res://scripts/ruins/sheet_rig.gd")
 const BUBBLE_BOTTOM := -21.0  # just over the head
+const PUFF := "res://assets/ruins/gore_puff.png"  # tools/gen_clone_children.py
 
 @export var original := "epstein"  # cast id of the person the batch was meant to reproduce
 @export var batch := 1
@@ -143,7 +144,18 @@ func bark(list := "barks") -> String:
 func get_eaten() -> void:
 	remove_from_group("zombie_clones")
 	set_deferred("monitoring", false)
+	if ResourceLoader.exists(PUFF):
+		_puff()
+	queue_free()
+
+
+## The puff: generated clone-dust sprites (gore_puff.png), each about 6-10 world px wide.
+func _puff() -> void:
+	var tex: Texture2D = load(PUFF)
+	var fit := 6.0 / float(tex.get_width())
 	var puff := CPUParticles2D.new()
+	puff.texture = tex
+	puff.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	puff.one_shot = true
 	puff.amount = 10
 	puff.lifetime = 0.6
@@ -152,11 +164,10 @@ func get_eaten() -> void:
 	puff.initial_velocity_min = 20.0
 	puff.initial_velocity_max = 50.0
 	puff.gravity = Vector2(0, -20)
-	puff.scale_amount_min = 3.0
-	puff.scale_amount_max = 6.0
-	puff.color = Color(0.85, 0.95, 0.85, 0.8)
+	puff.scale_amount_min = fit
+	puff.scale_amount_max = fit * 1.7
+	puff.color = Color(1, 1, 1, 0.9)
 	get_parent().add_child(puff)
 	puff.global_position = global_position
 	puff.emitting = true
 	puff.finished.connect(puff.queue_free)
-	queue_free()

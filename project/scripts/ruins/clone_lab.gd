@@ -153,12 +153,9 @@ func splatter(spot: Vector2) -> void:
 	fade.tween_property(puddle, "modulate:a", 0.0, 1.5)
 	fade.tween_callback(puddle.queue_free)
 
-	var ramp := Gradient.new()
-	ramp.set_color(0, Color(1.0, 0.62, 0.75))
-	ramp.set_color(1, Color(0.9, 0.25, 0.38))
-	_burst(spot, null, 24, Color.WHITE, ramp, 2.5)
-	_burst(spot, _tex("deco_heart"), 6, Color.WHITE, null, 0.7)
-	_burst(spot, _tex("deco_sparkle"), 6, Color.WHITE, null, 0.7)
+	_burst(spot, _tex("gore_drop"), 20, 4.0)
+	_burst(spot, _tex("deco_heart"), 6, 8.0)
+	_burst(spot, _tex("deco_sparkle"), 6, 8.0)
 
 	for bit: String in ["gore_bone", "gore_chunk"]:
 		var b := Sprite2D.new()
@@ -178,7 +175,12 @@ func splatter(spot: Vector2) -> void:
 		tw.tween_callback(b.queue_free)
 
 
-func _burst(spot: Vector2, texture: Texture2D, amount: int, color: Color, ramp: Gradient, size: float) -> void:
+## A one-shot spray of `texture`, each particle fitted to about `world_px` wide whatever
+## resolution the texture is drawn or cut at. No texture, no spray (never bare squares).
+func _burst(spot: Vector2, texture: Texture2D, amount: int, world_px: float) -> void:
+	if texture == null:
+		return
+	var size := world_px / float(texture.get_width())
 	var p := CPUParticles2D.new()
 	p.one_shot = true
 	p.amount = amount
@@ -190,18 +192,21 @@ func _burst(spot: Vector2, texture: Texture2D, amount: int, color: Color, ramp: 
 	p.initial_velocity_max = 130.0
 	p.gravity = Vector2(0, 260)
 	p.scale_amount_min = size
-	p.scale_amount_max = size * 1.6
-	p.color = color
-	if ramp:
-		p.color_initial_ramp = ramp
-	if texture:
-		p.texture = texture
+	p.scale_amount_max = size * 1.5
+	p.angle_min = -30.0
+	p.angle_max = 30.0
+	p.texture = texture
 	gore.add_child(p)
 	p.global_position = spot
 	p.emitting = true
 	p.finished.connect(p.queue_free)
 
 
+## A texture by id: the author's canon cut (assets/canon) when one exists, else the ruins'
+## generated art (assets/ruins).
 func _tex(name_: String) -> Texture2D:
-	var path := "res://assets/ruins/%s.png" % name_
-	return load(path) if ResourceLoader.exists(path) else null
+	for dir in ["canon", "ruins"]:
+		var path := "res://assets/%s/%s.png" % [dir, name_]
+		if ResourceLoader.exists(path):
+			return load(path)
+	return null
