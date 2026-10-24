@@ -6,10 +6,12 @@ extends Area2D
 
 const BARKS_PATH := "res://data/barks.json"
 ## Directional rig made from the canon front/side/back cuts by tools/gen_npc_rigs.py:
-## 32x52 frames, rows down/left/up, columns 0-3 idle and 4-7 walk, feet on y 50.
+## 8 columns x 3 rows of frames at the cuts' full resolution (frame = sheet size / (8, 3)),
+## rows down/left/up, columns 0-3 idle and 4-7 walk, feet at 50/52 of the frame height.
+## Shown RIG_HEIGHT world px tall, downsampled smoothly (mipmaps).
 const RIG_PATH := "res://assets/characters/%s_rig.png"
-const RIG_FRAME := Vector2i(32, 52)
-const RIG_FEET := 50
+const RIG_HEIGHT := 52.0
+const RIG_FEET := 50.0 / 52.0
 ## Within this distance the NPC turns to look at the player.
 const LOOK_DISTANCE := 96.0
 
@@ -67,10 +69,19 @@ func _build_rig() -> void:
 	rig.name = "Rig"
 	rig.sprite_frames = rig_frames(RIG_PATH % sprite_texture)
 	rig.centered = false
-	rig.position = Vector2(-RIG_FRAME.x / 2.0, 24 - RIG_FEET)
+	var frame := rig_frame_size(load(RIG_PATH % sprite_texture))
+	var k := RIG_HEIGHT / frame.y
+	rig.scale = Vector2(k, k)
+	rig.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	rig.position = Vector2(-frame.x * k / 2.0, 24 - RIG_HEIGHT * RIG_FEET)
 	add_child(rig)
 	move_child(rig, $Sprite2D.get_index() + 1)
 	rig.play("idle_down")
+
+
+## Frame size of a rig sheet: 8 columns, 3 rows.
+static func rig_frame_size(sheet: Texture2D) -> Vector2:
+	return Vector2(sheet.get_width() / 8.0, sheet.get_height() / 3.0)
 
 
 ## SpriteFrames for a rig sheet (idle_/walk_ + down/left/up), built once per sheet.
@@ -78,6 +89,7 @@ static func rig_frames(path: String) -> SpriteFrames:
 	if _rigs.has(path):
 		return _rigs[path]
 	var sheet: Texture2D = load(path)
+	var fr := rig_frame_size(sheet)
 	var sf := SpriteFrames.new()
 	sf.remove_animation("default")
 	for row: int in 3:
@@ -89,7 +101,7 @@ static func rig_frames(path: String) -> SpriteFrames:
 			for i in 4:
 				var at := AtlasTexture.new()
 				at.atlas = sheet
-				at.region = Rect2(((0 if state == "idle" else 4) + i) * RIG_FRAME.x, row * RIG_FRAME.y, RIG_FRAME.x, RIG_FRAME.y)
+				at.region = Rect2(((0 if state == "idle" else 4) + i) * fr.x, row * fr.y, fr.x, fr.y)
 				sf.add_frame(anim, at)
 	_rigs[path] = sf
 	return sf
