@@ -104,5 +104,8 @@ func _on_proximity_exited(body: Node2D) -> void:
 
 
 func _show_bubble(text: String) -> void:
+	if bubble.visible and bubble.text == text:
+		return
 	bubble.text = text
 	bubble.show()
+	Voice.speak(text, voice_pitch, display_name)
