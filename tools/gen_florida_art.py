@@ -1,9 +1,8 @@
 """Draw the tropical Florida Keys maps: ground backgrounds, standing props, garden items, fish.
 
 Usage: python3 -I tools/gen_florida_art.py
-Inputs: prompts/STYLE.md palette (via tools/florida_draw.py), project/data/florida.json (the
-plants) and the canon flower cluster project/assets/canon/deco_flowers.png, scattered on the
-lawns. The canon sheets hold no tropical scenery, so everything else is drawn in their sticker
+Inputs: prompts/STYLE.md palette (via tools/florida_draw.py) and project/data/florida.json (the
+plants). The canon sheets hold no tropical scenery, so everything is drawn in their sticker
 look: warm-brown outline #8a5a5a, flat pastel fills with one highlight, faces on the big
 friendly things (STYLE.md 4.1), Florida's saturated accents (coral, hibiscus, bougainvillea,
 mango, key lime, turquoise). Sizes below are world px; every PNG is written at
@@ -659,14 +658,31 @@ def stone(p, x, y, r=5):
     p.ell(x - r * 0.3, y - r * 0.2, r * 0.35, r * 0.18, WHITE, 0)
 
 
-FLOWERS_W = 36
-
-
-def canon_flowers(im, x, y):
-    fl = fd.canon_sprite("deco_flowers")
-    k = FLOWERS_W * BG_S / fl.width  # the cluster is FLOWERS_W world px wide at any cut size
-    fl = fl.resize((round(fl.width * k), round(fl.height * k)), Image.LANCZOS)
-    im.alpha_composite(fl, (round(x * BG_S - fl.width / 2), round(y * BG_S - fl.height)))
+def flower_cluster(p, x, y, rnd):
+    """A clump of tropical flowers on the lawn (about 36x22 world px, standing on y): rounded
+    leaves, then hibiscus and plumeria heads in the Florida colours."""
+    for dx, ang in ((-4, 200), (-2, 228), (0, 256), (1, 284), (3, 312), (4, 338), (0, 180), (1, 360)):
+        rad = math.radians(ang + rnd.uniform(-6, 6))
+        bx, by = x + dx, y - 1
+        L, W = rnd.uniform(10, 12.5), 3.0
+        ux, uy, nx, ny = math.cos(rad), math.sin(rad) * 0.8, -math.sin(rad), math.cos(rad)
+        pts = []
+        for k in range(13):  # almond leaf: tip to tip down one side and back up the other
+            t = k / 12
+            pts.append((bx + ux * L * t + nx * W * math.sin(t * math.pi), by + uy * L * t + ny * W * math.sin(t * math.pi)))
+        for k in range(11, 0, -1):
+            t = k / 12
+            pts.append((bx + ux * L * t - nx * W * math.sin(t * math.pi), by + uy * L * t - ny * W * math.sin(t * math.pi)))
+        col = rnd.choice(["#8fd88f", "#7fcf86", "#9ce29a"])
+        p.poly(pts, col, 0.7)
+        p.line([(bx, by), (bx + ux * L * 0.8, by + uy * L * 0.8)], fd.mix(col, INK, 0.3), 0.4)
+    heads = [(-7, -7, 4.2), (0, -11, 4.6), (7, -7, 4.0), (-3, -3, 3.8), (4, -2, 3.6)]
+    rnd.shuffle(heads)
+    for i, (dx, dy, r) in enumerate(heads):
+        if i % 2:
+            p.plumeria(x + dx, y + dy, r, 0.5)
+        else:
+            p.hibiscus(x + dx, y + dy, r, rnd.choice([fd.HIBISCUS, fd.BOUG, fd.FLOWER_YELLOW, fd.CORAL]), 0.55)
 
 
 def wavy(y0, amp, period, phase, x0=-10, x1=970, step=6):
@@ -781,7 +797,7 @@ def garden_bg():
         if not 430 < x < 530:
             p.hibiscus(x + rnd.uniform(-3, 3), 196 + rnd.uniform(-3, 3), 3.6, rnd.choice([fd.HIBISCUS, fd.FLOWER_YELLOW, fd.BOUG]), 0.6)
     for x, y in ((90, 140), (250, 330), (720, 420), (860, 300), (640, 500), (60, 420), (330, 500), (900, 470)):
-        canon_flowers(g.im, x, y)
+        flower_cluster(p, x, y, rnd)
     g.save("bg_florida_garden")
 
 
@@ -892,7 +908,7 @@ def stable_bg():
     for y in (240, 300, 360, 420, 480, 525):
         stone(p, 480 + rnd.uniform(-5, 5), y, 5)
     for x, y in ((120, 120), (840, 130), (60, 520), (900, 520), (300, 150), (660, 150)):
-        canon_flowers(g.im, x, y)
+        flower_cluster(p, x, y, rnd)
     g.save("bg_florida_stable")
 
 

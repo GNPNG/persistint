@@ -10,7 +10,7 @@ the game can stack them at one origin:
     head and its bottom set on the chin.
   - accessory: scaled by "scale" and placed at "anchor" relative to the head.
 White background and hair face openings become transparent.
-Layers keep the sheet's resolution (the shared canvas is about 540x790 px): no downscale, so
+Layers keep the sheet's resolution (the shared canvas is 721x760 px for the current sheet): no downscale, so
 the doll stays smooth illustration. Code scales it to its display size (player.gd fits it to
 48 world px tall; PaperDoll fits its rect).
 Outputs: project/assets/canon/<part>.png for every part in the data file.
