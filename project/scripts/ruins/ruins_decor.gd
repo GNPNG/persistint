@@ -13,8 +13,12 @@ const TILESET := preload("res://assets/ruins/ruins_tileset.tres")
 const VIGNETTE := preload("res://assets/ruins/vignette.png")
 const AMBIENT_SECONDS := 7.0
 const TITLE_SECONDS := 3.5
-const PROP_SCALE := 0.5  # generated props are drawn at two texels per world pixel
+## Generated ruins art (tools/gen_ruins_art.py, gen_clone_children.py) is drawn at this many
+## texels per world pixel and shown at 1/TEXELS, smoothly filtered (mipmaps, linear).
+const TEXELS := 8.0
 const TILE := 32
+## World height of a canon cut (source resolution, assets/canon) when the room data gives none.
+const CANON_HEIGHT := {"prop_seal_o": 36.0, "prop_scroll": 18.0, "prop_calendar": 20.0, "prop_tag_x": 20.0}
 ## Characters stand with their feet this far below their origin (player.gd: a 48 px doll drawn
 ## 8 px up); a standing prop's node sits the same distance above its feet so y-sort agrees.
 const FEET := 16.0
@@ -37,6 +41,7 @@ var _hint_prop: Node2D
 func _ready() -> void:
 	var r := room()
 	y_sort_enabled = true
+	smooth(self)
 	_paint_tiles(r)
 	for prop: Dictionary in r.get("props", []):
 		_add_prop(prop)
@@ -55,9 +60,21 @@ static func texture_for(kind: String) -> Texture2D:
 	return null
 
 
-## Generated ruins art is drawn at two texels per world pixel; canon cuts at one.
-static func scale_for(tex: Texture2D) -> float:
-	return PROP_SCALE if tex.resource_path.begins_with("res://assets/ruins/") else 1.0
+## The scale that shows `tex` at world size: 1/TEXELS for generated ruins art; a canon cut
+## (kept at the sheet's resolution) is fitted to `world_h` px tall, or its CANON_HEIGHT.
+static func scale_for(tex: Texture2D, world_h := 0.0) -> float:
+	if tex.resource_path.begins_with("res://assets/ruins/"):
+		return 1.0 / TEXELS
+	if world_h <= 0.0:
+		world_h = CANON_HEIGHT.get(tex.resource_path.get_file().get_basename(), 32.0)
+	return world_h / float(tex.get_height())
+
+
+## Art in the ruins is high-resolution illustration shown scaled down: filter it smoothly
+## (linear with mipmaps) from `root` down, whatever the project-wide default is. Only art
+## nodes get this (room props and tiles, clones, cubs, pickups, gore); text keeps its own.
+static func smooth(root: CanvasItem) -> void:
+	root.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 
 
 ## The wall band fills the rows above the walkable floor (the Nav polygon's top edge).
@@ -81,6 +98,7 @@ func _paint_tiles(r: Dictionary) -> void:
 	tiles.name = "Tiles"
 	tiles.tile_set = TILESET
 	tiles.z_index = -10
+	tiles.scale = Vector2.ONE / TEXELS  # 256-texel atlas cells, 32 world px each
 	add_child(tiles)
 	var cols := int(ceil(_map_size().x / TILE))
 	var rows := int(ceil(_map_size().y / TILE))
@@ -110,6 +128,7 @@ func _paint_tiles(r: Dictionary) -> void:
 	shade.name = "WallShadow"
 	shade.tile_set = TILESET
 	shade.z_index = -9
+	shade.scale = Vector2.ONE / TEXELS
 	add_child(shade)
 	for x in cols:
 		shade.set_cell(Vector2i(x, wall_rows), 0, Vector2i(6, 2))
@@ -131,7 +150,7 @@ func _add_prop(prop: Dictionary) -> void:
 		holder.z_index = -8
 	elif place == "floor":
 		holder.z_index = -7
-	var s := scale_for(tex)
+	var s := scale_for(tex, float(prop.get("h", 0.0)))
 	var frames: int = ANIMATED.get(kind, 1)
 	var cell := Vector2(tex.get_width() / float(frames), tex.get_height())
 	var node: Node2D

@@ -5,14 +5,18 @@ icons, a soft glow and a screen vignette.
 Usage: python3 -I tools/gen_ruins_art.py
 Inputs: none (palette hexes below come from prompts/STYLE.md; every random draw is seeded).
 Outputs, all under project/assets/ruins/:
-  ruins_tiles.png + ruins_tileset.tres  32x32 tile atlas (layout in tiles()), one texel per
-                                        world pixel, painted by scripts/ruins/ruins_decor.gd
-  ruins_<kind>.png                      the props data/ruins.json names by "kind"; drawn at
-                                        two texels per world pixel, shown at scale 0.5
-  ruins_tank.png, ruins_tank_duck.png   animated sheets: 1 row x 4 frames of 88x172 (tank())
-  icon_<id>.png                         Forbidden Knowledge pickups, 40x40 (data "icon")
-  glow.png, vignette.png                pickup glow, 640x360 screen vignette
-Each piece is drawn on a canvas SS times larger and downscaled (LANCZOS). Style: STYLE.md
+Every file is drawn at D = 8 texels per world pixel (four times the 1280x720 window's
+2x-camera display size); the game shows it at scale 1/8 with mipmapped linear filtering, so
+nothing is ever shown pixelated.
+  ruins_tiles.png + ruins_tileset.tres  atlas of 256x256 tiles (32x32 world px; layout in
+                                        tiles()), painted by scripts/ruins/ruins_decor.gd at
+                                        scale 1/8
+  ruins_<kind>.png                      the props data/ruins.json names by "kind", feet at the
+                                        bottom centre
+  ruins_tank.png, ruins_tank_duck.png   animated sheets: 1 row x 4 frames of 352x688 (tank())
+  icon_<id>.png                         Forbidden Knowledge pickups, 160x160 (data "icon")
+  glow.png, vignette.png                256x256 pickup glow, 1280x720 screen vignette
+Each piece is drawn on a canvas SS = 16 times the world size and downscaled (LANCZOS). Style: STYLE.md
 4.1-4.5 - soft outline (plum #5a4a5e in the bunker, warm brown #8a5a5a on the ship), flat
 pastel fills with one highlight, faces on the big machines, cat-in-a-lab-coat stickers on
 bunker machines, blue-green gloom with pink/mint accents. The Seal of the O and the tide
@@ -27,8 +31,8 @@ from PIL import Image, ImageDraw, ImageFilter
 OUT = Path(__file__).resolve().parent.parent / "project/assets/ruins"
 PLUM, BROWN = "#5a4a5e", "#8a5a5a"  # outline colours (STYLE.md 4.1)
 INK = PLUM
-SS = 8  # supersample: canvas pixels per world pixel
-D = 2  # output texels per world pixel for props
+SS = 16  # supersample: canvas pixels per world pixel
+D = 8  # output texels per world pixel
 BLUSH = "#ff9fb8"
 PINK, MINT, SKY, LILAC, BUTTER, CREAM = "#ffb3c8", "#a8e6c8", "#a8d8f0", "#c9b3f0", "#ffe08a", "#fdf6e3"
 STEEL, STEEL_D, STEEL_L = "#9fb3c4", "#7d91a6", "#c8d8e4"
@@ -110,7 +114,7 @@ class Art:
 
 # ---------------------------------------------------------------- tiles
 
-T = 32  # tile size in texels and world pixels
+T = 32  # tile size in world pixels (T * D texels in the atlas)
 FLOORS = ["deck", "grate", "plate", "concrete", "lab", "carpet"]
 WALLS = {  # id: (panel, seam, rivet, accent stripe, cap)
     "hull": ("#5f6e86", "#4d5a6f", "#7c8aa1", "#e9a7b9", "#8494ad"),
@@ -143,9 +147,12 @@ def floor_grate(a, r, alt):
         for j in range(4):
             a.rect(i * 8 + 1, j * 8 + 1, i * 8 + 7, j * 8 + 7, "#485261", 1, "#3c4552", 0.5)
             a.line([(i * 8 + 2, j * 8 + 2.2), (i * 8 + 6, j * 8 + 2.2)], "#66727f", 0.5)
-    if alt:  # a puddle catching the light
-        a.ell(9, 13, 23, 20, (168, 216, 240, 120), None)
-        a.line([(12, 15), (16, 15)], "#d6f0fb", 0.5)
+    if alt:  # a shallow puddle over the grate catching the light
+        a.ell(8, 12.5, 24, 20.5, "#7a93a6", "#4f5d6d", 0.4)
+        a.ell(9.4, 13.6, 22.6, 19.4, "#86a1b4", None)
+        a.arc(12, 14.6, 21, 19.4, 200, 320, "#a9c6d6", 0.4)  # a ripple
+        a.line([(11.4, 15.2), (15.4, 14.6)], "#dff2fb", 0.6)  # the one highlight
+        a.circ(18.6, 14.8, 0.45, "#dff2fb", None)
 
 
 def floor_plate(a, r, alt):
@@ -178,11 +185,10 @@ def floor_lab(a, r, alt):
     for k in (0.3, 16):
         a.line([(0, k), (32, k)], "#5f857e", 0.6)
         a.line([(k, 0), (k, 32)], "#5f857e", 0.6)
-    if alt:  # a drain, and a spill of pink tank fluid
+    if alt:  # a floor drain (the pink spills are props: ruins_puddle)
         a.circ(8, 24, 2.4, "#5f857e", "#4e6c72", 0.4)
         for dx in (-1, 0, 1):
             a.line([(8 + dx, 22.4), (8 + dx, 25.6)], "#4e6c72", 0.3)
-        a.ell(18, 6, 27, 11, (255, 158, 191, 150), None)
 
 
 def floor_carpet(a, r, alt):
@@ -236,7 +242,7 @@ def edge_shadow(a):
 
 
 def tiles():
-    """ruins_tiles.png: a 7x6 atlas of 32x32 tiles.
+    """ruins_tiles.png: a 7x6 atlas of (T*D)x(T*D) tiles.
     row 0: floors deck, grate, plate, concrete, lab, carpet; col 6 void
     row 1: the same floors with one detail (streamer, puddle, wax, crack, drain, card); col 6 lip
     row 2: wall caps   hull, service, core, bunker, lab, archive; col 6 floor edge shadow
@@ -244,12 +250,13 @@ def tiles():
     row 4: wall panels with the accent stripe
     row 5: wall skirting (bottom wall row)
     """
-    sheet = Image.new("RGBA", (7 * T, 6 * T))
+    TT = T * D
+    sheet = Image.new("RGBA", (7 * TT, 6 * TT))
 
     def put(col, row, draw, seed):
         a = Art(T, T)
         draw(a, random.Random(seed))
-        sheet.alpha_composite(a.im.resize((T, T), Image.LANCZOS), (col * T, row * T))
+        sheet.alpha_composite(a.im.resize((TT, TT), Image.LANCZOS), (col * TT, row * TT))
 
     for i, f in enumerate(FLOORS):
         fn = globals()["floor_" + f]
@@ -284,17 +291,17 @@ def tileset():
         '[ext_resource type="Texture2D" path="res://assets/ruins/ruins_tiles.png" id="1_tiles"]\n\n'
         '[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ruins"]\n'
         'texture = ExtResource("1_tiles")\n'
-        f"texture_region_size = Vector2i({T}, {T})\n"
+        f"texture_region_size = Vector2i({T * D}, {T * D})\n"
         f"{cells}\n\n"
         "[resource]\n"
-        f"tile_size = Vector2i({T}, {T})\n"
+        f"tile_size = Vector2i({T * D}, {T * D})\n"
         'sources/0 = SubResource("TileSetAtlasSource_ruins")\n')
 
 
 # ---------------------------------------------------------------- shared bits
 
 def glow():
-    n = 64
+    n = 256
     im = Image.new("RGBA", (n, n))
     px = im.load()
     for y in range(n):
@@ -306,7 +313,7 @@ def glow():
 
 
 def vignette():
-    w, h = 640, 360
+    w, h = 1280, 720
     im = Image.new("RGBA", (w, h))
     px = im.load()
     for y in range(h):
@@ -1010,13 +1017,23 @@ def chair_tipped():
 
 
 def puddle():
-    """Spilled tank fluid, pink, painted flat."""
+    """Spilled tank fluid, pink, painted flat: one soft-edged pool (overlapping lobes under a
+    single outline), two stray drops, a glossy highlight and a sparkle."""
     a = Art(40, 16)
-    a.ell(2, 3, 30, 13, "#ff9ebf", "INK", 0.5)
-    a.ell(24, 6, 38, 14, "#ff9ebf", "INK", 0.5)
-    a.d.ellipse(a.p(2.6, 3.6, 29.4, 12.4), fill="#ff9ebf")
-    a.ell(6, 5, 16, 8, "#ffd0dc", None)
-    a.circ(31, 9, 1.2, "#ffd0dc", None)
+    lobes = ((2, 4, 22, 13), (12, 2.5, 31, 11.5), (20, 6, 35, 14))
+    for box in lobes:  # outline pass
+        a.ell(*box, "#ff9ebf", "INK", 0.5)
+    for x0, y0, x1, y1 in lobes:  # fill pass hides the inner outline arcs
+        a.d.ellipse(a.p(x0 + 0.5, y0 + 0.5, x1 - 0.5, y1 - 0.5), fill="#ff9ebf")
+    a.ell(5, 8.5, 30, 13.2, "#f58fb2", None)  # the pool's deeper near edge
+    for x0, y0, x1, y1 in lobes:
+        a.d.ellipse(a.p(x0 + 1.4, y0 + 0.9, x1 - 1.4, y1 - 2.4), fill="#ff9ebf")
+    a.ell(6, 5, 15, 7.6, "#ffd0dc", None)  # gloss
+    a.circ(17, 6.2, 0.7, "#ffd0dc", None)
+    a.circ(37, 6, 1.3, "#ff9ebf", "INK", 0.4)  # stray drops
+    a.circ(36.6, 5.6, 0.4, "#ffd0dc", None)
+    a.circ(4, 14.6, 0.9, "#ff9ebf", "INK", 0.35)
+    a.sparkle(27, 4.2, 1.6, "#ffffff", "#ffd0dc")
     a.save("ruins_puddle")
 
 
@@ -1098,16 +1115,6 @@ def icon_thermo(a):
         a.line([(12, y), (13.6, y)], INK, 0.4)
 
 
-def icon_calendar(a):
-    a.rect(3, 4, 17, 18, "#ffffff", 1.5)
-    a.d.rectangle(a.p(3.6, 4.6, 16.4, 8), fill=SKY)
-    for i in range(3):
-        for j in range(2):
-            a.rect(5 + i * 4, 10 + j * 3.8, 7.6 + i * 4, 12.4 + j * 3.8, "#e6e6f0", 0.4, None)
-    for x in (7, 13):
-        a.rect(x - 0.8, 2, x + 0.8, 6, STEEL_D, 0.6, INK, 0.3)
-
-
 def icon_chart(a):
     a.rect(3, 3, 17, 17, "#fff8ec", 1.5)
     for i, h in enumerate((4, 7, 10, 6)):
@@ -1128,7 +1135,6 @@ def icons():
     icon("book", icon_book)
     icon("paper", icon_paper)
     icon("thermometer", icon_thermo)
-    icon("calendar", icon_calendar)
     icon("chart", icon_chart)
     icon("board", icon_board)
     icon("ledger", lambda a: icon_book(a, MINT))
