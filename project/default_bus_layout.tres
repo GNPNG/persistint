@@ -1,9 +1,8 @@
-[gd_resource type="AudioBusLayout" load_steps=3 format=3]
+[gd_resource type="AudioBusLayout" format=3 uid="uid://byckj76707w5a"]
 
 [sub_resource type="AudioEffectPitchShift" id="clones_pitch"]
 resource_name = "PitchShift"
 pitch_scale = 1.3
-fft_size = 3
 
 [sub_resource type="AudioEffectDistortion" id="clones_distortion"]
 resource_name = "Distortion"
