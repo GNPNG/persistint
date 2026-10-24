@@ -11,8 +11,10 @@ The Temple of the Queen Mother.
 
 ## Prompt
 
-Instrumental video-game music for a kawaii game, no vocals, seamless loop of 2 to 3 minutes, soft attack and no hard transient at the loop point, mixed quietly to sit under dialogue. Cute and melodic on the surface with a subtle sense that something is slightly wrong. Slow sacred kawaii ambience, harp, glass harmonica, toy-soft organ, small bells, wordless choir, dorian, reverent and faintly oppressive. Sacred kawaii temple ambience, 60 BPM, D dorian, harp and glass harmonica, slow pipe-organ chords softened like a toy organ, small bells on every downbeat, wordless choir pads. Reverent, pastel, ceremonial, faintly oppressive. Spec: instrumental only, no vocals or lyrics; seamless loop of 2:00 to 3:00 with no hard transient in the first or last 50 ms; about -16 LUFS integrated; MP3 320 kbps.
+Instrumental video-game music for a kawaii game, a seamless loop: constant energy, no intro, no outro, a repeating four-bar ostinato, soft dynamics, an uncluttered arrangement. Slow, sacred kawaii temple atmosphere, 60 BPM, D dorian: softly arpeggiated harp, glass harmonica, slow sustained toy-organ chords, a soft mellotron strings pad, and gentle, sparse glockenspiel notes placed between phrases. A cute pastel melody with subtle pitch drift and occasional dissonant passing notes. Reverent, pastel, ceremonial, faintly oppressive. Instrumental only, no vocals.
+
+Spec: instrumental only; seamless loop of 2:00 to 3:00, soft attack within the first and last 50 ms so the loop joins cleanly; about -16 LUFS integrated; MP3 320 kbps.
 
 ## Notes
 
-Instrumental, no vocals, seamless loop 2:00–3:00, about −16 LUFS integrated, mixed to sit under dialogue. Export MP3 320 kbps.
+Instrumental only, seamless loop 2:00–3:00, about −16 LUFS integrated, mixed to sit under dialogue. Export MP3 320 kbps. Paste only the first paragraph of ## Prompt into Gemini (prefixed with @persistint-asset-prompts); the Spec paragraph is for post-processing (tools/sync_rendered_assets.py). Lyria renders about 2.5 to 3 minutes; cut the loop seam on a bar boundary in post.

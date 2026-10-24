@@ -11,8 +11,10 @@ Ruins of Utopia: the Service Spine and Reliquary Core (repurposed retro sci-fi b
 
 ## Prompt
 
-Instrumental video-game music for a kawaii game, no vocals, seamless loop of 2 to 3 minutes, soft attack and no hard transient at the loop point, mixed quietly to sit under dialogue. Cute and melodic on the surface with a subtle sense that something is slightly wrong. Melancholy exploration ambience, tape-warbled lounge piano or filtering analog synth, ocean swell, distant foghorn, minor key, unresolved. Melancholy exploration ambience, 80 BPM, F# minor, analog synth arpeggio slowly filtering, soft sub pulse, data-blip percussion, airy choir pad. Discovery mixed with dread, like 1990s adventure games. Spec: instrumental only, no vocals or lyrics; seamless loop of 2:00 to 3:00 with no hard transient in the first or last 50 ms; about -16 LUFS integrated; MP3 320 kbps.
+Instrumental video-game music for a kawaii game, a seamless loop: constant energy, no intro, no outro, a repeating four-bar ostinato, soft dynamics, an uncluttered arrangement. Melancholy ambient exploration music for a retro sci-fi bunker, 80 BPM, F# minor: an analog synth arpeggio slowly filtering open and closed, a soft sub pulse, muted electronic micro-percussion of short, rounded blip tones, an airy, glassy synth pad, and a small pastel bell-synth melody over subtly detuned, unresolved minor chords. Discovery tinged with dread, like a 1990s adventure game. Instrumental only, no vocals.
+
+Spec: instrumental only; seamless loop of 2:00 to 3:00, soft attack within the first and last 50 ms so the loop joins cleanly; about -16 LUFS integrated; MP3 320 kbps.
 
 ## Notes
 
-Instrumental, no vocals, seamless loop 2:00–3:00, about −16 LUFS integrated, mixed to sit under dialogue. Export MP3 320 kbps.
+Instrumental only, seamless loop 2:00–3:00, about −16 LUFS integrated, mixed to sit under dialogue. Export MP3 320 kbps. Paste only the first paragraph of ## Prompt into Gemini (prefixed with @persistint-asset-prompts); the Spec paragraph is for post-processing (tools/sync_rendered_assets.py). Lyria renders about 2.5 to 3 minutes; cut the loop seam on a bar boundary in post.

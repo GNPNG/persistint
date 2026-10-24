@@ -11,8 +11,10 @@ Ruins of Utopia: the cruise-ship wreck (the Promenade Deck).
 
 ## Prompt
 
-Instrumental video-game music for a kawaii game, no vocals, seamless loop of 2 to 3 minutes, soft attack and no hard transient at the loop point, mixed quietly to sit under dialogue. Cute and melodic on the surface with a subtle sense that something is slightly wrong. Melancholy exploration ambience, tape-warbled lounge piano or filtering analog synth, ocean swell, distant foghorn, minor key, unresolved. Melancholy shipwreck exploration ambience, 72 BPM, B minor, a lounge piano playing a half-remembered cruise-ship melody through tape warble, rusty metallic creaks as percussion, low ocean swell pad, distant foghorn tone. Lonely, beautiful, decayed glamour. Spec: instrumental only, no vocals or lyrics; seamless loop of 2:00 to 3:00 with no hard transient in the first or last 50 ms; about -16 LUFS integrated; MP3 320 kbps.
+Instrumental video-game music for a kawaii game, a seamless loop: constant energy, no intro, no outro, a repeating four-bar ostinato, soft dynamics, an uncluttered arrangement. Melancholy ambient exploration music for the promenade deck of a wrecked cruise ship, 72 BPM, B minor: a vintage, slightly out-of-tune piano playing a slow, faded melody through tape wow-and-flutter as the repeating ostinato, a delicate celesta doubling a few of its notes, a low sustained synth pad, a distant, soft low brass tone held long, and sparse, muted metallic percussion, slow and irregular. Unresolved minor chords, soft dynamics. Lonely, beautiful, decayed glamour. Instrumental only, no vocals.
+
+Spec: instrumental only; seamless loop of 2:00 to 3:00, soft attack within the first and last 50 ms so the loop joins cleanly; about -16 LUFS integrated; MP3 320 kbps.
 
 ## Notes
 
-Instrumental, no vocals, seamless loop 2:00–3:00, about −16 LUFS integrated, mixed to sit under dialogue. Export MP3 320 kbps.
+Instrumental only, seamless loop 2:00–3:00, about −16 LUFS integrated, mixed to sit under dialogue. Export MP3 320 kbps. Paste only the first paragraph of ## Prompt into Gemini (prefixed with @persistint-asset-prompts); the Spec paragraph is for post-processing (tools/sync_rendered_assets.py). Lyria renders about 2.5 to 3 minutes; cut the loop seam on a bar boundary in post.
