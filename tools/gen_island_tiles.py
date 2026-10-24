@@ -7,13 +7,16 @@ Outputs:
   project/assets/tiles/island_tiles.png   the atlas
   project/assets/tiles/island_tiles.json  {name: [col, row]} read by tools/build_island_maps.gd
 
-Atlas layout (cell = 32x32 world px = 128x128 atlas px; index "cell" and "cell_px"):
-  row 0  walkable ground, one column per name in WALK
-  row 1  the same cells again as blocked ground (props stand on them), then the solid-only
-         tiles in SOLID; the builder gives every row-1 cell a full collision square
-  row 2+ animation strips: each ANIM tile has its own row of ANIM_FRAMES cells (frame 0 first);
-         the builder registers them as TileSet tile animations (solid, like row 1)
-  then   one row per EDGE set: 16 dual-grid overlay cells, column = corner mask
+Atlas layout (cell = 32x32 world px = 128x128 atlas px; index "cell" and "cell_px"), COLS = 32
+cells wide (4096 px), filled in this order, a new row where noted:
+  walkable ground, one cell per name in WALK ("tiles"[name])            -> new row
+  the same cells again as blocked ground, props stand on them ("blocked"[name]), then the
+  solid-only tiles in SOLID ("tiles"[name]); the builder gives both a full collision square
+                                                                          -> new row
+  animation strips: each ANIM tile has ANIM_FRAMES cells in one row, frame 0 first; the
+  builder registers them as TileSet tile animations (solid, like the blocked cells)
+  edge sets: 16 dual-grid overlay cells per set, never split across rows ("edges"[set] is
+  mask 0's cell, mask m is m cells to its right), column offset = corner mask
          (bit 1 top-left, 2 top-right, 4 bottom-left, 8 bottom-right set where that corner's
          cell is "inside": shallows or land for "shallows", land for "shore", grass for
          "grass_edge", path for "path_edge", paving for "paving_edge"). An overlay TileMapLayer
@@ -21,6 +24,7 @@ Atlas layout (cell = 32x32 world px = 128x128 atlas px; index "cell" and "cell_p
          centres of four ground cells; it rounds the reef line, the coast (sand rim, wet line,
          foam), the grass borders (soft bulge with a clover-green edge), the footpaths where they
          cross sand (trodden rim) and the paved terraces (curb band). Mask 0 and 15 are empty.
+All cell positions are written to the index ([col, row]); nothing else hard-codes them.
 Multi-cell pieces (rug, dais, doorway, stairs) are drawn whole at supersample and sliced into
 cells named <piece>_<col>_<row>; their cells only line up when placed together.
 
@@ -555,32 +559,55 @@ def cells():
     return out
 
 
+COLS = 32  # atlas width in cells: 4096 px, inside WebGL's common 4096 texture limit
+
+
 def main():
     tiles = cells()
-    cols = max(len(WALK) + len(SOLID), ANIM_FRAMES, 16)
-    atlas = Image.new("RGBA", (C * cols, C * (2 + len(ANIM) + len(EDGES))))
-    index = {}
-    for i, n in enumerate(WALK):
-        atlas.paste(tiles[n], (i * C, 0))
-        atlas.paste(tiles[n], (i * C, C))
-        index[n] = [i, 0]
-    for i, n in enumerate(SOLID):
-        atlas.paste(tiles[n], ((len(WALK) + i) * C, C))
-        index[n] = [len(WALK) + i, 1]
-    for j, n in enumerate(ANIM):
+    slots = []  # (name, image) in atlas order; a new row starts where a strip must not wrap
+
+    def row_break():
+        while len(slots) % COLS:
+            slots.append((None, None))
+
+    index, blocked = {}, {}
+    for n in WALK:
+        index[n] = len(slots)
+        slots.append((n, tiles[n]))
+    row_break()
+    for n in WALK:
+        blocked[n] = len(slots)
+        slots.append((n, tiles[n]))
+    for n in SOLID:
+        index[n] = len(slots)
+        slots.append((n, tiles[n]))
+    row_break()
+    for n in ANIM:
+        index[n] = len(slots)
         for f in range(ANIM_FRAMES):
-            atlas.paste(water(n, f), (f * C, (2 + j) * C))
-        index[n] = [0, 2 + j]
+            slots.append((n, water(n, f)))
+        row_break()
     edges = {}
-    for j, n in enumerate(EDGES):
-        row = 2 + len(ANIM) + j
+    for n in EDGES:
+        if len(slots) % COLS + 16 > COLS:
+            row_break()
+        edges[n] = len(slots)
         for m in range(16):
-            atlas.paste(edge(n, m), (m * C, row * C))
-        edges[n] = row
+            slots.append((n, edge(n, m)))
+    row_break()
+    rows = len(slots) // COLS
+    atlas = Image.new("RGBA", (C * COLS, C * rows))
+    for i, (_n, im) in enumerate(slots):
+        if im is not None:
+            atlas.paste(im, ((i % COLS) * C, (i // COLS) * C))
+    cell = lambda i: [i % COLS, i // COLS]
     atlas.save(OUT)
-    INDEX.write_text(json.dumps({"cell": S, "cell_px": C, "walk": WALK, "solid": SOLID, "anim": ANIM,
-                                 "anim_frames": ANIM_FRAMES, "edges": edges, "tiles": index},
-                                indent=1) + "\n")
+    INDEX.write_text(json.dumps({
+        "cell": S, "cell_px": C, "walk": WALK, "solid": SOLID, "anim": ANIM,
+        "anim_frames": ANIM_FRAMES,
+        "tiles": {n: cell(i) for n, i in index.items()},
+        "blocked": {n: cell(i) for n, i in blocked.items()},
+        "edges": {n: cell(i) for n, i in edges.items()}}, indent=1) + "\n")
     print(OUT, atlas.size)
 
 
