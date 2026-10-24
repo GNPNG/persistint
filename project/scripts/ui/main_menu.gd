@@ -14,6 +14,30 @@ func _ready() -> void:
 	_add_version_label()
 
 
+## A Fullscreen button under the others (touch-first: no key needed); F toggles it too. On the
+## web the browser only allows fullscreen from a tap or key press, which both of these are.
+func _add_fullscreen_button() -> void:
+	var b := Button.new()
+	b.name = "FullscreenButton"
+	b.text = "Fullscreen"
+	b.pressed.connect(toggle_fullscreen)
+	$Center/VBox.add_child(b)
+	$Center/VBox.move_child(b, $Center/VBox/SupportButton.get_index() + 1)
+
+
+static func is_fullscreen() -> bool:
+	return DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN
+
+
+static func toggle_fullscreen() -> void:
+	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED if is_fullscreen() else DisplayServer.WINDOW_MODE_FULLSCREEN)
+
+
+func _unhandled_key_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_F:
+		toggle_fullscreen()
+
+
 ## Version from project.godot application/config/version (stamped from VERSION by tools/version.py),
 ## followed by the build id (short commit) that tools/deploy_site.sh writes to res://build.json
 ## before it exports, so a player can tell which build the site is serving.

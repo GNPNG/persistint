@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.2.1 — 2026-10-24
+
+Playtest hotfix for v0.2.0 (performance drop, sound going wrong, background music stopping):
+
+- No real-time audio processing: the clone children's kid voices are baked into offline copies
+  of their clips and groans (tools/bake_clone_voices.py); the audio buses carry no effects.
+- No text-to-speech anywhere: every line is a pre-rendered clip, and a line with no clip yet shows
+  its bubble silently.
+- The crisp pixel look is back for every sprite (nearest filtering), the player included.
+- A Fullscreen button on the main menu, and F toggles it.
+- Site: fewer, faster, subtler hearts; they fade out at once when you scroll back up.
+
 ## v0.2.0 — 2026-10-24
 
 The first playtest build. Everything since v0.1.0:

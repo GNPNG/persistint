@@ -34,7 +34,7 @@
 <main id="main" class="doc-page">
 <div class="wrap narrow">
   <h1>Updates</h1>
-  <p class="doc-lede">The game you can play right now is <strong>v0.2.0</strong>. Here is what went into it,
+  <p class="doc-lede">The game you can play right now is <strong>v0.2.1</strong>. Here is what went into it,
     and what's coming next. Dates are estimates.</p>
   <ul class="toc" aria-label="On this page">
     <li><a href="#next">What's next</a></li>
@@ -50,6 +50,9 @@
   </section>
   <section id="new" aria-labelledby="new-h">
     <h2 id="new-h" class="doc-h">What's new</h2>
+<h2>v0.2.1 — 2026-10-24</h2>
+<p>Playtest hotfix for v0.2.0 (performance drop, sound going wrong, background music stopping):</p>
+<ul><li>No real-time audio processing: the clone children's kid voices are baked into offline copies of their clips and groans (tools/bake_clone_voices.py); the audio buses carry no effects.</li><li>No text-to-speech anywhere: every line is a pre-rendered clip, and a line with no clip yet shows its bubble silently.</li><li>The crisp pixel look is back for every sprite (nearest filtering), the player included.</li><li>A Fullscreen button on the main menu, and F toggles it.</li><li>Site: fewer, faster, subtler hearts; they fade out at once when you scroll back up.</li></ul>
 <h2>v0.2.0 — 2026-10-24</h2>
 <p>The first playtest build. Everything since v0.1.0:</p>
 <ul><li>Every scene looks finished: character rigs with directional walk cycles for the player and the NPCs, canon props cut at sheet resolution, the Florida surf and aquarium, ruins wall signs and plaques, the cruise stage hosts and backdrops, a generated PERSISTINT wordmark, boot splash and app icon, smooth texture filtering.</li><li>The game opens on the G|P|G studio sting, then the main menu, which shows the version and build id.</li><li>Speech: Margaret Atwood and the clone originals (Epstein, Bill and Hillary Clinton, Bill Gates) speak their own verified lines in cloned voices; villager barks are spoken.</li><li>Zombie clone children: groans in square brackets play as generated vocalizations instead of being read aloud; the clones speak through a kid-pitched bus; the Hillary clone has her "basket of deplorables" line for the other clones; clones floss and dab now and then, and a dancing clone gets pounced by the nearest cub.</li><li>Music: twelve world tracks rendered (title theme, island, Florida, cruise) with crossfades.</li><li>The promo site plays the title theme quietly on a toggle and rains hearts on clicks and scrolls.</li><li>Web build: index.pck down to 66 MB (112 kbps music, WebP-lossy big textures); builds deploy to the Cloudflare Pages project behind persistint.dataglut.org; the game data is served in parts.</li><li>Renderer: Google's check page is its own "blocked" outcome; batch mode submits and harvests Gemini chats in one reused tab; prompt files can mark author-rendered assets.</li><li>Private development material (design doc, style bible, canon sheets, lore notebook) moved under the encrypted dev/ folder.</li></ul>
@@ -67,7 +70,7 @@
     </div>
     <div class="footer-links">
       <a class="gnpng" href="https://gnpng.org">gnpng.org</a>
-      <a href="/play/">Play <span data-version>v0.2.0</span></a>
+      <a href="/play/">Play <span data-version>v0.2.1</span></a>
       <a href="/updates.html">Updates &amp; what's next</a>
       <a href="/citations.html">Citations &amp; further reading</a>
       <a href="/support.html">Online safety &amp; support</a>

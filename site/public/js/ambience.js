@@ -95,7 +95,7 @@
 
   const COLOURS = ['#ff8fb1', '#ffb3c8', '#c9b8f2', '#ffe59a'];
   const OUTLINE = '#8a5a5a';
-  const MAX = 36;
+  const MAX = 14;
   const hearts = [];
   let running = false, last = 0;
   const rand = (a, b) => a + Math.random() * (b - a);
@@ -106,7 +106,7 @@
         x: x == null ? rand(0, W) : Math.min(W, Math.max(0, x + rand(-60, 60))),
         y: rand(-30, -10),
         s: rand(6, 11),                // half-width in px
-        v: rand(26, 44),               // px per second
+        v: rand(55, 90),               // px per second
         t: rand(0, Math.PI * 2),       // sway phase
         sw: rand(10, 22),              // sway width
         rot: rand(-0.35, 0.35),
@@ -136,8 +136,10 @@
       h.t += dt * 1.6;
       const x = h.x + Math.sin(h.t) * h.sw;
       const fadeIn = Math.min(1, h.age / 0.6);
-      const fadeOut = h.y > H * 0.7 ? Math.max(0, 1 - (h.y - H * 0.7) / (H * 0.3)) : 1;
-      const alpha = 0.75 * fadeIn * fadeOut;
+      const fadeOut = h.y > H * 0.45 ? Math.max(0, 1 - (h.y - H * 0.45) / (H * 0.3)) : 1;
+      // Scrolling back up: the hearts have nowhere sensible to fall to, so they fade out fast.
+      if (h.dying) h.die = Math.min(1, (h.die || 0) + dt * 4);
+      const alpha = 0.6 * fadeIn * fadeOut * (1 - (h.die || 0));
       if (h.y > H + 20 || alpha <= 0.01 && h.age > 1) { hearts.splice(i, 1); continue; }
       ctx.save();
       ctx.translate(x, h.y);
@@ -156,16 +158,22 @@
 
   document.addEventListener('pointerdown', (e) => {
     if (e.button !== 0) return;
-    spawn(4, e.clientX);
+    spawn(2, e.clientX);
   });
   let scrollAcc = 0, lastY = window.scrollY, lastSpawn = 0;
   addEventListener('scroll', () => {
     const y = window.scrollY;
-    scrollAcc += Math.abs(y - lastY);
+    const dy = y - lastY;
     lastY = y;
+    if (dy < 0) {
+      for (const h of hearts) h.dying = true;
+      scrollAcc = 0;
+      return;
+    }
+    scrollAcc += dy;
     const now = performance.now();
-    if (scrollAcc >= 160 && now - lastSpawn > 120) {
-      spawn(Math.min(5, Math.floor(scrollAcc / 160)));
+    if (scrollAcc >= 320 && now - lastSpawn > 400) {
+      spawn(1);
       scrollAcc = 0;
       lastSpawn = now;
     }

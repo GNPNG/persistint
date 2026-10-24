@@ -61,20 +61,17 @@ func _run() -> void:
 					_check(ResourceLoader.exists("res://audio/sfx/%s.wav" % part["sfx"]), "%s -> %s.wav exists" % [bark, part["sfx"]])
 	_check(bracketed >= 8, "the clone barks carry bracketed sounds (%d)" % bracketed)
 
-	# --- The Clones bus: pitched up and distorted, under Voice.
+	# --- The Clones bus: a plain volume bus under Voice, no real-time effects; the kid voice is
+	# baked into audio/voice/clones/ copies (tools/bake_clone_voices.py).
 	var bus := AudioServer.get_bus_index("Clones")
 	_check(bus >= 0 and AudioServer.get_bus_send(bus) == &"Voice", "Clones bus exists and sends to Voice")
-	var pitch: AudioEffect = null
-	var dist: AudioEffect = null
-	if bus >= 0:
-		for i in AudioServer.get_bus_effect_count(bus):
-			var fx := AudioServer.get_bus_effect(bus, i)
-			if fx is AudioEffectPitchShift:
-				pitch = fx
-			if fx is AudioEffectDistortion:
-				dist = fx
-	_check(pitch != null and (pitch as AudioEffectPitchShift).pitch_scale > 1.1, "Clones bus pitches up (kid clones)")
-	_check(dist != null and (dist as AudioEffectDistortion).drive > 0.0, "Clones bus distorts a little")
+	_check(bus >= 0 and AudioServer.get_bus_effect_count(bus) == 0, "Clones bus has no real-time effects")
+	for b in AudioServer.bus_count:
+		_check(AudioServer.get_bus_effect_count(b) == 0, "no bus has real-time effects (%s)" % AudioServer.get_bus_name(b))
+	_check(ResourceLoader.exists("res://audio/voice/clones/groan_1.wav"), "a baked clone groan exists")
+	_check(voice.clone_variant("res://audio/sfx/groan_1.wav", "Clones").ends_with("/clones/groan_1.wav"), "a Clones line plays the baked groan")
+	_check(voice.clone_variant("res://audio/sfx/groan_1.wav", "Voice") == "res://audio/sfx/groan_1.wav", "a Voice line plays the plain groan")
+	_check(not voice.tts_available(), "text-to-speech is never used")
 	_check(ZombieChild.bus() == "Clones", "clone children speak through the Clones bus")
 
 	# --- In the clone hall: the bark bubble, the bus, the sounds first, then the original's line.

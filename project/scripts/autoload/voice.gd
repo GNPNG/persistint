@@ -11,8 +11,11 @@ extends Node
 ## It plays as a generated vocalization from audio/sfx (tools/gen_clone_sfx.py: groan_1-3, moan,
 ## growl, picked by the sound's spelling) and the words follow, in order. Bubbles show the
 ## sound without its brackets (display_text); clips are keyed on the words alone (spoken_text).
-## A line can be played through another audio bus: the clone children use "Clones" (pitched up
-## and distorted, default_bus_layout.tres) so their originals' clips come out as kid clones.
+## A line can be played through another audio bus: the clone children use "Clones", a plain
+## volume bus; their kid voice is baked offline into audio/voice/clones/ copies of the clips and
+## vocalizations (tools/bake_clone_voices.py), which play when the line goes through that bus.
+## Nothing is processed in real time and nothing is read by text-to-speech: a line with no clip
+## shows its bubble and stays silent.
 
 ## Every line handed to speak(), clip or text-to-speech (tests listen to it): the text as a
 ## bubble shows it, brackets removed.
@@ -27,10 +30,7 @@ static var _spaces := RegEx.create_from_string("\\s+")
 static var _letters := RegEx.create_from_string("[^a-z]")
 
 var _player: AudioStreamPlayer
-var _voices: Array = []
-var _speaker_voice: Dictionary = {}  # speaker -> voice id
 var _queue: Array = []  # what is left to play of the current line: {"sfx": path} | {"say": text}
-var _pitch := 1.0
 var _speaker := ""
 
 
@@ -39,16 +39,25 @@ func _ready() -> void:
 	_player.bus = "Voice"
 	_player.finished.connect(_play_next)
 	add_child(_player)
-	if tts_available():
-		_voices = DisplayServer.tts_get_voices_for_language("en")
 	var dm := get_node_or_null("/root/DialogueManager")
 	if dm and dm.has_signal("got_dialogue"):
 		dm.got_dialogue.connect(func(line) -> void: speak(line.text, 1.0, line.character))
 
 
+## Text-to-speech is never used (the author: no robot voices); kept so old callers compile.
 static func tts_available() -> bool:
-	return ProjectSettings.get_setting("audio/general/text_to_speech", false) \
-		and DisplayServer.get_name() != "headless"
+	return false
+
+
+const CLONES_DIR := "res://audio/voice/clones"
+
+
+## The baked kid-clone copy of a clip or vocalization when the line plays through the Clones bus.
+static func clone_variant(path: String, bus: String) -> String:
+	if bus != "Clones":
+		return path
+	var baked := "%s/%s" % [CLONES_DIR, path.get_file()]
+	return baked if ResourceLoader.exists(baked) else path
 
 
 ## The line as a bubble shows it: the brackets gone, the sounds kept ("Uuunnngh. Shamble.").
@@ -118,18 +127,15 @@ static func clip_path(speaker: String, text: String) -> String:
 
 
 ## Speaks `text` as `speaker`: its bracketed sounds as vocalizations, its words as the
-## impersonated clip or text-to-speech (at `pitch`), in order, through audio bus `bus`.
+## clip, in order, through audio bus `bus`. `pitch` is kept for callers; nothing uses it now.
 func speak(text: String, pitch := 1.0, speaker := "", bus := "Voice") -> void:
 	var shown := display_text(text)
 	if shown.is_empty():
 		return
 	spoke.emit(speaker, shown)
-	_pitch = pitch
 	_speaker = speaker
 	_player.bus = bus if AudioServer.get_bus_index(bus) >= 0 else "Voice"
 	_player.stop()
-	if tts_available():
-		DisplayServer.tts_stop()
 	_queue = parts(text)
 	_play_next()
 
@@ -143,31 +149,15 @@ func _play_next() -> void:
 	while not _queue.is_empty():
 		var part: Dictionary = _queue.pop_front()
 		if part.has("sfx"):
-			var path := "%s/%s.wav" % [SFX_DIR, part["sfx"]]
+			var path := clone_variant("%s/%s.wav" % [SFX_DIR, part["sfx"]], _player.bus)
 			if ResourceLoader.exists(path):
 				_player.stream = load(path)
 				_player.play()
 				return  # finished -> the next part
 			continue
-		var clip := clip_path(_speaker, part["say"])
+		var clip := clone_variant(clip_path(_speaker, part["say"]), _player.bus)
 		if ResourceLoader.exists(clip):
 			_player.stream = load(clip)
 			_player.play()
 			return
-		if tts_available():
-			DisplayServer.tts_speak(part["say"], _voice_for(_speaker), 50, clampf(_pitch, 0.5, 2.0))
-		# text-to-speech has no end we wait for: anything after it plays at once
-
-
-func _voice_for(speaker: String) -> String:
-	# Browsers load speech-synthesis voices asynchronously, so the list read in _ready() is
-	# often empty in the HTML5 build; ask again until voices arrive.
-	if _voices.is_empty():
-		_voices = DisplayServer.tts_get_voices_for_language("en")
-	if _voices.is_empty():
-		_voices = Array(DisplayServer.tts_get_voices()).map(func(v: Dictionary) -> String: return v["id"])
-	if _voices.is_empty():
-		return ""
-	if not _speaker_voice.has(speaker):
-		_speaker_voice[speaker] = _voices[_speaker_voice.size() % _voices.size()]
-	return _speaker_voice[speaker]
+		# no clip yet: the bubble shows the words; the next part follows at once
