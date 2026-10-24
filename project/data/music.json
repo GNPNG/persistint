@@ -4,6 +4,7 @@
 	"duck_db": -12.0,
 	"scenes": {
 		"res://scenes/ui/main_menu.tscn": "title_theme",
+		"res://scenes/ui/studio_intro.tscn": "",
 		"res://scenes/maps/village.tscn": {
 			"track": "island_village",
 			"when": [
