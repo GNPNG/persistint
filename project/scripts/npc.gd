@@ -48,7 +48,6 @@ func _ready() -> void:
 				_barks = parsed
 	if sprite_texture != "":
 		_load_art()
-	bubble.z_index = 20
 	bubble.hide()
 	input_event.connect(_on_input_event)
 	$Proximity.body_entered.connect(_on_proximity_entered)

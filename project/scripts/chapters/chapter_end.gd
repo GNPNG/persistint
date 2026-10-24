@@ -5,6 +5,10 @@ extends Control
 
 const Chapters := preload("res://scripts/chapters/chapters.gd")
 const FALLBACK := "res://scenes/ui/main_menu.tscn"
+## The card art behind the text (prompts/image/ui/chapter_cards/chapter_card_before_the_wreck.md;
+## a generated stand-in until the render lands at the same path). The cruise flashbacks are the
+## same era, so their cards use it too.
+const CARD_ART := "res://assets/ui/chapter_cards/chapter_card_before_the_wreck.png"
 
 var autostart := true
 var seconds := 9.0
@@ -29,6 +33,13 @@ func _build_ui() -> void:
 	bg.color = Color(0.02, 0.03, 0.06)
 	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(bg)
+	if ResourceLoader.exists(CARD_ART):
+		var art := TextureRect.new()
+		art.texture = load(CARD_ART)
+		art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		add_child(art)
 	var box := VBoxContainer.new()
 	box.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE, 24)
 	box.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -37,6 +48,8 @@ func _build_ui() -> void:
 	var heading := Label.new()
 	heading.name = "Heading"
 	heading.text = card.get("heading", "")
+	heading.theme_type_variation = &"CardLabel"
+	heading.add_theme_color_override("font_color", Color.WHITE)
 	heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	heading.add_theme_font_size_override("font_size", 16)
 	box.add_child(heading)
@@ -45,12 +58,13 @@ func _build_ui() -> void:
 		l.text = line
 		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		l.modulate = Color(1, 1, 1, 0.85)
+		l.theme_type_variation = &"CardLabel"
 		box.add_child(l)
 	var prompt := Label.new()
 	prompt.text = card.get("prompt", "")
 	prompt.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	prompt.modulate = Color(1, 1, 1, 0.5)
+	prompt.theme_type_variation = &"CardLabel"
+	prompt.modulate = Color(1, 1, 1, 0.5)  # STYLE.md 4.10: the prompt at 50%
 	box.add_child(prompt)
 
 
