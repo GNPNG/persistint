@@ -11,7 +11,6 @@ Some items carry a code name until they ship.
 - Touch controls: tap icons for the wardrobe, the journal and help, so it plays on a tablet with
   no keyboard.
 - More music: the remaining island, temple and ruins tracks.
-- A smaller, faster download.
 - The clone children's remaining lines in their own voices.
 
 ## Later (dates to follow)
