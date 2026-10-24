@@ -11,8 +11,8 @@ var _home := Vector2.ZERO
 
 func _ready() -> void:
 	_home = position
-	scale = Vector2.ONE * float(sprite_frames.get_meta(&"display_scale", 1.0))
 	play("swim_%s" % colour)
+	SpriteFit.fit_sheet(self, 0.5)  # a swimmer: centred on its spot
 	frame = randi() % 3
 	if DisplayServer.get_name() != "headless":
 		_swim()

@@ -9,7 +9,6 @@ extends "res://scripts/florida/clickable.gd"
 const ForbiddenKnowledge := preload("res://scripts/ruins/forbidden_knowledge.gd")
 const SheetRig := preload("res://scripts/ruins/sheet_rig.gd")
 const SHEET := "res://assets/ruins/clone_polar_bear.png"
-const BUBBLE_BOTTOM := -9.0
 
 @export var batch := 1
 @export var wander := Rect2(0, 0, 100, 60)  # global rect it toddles inside
@@ -32,6 +31,7 @@ func _ready() -> void:
 	sprite.sprite_frames = SheetRig.frames(load(SHEET), SheetRig.CUB)
 	set_frame("")
 	sprite.frame = randi() % 2
+	SheetRig.fit(sprite, SheetRig.CUB)
 	bubble.hide()
 	area_entered.connect(_on_bumped)
 	body_entered.connect(_on_bumped)
@@ -59,10 +59,6 @@ func set_frame(suffix: String) -> void:
 func current_animation() -> String:
 	return String(sprite.animation)
 
-
-func _process(_delta: float) -> void:
-	if bubble.visible:
-		SheetRig.keep_on_screen(bubble)
 
 
 func pick_target() -> Vector2:
@@ -114,8 +110,7 @@ func say(text: String) -> String:
 	if text == "" or _talking:
 		return ""
 	_talking = true
-	SheetRig.say(bubble, "%s\n%s" % [designation(), text], BUBBLE_BOTTOM)
-	bubble.show()
+	bubble.say("%s\n%s" % [designation(), text])
 	Voice.speak(text, float(data().get("pitch", 1.5)), data().get("cast", "polar_bear_clone"))
 	get_tree().create_timer(2.5).timeout.connect(func() -> void:
 		bubble.hide()

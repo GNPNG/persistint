@@ -1,8 +1,7 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/npc.gd" id="1"]
-[ext_resource type="Script" path="res://scripts/ui/bark_bubble.gd" id="2_bubble"]
-[ext_resource type="Texture2D" path="res://assets/ui/chrome/bubble_tail.png" id="3_tail"]
+[ext_resource type="PackedScene" path="res://scenes/ui/bark_bubble.tscn" id="bark_bubble"]
 
 [sub_resource type="CircleShape2D" id="click"]
 radius = 14.0
@@ -11,41 +10,19 @@ radius = 14.0
 radius = 52.0
 
 [node name="NPC" type="Area2D"]
-z_index = 4
 script = ExtResource("1")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -24)
 shape = SubResource("click")
 
 [node name="Proximity" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Proximity"]
+position = Vector2(0, -24)
 shape = SubResource("prox")
 
-[node name="BarkBubble" type="Label" parent="."]
-z_index = 20
-offset_left = -60.0
-offset_top = -44.0
-offset_right = 60.0
-offset_bottom = -30.0
-theme_type_variation = &"BarkBubble"
-theme_override_font_sizes/font_size = 5
-horizontal_alignment = 1
-vertical_alignment = 1
-script = ExtResource("2_bubble")
-
-[node name="Tail" type="TextureRect" parent="BarkBubble"]
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -4.5
-offset_top = -1.0
-offset_right = 4.5
-offset_bottom = 5.0
-grow_horizontal = 2
-mouse_filter = 2
-texture = ExtResource("3_tail")
+[node name="BarkBubble" parent="." instance=ExtResource("bark_bubble")]
+bottom = -54.0

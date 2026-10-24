@@ -9,6 +9,9 @@ const DATA_PATH := "res://data/hottest_of_the_hot.json"
 const EMCEE_PATH := "res://data/emcee.json"
 const OUTFITS_PATH := "res://data/outfits.json"
 const PAPER_DOLL := preload("res://scripts/systems/paper_doll.gd")
+## The passenger on the runway: this tall, the top this far above the screen centre.
+const DOLL_HEIGHT := 192.0
+const DOLL_TOP := -150.0
 const GAME_ID := "hottest_of_the_hot"
 const Flashbacks := preload("res://scripts/chapters/flashbacks.gd")
 
@@ -34,11 +37,13 @@ func _ready() -> void:
 	title.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	add_child(title)
 	doll = PAPER_DOLL.new()
+	doll.display_height = DOLL_HEIGHT
 	doll.set_anchors_preset(Control.PRESET_CENTER)
-	doll.offset_left = -91  # 2x the 91x96 paper-doll parts, so pixels stay square
-	doll.offset_right = 91
-	doll.offset_top = -150
-	doll.offset_bottom = 42
+	var size: Vector2 = doll.custom_minimum_size
+	doll.offset_left = -size.x / 2.0
+	doll.offset_right = size.x / 2.0
+	doll.offset_top = DOLL_TOP
+	doll.offset_bottom = DOLL_TOP + size.y
 	add_child(doll)
 	var panel := PanelContainer.new()
 	panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER_RIGHT, Control.PRESET_MODE_MINSIZE, 14)

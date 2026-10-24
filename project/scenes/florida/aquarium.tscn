@@ -29,17 +29,15 @@ centered = false
 navigation_polygon = SubResource("navpoly")
 
 [node name="spawn_default" type="Marker2D" parent="."]
-position = Vector2(470, 366)
+position = Vector2(470, 382)
 
 [node name="spawn_from_beach" type="Marker2D" parent="."]
-position = Vector2(480, 470)
+position = Vector2(480, 486)
 
 [node name="Player" parent="." instance=ExtResource("3")]
-z_index = 3
 position = Vector2(470, 366)
 
 [node name="Fish1" type="AnimatedSprite2D" parent="."]
-z_index = 1
 position = Vector2(320, 200)
 sprite_frames = ExtResource("4")
 animation = &"swim_coral"
@@ -48,7 +46,6 @@ colour = "coral"
 swim_range = 50.0
 
 [node name="Fish2" type="AnimatedSprite2D" parent="."]
-z_index = 1
 position = Vector2(420, 290)
 sprite_frames = ExtResource("4")
 animation = &"swim_mango"
@@ -57,7 +54,6 @@ colour = "mango"
 swim_range = 50.0
 
 [node name="Fish3" type="AnimatedSprite2D" parent="."]
-z_index = 1
 position = Vector2(560, 210)
 sprite_frames = ExtResource("4")
 animation = &"swim_lilac"
@@ -66,7 +62,6 @@ colour = "lilac"
 swim_range = 50.0
 
 [node name="Fish4" type="AnimatedSprite2D" parent="."]
-z_index = 1
 position = Vector2(640, 280)
 sprite_frames = ExtResource("4")
 animation = &"swim_coral"
@@ -75,7 +70,6 @@ colour = "coral"
 swim_range = 50.0
 
 [node name="Fish5" type="AnimatedSprite2D" parent="."]
-z_index = 1
 position = Vector2(380, 170)
 sprite_frames = ExtResource("4")
 animation = &"swim_lilac"
@@ -84,7 +78,6 @@ colour = "lilac"
 swim_range = 50.0
 
 [node name="Fish6" type="AnimatedSprite2D" parent="."]
-z_index = 1
 position = Vector2(600, 300)
 sprite_frames = ExtResource("4")
 animation = &"swim_mango"
@@ -93,7 +86,6 @@ colour = "mango"
 swim_range = 50.0
 
 [node name="Fish7" type="AnimatedSprite2D" parent="."]
-z_index = 1
 position = Vector2(300, 280)
 sprite_frames = ExtResource("4")
 animation = &"swim_mango"
@@ -102,7 +94,6 @@ colour = "mango"
 swim_range = 50.0
 
 [node name="Fish8" type="AnimatedSprite2D" parent="."]
-z_index = 1
 position = Vector2(680, 200)
 sprite_frames = ExtResource("4")
 animation = &"swim_coral"
@@ -111,88 +102,76 @@ colour = "coral"
 swim_range = 50.0
 
 [node name="Bench1" type="Sprite2D" parent="."]
-z_index = 3
-position = Vector2(330, 378)
+position = Vector2(330, 400)
 texture = ExtResource("6")
 scale = Vector2(0.25, 0.25)
-offset = Vector2(0, 44)
+offset = Vector2(0, -44)
 
 [node name="Bench2" type="Sprite2D" parent="."]
-z_index = 3
-position = Vector2(630, 378)
+position = Vector2(630, 400)
 texture = ExtResource("6")
 scale = Vector2(0.25, 0.25)
-offset = Vector2(0, 44)
+offset = Vector2(0, -44)
 
 [node name="Bench3" type="Sprite2D" parent="."]
-z_index = 3
-position = Vector2(150, 278)
+position = Vector2(150, 300)
 texture = ExtResource("6")
 scale = Vector2(0.25, 0.25)
-offset = Vector2(0, 44)
+offset = Vector2(0, -44)
 
 [node name="Bench4" type="Sprite2D" parent="."]
-z_index = 3
-position = Vector2(810, 278)
+position = Vector2(810, 300)
 texture = ExtResource("6")
 scale = Vector2(0.25, 0.25)
-offset = Vector2(0, 44)
+offset = Vector2(0, -44)
 
 [node name="Palm1" type="Sprite2D" parent="."]
-z_index = 3
-position = Vector2(40, 78)
+position = Vector2(40, 100)
 texture = ExtResource("7")
 scale = Vector2(0.25, 0.25)
-offset = Vector2(0, -4)
+offset = Vector2(0, -92)
 
 [node name="Palm2" type="Sprite2D" parent="."]
-z_index = 3
-position = Vector2(920, 78)
+position = Vector2(920, 100)
 texture = ExtResource("7")
 scale = Vector2(0.25, 0.25)
-offset = Vector2(0, -4)
+offset = Vector2(0, -92)
 
 [node name="Palm3" type="Sprite2D" parent="."]
-z_index = 3
-position = Vector2(40, 508)
+position = Vector2(40, 530)
 texture = ExtResource("7")
 scale = Vector2(0.25, 0.25)
-offset = Vector2(0, -4)
+offset = Vector2(0, -92)
 
 [node name="Palm4" type="Sprite2D" parent="."]
-z_index = 3
-position = Vector2(920, 508)
+position = Vector2(920, 530)
 texture = ExtResource("7")
 scale = Vector2(0.25, 0.25)
-offset = Vector2(0, -4)
+offset = Vector2(0, -92)
 
 [node name="Palm5" type="Sprite2D" parent="."]
-z_index = 3
-position = Vector2(180, 378)
+position = Vector2(180, 400)
 texture = ExtResource("7")
 scale = Vector2(0.25, 0.25)
-offset = Vector2(0, -4)
+offset = Vector2(0, -92)
 
 [node name="Palm6" type="Sprite2D" parent="."]
-z_index = 3
-position = Vector2(780, 378)
+position = Vector2(780, 400)
 texture = ExtResource("7")
 scale = Vector2(0.25, 0.25)
-offset = Vector2(0, -4)
+offset = Vector2(0, -92)
 
 [node name="Palm7" type="Sprite2D" parent="."]
-z_index = 3
-position = Vector2(230, 88)
+position = Vector2(230, 110)
 texture = ExtResource("7")
 scale = Vector2(0.25, 0.25)
-offset = Vector2(0, -4)
+offset = Vector2(0, -92)
 
 [node name="Palm8" type="Sprite2D" parent="."]
-z_index = 3
-position = Vector2(730, 88)
+position = Vector2(730, 110)
 texture = ExtResource("7")
 scale = Vector2(0.25, 0.25)
-offset = Vector2(0, -4)
+offset = Vector2(0, -92)
 
 [node name="BeachDoor" parent="." instance=ExtResource("8")]
 position = Vector2(480, 512)
@@ -201,13 +180,13 @@ target_spawn = "spawn_from_aquarium"
 exit_label = "Back to the Beach"
 
 [node name="Mermaid1" parent="." instance=ExtResource("9")]
-position = Vector2(400, 300)
+position = Vector2(400, 325)
 kind = "mermaid"
 nickname = "mermaid_marina"
-wander = Rect2(290, 280, 160, 34)
+wander = Rect2(290, 305, 160, 34)
 
 [node name="Mermaid2" parent="." instance=ExtResource("9")]
-position = Vector2(580, 296)
+position = Vector2(580, 321)
 kind = "mermaid"
 nickname = "mermaid_lagoon"
-wander = Rect2(520, 276, 150, 36)
+wander = Rect2(520, 301, 150, 36)

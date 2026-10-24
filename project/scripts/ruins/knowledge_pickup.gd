@@ -9,6 +9,11 @@ const ForbiddenKnowledge := preload("res://scripts/ruins/forbidden_knowledge.gd"
 const Flashbacks := preload("res://scripts/chapters/flashbacks.gd")
 const RuinsDecor := preload("res://scripts/ruins/ruins_decor.gd")
 
+## The icon is shown at most this tall (world px), centred over the glow.
+const ICON_HEIGHT := 20.0
+## The warm glow under it, world px across.
+const GLOW_SIZE := 38.0
+
 @export var piece_id := ""
 
 @onready var label: Label = $Label
@@ -19,10 +24,11 @@ var _recovered := false
 
 func _ready() -> void:
 	label.hide()
+	SpriteFit.fit($Glow, GLOW_SIZE, 0.5)
 	var tex := RuinsDecor.texture_for(String(ForbiddenKnowledge.pieces().get(piece_id, {}).get("icon", "icon_paper")))
 	if tex:
 		icon.texture = tex
-		icon.scale = Vector2.ONE * RuinsDecor.scale_for(tex) * (20.0 / maxf(20.0, tex.get_height() * RuinsDecor.scale_for(tex)))
+		SpriteFit.fit(icon, minf(ICON_HEIGHT, RuinsDecor.world_height(tex)), 0.5)
 	if ForbiddenKnowledge.has(piece_id):
 		queue_free()
 		return

@@ -29,7 +29,7 @@ func refresh_ponies() -> void:
 			node = PONY_SCENE.instantiate()
 			node.name = id
 			node.pony_id = id
-			var spot: Array = stalls[i % stalls.size()] if not stalls.is_empty() else [480, 330]
+			var spot: Array = stalls[i % stalls.size()] if not stalls.is_empty() else [480, 356]
 			node.position = Vector2(float(spot[0]), float(spot[1]))
 			ponies_root.add_child(node)
 		else:

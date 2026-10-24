@@ -1,6 +1,7 @@
 extends Area2D
 ## NPC — clickable villager with state-reactive barks (data/barks.json) and an
-## optional Dialogue Manager tree for story conversations.
+## optional Dialogue Manager tree for story conversations. The node's origin is the NPC's
+## feet, so a y-sorted map orders it with the props by where it stands.
 ## Bark selection: first entry whose "if" flags all match WorldState and whose
 ## optional "when" (cycle day, festival, phase...; see GameClock.matches_when) holds wins.
 
@@ -8,10 +9,12 @@ const BARKS_PATH := "res://data/barks.json"
 ## Directional rig made from the canon front/side/back cuts by tools/gen_npc_rigs.py:
 ## 8 columns x 3 rows of frames at the cuts' full resolution (frame = sheet size / (8, 3)),
 ## rows down/left/up, columns 0-3 idle and 4-7 walk, feet at 50/52 of the frame height.
-## Shown RIG_HEIGHT world px tall, downsampled smoothly (mipmaps).
+## Shown RIG_HEIGHT world px tall (SpriteFit), downsampled smoothly (mipmaps).
 const RIG_PATH := "res://assets/characters/%s_rig.png"
 const RIG_HEIGHT := 52.0
 const RIG_FEET := 50.0 / 52.0
+## A still sprite (an NPC without a rig) is shown this tall, feet on the origin.
+const STILL_HEIGHT := 48.0
 ## Within this distance the NPC turns to look at the player.
 const LOOK_DISTANCE := 96.0
 
@@ -30,7 +33,7 @@ static var _rigs: Dictionary = {}  # sheet path -> SpriteFrames
 @export var show_if_flag := ""
 @export var hide_if_flag := ""
 
-@onready var bubble: Label = $BarkBubble
+@onready var bubble: Label = $BarkBubble  # scenes/ui/bark_bubble.tscn
 
 ## The rigged sheet when the art has one; see _load_art.
 var rig: AnimatedSprite2D
@@ -47,6 +50,9 @@ func _ready() -> void:
 				_barks = parsed
 	if sprite_texture != "":
 		_load_art()
+	var art: Node2D = rig if rig else $Sprite2D
+	if SpriteFit.frame_size(art).y > 0.0:
+		bubble.bottom = -SpriteFit.frame_size(art).y * art.scale.y - 2.0  # over the head
 	bubble.hide()
 	input_event.connect(_on_input_event)
 	$Proximity.body_entered.connect(_on_proximity_entered)
@@ -69,34 +75,31 @@ func _load_art() -> void:
 			rig = AnimatedSprite2D.new()
 			rig.name = "Rig"
 			rig.sprite_frames = load(frames_path)
-			# Sheets drawn above world resolution say how far to scale down (tools/florida_draw.py).
-			rig.scale = Vector2.ONE * float(rig.sprite_frames.get_meta(&"display_scale", 1.0))
 			add_child(rig)
 			move_child(rig, $Sprite2D.get_index())
 			$Sprite2D.hide()
 			rig.play("idle_front")
 			rig.frame = randi() % rig.sprite_frames.get_frame_count("idle_front")
+			# The sheet states its resolution (display_scale, tools/florida_draw.py).
+			SpriteFit.fit_sheet(rig)
 			return
 		var path := "res://assets/%s/%s.png" % [dir, sprite_texture]
 		if ResourceLoader.exists(path):
 			$Sprite2D.texture = load(path)
+			SpriteFit.fit($Sprite2D, STILL_HEIGHT)
 			return
 
 
 func _build_rig() -> void:
-	## The rig replaces the single still sprite; its feet land where the still's feet were.
+	## The rig replaces the single still sprite; its feet stand on the origin.
 	$Sprite2D.hide()
 	rig = AnimatedSprite2D.new()
 	rig.name = "Rig"
 	rig.sprite_frames = rig_frames(RIG_PATH % sprite_texture)
-	rig.centered = false
-	var frame := rig_frame_size(load(RIG_PATH % sprite_texture))
-	var k := RIG_HEIGHT / frame.y
-	rig.scale = Vector2(k, k)
-	rig.position = Vector2(-frame.x * k / 2.0, 24 - RIG_HEIGHT * RIG_FEET)
 	add_child(rig)
 	move_child(rig, $Sprite2D.get_index() + 1)
 	rig.play("idle_down")
+	SpriteFit.fit(rig, RIG_HEIGHT, RIG_FEET)
 
 
 ## Frame size of a rig sheet: 8 columns, 3 rows.
@@ -203,5 +206,4 @@ func _on_proximity_exited(body: Node2D) -> void:
 
 
 func _show_bubble(text: String) -> void:
-	bubble.text = text
-	bubble.show()
+	bubble.say(text)

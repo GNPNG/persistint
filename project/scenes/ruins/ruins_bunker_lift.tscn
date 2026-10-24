@@ -25,16 +25,15 @@ script = ExtResource("7")
 room_id = "bunker_lift"
 
 [node name="spawn_default" type="Marker2D" parent="."]
-position = Vector2(120, 300)
+position = Vector2(120, 316)
 
 [node name="spawn_from_core" type="Marker2D" parent="."]
-position = Vector2(120, 300)
+position = Vector2(120, 316)
 
 [node name="spawn_from_hall" type="Marker2D" parent="."]
-position = Vector2(840, 300)
+position = Vector2(840, 316)
 
 [node name="Player" parent="." instance=ExtResource("3")]
-z_index = 0
 position = Vector2(120, 300)
 
 [node name="CoreDoor" parent="." instance=ExtResource("5")]
@@ -54,16 +53,16 @@ position = Vector2(480, 330)
 piece_id = "fk_bunker_1"
 
 [node name="ZombieBillGates2" parent="." instance=ExtResource("8")]
-position = Vector2(640, 420)
+position = Vector2(640, 436)
 original = "bill_gates"
 batch = 2
-wander = Rect2(560, 380, 280, 100)
+wander = Rect2(560, 396, 280, 100)
 
 [node name="ZombieEpstein9" parent="." instance=ExtResource("8")]
-position = Vector2(300, 300)
+position = Vector2(300, 316)
 original = "epstein"
 batch = 9
-wander = Rect2(240, 260, 300, 180)
+wander = Rect2(240, 276, 300, 180)
 
 [node name="Piece2" parent="." instance=ExtResource("6")]
 position = Vector2(200, 440)
