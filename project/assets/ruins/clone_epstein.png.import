@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dok4e4wkd4ums"
-path="res://.godot/imported/clone_bill_clinton.png-4c82882f0995880841bbdaed50370cae.ctex"
+uid="uid://dshrqkvbkgkg1"
+path="res://.godot/imported/clone_epstein.png-7e64388e409b2aaeb084431d8dfc9b42.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/canon/clone_bill_clinton.png"
-dest_files=["res://.godot/imported/clone_bill_clinton.png-4c82882f0995880841bbdaed50370cae.ctex"]
+source_file="res://assets/ruins/clone_epstein.png"
+dest_files=["res://.godot/imported/clone_epstein.png-7e64388e409b2aaeb084431d8dfc9b42.ctex"]
 
 [params]
 
@@ -23,7 +23,7 @@ compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=false
+mipmaps/generate=true
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""

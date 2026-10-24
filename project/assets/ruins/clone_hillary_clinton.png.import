@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bxwfy2qq57eim"
-path="res://.godot/imported/clone_bill_gates.png-f2705ad421d919fc0c59a704fee96748.ctex"
+uid="uid://coohin8834pn5"
+path="res://.godot/imported/clone_hillary_clinton.png-1706e9c3b841f2e80e5ac7bfcae6cf91.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/canon/clone_bill_gates.png"
-dest_files=["res://.godot/imported/clone_bill_gates.png-f2705ad421d919fc0c59a704fee96748.ctex"]
+source_file="res://assets/ruins/clone_hillary_clinton.png"
+dest_files=["res://.godot/imported/clone_hillary_clinton.png-1706e9c3b841f2e80e5ac7bfcae6cf91.ctex"]
 
 [params]
 
@@ -23,7 +23,7 @@ compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=false
+mipmaps/generate=true
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""

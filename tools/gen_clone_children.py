@@ -8,27 +8,28 @@ zombies: fluffy, round, healthy.
 
 Usage: python3 -I tools/gen_clone_children.py
 Inputs: none (palette from prompts/STYLE.md; nothing random).
-Outputs (project/assets/canon/, the paths scripts/ruins/*.gd load):
-  clone_<original>.png   originals are cast ids in data/cast.json. Sheet of 48x68 frames
-                         (24x34 world px at scale 0.5, feet on the bottom edge):
+Outputs (project/assets/ruins/, the paths scripts/ruins/*.gd load; generated stand-ins, not canon cuts):
+  clone_<original>.png   originals are cast ids in data/cast.json. Sheet of 192x272 frames
+                         (24x34 world px at scale 1/8, feet on the bottom edge):
                            rows    0 front (walking down), 1 side (facing right; flip for
                                    left), 2 back (walking up)
                            columns 0-1 idle (breathing), 2-5 walk (the shamble)
-  clone_polar_bear.png   sheet of 48x44 frames (24x22 world px at scale 0.5, feet on the
+  clone_polar_bear.png   sheet of 192x176 frames (24x22 world px at scale 1/8, feet on the
                          bottom edge):
                            rows 0 front, 1 side (facing right), 2 back: columns 0-1 idle,
                                 2-5 walk (a toddle)
                            row 3 front with a pink muzzle: 0-1 idle, 2-3 chomp
                            row 4 asleep, pink muzzle: 0-1 breathing
-  gore_bone.png 24x12, gore_chunk.png 20x20, gore_puddle.png 64x28 (two texels per world px;
-                         clone_lab.gd shows them at scale 0.75)
+  gore_bone.png 96x48, gore_chunk.png 80x80, gore_puddle.png 256x112 (eight texels per
+                         world px; clone_lab.gd shows them at scale 0.1875)
 Each frame is drawn SS times larger and downscaled (LANCZOS).
 """
+import math
 from pathlib import Path
 
 from PIL import Image, ImageDraw
 
-OUT = Path(__file__).resolve().parent.parent / "project/assets/canon"
+OUT = Path(__file__).resolve().parent.parent / "project/assets/ruins"
 INK = "#5a4a5e"  # the clone lab's plum outline (STYLE.md 4.1)
 SKIN = "#c9ecc4"
 SKIN_D = "#b2dbad"
@@ -37,8 +38,8 @@ BLUSH = "#ff9fb8"
 MOUTH = "#7a4a5a"
 FUR, FUR_D, EAR = "#fbfbff", "#e6e3f0", "#ffc4d4"
 SMEAR = "#ff7a9a"
-SS = 8  # canvas pixels per world unit while drawing
-D = 2  # output texels per world unit
+SS = 16  # canvas pixels per world unit while drawing
+D = 8  # output texels per world unit (the game shows them at 1/8)
 ORIGINALS = (("epstein", "#ffb3c8"), ("bill_clinton", "#a8d8f0"), ("hillary_clinton", "#c9b3f0"), ("bill_gates", "#ffe08a"))
 HAIR = {"epstein": ("#b7b4bd", "#8f8c96"), "bill_clinton": ("#f4f1ee", "#d9d4d0"),
         "hillary_clinton": ("#f2d48a", "#dcb86a"), "bill_gates": ("#9a7458", "#7d5a42")}
@@ -91,137 +92,206 @@ def sheet(frames, cols, rows, fw, fh):
 # ---------------------------------------------------------------- clone children
 
 CW, CH = 24, 34  # frame in world units
-STEP = [(1.6, 0.0), (0.4, 0.4), (0.0, 1.6), (0.4, 0.4)]  # (left, right) foot lift per walk frame
+STEP = [(1.4, 0.0), (0.4, 0.4), (0.0, 1.4), (0.4, 0.4)]  # (left, right) foot lift per walk frame
+
+
+def tint(hex_, k):
+    """hex_ mixed toward white by k (0..1): the one flat highlight of the sticker style."""
+    r, g, b = (int(hex_[i:i + 2], 16) for i in (1, 3, 5))
+    return "#%02x%02x%02x" % tuple(round(c + (255 - c) * k) for c in (r, g, b))
+
+
+def shade(hex_, k):
+    r, g, b = (int(hex_[i:i + 2], 16) for i in (1, 3, 5))
+    return "#%02x%02x%02x" % tuple(round(c * (1 - k)) for c in (r, g, b))
+
+
+def gown_shape(gx, top, hem, half_top, half_hem):
+    """An A-line gown: narrow at the shoulders, flaring to a softly rounded hem."""
+    pts = [(gx - half_top, top + 1.2), (gx - half_top + 1.2, top), (gx + half_top - 1.2, top), (gx + half_top, top + 1.2)]
+    pts += [(gx + half_hem, hem - 1.4)]
+    for k in range(9):  # the hem's gentle curve, right to left
+        t = k / 8
+        pts.append((gx + half_hem * (1 - 2 * t), hem - 1.4 + 1.6 * math.sin(math.pi * t)))
+    pts += [(gx - half_hem, hem - 1.4)]
+    return pts
 
 
 def clone_frame(kind, gown, view, f=None, breath=0):
     p = Pen(CW, CH)
-    bob = (0.6 if f in (1, 3) else 0.0) + (0.4 if breath else 0.0)
+    bob = (0.5 if f in (1, 3) else 0.0) + (0.35 if breath else 0.0)
     gx = 12 + {0: -0.5, 2: 0.5}.get(f, 0.0)  # the lurch
-    p.ell(5, 31.6, 19, 34, (40, 30, 50, 70), None)  # contact shadow
+    p.ell(5.5, 31.8, 18.5, 34, (40, 30, 50, 70), None)  # contact shadow
     ll, rl = (0.0, 0.0) if f is None else STEP[f]
-    if view == "side":
-        stride = {0: 2.2, 2: -2.2}.get(f, 0.0)
-        for dx, lift, shade in ((-stride, ll, SKIN_D), (stride, rl, SKIN)):
-            p.rect(gx - 1.4 + dx, 26.5 - lift, gx + 1.4 + dx, 33.2 - lift, shade, 0.9)
+    if view == "side":  # little legs and round toes pointing ahead
+        stride = {0: 2.0, 2: -2.0}.get(f, 0.0)
+        for dx, lift, fill in ((-stride, ll, SKIN_D), (stride, rl, SKIN)):
+            p.rect(gx - 1.3 + dx, 26.8 - lift, gx + 1.3 + dx, 32.6 - lift, fill, 1.0)
+            p.ell(gx - 1.5 + dx, 31.0 - lift, gx + 2.6 + dx, 33.2 - lift, fill)
     else:
-        for x, lift in ((gx - 3.2, ll), (gx + 0.6, rl)):
-            p.rect(x, 26.5 - lift, x + 2.6, 33.2 - lift, SKIN, 0.9)
-    top = 17 + bob
-    hem = 28.4 + bob * 0.3
+        for x, lift in ((gx - 2.6, ll), (gx + 2.6, rl)):
+            p.rect(x - 1.35, 26.8 - lift, x + 1.35, 32.4 - lift, SKIN, 1.0)
+            p.ell(x - 1.9, 31.0 - lift, x + 1.9, 33.3 - lift, SKIN)
+    top = 16.6 + bob
+    hem = 29.0 + bob * 0.3
+    hi = tint(gown, 0.45)
     if view == "side":
-        p.rect(gx - 4.6, top, gx + 4.2, hem, gown, 2.6)
-        p.line([(gx - 3.4, top + 5.5), (gx + 3, top + 5.5)])  # stitched seam
-        for x in (gx - 2, gx, gx + 2):
-            p.line([(x, top + 4.8), (x, top + 6.2)], w=0.4)
-        for y, shade in ((top + 1.4, SKIN_D), (top + 3.0, SKIN)):  # both arms straight forward
-            p.rect(gx + 1, y, gx + 10.4, y + 2.0, shade, 1.0)
+        for y, fill in ((top + 1.6, SKIN_D),):  # the far arm, straight ahead
+            p.rect(gx + 0.5, y, gx + 10.6, y + 2.2, fill, 1.1)
+        p.poly(gown_shape(gx - 0.3, top, hem, 3.8, 5.6), gown)
+        p.poly([(gx - 2.6, top + 2.2), (gx - 1.8, top + 1.2), (gx - 1.8, hem - 2.4), (gx - 2.9, hem - 2.6)], hi, None)
+        p.line([(gx - 3.6, top + 6.2), (gx + 3.6, top + 6.2)], w=0.45)  # stitched seam
+        for x in (gx - 2.2, gx, gx + 2.2):
+            p.line([(x, top + 5.4), (x, top + 7.0)], w=0.4)
+        p.rect(gx - 1.6, top + 2.6, gx + 4.0, top + 5.0, gown, 1.1)  # near sleeve
+        p.rect(gx + 2.6, top + 3.0, gx + 10.8, top + 5.0, SKIN, 1.0)  # near arm, straight ahead
+        p.circ(gx + 10.6, top + 4.0, 1.5, SKIN)
     elif view == "front":
-        p.rect(gx - 5.4, top, gx + 5.4, hem, gown, 3)
-        p.line([(gx - 3.6, top + 5.6), (gx + 3.6, top + 5.6)])
-        for x in (gx - 2, gx, gx + 2):
-            p.line([(x, top + 4.9), (x, top + 6.3)], w=0.4)
-        for sx in (-1, 1):  # short sleeves, and two hands held out at you
-            p.rect(gx + sx * 5.6 - 1.6, top + 1, gx + sx * 5.6 + 1.6, top + 5.4, gown, 1.2)
-            reach = 0.5 if (f == 0 and sx == 1) or (f == 2 and sx == -1) else 0.0
-            p.circ(gx + sx * 3.4, top + 4.6 - reach, 1.7, SKIN)
+        p.poly(gown_shape(gx, top, hem, 4.4, 6.6), gown)
+        p.poly([(gx - 4.0, top + 2.2), (gx - 2.9, top + 1.4), (gx - 3.9, hem - 2.0), (gx - 5.2, hem - 2.2)], hi, None)
+        p.line([(gx - 1.6, top + 0.2), (gx, top + 1.8), (gx + 1.6, top + 0.2)], w=0.45)  # collar
+        p.line([(gx - 4.4, top + 6.6), (gx + 4.4, top + 6.6)], w=0.45)
+        for x in (gx - 2.4, gx, gx + 2.4):
+            p.line([(x, top + 5.8), (x, top + 7.4)], w=0.4)
+        for sx in (-1, 1):  # puffed sleeves, both arms reaching out at you (foreshortened)
+            reach = 0.6 if (f == 0 and sx == 1) or (f == 2 and sx == -1) else 0.0
+            p.ell(gx + sx * 4.6 - 2.0, top + 0.6, gx + sx * 4.6 + 2.0, top + 4.6, gown)
+            p.ell(gx + sx * 3.6 - 1.7, top + 2.8 - reach, gx + sx * 3.6 + 1.7, top + 5.8 - reach, SKIN_D)
+            p.circ(gx + sx * 3.4, top + 4.4 - reach, 1.9, SKIN)
     else:  # back: the gown's ties, the arms out ahead of it
         for sx in (-1, 1):
-            p.rect(gx + sx * 4.8 - 1.4, top + 1, gx + sx * 4.8 + 1.4, top + 4.8, SKIN_D, 1.0)
-        p.rect(gx - 5.4, top, gx + 5.4, hem, gown, 3)
-        p.line([(gx, top + 1), (gx, hem - 0.4)], w=0.45)
+            p.rect(gx + sx * 4.9 - 1.4, top + 1.2, gx + sx * 4.9 + 1.4, top + 4.4, SKIN_D, 1.0)
+        p.poly(gown_shape(gx, top, hem, 4.4, 6.6), gown)
+        p.poly([(gx - 4.0, top + 2.2), (gx - 2.9, top + 1.4), (gx - 3.9, hem - 2.0), (gx - 5.2, hem - 2.2)], hi, None)
+        p.line([(gx, top + 1), (gx, hem - 0.6)], w=0.45)
         for y in (top + 3, top + 7):
-            p.line([(gx - 1.6, y - 0.6), (gx, y), (gx + 1.6, y - 0.6)], w=0.45)
+            p.line([(gx - 1.6, y - 0.7), (gx, y), (gx + 1.6, y - 0.7)], w=0.45)
     head(p, kind, view, gx, bob)
     return p.frame()
 
 
 def head(p, kind, view, gx, bob):
-    hy = 9.4 + bob
+    hy = 9.6 + bob
     hair, hair_d = HAIR[kind]
-    p.ell(gx - (7.2 if view == "side" else 8.2), hy - 8, gx + 8.2, hy + 7.6, SKIN)
+    if view == "side":
+        p.circ(gx - 3.4, hy + 1.4, 1.6, SKIN_D, INK, 0.45)  # ear, behind the hair line
+    p.ell(gx - (7.6 if view == "side" else 8.6), hy - 8.2, gx + 8.6, hy + 8.0, SKIN)
     if view == "back":
         back_hair(p, kind, gx, hy, hair, hair_d)
         return
     if view == "front":
-        # one sleepy dot eye, one X eye, blush, a tiny round groaning mouth
-        p.circ(gx - 3.4, hy + 0.6, 1.0, INK, None)
-        p.circ(gx - 3.7, hy + 0.2, 0.32, "#ffffff", None)
-        p.line([(gx + 2.3, hy - 0.4), (gx + 4.5, hy + 1.6)], w=0.6)
-        p.line([(gx + 4.5, hy - 0.4), (gx + 2.3, hy + 1.6)], w=0.6)
-        for x in (gx - 5.4, gx + 5.4):
-            p.ell(x - 1.5, hy + 2.2, x + 1.5, hy + 3.5, BLUSH, None)
-        p.ell(gx - 1.1, hy + 3.0, gx + 1.1, hy + 5.0, MOUTH, None)
-        p.line([(gx - 5.2, hy - 4.4), (gx - 1.6, hy - 5.4)], w=0.45)  # forehead stitches
-        for x in (gx - 4.2, gx - 2.8):
-            p.line([(x, hy - 5.8), (x + 0.2, hy - 4.0)], w=0.4)
-        p.rect(gx + 1.8, hy + 4.4, gx + 3.0, hy + 8.4, GOO, 0.6, None)  # goo drip off the chin
-        p.circ(gx + 2.4, hy + 8.4, 0.95, GOO, None)
+        # one sleepy dot eye with a catch-light, one X eye, blush, a tiny round groaning mouth
+        p.ell(gx - 4.6, hy + 0.2, gx - 2.4, hy + 2.8, INK, None)
+        p.circ(gx - 3.9, hy + 0.9, 0.42, "#ffffff", None)
+        p.line([(gx + 2.3, hy + 0.1), (gx + 4.7, hy + 2.5)], w=0.65)
+        p.line([(gx + 4.7, hy + 0.1), (gx + 2.3, hy + 2.5)], w=0.65)
+        for x in (gx - 5.6, gx + 5.6):
+            p.ell(x - 1.6, hy + 3.0, x + 1.6, hy + 4.4, BLUSH, None)
+        p.ell(gx - 1.0, hy + 3.6, gx + 1.0, hy + 5.5, MOUTH, None)
+        p.line([(gx - 5.6, hy - 3.2), (gx - 1.8, hy - 4.2)], w=0.45)  # forehead stitches
+        for x in (gx - 4.6, gx - 3.2):
+            p.line([(x, hy - 4.6), (x + 0.2, hy - 2.8)], w=0.4)
+        p.rect(gx + 1.6, hy + 5.2, gx + 2.8, hy + 9.0, GOO, 0.6, None)  # goo drip off the chin
+        p.circ(gx + 2.2, hy + 9.0, 0.95, GOO, None)
+        p.circ(gx + 1.9, hy + 8.7, 0.3, tint(GOO, 0.6), None)
         front_hair(p, kind, gx, hy, hair, hair_d)
     else:
-        p.circ(gx + 3.6, hy + 0.4, 1.0, INK, None)
-        p.circ(gx + 3.3, hy, 0.32, "#ffffff", None)
-        p.ell(gx + 1.2, hy + 2.2, gx + 4.0, hy + 3.5, BLUSH, None)
-        p.ell(gx + 6.0, hy + 3.0, gx + 7.6, hy + 4.8, MOUTH, None)
-        p.line([(gx - 1, hy - 5.4), (gx + 3, hy - 5.8)], w=0.45)
-        p.line([(gx + 1, hy - 6.4), (gx + 1.2, hy - 4.8)], w=0.4)
-        p.rect(gx + 5.6, hy + 4.4, gx + 6.8, hy + 8.2, GOO, 0.6, None)
-        p.circ(gx + 6.2, hy + 8.2, 0.95, GOO, None)
-        p.circ(gx - 3.6, hy + 1.2, 1.4, SKIN_D, INK, 0.45)  # ear
+        p.ell(gx + 2.6, hy + 0.2, gx + 4.6, hy + 2.8, INK, None)
+        p.circ(gx + 3.2, hy + 0.9, 0.42, "#ffffff", None)
+        p.ell(gx + 1.0, hy + 3.0, gx + 4.0, hy + 4.4, BLUSH, None)
+        p.ell(gx + 6.2, hy + 3.6, gx + 7.8, hy + 5.4, MOUTH, None)
+        p.line([(gx - 0.6, hy - 4.0), (gx + 3.4, hy - 4.6)], w=0.45)
+        p.line([(gx + 1.4, hy - 5.2), (gx + 1.6, hy - 3.4)], w=0.4)
+        p.rect(gx + 5.4, hy + 5.0, gx + 6.6, hy + 8.8, GOO, 0.6, None)
+        p.circ(gx + 6.0, hy + 8.8, 0.95, GOO, None)
         side_hair(p, kind, gx, hy, hair, hair_d)
 
 
+def shine(p, x0, y0, x1, y1, a0, a1, hair):
+    """The one highlight on the hair: a short pale arc."""
+    p.arc(x0 + 1.4, y0 + 1.4, x1 - 0.4, y1 - 0.4, a0, a1, tint(hair, 0.65), 0.8)
+
+
 def front_hair(p, kind, gx, hy, hair, hair_d):
-    if kind == "epstein":  # grey, swept back
-        p.chord(gx - 8.2, hy - 8.2, gx + 8.2, hy + 2.4, 180, 360, hair)
-        for dx in (-3, 0, 3):
-            p.line([(gx + dx - 1.4, hy - 6), (gx + dx + 1.2, hy - 4.2)], hair_d, 0.5)
+    if kind == "epstein":  # grey, swept back off the forehead in a soft wave
+        p.poly([(gx - 8.7, hy - 0.6), (gx - 8.6, hy - 4.6), (gx - 6.4, hy - 8.0), (gx - 2.0, hy - 9.4), (gx + 3.0, hy - 9.4),
+                (gx + 7.0, hy - 7.6), (gx + 8.8, hy - 4.0), (gx + 8.7, hy - 0.6), (gx + 7.6, hy - 2.4), (gx + 5.4, hy - 5.2),
+                (gx + 1.0, hy - 5.8), (gx - 3.2, hy - 5.0), (gx - 6.6, hy - 3.4)], hair)
+        for dx in (-3.4, 0.4, 4.0):
+            p.arc(gx + dx - 2.6, hy - 9.0, gx + dx + 2.6, hy - 4.8, 200, 300, hair_d, 0.5)
+        shine(p, gx - 7.0, hy - 8.8, gx - 1.0, hy - 3.2, 200, 250, hair)
     elif kind == "bill_clinton":  # white, puffy, a round red nose
-        for dx, dy in ((-5.2, -4.4), (0, -6.6), (5.2, -4.4)):
-            p.circ(gx + dx, hy + dy, 3.6, hair)
-        p.circ(gx, hy + 1.8, 1.2, "#f2a0a0", INK, 0.4)
-    elif kind == "hillary_clinton":  # blonde bob
-        p.chord(gx - 8.8, hy - 8.6, gx + 8.8, hy + 3.4, 180, 360, hair)
+        for dx, dy, r in ((-6.2, -3.6, 3.2), (-3.2, -6.8, 3.6), (1.0, -7.8, 3.8), (5.0, -6.4, 3.4), (7.0, -3.2, 2.8)):
+            p.circ(gx + dx, hy + dy, r, hair)
+        for dx, dy in ((-3.2, -6.8), (1.0, -7.8), (5.0, -6.4)):  # the puffs' inner curls
+            p.arc(gx + dx - 1.6, hy + dy - 0.4, gx + dx + 1.6, hy + dy + 2.4, 200, 340, hair_d, 0.45)
+        shine(p, gx - 5.0, hy - 10.2, gx + 0.4, hy - 5.6, 200, 260, hair)
+        p.circ(gx, hy + 2.2, 1.35, "#f2a0a0", INK, 0.45)
+        p.circ(gx - 0.4, hy + 1.8, 0.4, "#ffffff", None)
+    elif kind == "hillary_clinton":  # blonde chin-length bob with a swept fringe
         for sx in (-1, 1):
-            p.rect(gx + sx * 7.4 - 2, hy - 2.6, gx + sx * 7.4 + 2, hy + 5.6, hair, 1.6)
-        p.line([(gx - 2, hy - 7.6), (gx + 4, hy - 4.6)], hair_d, 0.5)
-    else:  # bill_gates: side part and big round glasses
-        p.chord(gx - 8.2, hy - 8.2, gx + 8.2, hy + 1.6, 180, 360, hair)
-        p.line([(gx - 2.2, hy - 8), (gx - 3.2, hy - 3.6)], INK, 0.45)
-        for x in (gx - 3.4, gx + 3.4):
-            p.circ(x, hy + 0.6, 2.5, None, INK, 0.5)
-        p.line([(gx - 0.9, hy + 0.4), (gx + 0.9, hy + 0.4)], INK, 0.45)
+            p.poly([(gx + sx * 8.9, hy - 3.6), (gx + sx * 9.4, hy + 3.6), (gx + sx * 8.6, hy + 6.6), (gx + sx * 6.2, hy + 6.4),
+                    (gx + sx * 6.6, hy + 2.6), (gx + sx * 6.4, hy - 1.6)], hair)
+        p.poly([(gx - 8.9, hy - 1.6), (gx - 8.6, hy - 5.4), (gx - 6.0, hy - 8.6), (gx - 1.0, hy - 9.6), (gx + 4.0, hy - 9.0),
+                (gx + 7.6, hy - 6.6), (gx + 8.9, hy - 1.6), (gx + 6.4, hy - 3.6), (gx + 2.6, hy - 4.4), (gx - 2.0, hy - 4.0),
+                (gx - 5.4, hy - 2.6)], hair)
+        p.line([(gx - 2.4, hy - 8.8), (gx + 3.6, hy - 4.8)], hair_d, 0.5)
+        shine(p, gx - 7.6, hy - 9.0, gx - 0.6, hy - 2.6, 200, 250, hair)
+    else:  # bill_gates: brown side-parted bowl and big round glasses
+        p.poly([(gx - 8.7, hy - 0.4), (gx - 8.6, hy - 5.0), (gx - 6.0, hy - 8.4), (gx - 1.0, hy - 9.6), (gx + 4.0, hy - 9.0),
+                (gx + 7.6, hy - 6.6), (gx + 8.8, hy - 2.6), (gx + 8.7, hy - 0.4), (gx + 7.4, hy - 3.0), (gx + 3.0, hy - 4.2),
+                (gx - 1.6, hy - 4.0), (gx - 2.4, hy - 6.6), (gx - 3.6, hy - 3.6), (gx - 6.8, hy - 2.6)], hair)
+        p.line([(gx - 2.4, hy - 9.4), (gx - 2.4, hy - 6.4)], hair_d, 0.5)
+        shine(p, gx + 0.6, hy - 9.2, gx + 7.0, hy - 3.6, 240, 300, hair)
+        for x in (gx - 3.5, gx + 3.5):
+            p.circ(x, hy + 1.5, 2.6, None, INK, 0.5)
+        p.line([(gx - 0.9, hy + 1.2), (gx + 0.9, hy + 1.2)], INK, 0.45)
 
 
 def side_hair(p, kind, gx, hy, hair, hair_d):
     if kind == "epstein":
-        p.chord(gx - 7.4, hy - 8.2, gx + 8.2, hy + 4, 180, 330, hair)
-        p.line([(gx + 1, hy - 6.6), (gx - 4, hy - 4.8)], hair_d, 0.5)
+        p.poly([(gx - 7.6, hy + 2.4), (gx - 8.0, hy - 3.0), (gx - 6.0, hy - 7.4), (gx - 1.0, hy - 9.4), (gx + 4.0, hy - 9.0),
+                (gx + 7.4, hy - 6.4), (gx + 6.0, hy - 5.2), (gx + 2.0, hy - 5.6), (gx - 2.0, hy - 4.4), (gx - 4.6, hy - 1.0),
+                (gx - 5.4, hy + 2.4)], hair)
+        p.arc(gx - 4.0, hy - 8.6, gx + 4.0, hy - 3.0, 190, 280, hair_d, 0.5)
+        shine(p, gx - 3.0, hy - 9.0, gx + 3.6, hy - 4.0, 220, 280, hair)
     elif kind == "bill_clinton":
-        for dx, dy in ((-4.4, -3.4), (0.6, -6.6), (4.6, -5.2), (-5.2, 1)):
-            p.circ(gx + dx, hy + dy, 3.4, hair)
-        p.circ(gx + 7.8, hy + 1.6, 1.2, "#f2a0a0", INK, 0.4)
+        for dx, dy, r in ((-4.8, -3.2, 3.4), (-1.2, -6.8, 3.6), (3.2, -7.2, 3.4), (6.2, -5.0, 2.6), (-5.6, 1.6, 2.8)):
+            p.circ(gx + dx, hy + dy, r, hair)
+        shine(p, gx - 3.6, hy - 10.2, gx + 1.6, hy - 5.6, 200, 270, hair)
+        p.circ(gx + 8.4, hy + 2.2, 1.35, "#f2a0a0", INK, 0.45)
     elif kind == "hillary_clinton":
-        p.chord(gx - 7.8, hy - 8.6, gx + 8.6, hy + 3.4, 180, 340, hair)
-        p.rect(gx - 7.8, hy - 3, gx - 1.8, hy + 5.6, hair, 2)
+        p.poly([(gx - 8.2, hy + 6.4), (gx - 8.8, hy - 2.0), (gx - 6.6, hy - 7.6), (gx - 1.0, hy - 9.6), (gx + 4.4, hy - 9.0),
+                (gx + 8.0, hy - 6.2), (gx + 8.6, hy - 2.6), (gx + 5.0, hy - 4.6), (gx + 0.6, hy - 4.6), (gx - 2.6, hy - 2.0),
+                (gx - 2.4, hy + 6.2)], hair)
+        p.line([(gx - 0.4, hy - 8.4), (gx + 4.8, hy - 5.4)], hair_d, 0.5)
+        shine(p, gx - 4.6, hy - 9.0, gx + 2.2, hy - 3.0, 210, 270, hair)
     else:
-        p.chord(gx - 7.4, hy - 8.2, gx + 8.2, hy + 2, 180, 340, hair)
-        p.circ(gx + 4.2, hy + 0.6, 2.5, None, INK, 0.5)
-        p.line([(gx + 1.7, hy + 0.2), (gx - 2.8, hy - 0.4)], INK, 0.45)
+        p.poly([(gx - 7.6, hy + 2.0), (gx - 8.0, hy - 3.6), (gx - 6.0, hy - 7.8), (gx - 1.0, hy - 9.6), (gx + 4.4, hy - 9.0),
+                (gx + 8.0, hy - 6.0), (gx + 7.6, hy - 3.6), (gx + 3.4, hy - 4.4), (gx - 1.6, hy - 4.0), (gx - 4.4, hy - 1.0),
+                (gx - 5.2, hy + 2.0)], hair)
+        shine(p, gx - 3.0, hy - 9.2, gx + 3.6, hy - 4.0, 220, 280, hair)
+        p.circ(gx + 4.0, hy + 1.5, 2.6, None, INK, 0.5)
+        p.line([(gx + 1.4, hy + 1.2), (gx - 2.8, hy + 0.4)], INK, 0.45)
 
 
 def back_hair(p, kind, gx, hy, hair, hair_d):
     if kind == "bill_clinton":
-        for dx, dy in ((-5, -3.6), (0, -6), (5, -3.6), (-3.6, 1.4), (3.6, 1.4)):
-            p.circ(gx + dx, hy + dy, 3.8, hair)
+        for dx, dy, r in ((-5.4, -3.6, 3.6), (0, -6.6, 4.0), (5.4, -3.6, 3.6), (-3.8, 1.6, 3.4), (3.8, 1.6, 3.4), (0, -1.0, 3.8)):
+            p.circ(gx + dx, hy + dy, r, hair)
+        shine(p, gx - 4.2, hy - 10.4, gx + 1.8, hy - 5.0, 200, 260, hair)
         return
-    bottom = {"epstein": 3.6, "hillary_clinton": 6.2, "bill_gates": 2.8}[kind]
-    p.chord(gx - 8.2, hy - 8.2, gx + 8.2, hy + bottom * 2 - 0.2, 180, 360, hair)
-    p.rect(gx - 8.1, hy - 0.6, gx + 8.1, hy + bottom, hair, 3.2)
-    p.line([(gx, hy - 7.6), (gx - 0.6, hy + bottom - 1.2)], hair_d, 0.5)
+    bottom = {"epstein": 3.4, "hillary_clinton": 6.8, "bill_gates": 2.6}[kind]
     if kind != "hillary_clinton":  # the ears peep out, except under a bob
         for sx in (-1, 1):
-            p.circ(gx + sx * 8.2, hy + 1.6, 1.3, SKIN_D, INK, 0.45)
+            p.circ(gx + sx * 8.4, hy + 1.8, 1.4, SKIN_D, INK, 0.45)
+    r = 8.8  # one outline: the crown's dome, straight sides, a softly rounded nape
+    pts = [(gx + r * math.cos(math.radians(a)), hy - 0.4 + r * math.sin(math.radians(a))) for a in range(180, 361, 10)]
+    pts += [(gx + r, hy + bottom - 1.6)]
+    pts += [(gx + r * (1 - 2 * k / 8), hy + bottom - 1.6 + 1.6 * math.sin(math.pi * k / 8)) for k in range(9)]
+    p.poly(pts, hair)
+    p.line([(gx, hy - 8.2), (gx - 0.6, hy + bottom - 1.4)], hair_d, 0.5)
+    shine(p, gx - 6.6, hy - 7.6, gx - 0.6, hy - 1.6, 200, 250, hair)
 
 
 def clone(kind, gown):

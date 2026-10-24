@@ -2,14 +2,14 @@ extends RefCounted
 ## SheetRig — SpriteFrames for the ruins' rigged sheets (tools/gen_clone_children.py documents
 ## each sheet's frame size and rows), and the facing a walk from one point to another takes.
 
-## A clone child: 48x68 frames; rows front/side/back; columns 0-1 idle, 2-5 walk.
-const CLONE := {"size": Vector2i(48, 68), "anims": {
+## A clone child: 192x272 frames (24x34 world px at 8 texels each); rows front/side/back; columns 0-1 idle, 2-5 walk.
+const CLONE := {"size": Vector2i(192, 272), "anims": {
 	"idle_down": [0, 0, 2, 2.0], "walk_down": [0, 2, 4, 6.0],
 	"idle_side": [1, 0, 2, 2.0], "walk_side": [1, 2, 4, 6.0],
 	"idle_up": [2, 0, 2, 2.0], "walk_up": [2, 2, 4, 6.0]}}
-## A polar bear cub: 48x44 frames; rows front/side/back (idle 0-1, walk 2-5), smeared
+## A polar bear cub: 192x176 frames (24x22 world px); rows front/side/back (idle 0-1, walk 2-5), smeared
 ## (idle 0-1, chomp 2-3) and nap (0-1).
-const CUB := {"size": Vector2i(48, 44), "anims": {
+const CUB := {"size": Vector2i(192, 176), "anims": {
 	"idle_down": [0, 0, 2, 2.0], "walk_down": [0, 2, 4, 8.0],
 	"idle_side": [1, 0, 2, 2.0], "walk_side": [1, 2, 4, 8.0],
 	"idle_up": [2, 0, 2, 2.0], "walk_up": [2, 2, 4, 8.0],

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://evpqohgmq0yo"
-path="res://.godot/imported/gore_bone.png-0351cdf24ae643fa71bbaa5a7816bf66.ctex"
+uid="uid://d1fcfr6yv16ir"
+path="res://.godot/imported/gore_bone.png-de905b00037f97b9894a684cfe70acac.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/canon/gore_bone.png"
-dest_files=["res://.godot/imported/gore_bone.png-0351cdf24ae643fa71bbaa5a7816bf66.ctex"]
+source_file="res://assets/ruins/gore_bone.png"
+dest_files=["res://.godot/imported/gore_bone.png-de905b00037f97b9894a684cfe70acac.ctex"]
 
 [params]
 
@@ -23,7 +23,7 @@ compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=false
+mipmaps/generate=true
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
