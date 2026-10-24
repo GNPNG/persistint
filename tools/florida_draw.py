@@ -248,6 +248,14 @@ def canon_base(name):
     return cut(cfg["bases"][name])
 
 
+def canon_prop(name):
+    """A canon cut listed under 'props' in project/data/florida_canon.json, cut straight from its
+    sheet at full resolution by tools/cut_island_props.py (no prior cut run needed)."""
+    from cut_island_props import cut
+    cfg = json.loads((ROOT / "project/data/florida_canon.json").read_text())
+    return cut(cfg["props"][name])
+
+
 def canon_sprite(name):
     return Image.open(ROOT / f"project/assets/canon/{name}.png").convert("RGBA")
 
@@ -255,13 +263,15 @@ def canon_sprite(name):
 def write_frames(name, fw, fh, anims):
     """Write project/assets/florida/<name>.tres: a SpriteFrames over <name>.png.
     fw, fh: the frame size in world px (the sheet holds frames of fw*D x fh*D texture px).
-    anims: list of (anim_name, row, columns, fps, loop)."""
+    anims: list of (anim_name, row, columns, fps, loop); a column given as a (column, row) pair
+    takes that frame from another row (for sheets stacked one frame per row)."""
     fw, fh = round(fw * D), round(fh * D)
     lines, subs, frames_by_anim = [], [], []
     n = 0
-    for anim, row, cols, fps, loop in anims:
+    for anim, anim_row, cols, fps, loop in anims:
         refs = []
         for c in cols:
+            c, row = c if isinstance(c, tuple) else (c, anim_row)
             n += 1
             sid = f"f{n}"
             subs.append(f'[sub_resource type="AtlasTexture" id="{sid}"]\natlas = ExtResource("1")\n'
