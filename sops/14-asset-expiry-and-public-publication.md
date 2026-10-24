@@ -43,6 +43,26 @@ private repository because the public mirror was a plain push mirror.
 - Verification: the reviewer tier checks the gate record at each release.
 - Records: the sweep output and the publication log, attached to the release ticket.
 
+## Edge cases (clauses proposed 2026-10-24, pending the author's approval; once approved, no instance is asked again)
+
+E1. **A private history rewrite has already happened** (as on 2026-10-24, before this SOP existed).
+    Restore the private repository's history from the most recent complete backup (bundle, backup
+    branch or forge copy) and push nothing rewritten to it; the rewritten history becomes the public
+    publication. If no complete backup exists, keep the rewritten private history and record the gap
+    (what was removed, when, why, where a copy survives) on the release ticket.
+
+E2. **A rewrite is unavoidable** (a credential or legally unpublishable material entered the
+    private history). Before rewriting, archive the pre-rewrite history as a bundle in the private
+    store with the date and the reason; rewrite; record the gap as in E1. The archive is private
+    research data, never published.
+
+E3. **The public repository already holds material that is now private or expired.** Regenerate the
+    public publication from the filter list and force-push it; the private repository is untouched.
+    Ask the forge host to purge unreachable objects if the material matters.
+
+E4. **A mirror is still in place when E3 occurs.** Delete the mirror first, then publish; the mirror
+    is not re-created, the publication script replaces it.
+
 ## Related
 
 SOP-01 (worktrees and the private folder key), SOP-09 (release checklist), SOP-11 (versioning and
