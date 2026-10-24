@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Updates: PERSISTINT</title>
+<meta name="description" content="What's new in the current version of PERSISTINT and what's coming next.">
+<meta name="theme-color" content="#fdf6e3">
+<meta name="color-scheme" content="light">
+<link rel="canonical" href="https://persistint.dataglut.org/updates.html">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="preload" href="/fonts/fredoka.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/css/site.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="topbar">
+  <a class="brand" href="/" aria-label="PERSISTINT home">
+    <img src="/icon.svg" alt="" width="28" height="28">
+    <span>PERSISTINT</span>
+  </a>
+  <nav aria-label="Site">
+    <ul>
+      <li class="nav-sec"><a href="/#worlds">Worlds</a></li>
+      <li><a href="/citations.html">Citations</a></li>
+      <li><a href="/support.html">Support</a></li>
+      <li><a class="nav-play" href="/play/">Play</a></li>
+    </ul>
+  </nav>
+</header>
+<main id="main" class="doc-page">
+<div class="wrap narrow">
+  <h1>Updates</h1>
+  <p class="doc-lede">The game you can play right now is <strong>v0.2.0</strong>. Here is what went into it,
+    and what's coming next. Dates are estimates.</p>
+  <ul class="toc" aria-label="On this page">
+    <li><a href="#next">What's next</a></li>
+    <li><a href="#new">What's new</a></li>
+  </ul>
+  <section id="next" aria-labelledby="next-h">
+    <h2 id="next-h" class="doc-h">What's next</h2>
+<p>What's coming, by version. Dates are estimates. Updates arrive as minor versions (0.3.0, 0.4.0, ...); fixes within a version are patches (0.3.1). Right now they're frequent; over time they'll spread out. Some items carry a code name until they ship.</p>
+<h2>v0.3.0 — target 2026-10-26 (minor)</h2>
+<ul><li>Animated title screen: the island at golden hour, day turning to night, waves, birds, charms drifting down, and letters that react when you tap them.</li><li>Touch controls: tap icons for the wardrobe, the journal and help, so it plays on a tablet with no keyboard.</li><li>More music: the remaining island, temple and ruins tracks.</li><li>A smaller, faster download.</li><li>The clone children's remaining lines in their own voices.</li></ul>
+<h2>Later (dates to follow)</h2>
+<ul><li>Paper look: paper edges and shadows across the world, a zoom-out for the ship's crowded decks, and a cute overhead map.</li><li>Classroom path: a guided 30-minute route through the game with a teacher's sheet.</li><li>Butterscotch.</li><li>Pedestal.</li><li>Open Mic.</li><li>Stable Voices.</li></ul>
+  </section>
+  <section id="new" aria-labelledby="new-h">
+    <h2 id="new-h" class="doc-h">What's new</h2>
+<h2>v0.2.0 — 2026-10-24</h2>
+<p>The first playtest build. Everything since v0.1.0:</p>
+<ul><li>Every scene looks finished: character rigs with directional walk cycles for the player and the NPCs, canon props cut at sheet resolution, the Florida surf and aquarium, ruins wall signs and plaques, the cruise stage hosts and backdrops, a generated PERSISTINT wordmark, boot splash and app icon, smooth texture filtering.</li><li>The game opens on the G|P|G studio sting, then the main menu, which shows the version and build id.</li><li>Speech: Margaret Atwood and the clone originals (Epstein, Bill and Hillary Clinton, Bill Gates) speak their own verified lines in cloned voices; villager barks are spoken.</li><li>Zombie clone children: groans in square brackets play as generated vocalizations instead of being read aloud; the clones speak through a kid-pitched bus; the Hillary clone has her "basket of deplorables" line for the other clones; clones floss and dab now and then, and a dancing clone gets pounced by the nearest cub.</li><li>Music: twelve world tracks rendered (title theme, island, Florida, cruise) with crossfades.</li><li>The promo site plays the title theme quietly on a toggle and rains hearts on clicks and scrolls.</li><li>Web build: index.pck down to 66 MB (112 kbps music, WebP-lossy big textures); builds deploy to the Cloudflare Pages project behind persistint.dataglut.org; the game data is served in parts.</li><li>Renderer: Google's check page is its own "blocked" outcome; batch mode submits and harvests Gemini chats in one reused tab; prompt files can mark author-rendered assets.</li><li>Private development material (design doc, style bible, canon sheets, lore notebook) moved under the encrypted dev/ folder.</li></ul>
+<h2>v0.1.0 — 2026-10-23</h2>
+<ul><li></li></ul>
+  </section>
+</div>
+</main>
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div>
+      <p class="footer-logo">PERSISTINT</p>
+      <p>Written and designed by Brett Whitty as a companion to his novel <cite>Persistint</cite>, coming soon from
+        <a href="https://gnpng.org">GNPNG</a>, an independent Canadian press.</p>
+    </div>
+    <div class="footer-links">
+      <a class="gnpng" href="https://gnpng.org">gnpng.org</a>
+      <a href="/play/">Play <span data-version>v0.2.0</span></a>
+      <a href="/updates.html">Updates &amp; what's next</a>
+      <a href="/citations.html">Citations &amp; further reading</a>
+      <a href="/support.html">Online safety &amp; support</a>
+    </div>
+  </div>
+  <div class="wrap legal">
+    <p>&copy; Brett Whitty. All rights reserved. Made with the <a href="https://godotengine.org">Godot Engine</a>.</p>
+  </div>
+</footer>
+<script src="/js/ambience.js" defer></script>
+</body>
+</html>
