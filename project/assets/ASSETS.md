@@ -6,6 +6,26 @@ stand-in there with no code change.
 
 | Path | Id | Generator | Frame layout | Stands in for prompt |
 |---|---|---|---|---|
+| `project/assets/canon/npc_barren.png` | npc_barren | `tools/cut_canon_sprites.sh` (canon caste sheet 4bzs) | 263x441 canon cut at source resolution, barren NPC front view (the default the game loads) | - |
+| `project/assets/canon/npc_barren_back.png` | npc_barren_back | `tools/cut_canon_sprites.sh` (canon caste sheet 4bzs) | 263x440 canon cut at source resolution, barren NPC back view | - |
+| `project/assets/canon/npc_barren_front.png` | npc_barren_front | `tools/cut_canon_sprites.sh` (canon caste sheet 4bzs) | 263x441 canon cut at source resolution, barren NPC front view | - |
+| `project/assets/canon/npc_barren_side.png` | npc_barren_side | `tools/cut_canon_sprites.sh` (canon caste sheet 4bzs) | 236x441 canon cut at source resolution, barren NPC side view | - |
+| `project/assets/canon/npc_drone.png` | npc_drone | `tools/cut_canon_sprites.sh` (canon caste sheet 4bzs) | 208x459 canon cut at source resolution, drone NPC front view (the default the game loads) | - |
+| `project/assets/canon/npc_drone_back.png` | npc_drone_back | `tools/cut_canon_sprites.sh` (canon caste sheet 4bzs) | 206x455 canon cut at source resolution, drone NPC back view | - |
+| `project/assets/canon/npc_drone_front.png` | npc_drone_front | `tools/cut_canon_sprites.sh` (canon caste sheet 4bzs) | 208x459 canon cut at source resolution, drone NPC front view | - |
+| `project/assets/canon/npc_drone_side.png` | npc_drone_side | `tools/cut_canon_sprites.sh` (canon caste sheet 4bzs) | 208x454 canon cut at source resolution, drone NPC side view | - |
+| `project/assets/canon/npc_initiate.png` | npc_initiate | `tools/cut_canon_sprites.sh` (canon caste sheet 4bzs) | 226x441 canon cut at source resolution, initiate NPC front view (the default the game loads) | - |
+| `project/assets/canon/npc_initiate_back.png` | npc_initiate_back | `tools/cut_canon_sprites.sh` (canon caste sheet 4bzs) | 227x440 canon cut at source resolution, initiate NPC back view | - |
+| `project/assets/canon/npc_initiate_front.png` | npc_initiate_front | `tools/cut_canon_sprites.sh` (canon caste sheet 4bzs) | 226x441 canon cut at source resolution, initiate NPC front view | - |
+| `project/assets/canon/npc_initiate_side.png` | npc_initiate_side | `tools/cut_canon_sprites.sh` (canon caste sheet 4bzs) | 194x440 canon cut at source resolution, initiate NPC side view | - |
+| `project/assets/canon/npc_mother.png` | npc_mother | `tools/cut_canon_sprites.sh` (canon caste sheet 4bzs) | 261x442 canon cut at source resolution, mother NPC front view (the default the game loads) | - |
+| `project/assets/canon/npc_mother_back.png` | npc_mother_back | `tools/cut_canon_sprites.sh` (canon caste sheet 4bzs) | 249x442 canon cut at source resolution, mother NPC back view | - |
+| `project/assets/canon/npc_mother_front.png` | npc_mother_front | `tools/cut_canon_sprites.sh` (canon caste sheet 4bzs) | 261x442 canon cut at source resolution, mother NPC front view | - |
+| `project/assets/canon/npc_mother_side.png` | npc_mother_side | `tools/cut_canon_sprites.sh` (canon caste sheet 4bzs) | 210x443 canon cut at source resolution, mother NPC side view | - |
+| `project/assets/canon/npc_priestess.png` | npc_priestess | `tools/cut_canon_sprites.sh` (canon caste sheet 4bzs) | 216x437 canon cut at source resolution, priestess NPC front view (the default the game loads) | - |
+| `project/assets/canon/npc_priestess_back.png` | npc_priestess_back | `tools/cut_canon_sprites.sh` (canon caste sheet 4bzs) | 224x441 canon cut at source resolution, priestess NPC back view | - |
+| `project/assets/canon/npc_priestess_front.png` | npc_priestess_front | `tools/cut_canon_sprites.sh` (canon caste sheet 4bzs) | 216x437 canon cut at source resolution, priestess NPC front view | - |
+| `project/assets/canon/npc_priestess_side.png` | npc_priestess_side | `tools/cut_canon_sprites.sh` (canon caste sheet 4bzs) | 207x439 canon cut at source resolution, priestess NPC side view | - |
 | `project/assets/canon/prop_scroll.png` | prop_scroll | `tools/cut_canon_sprites.sh` (canon sheet 481b) | 792x651 canon cut at source resolution, shown 18 world px tall as a pickup icon | - |
 | `project/assets/ruins/clone_bill_clinton.png` | clone_bill_clinton | `tools/gen_clone_children.py` | 192x272 frames (24x34 world px); rows front/side(right; flip for left)/back; cols 0-1 idle, 2-5 walk; scale 1/8, SpriteFrames via scripts/ruins/sheet_rig.gd | - |
 | `project/assets/ruins/clone_bill_gates.png` | clone_bill_gates | `tools/gen_clone_children.py` | 192x272 frames (24x34 world px); rows front/side(right; flip for left)/back; cols 0-1 idle, 2-5 walk; scale 1/8, SpriteFrames via scripts/ruins/sheet_rig.gd | - |
@@ -15,7 +35,9 @@ stand-in there with no code change.
 | `project/assets/ruins/glow.png` | glow | `tools/gen_ruins_art.py` | 256x256 pickup glow, scale 0.15 | - |
 | `project/assets/ruins/gore_bone.png` | gore_bone | `tools/gen_clone_children.py` | 96x48 still, scale 0.1875 | - |
 | `project/assets/ruins/gore_chunk.png` | gore_chunk | `tools/gen_clone_children.py` | 80x80 still, scale 0.1875 | - |
+| `project/assets/ruins/gore_drop.png` | gore_drop | `tools/gen_clone_children.py` | 48x64 still, splatter droplet, particle texture of the pounce spray (scripts/ruins/clone_lab.gd fits it to ~4 world px) | - |
 | `project/assets/ruins/gore_puddle.png` | gore_puddle | `tools/gen_clone_children.py` | 256x112 still, scale 0.1875 | - |
+| `project/assets/ruins/gore_puff.png` | gore_puff | `tools/gen_clone_children.py` | 80x72 still, clone-dust puff, particle texture of an eaten clone's poof (scripts/ruins/zombie_child.gd fits it to ~6 world px) | - |
 | `project/assets/ruins/icon_appendix.png` | icon_appendix | `tools/gen_ruins_art.py` | 160x160 Forbidden Knowledge pickup icon, scale 1/8 | - |
 | `project/assets/ruins/icon_board.png` | icon_board | `tools/gen_ruins_art.py` | 160x160 Forbidden Knowledge pickup icon, scale 1/8 | - |
 | `project/assets/ruins/icon_book.png` | icon_book | `tools/gen_ruins_art.py` | 160x160 Forbidden Knowledge pickup icon, scale 1/8 | - |

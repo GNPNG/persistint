@@ -22,6 +22,10 @@ Outputs (project/assets/ruins/, the paths scripts/ruins/*.gd load; generated sta
                            row 4 asleep, pink muzzle: 0-1 breathing
   gore_bone.png 96x48, gore_chunk.png 80x80, gore_puddle.png 256x112 (eight texels per
                          world px; clone_lab.gd shows them at scale 0.1875)
+  gore_drop.png 48x64    a splatter droplet, the particle texture of the pounce's spray
+                         (clone_lab.gd fits it to a world size)
+  gore_puff.png 80x72    a pale mint dust puff, the particle texture of an eaten clone's
+                         poof (zombie_child.gd fits it to a world size)
 Each frame is drawn SS times larger and downscaled (LANCZOS).
 """
 import math
@@ -426,6 +430,22 @@ def gore():
              (hx + 1, hy - 3), (hx + 2.6, hy - 3), (hx + 4, hy - 1.6), (hx + 4, hy), (hx, hy + 3.4)]
     p.line(heart, "#ffd0dc", 0.7)
     p.frame().save(OUT / "gore_puddle.png")
+    p = Pen(6, 8)  # a splatter droplet: the pounce's spray (clone_lab.gd particles)
+    tip, cx, cy, r = (3, 0.5), 3, 5.2, 2.3
+    p.circ(cx, cy, r + 0.45, INK, None)  # outline: the same teardrop, a little larger
+    p.poly([(tip[0], tip[1] - 0.2), (cx - r - 0.4, cy - 0.2), (cx + r + 0.4, cy - 0.2)], INK, None)
+    p.circ(cx, cy, r, "#ff8fa8", None)
+    p.poly([(tip[0], tip[1] + 0.55), (cx - r + 0.05, cy - 0.1), (cx + r - 0.05, cy - 0.1)], "#ff8fa8", None)
+    p.ell(cx - 1.5, cy - 1.6, cx - 0.3, cy + 0.2, "#ffd0dc", None)  # the one highlight
+    p.frame().save(OUT / "gore_drop.png")
+    p = Pen(10, 9)  # a pale mint puff of clone dust: where an eaten clone stood (zombie_child.gd)
+    lobes = ((3.2, 4.8, 2.4), (5.4, 3.4, 2.8), (7.2, 5.0, 2.2), (5.0, 5.6, 2.2))
+    for x, y, r in lobes:
+        p.circ(x, y, r + 0.45, INK, None)
+    for x, y, r in lobes:
+        p.circ(x, y, r, "#e6f7e2", None)
+    p.ell(3.9, 1.8, 5.6, 3.0, "#ffffff", None)  # the one highlight
+    p.frame().save(OUT / "gore_puff.png")
 
 
 if __name__ == "__main__":
