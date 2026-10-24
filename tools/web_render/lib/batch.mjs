@@ -99,6 +99,12 @@ async function anyVisibleSel(page, sels = []) {
   return false;
 }
 
+// Author, 2026-10-24: never delete a chat before its result is downloaded. The drop file must be on
+// disk at a real size before deleteChat runs; otherwise the chat is kept.
+function downloaded(task) {
+  try { return !!task && fs.statSync(task.drop_abs).size > 100_000; } catch { return false; }
+}
+
 const chatId = (url) => (url.match(/\/app\/([0-9a-f]{8,})/) || [])[1] || null;
 
 /** Click the first visible element whose own text is exactly `text` (inside `scope`, a CSS selector). */
@@ -168,7 +174,7 @@ export async function harvestAll(session, { tasks, surfaceOf, file, log = consol
   const state = loadBatch(file);
   const byId = new Map(tasks.map((t) => [t.id, t]));
   // Already downloaded but not yet deleted: delete now (only the recorded id).
-  for (const id of Object.keys(state).filter((id) => state[id].harvested && !state[id].deleted && state[id].chat)) {
+  for (const id of Object.keys(state).filter((id) => state[id]?.harvested && !state[id].deleted && state[id].chat && downloaded(byId.get(id)))) {
     try {
       await session.newPage();
       if (!await openChat(session, surfaceOf(byId.get(id) || { kind: state[id].kind }), state[id].chat)) { log(`  !! ${id}: chat not in the sidebar; not deleted`); continue; }
@@ -207,6 +213,7 @@ export async function harvestAll(session, { tasks, surfaceOf, file, log = consol
       state[id].harvested = new Date().toISOString();
       saveBatch(file, state, id);
       try {
+        if (!downloaded(t)) throw new Error(`${t.drop} is not on disk; chat kept`);
         await deleteChat(session, state[id].chat);
         state[id].deleted = new Date().toISOString();
         saveBatch(file, state, id);
