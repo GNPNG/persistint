@@ -17,6 +17,7 @@ const PAPER_FLAT := "res://shaders/paper_flat.gdshader"
 const PIXELATE := "res://shaders/pixelate.gdshader"
 const TILESET := "res://assets/tiles/island_tileset.tres"
 const COLUMN_W := 108.0
+const LEFT := 10.0  # first column's x: keeps the leftmost tree inside the 320 px view
 const COLUMNS := ["A", "B", "C"]
 const PAPERS := {"white": Color("fffdf7"), "cream": Color("fff0d2")}
 const RIG_FEET := 50.0 / 52.0
@@ -60,7 +61,7 @@ func _ready() -> void:
 	for i in COLUMNS.size():
 		var col := Node2D.new()
 		col.name = "Column" + COLUMNS[i]
-		col.position = Vector2(2.0 + i * COLUMN_W, 0.0)
+		col.position = Vector2(LEFT + i * COLUMN_W, 0.0)
 		col.y_sort_enabled = true
 		add_child(col)
 		columns[COLUMNS[i]] = col
@@ -68,7 +69,7 @@ func _ready() -> void:
 		for s in SUBJECTS:
 			_build_subject(COLUMNS[i], s)
 	camera = Camera2D.new()
-	camera.position = Vector2(2.0 + COLUMN_W * 1.5, 72.0)
+	camera.position = Vector2(LEFT + COLUMN_W * 1.5, 72.0)
 	camera.zoom = Vector2(2, 2)
 	add_child(camera)
 	_build_ui()
@@ -224,7 +225,7 @@ func _apply_all() -> void:
 				if n.animation != anim:
 					n.play(anim)
 	for i in COLUMNS.size():
-		columns[COLUMNS[i]].position.x = 2.0 + i * COLUMN_W
+		columns[COLUMNS[i]].position.x = LEFT + i * COLUMN_W
 
 
 func _retexture(node: Node2D, path: String) -> void:
