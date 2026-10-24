@@ -20,5 +20,8 @@
   "thread_support": false,
   "oversized_mode": "gzip",
   "custom_domain": false,
-  "host_type": "pages"
+  "host_type": "pages",
+  "review_channels": [
+    "edges"
+  ]
 }

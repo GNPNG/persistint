@@ -22,22 +22,28 @@ function baseHeaders(name) {
   return h;
 }
 
+const REVIEW_CHANNELS = ["edges"];
+const REVIEW_PROJECT = "persistint-dataglut-org";
+
 export default {
   async fetch(req, env, ctx) {
-    // Review channels on the trusted domain: /play/<channel>/... is proxied to the channel's own
-    // Pages project (<project>-<channel>.pages.dev, see deploy_site.sh --channel), so a test build
-    // never replaces the player-facing files and never asks a browser to trust a fresh host.
+    // Review channels (deploy_site.sh --channel <name>, site.config.json review_channels): proxied
+    // from /play/<channel>/... to <project>-<channel>.pages.dev/play/..., redirects rewritten.
     const rc = new URL(req.url).pathname.match(/^\/play\/([a-z0-9-]{1,24})\/(.*)$/);
-    if (rc && (env.REVIEW_CHANNELS || "edges").split(",").includes(rc[1])) {
-      if (req.method !== "GET" && req.method !== "HEAD") return new Response("Method not allowed", { status: 405, headers: { allow: "GET, HEAD" } });
-      const base = (env.REVIEW_PROJECT_BASE || "persistint-dataglut-org") + "-" + rc[1] + ".pages.dev";
+    if (rc && (env.REVIEW_CHANNELS ? env.REVIEW_CHANNELS.split(",") : REVIEW_CHANNELS).includes(rc[1])) {
+      if (req.method !== "GET" && req.method !== "HEAD") {
+        return new Response("Method not allowed", { status: 405, headers: { allow: "GET, HEAD" } });
+      }
       const u0 = new URL(req.url);
-      const target = new URL("https://" + base + "/play/" + rc[2] + u0.search);
-      const r = await fetch(new Request(target, { method: req.method, headers: { accept: req.headers.get("accept") || "*/*", range: req.headers.get("range") || "" }, redirect: "manual" }));
+      const target = new URL("https://" + REVIEW_PROJECT + "-" + rc[1] + ".pages.dev/play/" + rc[2] + u0.search);
+      const fh = new Headers({ accept: req.headers.get("accept") || "*/*" });
+      const range = req.headers.get("range");
+      if (range) fh.set("range", range);
+      const r = await fetch(new Request(target, { method: req.method, headers: fh, redirect: "manual" }));
       const h = new Headers(r.headers);
       const loc = h.get("location");
       if (loc && loc.startsWith("/play/")) h.set("location", "/play/" + rc[1] + loc.slice("/play".length));
-      h.delete("content-security-policy"); h.set("x-review-channel", rc[1]);
+      h.set("x-review-channel", rc[1]);
       return new Response(r.body, { status: r.status, headers: h });
     }
     const url = new URL(req.url);
