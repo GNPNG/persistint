@@ -3,8 +3,8 @@
 Status: active
 Owner: Brett Whitty
 Applies to: any project in a git repository where several coding agents work at the same time
-Last reviewed: 2026-10-23
-Related SOPs: SOP-07 (07-playtest-bug-triage.md: root-causing a flaky test instead of retrying it); SOP-08 (08-session-hygiene-tracking.md: issue notes, close reasons, worktree and stash cleanup at session close)
+Last reviewed: 2026-10-24
+Related SOPs: SOP-07 (07-playtest-bug-triage.md: root-causing a flaky test instead of retrying it); SOP-08 (08-session-hygiene-tracking.md: issue notes, close reasons, worktree and stash cleanup at session close); SOP-12 (12-team-roles-and-dispatch.md: which session dispatches which agent, forks with one directive, the heavy-job limit)
 
 ## 1. Purpose
 
@@ -30,6 +30,8 @@ Do not use when:
 - A setup command `{setup_cmd}` that makes a fresh checkout ready to test (install dependencies, build, or run the engine's asset import), and the list of tracked files it rewrites (`{config_file}`).
 - An issue tracker that agents and controller can both write to (this SOP uses `bd`, beads).
 - A written brief (section 8.2) saved where every sub-agent can read it.
+- If the repository encrypts a directory with a clean/smudge filter (for example git-crypt), the key file and the steps to install it in a new worktree (`{key_install_steps}`, section 8.5).
+- The machine's limit of heavy local jobs at once (`{max_heavy_jobs}`, default 1): engine imports and exports, media encodes and model runs count; test runs of one file do not.
 - A list of work items, each with: a system name `{name}`, its goal, the files it owns, and the test file it adds.
 
 ## 4. Roles and tools
@@ -54,9 +56,10 @@ Tools, by exact name:
 4. **Create one issue per system.** `bd create "{goal}" --actor {actor}`, then `bd update {id} --claim --actor {actor}` and `bd update {id} --notes "Worktree ../{repo}-wt-{name} ({branch_prefix}-{name})" --actor {actor}` (`--notes` replaces existing notes; use it only here, and `--append-notes` afterwards). Check: `bd list --status in_progress` shows each issue with the worktree in its notes.
 5. **Create one worktree per system.** From the main checkout:
    `git worktree add -b {branch_prefix}-{name} ../{repo}-wt-{name} {main}`
-   Check: `git worktree list` shows the new path on the new branch at the current `{main}` commit.
-6. **Prepare each worktree.** A new worktree has no build output, import cache or installed dependencies. In it, run `{setup_cmd}`, then `git checkout -- {config_file}` for each tracked file the setup rewrote, then run the golden test. Check: `git status` in the worktree is clean and the golden test passes there. Do not dispatch an agent into a worktree that fails this check.
-7. **Dispatch the sub-agents.** Give each agent: the absolute worktree path, the issue id, its goal, and the brief. Check: the prompt names the worktree path and says "work only here".
+   With an encryption filter: `git worktree add --no-checkout -b {branch_prefix}-{name} ../{repo}-wt-{name} {main}`, install the key with `{key_install_steps}` (section 8.5), then `git -C ../{repo}-wt-{name} checkout -f HEAD`. A worktree checked out before the key is installed holds the encrypted bytes under plain file names, and an agent reading them gets binary.
+   Check: `git worktree list` shows the new path on the new branch at the current `{main}` commit; with a filter, `head -c 9 {encrypted_file}` in the worktree does not print the filter's magic bytes (`\0GITCRYPT` for git-crypt).
+6. **Prepare each worktree.** A new worktree has no build output, import cache or installed dependencies. In it, run `{setup_cmd}`, then `git checkout -- {config_file}` for each tracked file the setup rewrote, then run the golden test. `{setup_cmd}` is a heavy job: run one worktree's setup at a time, never all of them at once, and not while an export or encode is running (`{max_heavy_jobs}`). Check: `git status` in the worktree is clean and the golden test passes there. Do not dispatch an agent into a worktree that fails this check.
+7. **Dispatch the sub-agents.** Give each agent: the absolute worktree path, the issue id, its goal, and the brief. Tell each agent whether it may run `{setup_cmd}` or other heavy jobs itself; on a shared laptop the brief says "no engine runs; the controller runs the suite" and the agents run only their own single test file. Check: the prompt names the worktree path and says "work only here"; the number of agents allowed to run heavy jobs at once is at most `{max_heavy_jobs}`.
 8. **Wait for reports.** Each agent ends with a five-line report (section 8.3). Treat each report as a claim, not a result.
 9. **Review one branch.** In the main checkout: `git log --oneline {main}..{branch_prefix}-{name}` and `git diff --stat {main}...{branch_prefix}-{name}`. Check: the diff touches only files that agent owns, plus its new test file. If it touches someone else's files or a read-only file, send it back.
 10. **Get approval.** Show the author the summary and diff stat. Check: the author has approved this merge and push.
@@ -127,6 +130,10 @@ Prevention: the brief forbids edits to the main checkout; only the controller wo
 
 7.8 **Two agents edit one shared file.** Recovery: keep one side, re-apply the other agent's change by hand in the main checkout, re-run the suite. Prevention: step 1 ownership check; one owner per shared file.
 
+7.10 **A worktree without the encryption key.** Files under the encrypted directory read as binary in the worktree; an agent reports "the design document is not text" or writes a new file next to an unreadable one. Recovery: install the key (`{key_install_steps}`) and `git checkout -f HEAD` in the worktree; nothing was lost, the blobs were never decrypted. Prevention: step 5 installs the key before the first checkout.
+
+7.11 **Too many heavy jobs on one machine.** Several agents run the engine import at once, or an export runs during an encode; the chat sessions stall or crash and the author loses the conversation. Recovery: stop the extra jobs; run them one at a time; move precomputes to another machine over SSH (SOP-12 step 11). Prevention: step 6 and 7 and `{max_heavy_jobs}`.
+
 7.9 **A pull after the merge flattens it.** `git pull --rebase` after a local `git merge --no-ff` drops the merge commit and replays the branch's commits when the remote has moved. Recovery: if not yet pushed, `git reset --hard ORIG_HEAD` (or reflog to the merge commit), then follow step 13 with `git pull --rebase=merges`. Prevention: step 13.
 
 ## 8. Artifacts and templates
@@ -192,6 +199,18 @@ Worktree ../{repo}-wt-{name} ({branch_prefix}-{name})
 
 Close reason: `Merged to {main} ({branch_prefix}-{name}), all {N} test files PASS`.
 
+### 8.5 Key install steps (git-crypt)
+
+```bash
+git worktree add --no-checkout -b {branch_prefix}-{name} ../{repo}-wt-{name} {main}
+mkdir -p "$(git -C ../{repo}-wt-{name} rev-parse --git-dir)/git-crypt/keys"
+cp {main_checkout}/.git/git-crypt/keys/default "$(git -C ../{repo}-wt-{name} rev-parse --git-dir)/git-crypt/keys/"
+git -C ../{repo}-wt-{name} checkout -f HEAD
+head -c 9 ../{repo}-wt-{name}/{encrypted_file} | tr '\0' '.'    # must not print .GITCRYPT
+```
+
+The key file never enters the repository; keep a backup outside it (`{key_backup}`).
+
 ## 9. Reference implementation in persistint
 
 - Engine and tests: Godot project in `project/`. Golden test `project/tests/verify_slice.gd`; per-system tests `project/tests/test_*.gd` (at `93870ee`: calendar, chapters, exits, florida, hottest_chains, interview, island_maps, landing_crew, ruins). Each runs with `godot --headless --path project -s tests/{file}.gd`, as stated in its header comment, and ends with `quit(0 if _failures == 0 else 1)` (`test_landing_crew.gd` uses `quit(_failures)`), so the exit code carries the result.
@@ -204,6 +223,9 @@ Close reason: `Merged to {main} ({branch_prefix}-{name}), all {N} test files PAS
 - Issue tracking: beads issue `persistint-game-cqz` (Exits) carries the note "Worktree ../persistint-game-wt-exits (sys-exits)" and the close reason "Merged to main (sys-exits incl. sys-ui-scale), all 10 test files PASS". Flaky test filed as `persistint-game-zk2`. Its title blames the first run after a headless `--import`; its close reason gives the cause as Godot 4.6 navigation async iterations syncing maps on worker threads ("reproduced 2/8 runs, unrelated to import"). Fixed in `e0574a1`: `test_island_maps` now waits until the map returns the region's own polygon.
 - Stash incident: `git stash list` in the main checkout still shows `stash@{0}: On main: Teleport auto-stash`. It holds `project/tests/test_exits.gd`, `project/tests/test_island_maps.gd`, `project/tests/_repro_exit.gd` and `.uid`, `.beads/interactions.jsonl`, `.beads/issues.jsonl` and `.claude/logs/actually-im-the-ahole-violations.jsonl`; the test work landed in `e0574a1`. The brief attributes the stash to `git pull --rebase --autostash`; the stash message reads "Teleport auto-stash", so the command that made it is not confirmed from the repo. It has not been dropped. `stash@{1}: WIP on main: 998da48 dev/STYLE.md ...` also exists; it holds map, florida and ruins scene files plus `project/scripts/door.gd` and `map.gd`. The brief does not say where it came from, so it is not accounted for here and has not been dropped.
 - Cleanup state when this SOP was written: `sys-quotes` and `sys-release` show 0 unmerged commits by `git cherry main`, but both branches still exist and both `../persistint-game-wt-quotes` and `../persistint-game-wt-release` are still worktrees. Step 14 has not been applied to them. Other worktrees (`sys-forbidden`, `sys-pony`, `sys-clone-voices`, `game-systems` with `+` lines; `sys-web-render`, `sys-sops` at `main`) are in use.
+- Encrypted directory: `dev/**` has `filter=git-crypt diff=git-crypt` in `.gitattributes` (since `422b539`). Key install for a worktree follows section 8.5 with the backup at `~/.config/git-crypt/persistint-game.key` (tracker memory `worktree-gitcrypt`). Checked 2026-10-24: a worktree made without the key showed `dev/DESIGN.md` as `\0GITCRYPT...`; the same worktree read it after the key was copied in and `checkout -f HEAD`.
+- Heavy-job limit on the author's laptop: one at a time (tracker memory `old-phones-and-precompute`); the suite is run by the controller, agents run their own test file; precomputes go to the author's remote machines over SSH (SOP-12, `dev/PROCESS.md`).
+- Worktrees on 2026-10-24: merged and removed the same day: `sys-lore`, `sys-render-fix`, `sys-look-integrate`, `sys-clone-voices`, `sys-zombie-clones` (`7cf0a13`). Still present at the time of writing: `wt-voices` and `wt-atwood` (merged; `git worktree remove` needs `--force` because of untracked files, left for the author), `wt-systems` (`game-systems`, far behind `main`, waiting on an author decision), `wt-title` (`sys-title-anim`) and `wt-audio` (`sys-audio`) waiting to merge for v0.3.0, `wt-zombies`, `wt-sops` (this SOP's branch).
 - Planned: a script that runs the full suite (`verify_slice.gd` plus every `tests/test_*.gd`) and restores `project.godot`; a script that lists and removes merged worktrees. Neither exists in `tools/` yet.
 
 ## 10. Lessons learned
@@ -215,3 +237,5 @@ Close reason: `Merged to {main} ({branch_prefix}-{name}), all {N} test files PAS
 - Agent reports are claims. Only the controller's full-suite run after the merge counts.
 - `git cherry main {branch}` tells whether a rebased branch has already landed when `git branch --merged` does not.
 - A test that passed in an agent's report failed intermittently (2 of 8 runs) because Godot's navigation sync runs asynchronously (`persistint-game-zk2`). The fix waits for the condition instead of retrying (`e0574a1`). How the failure was first caught is not recorded.
+- A fork dispatched into a worktree made without the git-crypt key could not read the design documents it was sent to use (2026-10-24). The key install is now part of step 5, before the first checkout.
+- The author's chat sessions crash when the laptop carries several engine jobs at once; the one-heavy-job rule (`{max_heavy_jobs}` = 1 here) came from that, stated by the author on 2026-10-24.

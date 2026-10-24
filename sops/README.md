@@ -16,8 +16,11 @@ Sections 1 to 8 of every SOP are project-agnostic and use `{placeholders}`. Sect
 | [SOP-06](06-quote-sourcing-vv.md) Sourcing and verifying real-person quotes | draft | Shipped content puts a real person's words on screen or in audio, or a tool reports a fact about a real person. |
 | [SOP-07](07-playtest-bug-triage.md) Turning playtest reports into reproduced, tested fixes | draft | A tester reports symptoms in their own words and each needs to be located, reproduced, fixed for its whole class and held by a test. |
 | [SOP-08](08-session-hygiene-tracking.md) Issue tracking, memory, commits and session close | active | Any agent session that changes a repository: issues, author rules in tracker memory, plain commits, and a clean, pushed close. |
+| [SOP-09](09-game-release-checklist.md) Release checklist for a public game | draft | A game is going public: licences, legal posture, builds, store and site items, each with an owner and a check. |
+| [SOP-11](11-versioning-and-playtest-cadence.md) Versioning and playtest cadence | active | A product owner plays each build: a minor version per playtest build, a patch per hotfix, one version file stamped everywhere, changelog and public updates page from the same text, a build id on screen. |
+| [SOP-12](12-team-roles-and-dispatch.md) Team roles and dispatch across machines and agent sessions | active | A human owner works with several agent sessions on several machines, some work is browser-bound, and the laptop carries one heavy job at a time: who touches what, how notes come in and reports go out. |
 
-How they connect: SOP-08 applies to every session. SOP-01 and SOP-07 use it for issues, commits and cleanup. SOP-02 feeds names and vocabulary to SOP-03, whose prompts feed SOP-04. SOP-06 verifies the quotes that SOP-02 content and SOP-05 voice clips use.
+How they connect: SOP-08 applies to every session. SOP-01 and SOP-07 use it for issues, commits and cleanup. SOP-02 feeds names and vocabulary to SOP-03, whose prompts feed SOP-04. SOP-06 verifies the quotes that SOP-02 content and SOP-05 voice clips use. SOP-12 says which session or agent runs each of these and how the owner's notes reach them; SOP-11 sets the build cadence they all work to, and SOP-09 is the list a version must clear before it is a public release.
 
 ## Adopting these SOPs in another project
 
