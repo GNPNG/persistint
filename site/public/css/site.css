@@ -402,3 +402,22 @@ figcaption { margin-top: 10px; font-size: .9rem; color: var(--plum-soft); text-a
 .ioa-referral .ioa-last { margin: 0; color: var(--plum-soft); }
 .ioa-referral a { color: var(--pink-ink); font-weight: 600; text-decoration: none; }
 .ioa-referral a:hover, .ioa-referral a:focus-visible { text-decoration: underline; }
+
+/* Ambience: the quiet title theme (toggle at the lower right) and the heart rain canvas */
+.music-toggle {
+  position: fixed; right: 16px; bottom: 16px; z-index: 50;
+  width: 44px; height: 44px; padding: 0; border-radius: 50%;
+  border: 3px solid var(--pink); background: var(--cream); color: var(--pink-ink);
+  box-shadow: 0 4px 14px rgba(13, 33, 55, 0.22); cursor: pointer;
+  display: grid; place-items: center; font: 700 22px/1 var(--display);
+  transition: transform .15s ease, background-color .15s ease;
+}
+.music-toggle:hover, .music-toggle:focus-visible { transform: translateY(-2px); }
+.music-toggle.on { background: var(--pink-hot); color: #fff; border-color: #fff; }
+.music-toggle .on-mark { display: none; }
+.music-toggle.on .off-mark { display: none; }
+.music-toggle.on .on-mark { display: inline-block; animation: music-bob 1.2s ease-in-out infinite; }
+@keyframes music-bob { 0%, 100% { transform: translateY(0) rotate(-8deg); } 50% { transform: translateY(-2px) rotate(8deg); } }
+.heart-rain { position: fixed; inset: 0; z-index: 49; pointer-events: none; }
+@media (max-width: 480px) { .music-toggle { right: 10px; bottom: 10px; width: 40px; height: 40px; font-size: 20px; } }
+@media (prefers-reduced-motion: reduce) { .music-toggle { transition: none; } .music-toggle.on .on-mark { animation: none; } }
