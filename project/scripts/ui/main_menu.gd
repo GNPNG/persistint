@@ -25,7 +25,7 @@ func _add_version_label() -> void:
 	if build != "":
 		label.text += " · %s" % build
 	label.add_theme_font_size_override("font_size", 8)
-	label.modulate = Color(1, 1, 1, 0.6)
+	label.add_theme_color_override("font_color", Color(0.6, 0.5, 0.55, 1))
 	label.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT)
 	label.position -= Vector2(36, 14)
 	add_child(label)

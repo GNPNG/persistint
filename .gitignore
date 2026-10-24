@@ -30,3 +30,6 @@ site/node_modules/
 
 # Build id written by tools/deploy_site.sh before each export (shown on the main menu)
 project/build.json
+
+# Playwright MCP screenshots and logs
+.playwright-mcp/
