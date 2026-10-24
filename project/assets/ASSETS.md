@@ -208,6 +208,10 @@ change. Rows are sorted by path.
 | `project/assets/ruins/ruins_pipes.png` | ruins_pipes | `tools/gen_ruins_art.py` | 2400x192 still, scale 1/8, feet at bottom centre | - |
 | `project/assets/ruins/ruins_pipes_striped.png` | ruins_pipes_striped | `tools/gen_ruins_art.py` | 2080x192 still, scale 1/8, feet at bottom centre | - |
 | `project/assets/ruins/ruins_plant.png` | ruins_plant | `tools/gen_ruins_art.py` | 240x352 still, scale 1/8, feet at bottom centre | - |
+| `project/assets/ruins/ruins_plaque_1.png` | ruins_plaque_1 | `tools/gen_ruins_art.py` | 176x240 still (22x30 world px), feet at bottom centre; plaque on a post before clone tank 1, its number as 1 pips | - |
+| `project/assets/ruins/ruins_plaque_2.png` | ruins_plaque_2 | `tools/gen_ruins_art.py` | 176x240 still (22x30 world px), feet at bottom centre; plaque on a post before clone tank 2, its number as 2 pips | - |
+| `project/assets/ruins/ruins_plaque_3.png` | ruins_plaque_3 | `tools/gen_ruins_art.py` | 176x240 still (22x30 world px), feet at bottom centre; plaque on a post before clone tank 3, its number as the duck | - |
+| `project/assets/ruins/ruins_plaque_4.png` | ruins_plaque_4 | `tools/gen_ruins_art.py` | 176x240 still (22x30 world px), feet at bottom centre; plaque on a post before clone tank 4, its number as 4 pips | - |
 | `project/assets/ruins/ruins_porthole.png` | ruins_porthole | `tools/gen_ruins_art.py` | 240x240 still, scale 1/8, feet at bottom centre | - |
 | `project/assets/ruins/ruins_portrait.png` | ruins_portrait | `tools/gen_ruins_art.py` | 352x416 still, scale 1/8, feet at bottom centre | - |
 | `project/assets/ruins/ruins_poster.png` | ruins_poster | `tools/gen_ruins_art.py` | 272x352 still, scale 1/8, feet at bottom centre | - |
@@ -216,6 +220,13 @@ change. Rows are sorted by path.
 | `project/assets/ruins/ruins_runner.png` | ruins_runner | `tools/gen_ruins_art.py` | 1600x176 still, scale 1/8, painted flat on the floor | - |
 | `project/assets/ruins/ruins_sequencer.png` | ruins_sequencer | `tools/gen_ruins_art.py` | 448x368 still, scale 1/8, feet at bottom centre | - |
 | `project/assets/ruins/ruins_server_rack.png` | ruins_server_rack | `tools/gen_ruins_art.py` | 416x688 still, scale 1/8, feet at bottom centre | - |
+| `project/assets/ruins/ruins_sign_buffet.png` | ruins_sign_buffet | `tools/gen_ruins_art.py` | 320x240 still (40x30 world px), hangs on the wall; cake sign over the buffet, a picture and no lettering | - |
+| `project/assets/ruins/ruins_sign_cold.png` | ruins_sign_cold | `tools/gen_ruins_art.py` | 320x240 still (40x30 world px), hangs on the wall; snowflake sign by the freezer, a picture and no lettering | - |
+| `project/assets/ruins/ruins_sign_cubs.png` | ruins_sign_cubs | `tools/gen_ruins_art.py` | 320x240 still (40x30 world px), hangs on the wall; paw sign by the cub basket, a picture and no lettering | - |
+| `project/assets/ruins/ruins_sign_lab.png` | ruins_sign_lab | `tools/gen_ruins_art.py` | 320x240 still (40x30 world px), hangs on the wall; helix sign over the incubators, a picture and no lettering | - |
+| `project/assets/ruins/ruins_sign_lifeboat.png` | ruins_sign_lifeboat | `tools/gen_ruins_art.py` | 320x240 still (40x30 world px), hangs on the wall; lifeboat sign, a picture and no lettering | - |
+| `project/assets/ruins/ruins_sign_shop.png` | ruins_sign_shop | `tools/gen_ruins_art.py` | 320x240 still (40x30 world px), hangs on the wall; shopping-bag sign over the gift shop, a picture and no lettering | - |
+| `project/assets/ruins/ruins_sign_slots.png` | ruins_sign_slots | `tools/gen_ruins_art.py` | 320x240 still (40x30 world px), hangs on the wall; cherries sign over the slot machines, a picture and no lettering | - |
 | `project/assets/ruins/ruins_slots.png` | ruins_slots | `tools/gen_ruins_art.py` | 672x560 still, scale 1/8, feet at bottom centre | - |
 | `project/assets/ruins/ruins_stationery.png` | ruins_stationery | `tools/gen_ruins_art.py` | 448x368 still, scale 1/8, feet at bottom centre | - |
 | `project/assets/ruins/ruins_tank.png` | ruins_tank | `tools/gen_ruins_art.py` | 1 row x 4 frames of 352x688 (bubbles, blinking light), 6 fps, scale 1/8 | - |

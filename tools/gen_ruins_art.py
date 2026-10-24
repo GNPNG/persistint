@@ -14,6 +14,7 @@ nothing is ever shown pixelated.
   ruins_<kind>.png                      the props data/ruins.json names by "kind", feet at the
                                         bottom centre
   ruins_tank.png, ruins_tank_duck.png   animated sheets: 1 row x 4 frames of 352x688 (tank())
+  ruins_sign_<what>.png, ruins_plaque_<n>.png  in-world signage: pictures, never lettering
   icon_<id>.png                         Forbidden Knowledge pickups, 160x160 (data "icon")
   glow.png, vignette.png                256x256 pickup glow, 1280x720 screen vignette
 Each piece is drawn on a canvas SS = 16 times the world size and downscaled (LANCZOS). Style: STYLE.md
@@ -1142,6 +1143,110 @@ def icons():
     icon("appendix", lambda a: icon_book(a, PINK))
 
 
+
+# ---------------------------------------------------------------- in-world signage (no lettering)
+# Signs say what they mark with a picture, never words (prompts/STYLE.md 4.11): hanging boards on
+# the ship's walls, little plaques on posts in front of the clone tanks.
+
+def hanging_sign(name, board, draw_icon, w=40, h=30):
+    """A rounded board hung from two short chains, a picture on it and a heart in the corner."""
+    a = Art(w, h)
+    for x in (8, w - 8):
+        a.line([(x, 0.5), (x, 7)], STEEL_D, 0.7)
+        a.circ(x, 7, 1.2, STEEL_L, "INK", 0.4)
+    a.rect(2, 7, w - 2, h - 1.5, board, 3.5)
+    a.rect(4.5, 9.5, w - 4.5, h - 4, None, 2.5, "#ffffff", 0.5)
+    draw_icon(a, w / 2, 7 + (h - 8.5) / 2)
+    a.heart(w - 6.5, 11.5, 1.8)
+    a.save(name)
+
+
+def icon_bag(a, x, y):
+    a.rect(x - 7, y - 4, x + 7, y + 8, PINK, 1.2)
+    a.arc(x - 4, y - 9, x + 4, y - 1, 180, 360, "INK", 0.8)
+    a.heart(x, y + 2, 2.2, "#ffffff")
+
+
+def icon_lifeboat(a, x, y):
+    a.poly([(x - 10, y + 2), (x + 10, y + 2), (x + 7, y + 7), (x - 7, y + 7)], "#ff9a6e")
+    a.circ(x, y - 4, 5, "#ffffff")
+    for ang in (45, 135, 225, 315):
+        r = math.radians(ang)
+        a.circ(x + math.cos(r) * 3.6, y - 4 + math.sin(r) * 3.6, 1.1, "#ff9a6e", None)
+    a.circ(x, y - 4, 2.2, "#f2e6d8")
+
+
+def icon_cake(a, x, y):
+    a.rect(x - 8, y, x + 8, y + 7, "#fff0f4", 1.2)
+    a.rect(x - 6, y - 5, x + 6, y + 0.5, PINK, 1.2)
+    a.line([(x, y - 5), (x, y - 9)], BUTTER, 1.0)
+    a.ell(x - 1, y - 12, x + 1, y - 9, "#ffd36e", None)
+
+
+def icon_cherries(a, x, y):
+    a.line([(x - 4, y + 3), (x, y - 7), (x + 4, y + 3)], "#7cbf6a", 0.8)
+    a.circ(x - 4, y + 4, 3.2, "#ff6f8f")
+    a.circ(x + 4, y + 4, 3.2, "#ff6f8f")
+    a.ell(x - 1, y - 9, x + 6, y - 5, "#a6dc8a")
+
+
+def icon_helix(a, x, y):
+    for i in range(7):
+        t = i / 6
+        yy = y - 8 + t * 16
+        dx = math.sin(t * math.pi * 2) * 5
+        a.line([(x - dx, yy), (x + dx, yy)], LILAC, 0.7)
+        a.circ(x - dx, yy, 1.1, MINT, None)
+        a.circ(x + dx, yy, 1.1, PINK, None)
+
+
+def icon_snowflake(a, x, y):
+    for ang in (0, 60, 120):
+        r = math.radians(ang)
+        a.line([(x - math.cos(r) * 8, y - math.sin(r) * 8), (x + math.cos(r) * 8, y + math.sin(r) * 8)], SKY, 1.2)
+    a.circ(x, y, 1.6, "#ffffff")
+
+
+def icon_paw(a, x, y):
+    a.ell(x - 4.5, y - 1, x + 4.5, y + 6, "#ffffff")
+    for dx, dy in ((-5, -4), (-1.8, -7), (1.8, -7), (5, -4)):
+        a.circ(x + dx, y + dy, 1.7, "#ffc4d4")
+
+
+def tank_plaque(name, pips, duck=False):
+    """A little plaque on a post in front of a tank: its number as pips (and the duck's tank its
+    duck), no digits."""
+    a = Art(22, 30)
+    a.rect(9.8, 12, 12.2, 29, STEEL_D, 0.8)
+    a.ell(6, 27.5, 16, 30, (20, 20, 35, 90), None)
+    a.rect(1.5, 1.5, 20.5, 14, CREAM, 2.5)
+    if duck:
+        a.ell(6, 5, 15, 12, BUTTER)
+        a.circ(14, 5.5, 2.6, BUTTER)
+        a.poly([(16, 5.2), (18.6, 6), (16, 6.8)], "#ff9a6e", None)
+        a.circ(14.4, 4.8, 0.5, INK, None)
+    else:
+        for i in range(pips):
+            a.circ(11 - (pips - 1) * 2.2 + i * 4.4, 7.8, 1.6, PINK if i % 2 == 0 else MINT, "INK", 0.4)
+    a.save(name)
+
+
+def signage():
+    """The ship's hanging signs (warm brown line) are drawn in ship(); the bunker's plaques here."""
+    for i in range(1, 5):
+        tank_plaque(f"ruins_plaque_{i}", i, duck=(i == 3))
+    hanging_sign("ruins_sign_lab", "#e4f4ee", icon_helix)
+    hanging_sign("ruins_sign_cold", "#e8f2fa", icon_snowflake)
+    hanging_sign("ruins_sign_cubs", "#fff0f4", icon_paw)
+
+
+def ship_signage():
+    hanging_sign("ruins_sign_shop", "#fff0f4", icon_bag)
+    hanging_sign("ruins_sign_lifeboat", "#e8f2fa", icon_lifeboat)
+    hanging_sign("ruins_sign_buffet", "#fff6e2", icon_cake)
+    hanging_sign("ruins_sign_slots", "#f2ecfb", icon_cherries)
+
+
 def bunker():
     tiles()
     tank("ruins_tank")
@@ -1153,6 +1258,7 @@ def bunker():
         binder_shelf(name, seed)
     for draw in (puddle, lab_cart, poster):
         draw()
+    signage()
     icons()
 
 
@@ -1164,6 +1270,7 @@ def ship():
     pipes("ruins_pipes_striped", "#ff9a9a", 260)
     for draw in (crates, barrel, papers, cables, plant, offering, bunting, porthole, life_ring, chair_tipped, runner):
         draw()
+    ship_signage()
 
 
 if __name__ == "__main__":
