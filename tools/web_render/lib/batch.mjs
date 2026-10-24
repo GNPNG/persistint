@@ -31,7 +31,7 @@ async function submitOne(session, surface, task, prompt) {
   const st = surface.steps;
   const ctx = { vars: { aspect: task.aspect, id: task.id }, stepMs: surface.timeouts?.stepMs ?? 20_000 };
   await session.newPage();
-  await session.goto(surface.url);
+  await newChat(session, surface);
   await waitReady(session, surface, ctx);
   await runSteps(session, st.open, 'open', ctx);
   if (surface.skillFirst) {
@@ -44,14 +44,59 @@ async function submitOne(session, surface, task, prompt) {
     await insertText(session, st.input, prompt, ctx);
   }
   await runSteps(session, st.submit, 'submit', ctx);
-  const deadline = Date.now() + 60_000;
+  // Author, 2026-10-24: stay on this chat until the generation has really started (Gemini's Stop
+  // button shows, or its reply is on the page) before recording it and moving on. Leaving earlier
+  // can abandon the send, and the chat id is only final once the reply has begun.
+  const deadline = Date.now() + 180_000;
   while (Date.now() < deadline) {
     const url = session.page.url();
-    // A chat counts only once the sent message is on the page (a rejected send can still flash a URL).
-    if (CHAT_RE.test(url) && await session.page.$('user-query')) return url.split('?')[0];
-    await sleep(500);
+    const started = await session.page.$('model-response') || await anyVisibleSel(session.page, st.busy);
+    if (CHAT_RE.test(url) && started && await session.page.$('user-query')) {
+      await sleep(5000);
+      return session.page.url().split('?')[0];
+    }
+    await sleep(1000);
   }
-  throw new StepError('submit', `sent, but the page never moved to a chat URL (still ${session.page.url()})`);
+  throw new StepError('submit', `sent, but no generation started within 3 min (page ${session.page.url()})`);
+}
+
+// Author, 2026-10-24: never reload the Gemini page. Navigate inside the app the way a person
+// does: "New chat" and the chat links in the sidebar. A full load happens only when the tab is not
+// on Gemini at all.
+async function ensureGemini(session, url) {
+  if (!session.page.url().startsWith('https://gemini.google.com/')) {
+    await session.goto(url);
+    await sleep(6000);
+  }
+}
+
+async function newChat(session, surface) {
+  await ensureGemini(session, surface.url);
+  const link = await session.page.$("a[aria-label='New chat'], [data-test-id='new-chat-button'] a, side-nav-action-button[data-test-id='new-chat-button']")
+    || await session.page.$('::-p-aria(New chat)');
+  if (!link) throw new StepError('open', 'no New chat button in the sidebar');
+  await link.click();
+  await sleep(2500);
+}
+
+/** Open a recorded chat by clicking its sidebar link; returns false when it is not in the sidebar. */
+async function openChat(session, surface, chatUrl) {
+  await ensureGemini(session, surface.url);
+  const id = chatId(chatUrl);
+  if (chatId(session.page.url()) === id) return true;
+  const link = await session.page.$(`a[href$="/app/${id}"]`);
+  if (!link) return false;
+  await link.click();
+  for (let i = 0; i < 20 && chatId(session.page.url()) !== id; i++) await sleep(500);
+  await sleep(4000);
+  return chatId(session.page.url()) === id;
+}
+
+async function anyVisibleSel(page, sels = []) {
+  for (const sel of sels) {
+    try { for (const h of await page.$$(sel)) if (await h.isVisible()) return true; } catch { /* bad selector */ }
+  }
+  return false;
 }
 
 const chatId = (url) => (url.match(/\/app\/([0-9a-f]{8,})/) || [])[1] || null;
@@ -72,7 +117,7 @@ async function clickText(page, scope, text) {
 /**
  * Delete the chat at `chatUrl` and nothing else (author, 2026-10-24: once the track is downloaded,
  * clean up the chat that was created for it, only that id). Uses the open chat's own conversation
- * menu, after checking the page is that chat; then reloads the URL to confirm the chat is gone.
+ * menu, after checking the page is that chat; then checks its sidebar link is gone (no reload).
  */
 export async function deleteChat(session, chatUrl) {
   const want = chatId(chatUrl);
@@ -92,10 +137,8 @@ export async function deleteChat(session, chatUrl) {
     const seen = await page.evaluate(() => [...document.querySelectorAll('button')].filter((e) => e.getBoundingClientRect().width).map((e) => `${e.innerText.trim().replace(/\s+/g, ' ')}|${e.getAttribute('data-test-id')}`).slice(-12).join('; '));
     throw new StepError('delete', `no Delete button in the confirmation dialog (visible buttons: ${seen})`);
   }
-  await sleep(3000);
-  await session.goto(chatUrl);
-  await sleep(5000);
-  if (chatId(page.url()) === want && await page.$('model-response')) throw new StepError('delete', 'the chat still opens after Delete');
+  await sleep(4000);
+  if (await page.$(`a[href$="/app/${want}"]`)) throw new StepError('delete', 'the chat is still in the sidebar after Delete');
 }
 
 /** Submit every task not already submitted; `gapMs` between sends. */
@@ -128,8 +171,7 @@ export async function harvestAll(session, { tasks, surfaceOf, file, log = consol
   for (const id of Object.keys(state).filter((id) => state[id].harvested && !state[id].deleted && state[id].chat)) {
     try {
       await session.newPage();
-      await session.goto(state[id].chat);
-      await sleep(6000);
+      if (!await openChat(session, surfaceOf(byId.get(id) || { kind: state[id].kind }), state[id].chat)) { log(`  !! ${id}: chat not in the sidebar; not deleted`); continue; }
       await deleteChat(session, state[id].chat);
       state[id].deleted = new Date().toISOString();
       saveBatch(file, state, id);
@@ -145,8 +187,11 @@ export async function harvestAll(session, { tasks, surfaceOf, file, log = consol
     log(`- ${id}  ${state[id].chat}`);
     try {
       await session.newPage();
-      await session.goto(state[id].chat);
-      await waitReady(session, surface, {});
+      if (!await openChat(session, surface, state[id].chat)) {
+        log('    not in the sidebar list (left as is; check by hand)');
+        left.push(id);
+        continue;
+      }
       const st = surface.steps;
       if ((await resultInfo(session.page, st.result, surface.resultMinSize ?? 0)).count === 0) {
         // Still generating (or the reply is still loading): wait a little, then move on.
