@@ -379,8 +379,9 @@ figcaption { margin-top: 10px; font-size: .9rem; color: var(--plum-soft); text-a
 .modal-close:focus-visible { outline: 3px solid var(--pink-ink); outline-offset: 2px; }
 .modal-body { padding: 8px 22px 24px; overflow: auto; max-height: calc(min(86vh, 900px) - 70px); }
 /* Online safety & support badge in the footer */
+.site-footer .safety-badge, .site-footer .safety-badge:hover { color: #ffffff; }
 .safety-badge {
-  display: inline-flex; align-items: center; gap: 7px; padding: 6px 16px 7px 10px; border-radius: 999px;
+  display: inline-flex; align-self: flex-start; width: max-content; align-items: center; gap: 7px; padding: 6px 16px 7px 10px; border-radius: 999px;
   background: linear-gradient(180deg, #ff9fd6 0%, #f05fb4 55%, #e0429f 100%);
   border: 2px solid #8e5bd6; color: #ffffff; font-weight: 700; text-decoration: none;
   box-shadow: 0 4px 0 #7b4fc4, 0 7px 12px rgba(89, 30, 70, .35), inset 0 2px 0 rgba(255, 255, 255, .65);
