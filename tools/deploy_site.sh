@@ -550,6 +550,9 @@ PY
 log "Version"
 python3 -I tools/version.py check || die "version not stamped; nothing was uploaded or deployed"
 
+log "Audio levels (sops/10-audio-levels.md)"
+python3 -I tools/audio_report.py --check --quiet || die "audio levels out of range; nothing was uploaded or deployed"
+
 log "Link check (PW-13)"
 allow=()
 for f in "${OVERSIZED[@]}"; do allow+=(--allow "/play/*/$f"); done

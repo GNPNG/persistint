@@ -1,6 +1,7 @@
 extends Control
 ## Main menu — New Game (fresh flags); Continue only when there is a save to continue.
-## Help & Support opens the support page on the site in the system browser.
+## Help & Support opens the support page on the site in the system browser. Settings opens the
+## volume sliders (AudioSettings).
 
 const FIRST_MAP := "res://scenes/maps/village.tscn"
 const SUPPORT_URL := "https://persistint.dataglut.org/support.html"
@@ -10,6 +11,7 @@ func _ready() -> void:
 	%BeginButton.pressed.connect(_on_begin)
 	%NewButton.pressed.connect(_on_new_game)
 	%SupportButton.pressed.connect(_on_support)
+	%SettingsButton.pressed.connect(AudioSettings.open)
 	%BeginButton.visible = WorldState.get_flag("_location") is Dictionary
 	_add_version_label()
 

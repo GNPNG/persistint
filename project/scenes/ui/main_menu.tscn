@@ -82,6 +82,11 @@ layout_mode = 2
 tooltip_text = "Opens the PERSISTINT support page in your web browser"
 text = "Help & Support"
 
+[node name="SettingsButton" type="Button" parent="Center/Panel/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Settings"
+
 [node name="Hint" type="Label" parent="Center/Panel/VBox"]
 layout_mode = 2
 theme_type_variation = &"HintLabel"

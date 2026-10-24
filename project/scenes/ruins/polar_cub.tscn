@@ -18,6 +18,7 @@ position = Vector2(0, -10)
 shape = SubResource("click")
 
 [node name="Sfx" type="AudioStreamPlayer2D" parent="."]
+bus = &"SFX"
 
 [node name="BarkBubble" parent="." instance=ExtResource("bark_bubble")]
 bottom = -25.0

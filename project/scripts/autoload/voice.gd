@@ -13,6 +13,8 @@ extends Node
 ## sound without its brackets (display_text); clips are keyed on the words alone (spoken_text).
 ## A line can be played through another audio bus: the clone children use "Clones" (pitched up
 ## and distorted, default_bus_layout.tres) so their originals' clips come out as kid clones.
+## While a clip or vocalization plays, Music ducks the loop (Music.duck_voice, a volume move, no
+## audio effect) so speech sits above it.
 
 ## Every line handed to speak(), clip or text-to-speech (tests listen to it): the text as a
 ## bubble shows it, brackets removed.
@@ -134,6 +136,13 @@ func speak(text: String, pitch := 1.0, speaker := "", bus := "Voice") -> void:
 	_play_next()
 
 
+func _duck(on: bool) -> void:
+	var music := get_node_or_null("/root/Music")
+	if music and music.has_method("duck_voice"):
+		music.duck_voice(on)
+
+
+
 ## What is still to play of the current line (sounds and words), in order.
 func pending() -> Array:
 	return _queue.duplicate()
@@ -146,17 +155,20 @@ func _play_next() -> void:
 			var path := "%s/%s.wav" % [SFX_DIR, part["sfx"]]
 			if ResourceLoader.exists(path):
 				_player.stream = load(path)
+				_duck(true)
 				_player.play()
 				return  # finished -> the next part
 			continue
 		var clip := clip_path(_speaker, part["say"])
 		if ResourceLoader.exists(clip):
 			_player.stream = load(clip)
+			_duck(true)
 			_player.play()
 			return
 		if tts_available():
 			DisplayServer.tts_speak(part["say"], _voice_for(_speaker), 50, clampf(_pitch, 0.5, 2.0))
 		# text-to-speech has no end we wait for: anything after it plays at once
+	_duck(false)
 
 
 func _voice_for(speaker: String) -> String:

@@ -16,6 +16,7 @@ Sections 1 to 8 of every SOP are project-agnostic and use `{placeholders}`. Sect
 | [SOP-06](06-quote-sourcing-vv.md) Sourcing and verifying real-person quotes | draft | Shipped content puts a real person's words on screen or in audio, or a tool reports a fact about a real person. |
 | [SOP-07](07-playtest-bug-triage.md) Turning playtest reports into reproduced, tested fixes | draft | A tester reports symptoms in their own words and each needs to be located, reproduced, fixed for its whole class and held by a test. |
 | [SOP-08](08-session-hygiene-tracking.md) Issue tracking, memory, commits and session close | active | Any agent session that changes a repository: issues, author rules in tracker memory, plain commits, and a clean, pushed close. |
+| [SOP-10](10-audio-levels.md) Audio levels | active | Loudness targets for music, voices and effects, fixed in the samples and plain bus volumes (no real-time effects); the gate on every deploy and a fresh full measurement on each minor release. |
 
 How they connect: SOP-08 applies to every session. SOP-01 and SOP-07 use it for issues, commits and cleanup. SOP-02 feeds names and vocabulary to SOP-03, whose prompts feed SOP-04. SOP-06 verifies the quotes that SOP-02 content and SOP-05 voice clips use.
 
