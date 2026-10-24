@@ -4,6 +4,10 @@ extends Node2D
 ## chomp with kawaii gore (pastel splatter, hearts, sparkles, a bouncing bone and chunk, a
 ## heart-outlined puddle that fades) and the data's sfx in order; the zombie is gone, the cub
 ## naps with a pink muzzle, and the eaten clone's batch restocks from a tank a while later.
+## A clone that starts dancing (the floss, the dab: ZombieChild.dance) is pounced on at once by
+## a free cub within "dance_radius", after "dance_pounce_delay" seconds (author 2026-10-24: the
+## floss and the dab are "one of the triggers for them to be attacked by the baby polar bears");
+## the timed pounce prefers a dancer too.
 ## WorldState "clones_eaten" counts eaten clones per batch ("epstein_batch_7": 2).
 ## The player never fights; this only happens around them.
 
@@ -58,7 +62,8 @@ func _schedule() -> void:
 			_schedule())
 
 
-## Pounces with the first free cub that has a zombie within the radius; true if one did.
+## Pounces with the first free cub that has a zombie within the radius (a dancing one first,
+## else the nearest); true if one did.
 func try_pounce() -> bool:
 	var radius := float(settings().get("radius", 150.0))
 	for cub: Node2D in cubs():
@@ -66,13 +71,44 @@ func try_pounce() -> bool:
 			continue
 		var best: Node2D = null
 		for z: Node2D in zombies():
-			if z.global_position.distance_to(cub.global_position) <= radius \
-					and (best == null or z.global_position.distance_to(cub.global_position) < best.global_position.distance_to(cub.global_position)):
+			if z.global_position.distance_to(cub.global_position) > radius:
+				continue
+			if best == null or (z.dancing and not best.dancing) \
+					or (z.dancing == best.dancing and z.global_position.distance_to(cub.global_position) < best.global_position.distance_to(cub.global_position)):
 				best = z
 		if best:
 			pounce(cub, best)
 			return true
 	return false
+
+
+## A clone started dancing: the nearest free cub within "dance_radius" pounces on it after
+## "dance_pounce_delay" seconds (at once with `now`), if the data allows it. Returns true when a
+## pounce is on its way.
+func on_dance(zombie: Node2D, now := false) -> bool:
+	var s := settings()
+	if not bool(s.get("dance_pounce", true)):
+		return false
+	var radius := float(s.get("dance_radius", 220.0))
+	var best: Node2D = null
+	for cub: Node2D in cubs():
+		if cub.can_pounce() and cub.global_position.distance_to(zombie.global_position) <= radius \
+				and (best == null or cub.global_position.distance_to(zombie.global_position) < best.global_position.distance_to(zombie.global_position)):
+			best = cub
+	if best == null:
+		return false
+	var delay := 0.0 if now else float(s.get("dance_pounce_delay", 0.8))
+	if delay <= 0.0:
+		pounce(best, zombie)
+		return true
+	best.busy = true  # spoken for: no other pounce takes the cub meanwhile
+	get_tree().create_timer(delay).timeout.connect(func() -> void:
+		if not is_instance_valid(best):
+			return
+		best.busy = false
+		if is_inside_tree() and is_instance_valid(zombie) and zombie.is_in_group("zombie_clones") and best.can_pounce():
+			pounce(best, zombie))
+	return true
 
 
 ## The cub eats the zombie. Returns the batch key counted in WorldState.

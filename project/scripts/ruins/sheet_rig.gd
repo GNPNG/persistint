@@ -5,11 +5,16 @@ extends RefCounted
 ## Each rig: frame size in texels, the frame's world height and its feet line (fraction of the
 ## frame height; SpriteFit puts it on the character's origin), and its animations
 ## (row, first column, frames, fps).
-## A clone child: 192x272 frames (24x34 world px at 8 texels each); rows front/side/back; columns 0-1 idle, 2-5 walk.
+## A clone child: 192x272 frames (24x34 world px at 8 texels each); rows front/side/back; columns 0-1 idle, 2-5 walk;
+## row 3 the floss (6 frames), row 4 the dab (3 frames), both front views (ZombieChild.dance).
 const CLONE := {"size": Vector2i(192, 272), "world_h": 34.0, "feet": 1.0, "anims": {
 	"idle_down": [0, 0, 2, 2.0], "walk_down": [0, 2, 4, 6.0],
 	"idle_side": [1, 0, 2, 2.0], "walk_side": [1, 2, 4, 6.0],
-	"idle_up": [2, 0, 2, 2.0], "walk_up": [2, 2, 4, 6.0]}}
+	"idle_up": [2, 0, 2, 2.0], "walk_up": [2, 2, 4, 6.0],
+	"floss": [3, 0, 6, 7.0], "dab": [4, 0, 3, 5.0]}}
+## The dances a clone can do: animation name -> true when it loops (the floss) or holds its
+## last frame (the dab).
+const CLONE_DANCES := {"floss": true, "dab": false}
 ## A polar bear cub: 192x176 frames (24x22 world px); rows front/side/back (idle 0-1, walk 2-5), smeared
 ## (idle 0-1, chomp 2-3) and nap (0-1).
 const CUB := {"size": Vector2i(192, 176), "world_h": 22.0, "feet": 174.0 / 176.0, "anims": {
@@ -28,7 +33,7 @@ static func frames(sheet: Texture2D, rig: Dictionary) -> SpriteFrames:
 		var a: Array = rig["anims"][anim]
 		sf.add_animation(anim)
 		sf.set_animation_speed(anim, a[3])
-		sf.set_animation_loop(anim, true)
+		sf.set_animation_loop(anim, bool(CLONE_DANCES.get(anim, true)))
 		for i in int(a[2]):
 			var at := AtlasTexture.new()
 			at.atlas = sheet

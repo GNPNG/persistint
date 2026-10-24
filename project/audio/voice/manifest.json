@@ -1386,6 +1386,12 @@
     "clip": "res://audio/voice/02dad77dc4e904123457fb4ec1df603d.wav"
   },
   {
+    "speaker": "hillary_clinton",
+    "text": "You know, to just be grossly generalistic, you could put half of Trump's supporters into what I call the basket of deplorables. Right?",
+    "key": "f2ff401f9963a295238c2b72f51c1811",
+    "clip": "res://audio/voice/f2ff401f9963a295238c2b72f51c1811.wav"
+  },
+  {
     "speaker": "bill_gates",
     "text": "If anything kills over 10 million people in the next few decades, it's most likely to be a highly infectious virus rather than a war.",
     "key": "576271e784cc1d8ff49c4dec7c5d8c88",
