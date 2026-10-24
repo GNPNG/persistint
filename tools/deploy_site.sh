@@ -175,6 +175,9 @@ else
     echo "project/.godot missing: importing first"
     godot --headless --path project --import >"$TMP/import.log" 2>&1 || { tail -n 40 "$TMP/import.log"; die "godot --import failed"; }
   fi
+  # The main menu shows this build id next to the version (res://build.json, gitignored; the Web
+  # preset's include_filter "*.json" packs it).
+  printf '{"build": "%s"}\n' "$BUILD_ID" > project/build.json
   godot --headless --path project --export-release Web "$EXPORT/index.html" >"$TMP/export.log" 2>&1 \
     || { tail -n 40 "$TMP/export.log"; die "godot export failed"; }
   cp "$TMP/project.godot.orig" project/project.godot
