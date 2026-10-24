@@ -387,11 +387,11 @@ E minor), festival (112 BPM, F major).
 
 ## 6. The other areas and worlds
 
-### 6.1 The Temple of the Queen Mothers
+### 6.1 The Temple of the Queen Mother
 
 **In-story:** the high-holy temple, built on the island's real temple building. It holds the Queen
 Mother icons, the Seal of the O and Atwood's skull. Priestess Betty receives offerings here.
-"The Queen Mothers see all who wish to be seen. And all who don't, of course."
+"The Queen Mother sees all who wish to be seen. And all who don't, of course."
 
 **Interior (30×20 cells):** high cream brick walls with a pale cap; a cream and blush-pink
 **checkerboard floor**; a **pink rug runner** from the door up to a pink **dais**; **six Queen

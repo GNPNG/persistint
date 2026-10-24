@@ -33,6 +33,10 @@ for t in hot.get("verdicts", []):
 landing = json.loads((ROOT / "data/landing.json").read_text())
 for c in landing.get("commands", []):
     add(landing.get("first_mate", ""), c["text"])
+barks = json.loads((ROOT / "data/barks.json").read_text())
+for npc_id, entries in barks.items():
+    for e in entries if isinstance(entries, list) else []:
+        add(name(npc_id), e.get("text", ""))
 cast_ref = re.compile(r'\{\{Cast\.full\("(\w+)"\)\}\}')
 for f in sorted((ROOT / "dialogue").glob("*.dialogue")):
     for raw in f.read_text().splitlines():

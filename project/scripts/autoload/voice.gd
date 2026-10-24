@@ -7,6 +7,9 @@ extends Node
 ##    the browser's speech synthesis in the HTML5 build), one voice per speaker.
 ## Dialogue Manager lines are spoken automatically as they appear.
 
+## Every line handed to speak(), clip or text-to-speech (tests listen to it).
+signal spoke(speaker: String, text: String)
+
 const CLIP_DIR := "res://audio/voice"
 
 var _player: AudioStreamPlayer
@@ -42,6 +45,7 @@ static func clip_path(speaker: String, text: String) -> String:
 func speak(text: String, pitch := 1.0, speaker := "") -> void:
 	if text.strip_edges().is_empty():
 		return
+	spoke.emit(speaker, text)
 	var clip := clip_path(speaker, text)
 	if ResourceLoader.exists(clip):
 		_player.stream = load(clip)
