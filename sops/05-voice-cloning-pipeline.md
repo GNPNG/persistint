@@ -8,7 +8,7 @@ Related SOPs: SOP-04 (04-generative-render-pipeline.md: background rendering, tr
 
 ## 1. Purpose
 
-Give every scripted spoken line a pre-rendered voice clip in the speaking character's voice, cloned from a short reference recording or taken from a stock synthetic voice. Use platform text-to-speech for any line that has no clip, so no line is ever silent and no line uses placeholder babble.
+Give every scripted spoken line a pre-rendered voice clip in the speaking character's voice, cloned from a short reference recording or taken from a stock synthetic voice. A line with no clip shows its text bubble silently: no runtime text-to-speech and no placeholder babble (the project rule is no synthetic voices and no real-time audio processing on the client).
 
 ## 2. When to use / when not to
 
@@ -18,7 +18,7 @@ Use when:
 - Clips can be rendered offline and shipped as static audio.
 
 Do not use when:
-- Lines are generated at runtime (LLM chat, procedurally assembled sentences). Pre-rendered clips cannot match; use runtime TTS.
+- Lines are generated at runtime (LLM chat, procedurally assembled sentences). Pre-rendered clips cannot match; such lines stay text-only.
 - No lawful reference audio exists for a real person, or the author has not accepted the cloning model's licence.
 - The line attributed to a real person is invented. Real people speak only sourced quotes (see step 2 and SOP-06).
 - The target is babble-style "talking noise" (Animalese, beeps). This SOP replaces that; it does not produce it.
@@ -30,7 +30,7 @@ Do not use when:
 - For each cloned speaker: a public recording with at least 30 s of that person speaking alone (interview, speech, talk), its URL and a start-end span.
 - A licence decision: the author accepts the cloning model's licence before any rendering, and checks its terms for commercial use (for XTTS v2, the model card at huggingface.co/coqui/XTTS-v2).
 - Tools on the render machine: `yt-dlp`, `ffmpeg`, Python 3.10+, a dedicated venv (`{venv}`) holding both the TTS stack and the verifier dependencies.
-- Runtime: the engine's audio player, a platform TTS API for fallback, and the engine's asset importer if it needs one for audio files.
+- Runtime: the engine's audio player and the engine's asset importer if it needs one for audio files.
 
 ## 4. Roles and tools
 
