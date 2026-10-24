@@ -712,5 +712,425 @@
     "text": "And all who don't, of course. That's rather the point of Them.",
     "key": "dbd4ee9a3a35930c7ae39671440cd14a",
     "clip": "res://audio/voice/dbd4ee9a3a35930c7ae39671440cd14a.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "What would a Good Feminist look like, in the eyes of my accusers?",
+    "key": "f845d2dc94758b77f7f99ad57d2670f3",
+    "clip": "res://audio/voice/f845d2dc94758b77f7f99ad57d2670f3.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "They're not angels, incapable of wrongdoing.",
+    "key": "6fac3d50d8f137b527938a5e9e081684",
+    "clip": "res://audio/voice/6fac3d50d8f137b527938a5e9e081684.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Nor do I believe that women are children, incapable of agency or of making moral decisions.",
+    "key": "7e5168d6b18571ffd24afe06d9160881",
+    "clip": "res://audio/voice/7e5168d6b18571ffd24afe06d9160881.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "We are grownups: We can make up our own minds, one way or the other.",
+    "key": "fed8931c3a14a2fd3d5e3b195b2adc9c",
+    "clip": "res://audio/voice/fed8931c3a14a2fd3d5e3b195b2adc9c.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "The aim of ideology is to eliminate ambiguity.",
+    "key": "aa9ca4cab5e021588f709e4db8731c82",
+    "clip": "res://audio/voice/aa9ca4cab5e021588f709e4db8731c82.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Fiction writers are particularly suspect because they write about human beings, and people are morally ambiguous.",
+    "key": "2d03020c68b5be408196189a237e9aad",
+    "clip": "res://audio/voice/2d03020c68b5be408196189a237e9aad.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "In times of extremes, extremists win.",
+    "key": "a1a1a8d8b8a5847d45263399227f9dbd",
+    "clip": "res://audio/voice/a1a1a8d8b8a5847d45263399227f9dbd.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "The #MeToo moment is a symptom of a broken legal system.",
+    "key": "35e0ef36153090b8076c2e45bad1b9b7",
+    "clip": "res://audio/voice/35e0ef36153090b8076c2e45bad1b9b7.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "We are acceptable neither to Right nor to Left.",
+    "key": "484c4a2b14ae8dd492645394ab07ba69",
+    "clip": "res://audio/voice/484c4a2b14ae8dd492645394ab07ba69.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "A war among women, as opposed to a war on women, is always pleasing to those who do not wish women well.",
+    "key": "f59dbbeb31ec704a751e259fee025f32",
+    "clip": "res://audio/voice/f59dbbeb31ec704a751e259fee025f32.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "There are powerful groups in North America pushing this agenda, but they are not usually considered feminists.",
+    "key": "4ecfdab1409e481a8af2de5df273d3ed",
+    "clip": "res://audio/voice/4ecfdab1409e481a8af2de5df273d3ed.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Are these Good Feminists fair-minded people?",
+    "key": "ce8918e2bc6d3246fb5ec977aacf42c8",
+    "clip": "res://audio/voice/ce8918e2bc6d3246fb5ec977aacf42c8.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Why have accountability and transparency been framed as antithetical to women's rights?",
+    "key": "44f9e6d90e70a6f5dae84a8ba2e0deb0",
+    "clip": "res://audio/voice/44f9e6d90e70a6f5dae84a8ba2e0deb0.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Endorsing basic human rights for everyone is not warring against women.",
+    "key": "9e65d53a992df97f7bcfc059736831e6",
+    "clip": "res://audio/voice/9e65d53a992df97f7bcfc059736831e6.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "In order to have rights for women you have to have rights period.",
+    "key": "48c7d739c2e092b23b1b0134702e6b62",
+    "clip": "res://audio/voice/48c7d739c2e092b23b1b0134702e6b62.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Women are human beings, radical though it may seem.",
+    "key": "4061ab6e434635897399f900beca0048",
+    "clip": "res://audio/voice/4061ab6e434635897399f900beca0048.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "If the state owns your body, they should pay.",
+    "key": "fe87614b87bfd174230284b3cfbcc861",
+    "clip": "res://audio/voice/fe87614b87bfd174230284b3cfbcc861.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "There's a great big hole in the road up ahead. Don't fall into it.",
+    "key": "d17a1f3d9ed787a3d4c1cfa349342c5b",
+    "clip": "res://audio/voice/d17a1f3d9ed787a3d4c1cfa349342c5b.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "“Why do men feel threatened by women?” I asked a male friend of mine.",
+    "key": "7f77d38278451c831ed54b7cdae0794d",
+    "clip": "res://audio/voice/7f77d38278451c831ed54b7cdae0794d.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "“They’re afraid women will laugh at them,” he said. “Undercut their world view.”",
+    "key": "679fa011cac79603d53a645344c4b709",
+    "clip": "res://audio/voice/679fa011cac79603d53a645344c4b709.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "“They’re afraid of being killed,” they said.",
+    "key": "970893e4aa0bdbcab2ee3a0cf68d7815",
+    "clip": "res://audio/voice/970893e4aa0bdbcab2ee3a0cf68d7815.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "So to sum it up, it's a joke-filled, fun-packed, rollicking adventure story about the downfall of the human race.",
+    "key": "6b8388f0412b2dd85f1d18e731e9498a",
+    "clip": "res://audio/voice/6b8388f0412b2dd85f1d18e731e9498a.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "But I think it's a cheering sort of book",
+    "key": "ffdf3b24684391de29c99c2a0f1af75f",
+    "clip": "res://audio/voice/ffdf3b24684391de29c99c2a0f1af75f.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Cheering.",
+    "key": "e79074a82693a78cd692e3b8289a131e",
+    "clip": "res://audio/voice/e79074a82693a78cd692e3b8289a131e.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "And being a cheerful person, I eliminate nothing but the human beings.",
+    "key": "a1b13cf8de5bd20f02bffa54873b7c38",
+    "clip": "res://audio/voice/a1b13cf8de5bd20f02bffa54873b7c38.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "This is a true story.",
+    "key": "2dcaa75f725ca37cfb20e4485a914c75",
+    "clip": "res://audio/voice/2dcaa75f725ca37cfb20e4485a914c75.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Let's pretend we're in the 14th century, and it's a map of the world, like that.",
+    "key": "a2acea2d1feb4aa7d3d79c2a3f2ab7ab",
+    "clip": "res://audio/voice/a2acea2d1feb4aa7d3d79c2a3f2ab7ab.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "That is, I'm not up on absolutely everything that's being done today.",
+    "key": "a5b7f4a155bab958b6cbc2f7230c6976",
+    "clip": "res://audio/voice/a5b7f4a155bab958b6cbc2f7230c6976.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Anyway, so that's what I did.",
+    "key": "1c197d50fc9a1e95ab023ef34faa4351",
+    "clip": "res://audio/voice/1c197d50fc9a1e95ab023ef34faa4351.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Anyway, I, in fact, grew up amongst the scientists.",
+    "key": "727df43c2cd5cf62e85d4f2652672479",
+    "clip": "res://audio/voice/727df43c2cd5cf62e85d4f2652672479.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "First of all, I couldn't do the smoking. It made me cough. I couldn't do the drinking. It made me throw up.",
+    "key": "793a9059c53cdc9fd2c487fc1da2c4e3",
+    "clip": "res://audio/voice/793a9059c53cdc9fd2c487fc1da2c4e3.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "First of all, not all Americans are alike.",
+    "key": "ade41740cd2b84ec557cd5ab2eeccf0c",
+    "clip": "res://audio/voice/ade41740cd2b84ec557cd5ab2eeccf0c.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Number one, you're very observant. You observe details.",
+    "key": "3a769aaba7d2a1f3d933038cee245266",
+    "clip": "res://audio/voice/3a769aaba7d2a1f3d933038cee245266.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "But let me ask you the following question.",
+    "key": "db2876634c59892219abbf45e266e45b",
+    "clip": "res://audio/voice/db2876634c59892219abbf45e266e45b.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Let me ask you a question about them.",
+    "key": "fe7903027a8fc04fbca93c461de365e0",
+    "clip": "res://audio/voice/fe7903027a8fc04fbca93c461de365e0.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "If I were them, I would reintroduce some predators to keep the beavers under control.",
+    "key": "0accfa496a78336036a2d7c8c3a66b92",
+    "clip": "res://audio/voice/0accfa496a78336036a2d7c8c3a66b92.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "If I were them, I would have kept more of that.",
+    "key": "c5feeda3650dbfdad16b780ea6455dd8",
+    "clip": "res://audio/voice/c5feeda3650dbfdad16b780ea6455dd8.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Those are the three people we follow. What was the question?",
+    "key": "a4ce93ed0ac1f88e8413e2402d6d37d3",
+    "clip": "res://audio/voice/a4ce93ed0ac1f88e8413e2402d6d37d3.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Anything else you'd like to know?",
+    "key": "677721e2fa96815b593418cd6abedae9",
+    "clip": "res://audio/voice/677721e2fa96815b593418cd6abedae9.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "That's a double question.",
+    "key": "77b697b88b3903fab3aa9e62eb18b532",
+    "clip": "res://audio/voice/77b697b88b3903fab3aa9e62eb18b532.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Funny you should ask.",
+    "key": "85c431f5c23175a151a445c467d4e58d",
+    "clip": "res://audio/voice/85c431f5c23175a151a445c467d4e58d.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "I'll repeat it into the mic so people will know what you asked, which will also give me a chance to reformulate the question.",
+    "key": "e869fc07164992691daafd27aa9e649a",
+    "clip": "res://audio/voice/e869fc07164992691daafd27aa9e649a.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "So I hope I've clarified them a little bit.",
+    "key": "16b9522ccab5dbe35cb4a1e351da8a72",
+    "clip": "res://audio/voice/16b9522ccab5dbe35cb4a1e351da8a72.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "I think you probably read that in a book that I wrote.",
+    "key": "e93184f113e4981184a51e5d141bc5c7",
+    "clip": "res://audio/voice/e93184f113e4981184a51e5d141bc5c7.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Well, there is a shocking piece of news for you.",
+    "key": "ddd3c96b69069ba16079ce52588e6778",
+    "clip": "res://audio/voice/ddd3c96b69069ba16079ce52588e6778.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Read any news lately?",
+    "key": "1064acac98016d428990eae06d99dca6",
+    "clip": "res://audio/voice/1064acac98016d428990eae06d99dca6.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Well, who can blame me?",
+    "key": "469d075ad4a65d56343bbe43b4d7a11b",
+    "clip": "res://audio/voice/469d075ad4a65d56343bbe43b4d7a11b.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "I'm glad we all have chairs today.",
+    "key": "295dd4fdd0558bb349e6fb2c7f21fa43",
+    "clip": "res://audio/voice/295dd4fdd0558bb349e6fb2c7f21fa43.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "There will be duct tape in the future.",
+    "key": "1a04b0de179ff2d3eda0e59ab98d7e94",
+    "clip": "res://audio/voice/1a04b0de179ff2d3eda0e59ab98d7e94.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "This is a skill I would advise everyone to acquire.",
+    "key": "cc07fbc277fbb1e7ef63918da43dfaba",
+    "clip": "res://audio/voice/cc07fbc277fbb1e7ef63918da43dfaba.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Not everybody can get those two ideas together in their heads.",
+    "key": "f3d0afa6ea6737f68075b5a21a644794",
+    "clip": "res://audio/voice/f3d0afa6ea6737f68075b5a21a644794.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "I don't like books at all in which everybody's happy all the time. They depress me, no end.",
+    "key": "753aa9cb9ce219c9068dc34f2401490a",
+    "clip": "res://audio/voice/753aa9cb9ce219c9068dc34f2401490a.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "I'm really old.",
+    "key": "76d912bbd7e7fffc1c0c7bbbaa50c04c",
+    "clip": "res://audio/voice/76d912bbd7e7fffc1c0c7bbbaa50c04c.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "I've never been able to type.",
+    "key": "758592b55dd0618e42bd9da56554e2df",
+    "clip": "res://audio/voice/758592b55dd0618e42bd9da56554e2df.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "I think I sold two copies and I thought, is this the glamorous literary life?",
+    "key": "e1d946a36443acc27887e543be2dd20e",
+    "clip": "res://audio/voice/e1d946a36443acc27887e543be2dd20e.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "I'm not very current.",
+    "key": "80cf61cb09cc45065081f00120452e38",
+    "clip": "res://audio/voice/80cf61cb09cc45065081f00120452e38.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Don't throw anything out. You never know when it might come in handy.",
+    "key": "331234f0d1709716b4423cfd3ded7b65",
+    "clip": "res://audio/voice/331234f0d1709716b4423cfd3ded7b65.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Don't worry about large issues. Worry about the page. The page is all you've got.",
+    "key": "c5611da7f0e88d3dd81ae74a5c20a80d",
+    "clip": "res://audio/voice/c5611da7f0e88d3dd81ae74a5c20a80d.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "And on that note, I will say thank you very much.",
+    "key": "a5b88f42631a4a2d7d7d155c0c36a166",
+    "clip": "res://audio/voice/a5b88f42631a4a2d7d7d155c0c36a166.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "There's a plus and a minus to everything. There's an up and a down to everything.",
+    "key": "6e2f949d290e438e0f1950632a086486",
+    "clip": "res://audio/voice/6e2f949d290e438e0f1950632a086486.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "We will see.",
+    "key": "181b48975f69770535af04d7f6d0fe69",
+    "clip": "res://audio/voice/181b48975f69770535af04d7f6d0fe69.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "I never solved their shoe problem, so I'm open to suggestions.",
+    "key": "daca9a5cd5471cb060d9784936208b0e",
+    "clip": "res://audio/voice/daca9a5cd5471cb060d9784936208b0e.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "I leave you with this problem.",
+    "key": "77635f28f57e3595644db23725a88e23",
+    "clip": "res://audio/voice/77635f28f57e3595644db23725a88e23.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "So it's always a struggle. It's a struggle. You work it out.",
+    "key": "e71fd515c4d7ad6df64b74b315258674",
+    "clip": "res://audio/voice/e71fd515c4d7ad6df64b74b315258674.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Oh dear, there's so many of them.",
+    "key": "ccc9c2be27ebdb59f1ada84c2afad6bb",
+    "clip": "res://audio/voice/ccc9c2be27ebdb59f1ada84c2afad6bb.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "If you have a problem, you can put it up there, and they will send you many answers, some of which will be right.",
+    "key": "90a3830aa73f5936a15fd7dd7822a889",
+    "clip": "res://audio/voice/90a3830aa73f5936a15fd7dd7822a889.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "So I leave them maybe in a difficult position.",
+    "key": "afc6a69e3f64247a90a8adad6f5e70c0",
+    "clip": "res://audio/voice/afc6a69e3f64247a90a8adad6f5e70c0.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "But I also leave the door open.",
+    "key": "1d99a9bc124aff8bf2a0866c41b26c09",
+    "clip": "res://audio/voice/1d99a9bc124aff8bf2a0866c41b26c09.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Happy endings. You can find them in the children's books.",
+    "key": "4bab20ffe7cb69ba39fe8a5d2fe95ad0",
+    "clip": "res://audio/voice/4bab20ffe7cb69ba39fe8a5d2fe95ad0.wav"
+  },
+  {
+    "speaker": "Margaret Atwood",
+    "text": "Well, there you go.",
+    "key": "8cea1055223c38bff9e56abb8d2e8459",
+    "clip": "res://audio/voice/8cea1055223c38bff9e56abb8d2e8459.wav"
   }
 ]

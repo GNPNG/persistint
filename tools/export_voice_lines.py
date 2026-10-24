@@ -40,6 +40,13 @@ for f in sorted((ROOT / "dialogue").glob("*.dialogue")):
         if m:
             speaker = cast_ref.sub(lambda x: name(x.group(1)), m.group(1))
             add(speaker, cast_ref.sub(lambda x: name(x.group(1)), m.group(2)))
+# Real people who speak only their own sourced words (data/quotes/<cast id>.json): every usable quote
+# (verified, not excluded_from_game) and every verified, whole-line speech habit, under their display name.
+for cid in ("atwood",):
+    qf = json.loads((ROOT / f"data/quotes/{cid}.json").read_text())
+    for q in qf.get("quotes", []) + qf.get("speech_habits", []):
+        if q.get("verified") is True and q.get("excluded_from_game") is not True and not q.get("fragment"):
+            add(name(cid), q["text"])
 seen, out = set(), []
 for l in lines:
     if l["key"] not in seen:

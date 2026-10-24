@@ -1,10 +1,11 @@
 {
-	"_note": "Voice for each speaker's impersonated clips (tools/generate_voice_clips.py). Keys are cast ids from cast.json (or a literal speaker label such as the landing's first mate). \"ref\": a reference recording of that person (6-30 s of clean speech) under art/voice_refs/; \"builtin\": one of XTTS-v2's built-in studio voices, for characters who aren't real people. Speakers with neither are spoken with system text-to-speech.",
+	"_note": "Voice for each speaker's impersonated clips (tools/generate_voice_clips.py). Keys are cast ids from cast.json (or a literal speaker label such as the landing's first mate). \"ref\": a reference recording of that person (6-30 s of clean speech) under art/voice_refs/ (gitignored: regenerate a missing one from \"source\" and \"span\"), with optional \"extra_refs\" (more clips of the same person, cut from \"extra_spans\") passed to XTTS together; \"builtin\": one of XTTS-v2's built-in studio voices, for characters who aren't real people. Speakers with neither are spoken with system text-to-speech.",
 	"chelsea": { "ref": "art/voice_refs/chelsea.wav" },
 	"tyra": { "ref": "art/voice_refs/tyra.wav" },
 	"oprah": { "ref": "art/voice_refs/oprah.wav" },
 	"silverman": { "ref": "art/voice_refs/silverman.wav" },
 	"kate": { "ref": "art/voice_refs/kate.wav" },
+	"atwood": { "ref": "art/voice_refs/atwood.wav", "extra_refs": ["art/voice_refs/atwood_2.wav", "art/voice_refs/atwood_3.wav"], "source": "https://www.youtube.com/watch?v=kB_bhdEX8OE", "span": "10:06.87-10:27.24", "extra_spans": ["16:08.17-16:28.30", "18:24.96-18:51.41"], "from": "2004 Abramowitz Memorial Lecture at MIT, 'Oryx and Crake' Revisited (MIT Video Productions), Atwood lecturing alone; cut mono 22050 Hz, highpass 70 Hz, loudnorm I=-20" },
 	"initiate": { "builtin": "Daisy Studious" },
 	"priestess": { "builtin": "Ana Florence" },
 	"barren": { "builtin": "Gracie Wise" },
