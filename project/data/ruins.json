@@ -135,25 +135,25 @@
 				{
 					"kind": "ruins_sign_shop",
 					"x": 160,
-					"y": 150,
+					"y": 182,
 					"place": "wall"
 				},
 				{
 					"kind": "ruins_sign_slots",
 					"x": 700,
-					"y": 150,
+					"y": 194,
 					"place": "wall"
 				},
 				{
 					"kind": "ruins_sign_buffet",
 					"x": 245,
-					"y": 160,
+					"y": 194,
 					"place": "wall"
 				},
 				{
 					"kind": "ruins_sign_lifeboat",
 					"x": 905,
-					"y": 160,
+					"y": 194,
 					"place": "wall"
 				}
 			]
@@ -653,19 +653,19 @@
 				{
 					"kind": "ruins_sign_lab",
 					"x": 640,
-					"y": 150,
+					"y": 200,
 					"place": "wall"
 				},
 				{
 					"kind": "ruins_sign_cold",
 					"x": 860,
-					"y": 160,
+					"y": 200,
 					"place": "wall"
 				},
 				{
 					"kind": "ruins_sign_cubs",
 					"x": 70,
-					"y": 165,
+					"y": 200,
 					"place": "wall"
 				}
 			]
