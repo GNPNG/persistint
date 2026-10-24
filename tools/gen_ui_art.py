@@ -2,10 +2,12 @@
 the cruise and temple mini-game screens, and the stand-ins for the Gemini title screen and
 chapter card.
 
-Usage: python3 -I tools/gen_ui_art.py   (run after tools/cut_island_props.py: it reads canon props)
+Usage: python3 -I tools/gen_ui_art.py   (run after tools/cut_island_props.py and
+                                        tools/gen_village_props.py: it reads their art)
 
 Inputs:  project/assets/canon/{prop_ship,prop_bunker,prop_pillar_orb,
-         deco_tree_a,deco_tree_b,deco_tree_c,deco_flowers,deco_heart,deco_sparkle}.png
+         deco_tree_a,deco_tree_b,deco_tree_c,deco_flowers,deco_heart,deco_sparkle}.png,
+         project/assets/island/temple_pavilion.png (the striped gold-domed temple on the title)
 Outputs (all static, no animation frames):
   project/assets/ui/chrome/<id>.png     theme chrome, read by project/themes/default.tres as
                                         StyleBoxTexture 9-slices (margins listed in CHROME below)
@@ -148,6 +150,13 @@ def canon(name, height):
     h = max(1, round(height * O))
     w = max(1, round(im.width * h / im.height))
     return im.resize((w, h), Image.LANCZOS)
+
+
+def asset(rel, height):
+    """Generated game art (project/assets/<rel>.png) resized to height units at its own aspect."""
+    im = Image.open(ASSETS / f"{rel}.png").convert("RGBA")
+    h = max(1, round(height * O))
+    return im.resize((max(1, round(im.width * h / im.height)), h), Image.LANCZOS)
 
 
 def stamp(dst, src, x, y):
@@ -629,7 +638,8 @@ def temple_altar():
 # ---------------------------------------------------------------- Gemini stand-ins
 
 def title_screen_plain():
-    """The island at golden hour: pastel sky and sea, canon bunker homes, trees and the wreck."""
+    """The island at golden hour: pastel sky and sea, canon bunker homes, the striped gold-domed
+    temple, trees and the wreck."""
     rng = random.Random(71)
     im = vgrad(W * K, H * K, [(0, "#ffd8b8"), (.3, "#ffc8d8"), (.52, "#f8d8f0"), (.53, SKY), (1, "#70c8d0")])
     d = ImageDraw.Draw(im)
@@ -650,6 +660,7 @@ def title_screen_plain():
     stamp(out, canon("prop_ship", 120), 520, 300)
     stamp(out, canon("prop_bunker", 66), 150, 300)
     stamp(out, canon("prop_bunker", 54), 250, 290)
+    stamp(out, asset("island/temple_pavilion", 74), 385, 292)                 # STYLE.md 4.10
     for i, (x, y) in enumerate(((80, 316), (330, 300), (400, 330), (210, 340), (300, 352), (110, 356))):
         stamp(out, canon("deco_tree_" + "abc"[i % 3], 52), x, y)
     for x, y in ((180, 330), (360, 350), (440, 352), (260, 356)):

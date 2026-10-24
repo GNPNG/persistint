@@ -1,11 +1,11 @@
 extends Control
-## The GNPNG Ping Pong imprint mark (the publisher's colophon for its games), the paddles and ball
-## rallying. Plays the sheet written by tools/gen_imprint_mark.py through SpriteFrames; the
+## The GNPNG Ping Pong mark (the publisher's colophon for its games; the promo site's G|P|G pong
+## badge), the paddles and ball rallying. Plays the sheet written by tools/gen_imprint_mark.py through SpriteFrames; the
 ## layout constants below match that generator's docstring. Fits the mark inside this control's
 ## size, centred. Clicking it opens gnpng.org, as the mark on the promo site does.
 
 const SHEET := preload("res://assets/ui/brand/gnpng_pingpong_sheet.png")
-const FRAME_SIZE := Vector2i(504, 316)
+const FRAME_SIZE := Vector2i(384, 152)
 const COLUMNS := 6
 const FRAME_COUNT := 36
 const FPS := 12.0
