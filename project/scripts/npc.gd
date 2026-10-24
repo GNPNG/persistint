@@ -17,9 +17,10 @@ const RIG_FEET := 50.0 / 52.0
 const STILL_HEIGHT := 48.0
 ## Within this distance the NPC turns to look at the player.
 const LOOK_DISTANCE := 96.0
+## Moving faster than this (world px per second), the NPC plays its walk.
+const WALK_SPEED_MIN := 4.0
 
 static var _barks: Dictionary = {}
-static var _rigs: Dictionary = {}  # sheet path -> SpriteFrames
 
 @export var npc_id := ""
 @export var display_name := ""
@@ -37,6 +38,7 @@ static var _rigs: Dictionary = {}  # sheet path -> SpriteFrames
 
 ## The rigged sheet when the art has one; see _load_art.
 var rig: AnimatedSprite2D
+var _last_position := Vector2.ZERO
 
 
 func _ready() -> void:
@@ -48,6 +50,7 @@ func _ready() -> void:
 			var parsed: Variant = JSON.parse_string(f.get_as_text())
 			if parsed is Dictionary:
 				_barks = parsed
+	_last_position = global_position
 	if sprite_texture != "":
 		_load_art()
 	var art: Node2D = rig if rig else $Sprite2D
@@ -95,58 +98,39 @@ func _build_rig() -> void:
 	$Sprite2D.hide()
 	rig = AnimatedSprite2D.new()
 	rig.name = "Rig"
-	rig.sprite_frames = rig_frames(RIG_PATH % sprite_texture)
+	rig.sprite_frames = RigSheet.frames(RIG_PATH % sprite_texture)
 	add_child(rig)
 	move_child(rig, $Sprite2D.get_index() + 1)
 	rig.play("idle_down")
 	SpriteFit.fit(rig, RIG_HEIGHT, RIG_FEET)
 
 
-## Frame size of a rig sheet: 8 columns, 3 rows.
-static func rig_frame_size(sheet: Texture2D) -> Vector2:
-	return Vector2(sheet.get_width() / 8.0, sheet.get_height() / 3.0)
-
-
-## SpriteFrames for a rig sheet (idle_/walk_ + down/left/up), built once per sheet.
-static func rig_frames(path: String) -> SpriteFrames:
-	if _rigs.has(path):
-		return _rigs[path]
-	var sheet: Texture2D = load(path)
-	var fr := rig_frame_size(sheet)
-	var sf := SpriteFrames.new()
-	sf.remove_animation("default")
-	for row: int in 3:
-		var dir: String = ["down", "left", "up"][row]
-		for state: String in ["idle", "walk"]:
-			var anim := "%s_%s" % [state, dir]
-			sf.add_animation(anim)
-			sf.set_animation_speed(anim, 3.0 if state == "idle" else 8.0)
-			for i in 4:
-				var at := AtlasTexture.new()
-				at.atlas = sheet
-				at.region = Rect2(((0 if state == "idle" else 4) + i) * fr.x, row * fr.y, fr.x, fr.y)
-				sf.add_frame(anim, at)
-	_rigs[path] = sf
-	return sf
-
-
-## A rigged NPC turns to look at the player standing near it.
-func _process(_delta: float) -> void:
+## A rigged NPC walks when it moves (whatever moves it: its node's position changing between
+## frames) facing the way it goes, and otherwise stands and turns to look at the player near it.
+func _process(delta: float) -> void:
 	if rig == null or not visible:
 		return
-	var player := get_tree().get_first_node_in_group("player") as Node2D
+	var moved := global_position - _last_position
+	_last_position = global_position
 	var d := Vector2.ZERO
-	if player and player.global_position.distance_to(global_position) <= LOOK_DISTANCE:
-		d = player.global_position - global_position
+	var state := "idle"
+	if delta > 0.0 and moved.length() / delta > WALK_SPEED_MIN:
+		d = moved
+		state = "walk"
+	else:
+		var player := get_tree().get_first_node_in_group("player") as Node2D
+		if player and player.global_position.distance_to(global_position) <= LOOK_DISTANCE:
+			d = player.global_position - global_position
 	var side := absf(d.x) > absf(d.y) * 1.2
 	var anim: String
 	if rig.sprite_frames.has_animation("idle_down"):
-		anim = "idle_left" if side else ("idle_up" if d.y < 0.0 else "idle_down")
-		rig.flip_h = side and d.x > 0.0
+		var f := RigSheet.facing(d, state)
+		anim = f[0]
+		rig.flip_h = f[1]
 	else:
 		anim = "idle_side" if side else ("idle_back" if d.y < 0.0 else "idle_front")
 		rig.flip_h = side and d.x < 0.0
-	if rig.animation != anim:
+	if rig.sprite_frames.has_animation(anim) and rig.animation != anim:
 		rig.play(anim)
 
 
