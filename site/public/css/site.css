@@ -381,3 +381,13 @@ figcaption { margin-top: 10px; font-size: .9rem; color: var(--plum-soft); text-a
 /* Online safety & support badge in the footer */
 .safety-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px 4px 8px; border-radius: 999px; background: var(--sky-tint); border: 2px solid var(--sky); color: var(--plum); font-weight: 600; text-decoration: none; }
 .safety-badge:hover, .safety-badge:focus-visible { background: var(--white); }
+
+/* Host context + IOA Emotional Well-Being Referral (outrage.dataglut.org boilerplate) */
+.ioa-host h2 { font-family: var(--display); margin: 0 0 .5rem; }
+.ioa-host p { margin: 0 0 1rem; }
+.ioa-referral { background: linear-gradient(135deg, var(--white) 0%, var(--sky-tint) 100%); border: 1px solid var(--sky); border-left: 5px solid var(--mint); border-radius: 0 var(--radius) var(--radius) 0; padding: 1.4rem 1.8rem; margin: 1.2rem 0 0; line-height: 1.6; color: var(--plum); box-shadow: var(--shadow); }
+.ioa-referral .ioa-title { font-family: var(--display); font-size: 1.15rem; font-weight: 600; margin-bottom: .8rem; }
+.ioa-referral p { margin: 0 0 .8rem; }
+.ioa-referral .ioa-last { margin: 0; color: var(--plum-soft); }
+.ioa-referral a { color: var(--pink-ink); font-weight: 600; text-decoration: none; }
+.ioa-referral a:hover, .ioa-referral a:focus-visible { text-decoration: underline; }
