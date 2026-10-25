@@ -17,6 +17,7 @@ team:
   humans: [author]
   agents: [coordinator session (repo, game, headless harvest), Windows session (browser, Gemini dispatch, playtesting), srv PM session (planned), forks and subagents in worktrees]
   external: []
+hosting: private-forge+publication   # working source on the private forge; GitHub GNPNG/persistint is the SOP-14 filtered publication, public wiki and public issues
 deployment: [web (Cloudflare Pages), old phones and tablets]
 stage: 0.2.1 shipped; next gate 0.3.0 (title screen, touch controls, remaining music, clone lines)
 hazard_standard: [public release (SOP-09, SOP-11), publication to the public mirror (SOP-14), voice pipeline (SOP-05, SOP-06), generative renders (SOP-04)]   # prospective hazard analysis before the stage opens; playtest builds are not held to it
