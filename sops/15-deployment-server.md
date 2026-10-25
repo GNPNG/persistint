@@ -12,6 +12,8 @@ One place where every automated movement of a repository's content runs: filtere
 
 ## 2. When to use / when not to
 
+The same loop is the organisation's repository backup: every listed repository is kept as a full bare mirror (every ref, including the beads data ref) in the container's state directory, which sits on its own ZFS dataset and is snapshotted. The author: "the benefit of that is, we have a backup if the git servers shit the bed, and one that lives on a ZFS-backed filesystem we can snapshot. So a very solid backup of the repos."
+
 Use for any job triggered by a change in a repository that pushes content somewhere else. Not for interactive agent sessions, rendering jobs (SOP-04), or anything that needs the author's keyboard.
 
 ## 3. Inputs and prerequisites
@@ -30,13 +32,13 @@ A list of repositories; each repository's `.config/publish.toml` (its targets: `
 
 1. Create the container; snapshot it (`pre-<change>`) before each change; install git, git-filter-repo, python3, Nextflow, the runner agent; put destination credentials in that user's git credential store only.
 2. Add a repository: write its `.config/publish.toml`, add it to the list (or enable its workflow file), run once by hand with `--dry-run`, then for real, check the destination.
-3. Every tick: fetch each repository; work out which refs moved since the last successful tick; if any did, check out `main` and run the handler with that list. A target runs only when a moved ref matches its trigger (`on`; default a version tag, the author: "more sensibly, it gets triggered by tagging"; `main` for publish-on-every-push). A `run` target checks out the tag that fired it. one JSON line per target run (time, repo, target, mode, destination, commit, version, ok, seconds, steps, error).
+3. Every tick: fetch each repository; work out which refs moved since the last successful tick; if any did, check out `main` and run the handler with that list. A target runs only when a moved ref matches its trigger (`on`; default a version tag, a dev build is a second tag pattern such as `dev-*`; the author: "Tagging a release, tagging a dev build, or whatever"; the author: "more sensibly, it gets triggered by tagging"; `main` for publish-on-every-push). A `run` target checks out the tag that fired it. one JSON line per target run (time, repo, target, mode, destination, commit, version, ok, seconds, steps, error).
 4. When a site is stale or a mirror is behind: look in the container (the cron log, `runs.jsonl`, the runner UI). Nowhere else.
 5. A failed target does not stop the others; it is retried on the next tick; a filtered publication is force-pushed whole or not at all.
 
 ## 6. Acceptance checks
 
-A change on `main` reaches every destination within one tick; each target run has a record; a failure is visible in the log or UI and clears on the next successful tick; a snapshot exists from before the last container change; no credential is readable outside the container.
+A new tag reaches every destination within one tick; the bare mirror holds every ref the forge holds (compare `git ls-remote` counts); each target run has a record; a failure is visible in the log or UI and clears on the next successful tick; a snapshot exists from before the last container change; no credential is readable outside the container.
 
 ## 7. Hazard analysis, failure modes and recovery
 
@@ -48,6 +50,7 @@ A change on `main` reaches every destination within one tick; each target run ha
 | Destination URL wrong in a repository's config | step 2 | dry run lists an unexpected destination | one | fix before the first real run | review | anticipated |
 | Force-push of a filtered copy fails half way | step 5 | push error in the run record | one | nothing landed (git push is atomic per ref set); retried next tick | runs.jsonl | anticipated |
 | Forge mirror feature trusted for publication | design | a push mirror still configured | one | delete it; the pipeline is the only publisher (SOP-14 E4) | ca0 | learned 2026-10-24 (API/UI disagreed on the mirror's state) |
+| Backup mirror missing refs (heads and tags only) | provisioning | `git ls-remote` of forge and mirror differ in ref count | any | clone with `--mirror`; fetch with `--prune` and no refspec | tick log | learned 2026-10-25 (first draft fetched heads and tags only) |
 | Credential outside the container | provisioning | token in a session env or a laptop file | present | move it into the container's credential store | provisioning note | anticipated |
 
 ## 8. Artifacts and templates

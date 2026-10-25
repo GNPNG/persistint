@@ -8,7 +8,7 @@
 name = "github-public"
 mode = "filtered"
 dest = "https://github.com/GNPNG/persistint.git"
-on = ["refs/tags/v*"]              # the trigger: a version tag (author 2026-10-25: "more sensibly, it gets
+on = ["refs/tags/v*"]              # the trigger: a version tag; add "refs/tags/dev-*" for dev builds (author 2026-10-25: "more sensibly, it gets
                                    # triggered by tagging"); add "main" to publish the pace of work on every push
 refs = ["main", "refs/tags/v*"]    # what is pushed when it fires
 remove_paths = ["art/canon/gemini/*"]

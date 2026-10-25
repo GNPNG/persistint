@@ -6,7 +6,9 @@
 # matches a moved ref: filtered publication, mirror replication, or a command such as a site deploy.
 # A failed tick is retried on the next one (the ref snapshot advances only on success); a filtered
 # publication is force-pushed whole or not at all. Run records: $STATE/runs.jsonl, for whatever runner UI
-# or dashboard SOP-15 chooses. Credentials live in this user's git credential store inside the container.
+# or dashboard SOP-15 chooses. The bare clones are full mirrors (every ref, beads data included) and so
+# double as the backup of every listed repository: keep $STATE on its own ZFS dataset and snapshot it.
+# Credentials live in this user's git credential store inside the container.
 #   publish_public_cron.sh LIST_FILE      # one clone URL per line, # comments allowed
 set -uo pipefail
 LIST="${1:?list file of repository URLs}"
@@ -16,8 +18,8 @@ log() { echo "$(date -u +%FT%TZ) $*" >>"$STATE/publication.log"; }
 while IFS= read -r url; do
   [[ -z "$url" || "$url" == \#* ]] && continue
   name="$(basename "${url%.git}")"; bare="$STATE/$name.git"; snap="$STATE/$name.refs"
-  if [[ -d "$bare" ]]; then git -C "$bare" fetch -q --prune origin '+refs/heads/*:refs/heads/*' '+refs/tags/*:refs/tags/*' || { log "$name fetch failed"; continue; }
-  else git clone -q --bare "$url" "$bare" || { log "$name clone failed"; continue; }; fi
+  if [[ -d "$bare" ]]; then git -C "$bare" fetch -q --prune origin || { log "$name fetch failed"; continue; }
+  else git clone -q --mirror "$url" "$bare" || { log "$name clone failed"; continue; }; fi
   new="$(git -C "$bare" for-each-ref --format='%(objectname) %(refname)')"
   changed="$(comm -13 <(sort "$snap" 2>/dev/null) <(echo "$new" | sort) | awk '{print $2}')"   # refs new or moved
   [[ -z "$changed" ]] && continue
