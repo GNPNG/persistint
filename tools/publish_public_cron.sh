@@ -1,21 +1,25 @@
 #!/usr/bin/env bash
-# SOP-14 publication trigger without a runner: run from cron on a machine that is not the author's
-# laptop (srv), every 15 minutes. Fetches the private repository, and when main or the tags moved
-# since the last run, regenerates the public repository with tools/publish_public.sh.
-#   PRIVATE_URL  private forge clone URL (read access)
-#   STATE_FILE   where the last published main commit is kept (default ~/.local/state/publish_public/last)
-#   The public repository's token lives in a credential helper or a file readable only by this user;
-#   it is never passed on the command line or exported from an interactive session.
-set -euo pipefail
-PRIVATE_URL="${PRIVATE_URL:?set PRIVATE_URL}"
-STATE_FILE="${STATE_FILE:-$HOME/.local/state/publish_public/last}"
-WORK="${WORK:-$HOME/.local/state/publish_public/private.git}"
-mkdir -p "$(dirname "$STATE_FILE")"
-if [[ -d "$WORK" ]]; then git -C "$WORK" fetch -q --prune origin '+refs/heads/main:refs/heads/main' '+refs/tags/*:refs/tags/*'; else git clone -q --bare "$PRIVATE_URL" "$WORK"; fi
-now="$(git -C "$WORK" rev-parse main)-$(git -C "$WORK" tag | sort | sha1sum | cut -c1-12)"
-[[ -f "$STATE_FILE" && "$(cat "$STATE_FILE")" == "$now" ]] && exit 0
-# publish from a working checkout of the bare mirror so the filter lists are the committed ones
-CO="$(mktemp -d)"; trap 'rm -rf "$CO"' EXIT
-git clone -q "$WORK" "$CO" && (cd "$CO" && tools/publish_public.sh)
-echo "$now" >"$STATE_FILE"
-echo "$(date -u +%FT%TZ) published $now" >>"$(dirname "$STATE_FILE")/publication.log"
+# SOP-14 publication, the simple form: one cron line on srv, one list of private repositories, no Gitea
+# configuration, no runner, no webhook. Every 15 minutes, for each private repository in the list:
+# fetch it, and if main or the tags moved since the last publication, run its own tools/publish_public.sh
+# (the repository carries its filter lists and its destination in tools/publish_public.{paths,blobs,dest}).
+# A failed run is retried on the next tick; nothing is half-published because the script force-pushes a
+# complete regenerated copy or nothing. The GitHub token lives in this user's git credential store.
+#   publish_public_cron.sh LIST_FILE      # one private clone URL per line, # comments allowed
+set -uo pipefail
+LIST="${1:?list file of private repository URLs}"
+STATE="${STATE_DIR:-$HOME/.local/state/publish_public}"; mkdir -p "$STATE"
+log() { echo "$(date -u +%FT%TZ) $*" >>"$STATE/publication.log"; }
+while IFS= read -r url; do
+  [[ -z "$url" || "$url" == \#* ]] && continue
+  name="$(basename "${url%.git}")"; bare="$STATE/$name.git"; marker="$STATE/$name.last"
+  if [[ -d "$bare" ]]; then git -C "$bare" fetch -q --prune origin '+refs/heads/main:refs/heads/main' '+refs/tags/*:refs/tags/*' || { log "$name fetch failed"; continue; }
+  else git clone -q --bare "$url" "$bare" || { log "$name clone failed"; continue; }; fi
+  now="$(git -C "$bare" rev-parse main)-$(git -C "$bare" tag | sort | sha1sum | cut -c1-12)"
+  [[ -f "$marker" && "$(cat "$marker")" == "$now" ]] && continue
+  co="$(mktemp -d)"
+  if git clone -q "$bare" "$co" && [[ -x "$co/tools/publish_public.sh" ]] && (cd "$co" && tools/publish_public.sh >>"$STATE/$name.out" 2>&1); then
+    echo "$now" >"$marker"; log "$name published $now"
+  else log "$name publication failed (see $name.out)"; fi
+  rm -rf "$co"
+done <"$LIST"

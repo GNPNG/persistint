@@ -9,7 +9,7 @@
 # published: main and tags only, unless PUBLISH_REFS is set.
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-DEST="${DEST:-https://github.com/GNPNG/persistint.git}"; DRY=0
+DEST="${DEST:-$( [[ -s "$(dirname "$0")/publish_public.dest" ]] && head -n1 "$(dirname "$0")/publish_public.dest" || echo https://github.com/GNPNG/persistint.git )}"; DRY=0
 for a in "$@"; do case "$a" in --dry-run) DRY=1 ;; --dest=*) DEST="${a#--dest=}" ;; esac; done
 command -v git-filter-repo >/dev/null 2>&1 || git filter-repo --version >/dev/null 2>&1 || { echo "git-filter-repo missing" >&2; exit 1; }
 WORK="$(mktemp -d)"; trap 'rm -rf "$WORK"' EXIT
