@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""SOP-14/SOP-15 pipeline driver: runs every target in a repository's .config/publish.toml.
+"""SOP-14/SOP-15 (org vault) pipeline driver: runs every target in a repository's .config/publish.toml.
 
 Usage: python3 -I tools/publish.py [--repo PATH] [--only NAME] [--dry-run] [--changed REF ...]
 Trigger: each target has `on`, the ref patterns that fire it (default: version tags, refs/tags/v*; add

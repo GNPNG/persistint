@@ -11,7 +11,7 @@ dest = "https://github.com/GNPNG/persistint.git"
 on = ["refs/tags/v*"]              # the trigger: a version tag; add "refs/tags/dev-*" for dev builds (author 2026-10-25: "more sensibly, it gets
                                    # triggered by tagging"); add "main" to publish the pace of work on every push
 refs = ["main", "refs/tags/v*"]    # what is pushed when it fires
-remove_paths = ["art/canon/gemini/*", "sops/15-*"]   # SOP-15 names the organisation's infrastructure and provenance; private until a public-safe version exists
+remove_paths = ["art/canon/gemini/*"]
 strip_blobs_file = "tools/publish_public.blobs"
 note = "public wiki and public bug reports live here; AGENTS.md says this is not the working source"
 

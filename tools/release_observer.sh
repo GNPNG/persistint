@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# SOP-15 release observer: runs on the LXD host, outside the deployment container, from its own cron line.
+# SOP-15 (org vault) release observer: runs on the LXD host, outside the deployment container, from its own cron line.
 # Watches the PUBLIC side (the author 2026-10-25: "an observer script outside of that container could
 # actually watch the public repos, eg: Github, and on noticing a successful public release, do an
 # 'lxc snapshot' on that container. Meaning that we have a snapshot of the repo of the release.").

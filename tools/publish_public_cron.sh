@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# SOP-15 deployment server, the whole of it: one cron line, one list of repositories, this loop, and the
+# SOP-15 (org vault) deployment server, the whole of it: one cron line, one list of repositories, this loop, and the
 # handler (publish.py) beside it. Every tick, for each repository in the list: fetch it; work out which
 # refs moved since the last successful tick; if any did, check out main and run the handler, which reads
 # the checkout's .config/publish.toml and runs each target whose trigger (`on`, default version tags)
