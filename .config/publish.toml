@@ -1,0 +1,26 @@
+# Publication and replication targets for this repository (SOP-14). Read by tools/publish.py, which runs
+# from a cron on srv over a list of repositories; each repository describes its own targets here.
+#   mode = "filtered": main and tags only, every commit rewritten to remove `remove_paths` and the blobs
+#                      listed in `strip_blobs_file`; force-pushed; the destination is a regenerated copy.
+#   mode = "mirror":   every ref as is (git push --mirror), for a replica or a migration between forges.
+
+[[target]]
+name = "github-public"
+mode = "filtered"
+dest = "https://github.com/GNPNG/persistint.git"
+refs = ["main", "refs/tags/v*"]
+remove_paths = ["art/canon/gemini/*"]
+strip_blobs_file = "tools/publish_public.blobs"
+note = "public wiki and public bug reports live here; AGENTS.md says this is not the working source"
+
+# [[target]]
+# name = "srv-replica"
+# mode = "mirror"
+# dest = "https://forge.gnomatix.com/gnpng/persistint-game.git"
+
+# The live site, once the deployment container exists (SOP-15); until then the coordinator deploys
+# stable main from the laptop (standing permission).
+# [[target]]
+# name = "site"
+# mode = "run"
+# command = ["tools/deploy_site.sh"]

@@ -1,25 +1,26 @@
 #!/usr/bin/env bash
-# SOP-14 publication, the simple form: one cron line on srv, one list of private repositories, no Gitea
-# configuration, no runner, no webhook. Every 15 minutes, for each private repository in the list:
-# fetch it, and if main or the tags moved since the last publication, run its own tools/publish_public.sh
-# (the repository carries its filter lists and its destination in tools/publish_public.{paths,blobs,dest}).
-# A failed run is retried on the next tick; nothing is half-published because the script force-pushes a
-# complete regenerated copy or nothing. The GitHub token lives in this user's git credential store.
-#   publish_public_cron.sh LIST_FILE      # one private clone URL per line, # comments allowed
+# SOP-15 deployment server, the whole of it: one cron line, one list of repositories, this script.
+# Every tick, for each repository in the list: fetch it; if any ref moved since the last run, check it
+# out and run its own pipelines (tools/publish.py reads the repository's .config/publish.toml: filtered
+# publication, mirror replication, or a command such as a site deploy). The run records (runs.jsonl) feed whatever runner UI or dashboard SOP-15 chooses.
+# A failed run is retried on the next tick; a filtered publication is force-pushed whole or not at all.
+# Credentials live in this user's git credential store inside the deployment container (SOP-15).
+#   publish_public_cron.sh LIST_FILE      # one clone URL per line, # comments allowed
 set -uo pipefail
-LIST="${1:?list file of private repository URLs}"
-STATE="${STATE_DIR:-$HOME/.local/state/publish_public}"; mkdir -p "$STATE"
+LIST="${1:?list file of repository URLs}"
+STATE="${STATE_DIR:-$HOME/.local/state/publish_public}"; mkdir -p "$STATE/www"; export PUBLISH_STATE="$STATE"
+HERE="$(cd "$(dirname "$0")" && pwd)"
 log() { echo "$(date -u +%FT%TZ) $*" >>"$STATE/publication.log"; }
 while IFS= read -r url; do
   [[ -z "$url" || "$url" == \#* ]] && continue
   name="$(basename "${url%.git}")"; bare="$STATE/$name.git"; marker="$STATE/$name.last"
-  if [[ -d "$bare" ]]; then git -C "$bare" fetch -q --prune origin '+refs/heads/main:refs/heads/main' '+refs/tags/*:refs/tags/*' || { log "$name fetch failed"; continue; }
+  if [[ -d "$bare" ]]; then git -C "$bare" fetch -q --prune origin '+refs/heads/*:refs/heads/*' '+refs/tags/*:refs/tags/*' || { log "$name fetch failed"; continue; }
   else git clone -q --bare "$url" "$bare" || { log "$name clone failed"; continue; }; fi
-  now="$(git -C "$bare" rev-parse main)-$(git -C "$bare" tag | sort | sha1sum | cut -c1-12)"
+  now="$(git -C "$bare" for-each-ref --format='%(objectname) %(refname)' | sha1sum | cut -c1-16)"
   [[ -f "$marker" && "$(cat "$marker")" == "$now" ]] && continue
   co="$(mktemp -d)"
-  if git clone -q "$bare" "$co" && [[ -x "$co/tools/publish_public.sh" ]] && (cd "$co" && tools/publish_public.sh >>"$STATE/$name.out" 2>&1); then
-    echo "$now" >"$marker"; log "$name published $now"
-  else log "$name publication failed (see $name.out)"; fi
+  if git clone -q "$bare" "$co" && [[ -f "$co/.config/publish.toml" ]] && (cd "$co" && python3 -I tools/publish.py >>"$STATE/$name.out" 2>&1); then
+    echo "$now" >"$marker"; log "$name pipelines ran $now"
+  else log "$name pipeline failed (see $name.out and the status page)"; fi
   rm -rf "$co"
 done <"$LIST"
