@@ -81,6 +81,8 @@ The author's words: "I want people to see the pace of work we're doing; but if y
 
 **Gate.** The publication runs only after the filter lists are current (the expiry sweep of this SOP) and only from the private `main`; no other branch is ever published. The push mirror is deleted when the first trigger run is confirmed on the public repository (the author's E4), and the mirror is never re-created.
 
+**What the public repository is for.** The author's words: "The benefit we get from Github is also a better public wiki and public bug reports." So the public repository carries the public wiki and the public issue tracker; the private forge carries the working source, the team tracker and the history. Every publication carries `AGENTS.md` at the repository root, which states in plain words that the GitHub copy is a filtered publication of a private repository hosted at GNPNG/GNOMATIX, that its history is regenerated, that bugs go to GitHub issues and that an agent which checked it out as the working source should stop and ask for the private forge. The author's words for the need: agents "get confused and checkout the github repo thinking that's the working source." The file lives in the private repository so the publication carries it unchanged.
+
 **Record.** Each run appends one line to the publication log in the private repository's wiki or the vault (date, private commit, public commit, filter list hash, runner); a run whose filter list hash differs from the previous run is flagged for a human look before the next.
 
 ### Hazard rows for this trigger (section 7 form)
