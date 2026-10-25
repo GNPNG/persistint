@@ -63,6 +63,35 @@ E3. **The public repository already holds material that is now private or expire
 E4. **A mirror is still in place when E3 occurs.** Delete the mirror first, then publish; the mirror
     is not re-created, the publication script replaces it.
 
+## Publication trigger (added 2026-10-25, the author's ask: the pace of work visible without a mirror)
+
+The author's words: "I want people to see the pace of work we're doing; but if you wanted to be able to trigger a push mirror maybe with a version increment, and you can help me set that up on a gitea trigger, on a hook on your side, that would work for me too." And on the alternative: "like pushing a special release branch that we clean up or something."
+
+**Why not a mirror interval, and why not a cleaned release branch.** A push mirror cannot filter: whatever is on the private forge, every branch, every blob, reaches the public repository within the interval, and the interval only sets how long there is to notice. Four hours is not safe for the same reason fifteen minutes is not: the control is in the wrong place. A cleaned release branch is the same idea done by hand: it still carries the private history's objects unless the history is rewritten, and rewriting by hand each release is the mistake SOP-14 exists to prevent. The filtered publication (`tools/publish_public.sh`) is the cleaned release branch done mechanically and completely: a fresh mirror of the private repository, `git filter-repo` over the path list and blob list, force-push of main and tags to the public repository. The private forge is never rewritten; the public repository is disposable and regenerated.
+
+**Trigger.** Two events run the publication, both from a machine that is not the author's laptop and not an agent session (so the publication never depends on who is at a keyboard):
+
+1. Every push to `main` on the private forge: the public repository then shows the same pace of work as the private one, filtered. Public commits carry the same messages and times; only the removed paths differ.
+2. Every version tag `v*`: the tag is published with the same filter, so a release on the public repository is a release on the private one.
+
+**Mechanism, in order of preference.**
+
+- Gitea Actions on the private repository with a registered runner: `.gitea/workflows/publish-public.yml` runs `tools/publish_public.sh` on push to `main` and on tags, with the public repository's write token as the repository secret `PUBLIC_PUSH_TOKEN`. One-time provisioning: enable Actions on the instance, register a runner (srv is the intended host), add the secret.
+- Without a runner: `tools/publish_public_cron.sh` on srv, every 15 minutes, fetches the private repository, compares `main` and the tags with the last published state, and runs the publication only when something changed. Same token, from a file readable only by the service user, never from the environment of an interactive session.
+
+**Gate.** The publication runs only after the filter lists are current (the expiry sweep of this SOP) and only from the private `main`; no other branch is ever published. The push mirror is deleted when the first trigger run is confirmed on the public repository (the author's E4), and the mirror is never re-created.
+
+**Record.** Each run appends one line to the publication log in the private repository's wiki or the vault (date, private commit, public commit, filter list hash, runner); a run whose filter list hash differs from the previous run is flagged for a human look before the next.
+
+### Hazard rows for this trigger (section 7 form)
+
+| Hazard | Control point | Signal | Limit | Corrective action | Record | Anticipated / learned |
+|---|---|---|---|---|---|---|
+| Private path missing from the filter list | before the publication runs | a path under dev/, art/canon or a `publish_public.paths` glob present in the filtered tree | any such path | stop the run, add the glob, regenerate the publication | publication log | anticipated |
+| Mirror and publication both active | any push | `list_push_mirrors` returns an entry | one entry | delete the mirror before the next interval | ca0, publication log | learned 2026-10-24 |
+| Publication from a branch other than main | the trigger | ref name in the run | not `main` or `v*` | abort | workflow log | anticipated |
+| Token in an interactive session's environment | provisioning | token readable by `env` in a session | present | move to the runner secret or the service user's file | provisioning note | anticipated |
+
 ## Related
 
 SOP-01 (worktrees and the private folder key), SOP-09 (release checklist), SOP-11 (versioning and

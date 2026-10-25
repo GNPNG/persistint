@@ -1,0 +1,23 @@
+# SOP-14 publication trigger: regenerate the public repository as a filtered copy of the private
+# history on every push to main and on every version tag. Needs a registered runner and the
+# repository secret PUBLIC_PUSH_TOKEN (write access to the public repository only).
+name: publish-public
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install git-filter-repo
+        run: pip install --quiet git-filter-repo
+      - name: Publish the filtered history
+        env:
+          PUBLIC_PUSH_TOKEN: ${{ secrets.PUBLIC_PUSH_TOKEN }}
+        run: |
+          git config --global url."https://x-access-token:${PUBLIC_PUSH_TOKEN}@github.com/".insteadOf "https://github.com/"
+          tools/publish_public.sh
