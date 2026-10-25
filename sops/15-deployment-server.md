@@ -12,6 +12,8 @@ One place where every automated movement of a repository's content runs: filtere
 
 ## 2. When to use / when not to
 
+The release snapshots make the container the organisation's internal web archive: one point-in-time copy per public release of every mirrored repository and every deployed site tree, which the forge on the NAS cannot give. The author: "Which we can not do on the Gitea server on the NAS. Right, we're running our own internal web archive."
+
 The same loop is the organisation's repository backup: every listed repository is kept as a full bare mirror (every ref, including the beads data ref) in the container's state directory, which sits on its own ZFS dataset and is snapshotted. The author: "the benefit of that is, we have a backup if the git servers shit the bed, and one that lives on a ZFS-backed filesystem we can snapshot. So a very solid backup of the repos."
 
 Use for any job triggered by a change in a repository that pushes content somewhere else. Not for interactive agent sessions, rendering jobs (SOP-04), or anything that needs the author's keyboard.
