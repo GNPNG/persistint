@@ -1,26 +1,30 @@
 #!/usr/bin/env bash
-# SOP-15 deployment server, the whole of it: one cron line, one list of repositories, this script.
-# Every tick, for each repository in the list: fetch it; if any ref moved since the last run, check it
-# out and run the handler, publish.py beside this script, which reads the checkout's .config/publish.toml (filtered
-# publication, mirror replication, or a command such as a site deploy). The run records (runs.jsonl) feed whatever runner UI or dashboard SOP-15 chooses.
-# A failed run is retried on the next tick; a filtered publication is force-pushed whole or not at all.
-# Credentials live in this user's git credential store inside the deployment container (SOP-15).
+# SOP-15 deployment server, the whole of it: one cron line, one list of repositories, this loop, and the
+# handler (publish.py) beside it. Every tick, for each repository in the list: fetch it; work out which
+# refs moved since the last successful tick; if any did, check out main and run the handler, which reads
+# the checkout's .config/publish.toml and runs each target whose trigger (`on`, default version tags)
+# matches a moved ref: filtered publication, mirror replication, or a command such as a site deploy.
+# A failed tick is retried on the next one (the ref snapshot advances only on success); a filtered
+# publication is force-pushed whole or not at all. Run records: $STATE/runs.jsonl, for whatever runner UI
+# or dashboard SOP-15 chooses. Credentials live in this user's git credential store inside the container.
 #   publish_public_cron.sh LIST_FILE      # one clone URL per line, # comments allowed
 set -uo pipefail
 LIST="${1:?list file of repository URLs}"
-STATE="${STATE_DIR:-$HOME/.local/state/publish_public}"; mkdir -p "$STATE/www"; export PUBLISH_STATE="$STATE"
+STATE="${STATE_DIR:-$HOME/.local/state/publish_public}"; mkdir -p "$STATE"; export PUBLISH_STATE="$STATE"
 HERE="$(cd "$(dirname "$0")" && pwd)"
 log() { echo "$(date -u +%FT%TZ) $*" >>"$STATE/publication.log"; }
 while IFS= read -r url; do
   [[ -z "$url" || "$url" == \#* ]] && continue
-  name="$(basename "${url%.git}")"; bare="$STATE/$name.git"; marker="$STATE/$name.last"
+  name="$(basename "${url%.git}")"; bare="$STATE/$name.git"; snap="$STATE/$name.refs"
   if [[ -d "$bare" ]]; then git -C "$bare" fetch -q --prune origin '+refs/heads/*:refs/heads/*' '+refs/tags/*:refs/tags/*' || { log "$name fetch failed"; continue; }
   else git clone -q --bare "$url" "$bare" || { log "$name clone failed"; continue; }; fi
-  now="$(git -C "$bare" for-each-ref --format='%(objectname) %(refname)' | sha1sum | cut -c1-16)"
-  [[ -f "$marker" && "$(cat "$marker")" == "$now" ]] && continue
+  new="$(git -C "$bare" for-each-ref --format='%(objectname) %(refname)')"
+  changed="$(comm -13 <(sort "$snap" 2>/dev/null) <(echo "$new" | sort) | awk '{print $2}')"   # refs new or moved
+  [[ -z "$changed" ]] && continue
   co="$(mktemp -d)"
-  if git clone -q "$bare" "$co" && [[ -f "$co/.config/publish.toml" ]] && python3 -I "$HERE/publish.py" --repo "$co" >>"$STATE/$name.out" 2>&1; then
-    echo "$now" >"$marker"; log "$name pipelines ran $now"
-  else log "$name pipeline failed (see $name.out and the status page)"; fi
+  if git clone -q "$bare" "$co" && [[ -f "$co/.config/publish.toml" ]] && python3 -I "$HERE/publish.py" --repo "$co" --changed $changed >>"$STATE/$name.out" 2>&1; then
+    echo "$new" >"$snap"; log "$name ran for: $(echo $changed)"
+  elif [[ ! -f "$co/.config/publish.toml" ]]; then echo "$new" >"$snap"; log "$name has no .config/publish.toml; nothing to run"
+  else log "$name handler failed (see $name.out); will retry"; fi
   rm -rf "$co"
 done <"$LIST"

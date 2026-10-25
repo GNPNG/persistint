@@ -8,7 +8,9 @@
 name = "github-public"
 mode = "filtered"
 dest = "https://github.com/GNPNG/persistint.git"
-refs = ["main", "refs/tags/v*"]
+on = ["refs/tags/v*"]              # the trigger: a version tag (author 2026-10-25: "more sensibly, it gets
+                                   # triggered by tagging"); add "main" to publish the pace of work on every push
+refs = ["main", "refs/tags/v*"]    # what is pushed when it fires
 remove_paths = ["art/canon/gemini/*"]
 strip_blobs_file = "tools/publish_public.blobs"
 note = "public wiki and public bug reports live here; AGENTS.md says this is not the working source"
@@ -23,4 +25,4 @@ note = "public wiki and public bug reports live here; AGENTS.md says this is not
 # [[target]]
 # name = "site"
 # mode = "run"
-# command = ["tools/deploy_site.sh"]
+# command = ["tools/deploy_site.sh"]   # runs in a checkout of the tag that fired it

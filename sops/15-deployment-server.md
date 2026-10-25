@@ -30,7 +30,7 @@ A list of repositories; each repository's `.config/publish.toml` (its targets: `
 
 1. Create the container; snapshot it (`pre-<change>`) before each change; install git, git-filter-repo, python3, Nextflow, the runner agent; put destination credentials in that user's git credential store only.
 2. Add a repository: write its `.config/publish.toml`, add it to the list (or enable its workflow file), run once by hand with `--dry-run`, then for real, check the destination.
-3. Every tick: fetch each repository; if any ref moved, check it out and run its targets; one JSON line per target run (time, repo, target, mode, destination, commit, version, ok, seconds, steps, error).
+3. Every tick: fetch each repository; work out which refs moved since the last successful tick; if any did, check out `main` and run the handler with that list. A target runs only when a moved ref matches its trigger (`on`; default a version tag, the author: "more sensibly, it gets triggered by tagging"; `main` for publish-on-every-push). A `run` target checks out the tag that fired it. one JSON line per target run (time, repo, target, mode, destination, commit, version, ok, seconds, steps, error).
 4. When a site is stale or a mirror is behind: look in the container (the cron log, `runs.jsonl`, the runner UI). Nowhere else.
 5. A failed target does not stop the others; it is retried on the next tick; a filtered publication is force-pushed whole or not at all.
 
@@ -43,6 +43,7 @@ A change on `main` reaches every destination within one tick; each target run ha
 | Hazard | Control point | Signal | Limit | Corrective action | Record | Anticipated / learned |
 |---|---|---|---|---|---|---|
 | Container changed without a snapshot | step 1 | no `pre-*` snapshot newer than the change | any | snapshot now; restore from the last one if the change broke it | snapshot list | anticipated |
+| Trigger too broad (every push deploys a half-finished tree) | config review | `on` contains `main` for a deploy target | any | default to tags; `main` only for publication of the pace of work | review | anticipated |
 | Two schedulers running the same pipeline | provisioning | a run record from both cron and runner for one commit | two | disable one; the cron is the fallback, not a second runner | runs.jsonl | anticipated |
 | Destination URL wrong in a repository's config | step 2 | dry run lists an unexpected destination | one | fix before the first real run | review | anticipated |
 | Force-push of a filtered copy fails half way | step 5 | push error in the run record | one | nothing landed (git push is atomic per ref set); retried next tick | runs.jsonl | anticipated |

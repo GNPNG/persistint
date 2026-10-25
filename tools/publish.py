@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 """SOP-14/SOP-15 pipeline driver: runs every target in a repository's .config/publish.toml.
 
-Usage: python3 -I tools/publish.py [--repo PATH] [--only NAME] [--dry-run]
+Usage: python3 -I tools/publish.py [--repo PATH] [--only NAME] [--dry-run] [--changed REF ...]
+Trigger: each target has `on`, the ref patterns that fire it (default: version tags, refs/tags/v*; add
+"main" for a target that should run on every push). With --changed (the loop passes the refs that moved
+since its last tick) a target runs only if a changed ref matches; without it every target runs.
 Target modes (canned pipelines; the repository only fills in parameters):
   filtered  fresh mirror clone, git filter-repo removing remove_paths and the blobs in strip_blobs_file
             from every commit, force-push of `refs` (default main and v* tags). The private repository
@@ -62,7 +65,9 @@ def mirror(repo, t, dry, steps) -> None:
         sh(["git", "push", "--mirror", t["dest"]], cwd=repo)
 
 
-def run(repo, t, dry, steps) -> None:
+def run(repo, t, dry, steps, at=None) -> None:
+    if at:
+        sh(["git", "checkout", "-q", at], cwd=repo); steps.append(f"checkout {at}")
     steps.append("run: " + " ".join(t["command"]))
     if not dry:
         out = sh(t["command"], cwd=repo)
@@ -98,6 +103,7 @@ def main() -> None:
     ap.add_argument("--repo", default=".")
     ap.add_argument("--only")
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--changed", nargs="*", help="refs that moved; a target runs only if one matches its `on`")
     a = ap.parse_args()
     repo = Path(a.repo).resolve()
     cfg = repo / ".config" / "publish.toml"
@@ -107,9 +113,17 @@ def main() -> None:
     for t in tomllib.loads(cfg.read_text()).get("target", []):
         if a.only and t.get("name") != a.only:
             continue
+        on = [r if r.startswith("refs/") else f"refs/heads/{r}" for r in t.get("on", ["refs/tags/v*"])]
+        hit = None if a.changed is None else [c for c in a.changed if any(fnmatch.fnmatch(c, o) for o in on)]
+        if hit is not None and not hit:
+            print(f"{t['name']} ({t['mode']}): skipped, no changed ref matches {t.get('on', ['refs/tags/v*'])}")
+            continue
         steps, t0, err = [], time.time(), ""
         try:
-            MODES[t["mode"]](repo, t, a.dry_run, steps)
+            if t["mode"] == "run":
+                run(repo, t, a.dry_run, steps, at=sorted(hit)[-1] if hit else None)
+            else:
+                MODES[t["mode"]](repo, t, a.dry_run, steps)
             print(f"{t['name']} ({t['mode']}): ok")
         except Exception as e:  # noqa: BLE001  (one failed target must not stop the others)
             err = str(e); failed += 1
