@@ -2,7 +2,7 @@
 
 ## 1. Purpose
 
-A repeatable way to answer "can we use this?" about a tool, library, engine feature, paper method or service that someone outside the team built. The outcome is one of five verdicts with evidence: use it as is, use it under a licence or a special agreement, wrap it, roll our own, or drop it. The author describes the method as a very simple heuristic; the procedure below is that heuristic written down so that any agent on the team applies it the same way and so that a less capable agent can run it without inventing steps.
+A repeatable way to answer "can we use this?" about a tool, library, engine feature, paper method or service that someone outside the team built. The outcome is one of five verdicts with evidence: use it as is, use it under a licence or a special agreement, wrap it, roll our own, or drop it. The premise, in the author's words, is that "you're not using anyone else's IP": a tool enters production under its own terms or not at all, and a method is reimplemented from what is published, which is "the honest and legal open source model working like it should." The author describes the method as a very simple heuristic; the procedure below is that heuristic written down so that any agent on the team applies it the same way and so that a less capable agent can run it without inventing steps.
 
 ## 2. When to use / when not to
 
@@ -76,4 +76,5 @@ Do not use it for:
 
 - 2026-10-25, the author, on where the method comes from: his job at TIGR/JCVI on the ergatis pipeline, where a staff scientist could come to his desk with a tool from a paper under review and ask whether it could go into the production annotation pipeline. His words for the core of it: "Can we run it, will it scale. If it won't scale, can I create a wrapper that allows it to scale; if not, is the method something we can do ourselves ... roll our own version, and ideally more intelligently." And on the paper trail: "most methods aren't entirely new, so they probably did that intentionally because there is another tool that does the same thing and works better." And: "It's a very simple heuristic actually."
 - 2026-10-25, the author, on where it has worked: at a not-for-profit (TIGR/JCVI) and, in his words, "the same model works GREAT at a pharma startup that was trying to ship an FDA-approved product and ultimately successfully be bought-out by LabCorp." The method does not depend on the sector or the size of the shop.
+- 2026-10-25, the author, on why the licence step is a verdict and not a formality: "Because you're not using anyone else's IP" and "that's the honest and legal open source model working like it should."
 - The same heuristic applied to engine features gives the pre-render direction: when the engine's runtime path will not carry the look on the target device, pre-compute the result as an asset (SOP-03, 5d8).
