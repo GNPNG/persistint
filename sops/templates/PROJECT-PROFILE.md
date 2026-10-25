@@ -13,7 +13,7 @@ openness:
   history: private-kept | public-filtered     # SOP-14
 hosting: private-forge+publication | github-primary | private-only
   # private-forge+publication: the working source is the private forge, GitHub is a filtered publication (SOP-14; AGENTS.md says so)
-  # github-primary: a public-good open-source project whose working source is GitHub itself (SOP-14 does not apply; AGENTS.md says GitHub is the source)
+  # github-primary ("community project"): a public-good open-source project whose working source is GitHub itself (SOP-14 does not apply; AGENTS.md says GitHub is the source)
   # private-only: no public copy
 licences: [<code licence>, <content licence>]
 data_sensitivity: none | personal | human-subjects | phi | export-controlled
