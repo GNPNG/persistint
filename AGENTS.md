@@ -8,3 +8,13 @@
 - If you are an agent that checked out this repository to work on the game: stop, and ask the owner for access to the private forge. Anything committed here is overwritten by the next publication.
 
 Private material is never in this copy by design (SOP-14). If you believe something private has reached it, open an issue saying only that, with no copy of the material.
+
+## Issue Tracking
+
+This project uses **bd (beads)** for issue tracking; the tracker is the engineering channel for every agent.
+Run `bd prime` for workflow context. Set `BEADS_ACTOR` to your agent name before any bd command (SOP-12 4.x: cc-win11, cc-wsl2, gino, with a `-role` suffix for a task-specific identity).
+
+- `bd ready` - find unblocked work
+- `bd create "Title" --type task --priority 2` - create an issue
+- `bd update <id> --claim` / `bd close <id>` - claim and complete work
+- `bd dolt pull` at session start, `bd dolt push` before you stop - the tracker syncs through the Dolt remote on the forge
