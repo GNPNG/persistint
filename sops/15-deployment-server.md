@@ -34,7 +34,8 @@ A list of repositories; each repository's `.config/publish.toml` (its targets: `
 2. Add a repository: write its `.config/publish.toml`, add it to the list (or enable its workflow file), run once by hand with `--dry-run`, then for real, check the destination.
 3. Every tick: fetch each repository; work out which refs moved since the last successful tick; if any did, check out `main` and run the handler with that list. A target runs only when a moved ref matches its trigger (`on`; default a version tag, a dev build is a second tag pattern such as `dev-*`; the author: "Tagging a release, tagging a dev build, or whatever"; the author: "more sensibly, it gets triggered by tagging"; `main` for publish-on-every-push). A `run` target checks out the tag that fired it. one JSON line per target run (time, repo, target, mode, destination, commit, version, ok, seconds, steps, error).
 4. When a site is stale or a mirror is behind: look in the container (the cron log, `runs.jsonl`, the runner UI). Nowhere else.
-5. A failed target does not stop the others; it is retried on the next tick; a filtered publication is force-pushed whole or not at all.
+5. **Release observer, on the host, outside the container.** A second cron line watches the public destinations with `git ls-remote --tags`; a tag that appears there for the first time is a release that reached the public, and the host takes `lxc snapshot <container> release-<repo>-<tag>-<date>`. The container never snapshots itself and holds no `lxc` rights; the trigger is the public fact, not the container's own log. The author: "an observer script outside of that container could actually watch the public repos, eg: Github, and on noticing a successful public release, do an 'lxc snapshot' on that container. Meaning that we have a snapshot of the repo of the release."
+6. A failed target does not stop the others; it is retried on the next tick; a filtered publication is force-pushed whole or not at all.
 
 ## 6. Acceptance checks
 
@@ -51,6 +52,8 @@ A new tag reaches every destination within one tick; the bare mirror holds every
 | Force-push of a filtered copy fails half way | step 5 | push error in the run record | one | nothing landed (git push is atomic per ref set); retried next tick | runs.jsonl | anticipated |
 | Forge mirror feature trusted for publication | design | a push mirror still configured | one | delete it; the pipeline is the only publisher (SOP-14 E4) | ca0 | learned 2026-10-24 (API/UI disagreed on the mirror's state) |
 | Backup mirror missing refs (heads and tags only) | provisioning | `git ls-remote` of forge and mirror differ in ref count | any | clone with `--mirror`; fetch with `--prune` and no refspec | tick log | learned 2026-10-25 (first draft fetched heads and tags only) |
+| Release snapshots accumulate without a retention rule | observer | snapshot count per container | set by the author | keep every release snapshot that corresponds to a supported version; prune the rest on his word | snapshot list | anticipated |
+| Observer snapshots before the container finished every target for that tag | observer | run record for the tag incomplete at snapshot time | one | the snapshot still holds the full mirror of the tag; re-run the observer tick after the record completes if a second snapshot is wanted | observer.log | anticipated |
 | Credential outside the container | provisioning | token in a session env or a laptop file | present | move it into the container's credential store | provisioning note | anticipated |
 
 ## 8. Artifacts and templates
@@ -59,7 +62,7 @@ A new tag reaches every destination within one tick; the bare mirror holds every
 
 ## 9. Reference implementation in persistint
 
-`tools/publish.py` (the handler: three modes, run records; installed into the container beside the loop, the repository copy is the reference source and serves by-hand dry runs), `tools/publish_public_cron.sh` (the single script on a cron), `.config/publish.toml` (github-public filtered target live; site deploy target drafted and disabled until the container exists), `.gitea/workflows/publish-public.yml` (fast path if a forge runner is registered). Host: srv, the NUC the author built "EXACTLY to host things like this". Tested 2026-10-25: a filtered publication of main and three tags into a throwaway bare repository, 53 s, zero removed paths left in the copy, one run record written. Beads: ck0 (publication path), the container build task filed with this SOP.
+`tools/publish.py` (the handler: three modes, run records; installed into the container beside the loop, the repository copy is the reference source and serves by-hand dry runs), `tools/publish_public_cron.sh` (the single script on a cron inside the container), `tools/release_observer.sh` (the host-side observer, its own cron line, no credentials), `.config/publish.toml` (github-public filtered target live; site deploy target drafted and disabled until the container exists), `.gitea/workflows/publish-public.yml` (fast path if a forge runner is registered). Host: srv, the NUC the author built "EXACTLY to host things like this". Tested 2026-10-25: a filtered publication of main and three tags into a throwaway bare repository, 53 s, zero removed paths left in the copy, one run record written. Beads: ck0 (publication path), the container build task filed with this SOP.
 
 ## 10. Lessons learned
 
