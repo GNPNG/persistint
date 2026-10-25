@@ -21,4 +21,5 @@ team:
   external: [<institutions, collaborators>]
 deployment: [<web>, <mobile>, <on-prem>, <cloud provider>]
 stage: <0.x.y and what the next gate is>
+hazard_standard: [<stages held to the prospective hazard analysis (SOP template section 7): e.g. public release, publication, voice pipeline>]
 ```

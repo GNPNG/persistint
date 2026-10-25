@@ -19,6 +19,7 @@ team:
   external: []
 deployment: [web (Cloudflare Pages), old phones and tablets]
 stage: 0.2.1 shipped; next gate 0.3.0 (title screen, touch controls, remaining music, clone lines)
+hazard_standard: [public release (SOP-09, SOP-11), publication to the public mirror (SOP-14), voice pipeline (SOP-05, SOP-06), generative renders (SOP-04)]   # prospective hazard analysis before the stage opens; playtest builds are not held to it
 ```
 
 SOPs that apply because of this profile (to be encoded as `applies_when` on each SOP): the content

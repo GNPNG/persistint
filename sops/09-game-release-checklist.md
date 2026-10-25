@@ -187,6 +187,10 @@ Each step is one phase. Work the phases in order where an item depends on an ear
    - [ ] LA-10 Account recovery. Done when the owner, a second recovery route and two-factor authentication are recorded (in a private place, not the repo) for every account the release depends on: domain registrar and DNS, hosting, stores, forge and mirror, analytics and signup.
    Check: the instance file shows no "missing" or "partial" item without an issue id or an author decision.
 
+### 5.x Prospective hazard analysis for release stages (added 2026-10-25)
+
+A public release, a publication to the public mirror (SOP-14) and the voice pipeline (SOP-05, SOP-06) are held to the prospective standard: before the stage opens, the governing SOP's section 7 table lists the anticipated contamination events with their control point, signal, limit, corrective action and record, and the release instance file links to it. A stage whose table is empty or only contains "learned" rows is not open. The author's words for the standard: "in a CAP/CLIA / FDA-regulated world, you need to anticipate ALL OF THAT." The project profile (docs/PROJECT-PROFILE.md) names which stages are held to it.
+
 ## 6. Acceptance checks
 
 The release is ready when all of these hold:

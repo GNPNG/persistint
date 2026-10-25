@@ -64,7 +64,15 @@ The work is done when all of these hold:
 
 - {check that needs reading rather than a command}
 
-## 7. Failure modes and recovery
+## 7. Hazard analysis, failure modes and recovery
+
+Written before the stage this SOP governs opens, not after it fails (HACCP: anticipate the contamination events, then control them). One row per anticipated event that would contaminate the downstream work product. "Signal" is what is observable at the control point before the product moves on; "limit" is the value that stops the line; "record" is where the observation is written so a late discovery can be traced back. Incidents that were not anticipated are added as rows when they happen, marked "learned".
+
+| Hazard (contamination event) | Control point | Signal | Limit | Corrective action | Record | Anticipated / learned |
+|---|---|---|---|---|---|---|
+| {what gets in} | {where it is still visible} | {what to look at} | {what value stops the line} | {what to do; how to prevent it} | {ticket, log, file} | {anticipated or learned (date)} |
+
+Legacy form, kept for SOPs not yet converted:
 
 | Failure | How it shows | Recovery |
 |---|---|---|
