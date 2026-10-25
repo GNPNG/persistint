@@ -69,8 +69,14 @@ func _run() -> void:
 	for b in AudioServer.bus_count:
 		_check(AudioServer.get_bus_effect_count(b) == 0, "no bus has real-time effects (%s)" % AudioServer.get_bus_name(b))
 	_check(ResourceLoader.exists("res://audio/voice/clones/groan_1.wav"), "a baked clone groan exists")
-	_check(voice.clone_variant("res://audio/sfx/groan_1.wav", "Clones").ends_with("/clones/groan_1.wav"), "a Clones line plays the baked groan")
+	# Author 2026-10-25: the pitched (baked kid-clone) copies are switched off in the build so the raw
+	# cloned clips can be judged (kz2); the switch is exercised both ways here.
+	_check(not voice.pitched_clones, "pitched clone copies are off by default (kz2)")
+	_check(voice.clone_variant("res://audio/sfx/groan_1.wav", "Clones") == "res://audio/sfx/groan_1.wav", "with the switch off a Clones line plays the plain groan")
+	voice.pitched_clones = true
+	_check(voice.clone_variant("res://audio/sfx/groan_1.wav", "Clones").ends_with("/clones/groan_1.wav"), "with the switch on a Clones line plays the baked groan")
 	_check(voice.clone_variant("res://audio/sfx/groan_1.wav", "Voice") == "res://audio/sfx/groan_1.wav", "a Voice line plays the plain groan")
+	voice.pitched_clones = false
 	_check(not voice.tts_available(), "text-to-speech is never used")
 	_check(ZombieChild.bus() == "Clones", "clone children speak through the Clones bus")
 

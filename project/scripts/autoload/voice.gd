@@ -51,10 +51,14 @@ static func tts_available() -> bool:
 
 const CLONES_DIR := "res://audio/voice/clones"
 
+## Author 2026-10-25: the pitch-shifted (baked kid-clone) copies are off for now, so the raw cloned
+## clips can be judged on their own; set true again to restore the clone-hall voices (kz2).
+static var pitched_clones := false
+
 
 ## The baked kid-clone copy of a clip or vocalization when the line plays through the Clones bus.
 static func clone_variant(path: String, bus: String) -> String:
-	if bus != "Clones":
+	if bus != "Clones" or not pitched_clones:
 		return path
 	var baked := "%s/%s" % [CLONES_DIR, path.get_file()]
 	return baked if ResourceLoader.exists(baked) else path
