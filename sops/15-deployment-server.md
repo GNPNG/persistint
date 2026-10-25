@@ -66,6 +66,8 @@ A new tag reaches every destination within one tick; the bare mirror holds every
 
 ## 9. Reference implementation in persistint
 
+The infrastructure this SOP runs on already exists; the author stood it up about ten years ago (his words, 2026-10-25: "All the shit I'm describing already exists because I stood it up like 10 years ago."): the LXD host, the ZFS datasets, the archive storage server, the Bamboo instance and the standard dashboards on srv. The first build is therefore an inventory followed by wiring, not a provisioning job; nothing that exists is reinstalled.
+
 `tools/publish.py` (the handler: three modes, run records; installed into the container beside the loop, the repository copy is the reference source and serves by-hand dry runs), `tools/publish_public_cron.sh` (the single script on a cron inside the container), `tools/release_observer.sh` (the host-side observer, its own cron line, no credentials), `.config/publish.toml` (github-public filtered target live; site deploy target drafted and disabled until the container exists), `.gitea/workflows/publish-public.yml` (fast path if a forge runner is registered). Host: srv, the NUC the author built "EXACTLY to host things like this". Tested 2026-10-25: a filtered publication of main and three tags into a throwaway bare repository, 53 s, zero removed paths left in the copy, one run record written. Beads: ck0 (publication path), the container build task filed with this SOP.
 
 ## 10. Lessons learned
