@@ -8,6 +8,8 @@ Related SOPs: SOP-14 (14-asset-expiry-and-public-publication.md: the filtered pu
 
 ## 1. Purpose
 
+The design is the controlled-access model the author administered for genomic data: everything inside the wall, one heavily guarded gate, the gate the only holder of a key, every passage logged. His words, 2026-10-25: "That's why I explained the thing about the walls with one heavily guarded gate. I was the DACO admin for EGA data at EMBL... you see?" The deployment container is that gate for code and sites: the only holder of the publication credential, the only path from private to public, a run record per passage, a snapshot per release.
+
 One place where every automated movement of a repository's content runs: filtered publication to a public forge, replication between forges, site deploys, release builds. The author's words: "all the orchestration and staging stuff has a single point of action and config on a reliable machine"; "So if we notice the web sites aren't being updated, and the github mirrors are stale... we know exactly where to look."
 
 ## 2. When to use / when not to
