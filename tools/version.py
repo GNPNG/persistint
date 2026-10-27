@@ -75,8 +75,8 @@ def changelog(v: str) -> None:
         return
     # Keep a Changelog: the Unreleased section becomes the release; without one, a new heading
     # goes above the newest release with an empty Added list to fill.
-    if re.search(r"^## Unreleased\s*$", text, re.M):
-        text = re.sub(r"^## Unreleased\s*$", head, text, count=1, flags=re.M)
+    if re.search(r"^## Unreleased[ \t]*$", text, re.M):
+        text = re.sub(r"^## Unreleased[ \t]*$", head, text, count=1, flags=re.M)
     else:
         m = re.search(r"^## v", text, re.M)
         at = m.start() if m else len(text)
