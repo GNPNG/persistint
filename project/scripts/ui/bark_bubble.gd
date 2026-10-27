@@ -5,8 +5,8 @@ extends Label
 ## `bottom` to just over the character's head (characters stand with their origin on their
 ## feet, so it is minus their height).
 ## Whenever its text changes it fits itself to the text: one line up to max_width, wrapped
-## beyond that, centred on the speaker and growing upward from `bottom`; it slides sideways to
-## stay inside the camera's view.
+## beyond that, centred on the speaker and growing upward from `bottom`; it slides sideways, and
+## down from the top edge, to stay inside the camera's view.
 
 ## Widest a line gets before the text wraps (world px).
 @export var max_width := 64.0
@@ -64,7 +64,9 @@ func _aim_tail() -> void:
 		tail.position.x = x - tail.size.x / 2.0
 
 
-## Slides the bubble sideways so all of it stays inside the camera's view.
+## Slides the bubble sideways so all of it stays inside the camera's view, and down when its top
+## would be over the top of the view: a speaker near the top edge (the player walking up to them
+## from below, a speaker at the top of the map) still shows the line, over their head.
 func _keep_on_screen() -> void:
 	var cam := get_viewport().get_camera_2d()
 	var speaker := get_parent() as Node2D
@@ -77,4 +79,6 @@ func _keep_on_screen() -> void:
 	var lo := center.x - half.x + 2.0
 	var hi := maxf(lo, center.x + half.x - w - 2.0)
 	position.x = -w / 2.0 + clampf(anchor, lo, hi) - anchor
+	var top := speaker.global_position.y + bottom - size.y
+	position.y = bottom - size.y + maxf(0.0, center.y - half.y + 2.0 - top)
 	_aim_tail()
