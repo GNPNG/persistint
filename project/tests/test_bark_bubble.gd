@@ -3,7 +3,9 @@ extends SceneTree
 ## view (the player walking up to them from below: the Priestess on her dais, any NPC whose
 ## proximity fires 52 px under them) it comes down under the top of the view instead of being
 ## drawn above it; over a speaker in the middle of the view it sits where it fits, its bottom on
-## `bottom`, centred on the speaker.
+## `bottom`, centred on the speaker. Bubbles of speakers standing close keep clear of each other
+## (bd wso.3: a clone's bubble covered a polar bear cub's): the one further back goes up over the
+## one in front, or under it at the top of the view, and comes back once the front one is gone.
 ## Run: godot --headless --path project -s tests/test_bark_bubble.gd
 
 const BUBBLE := "res://scenes/ui/bark_bubble.tscn"
@@ -37,12 +39,40 @@ func _run() -> void:
 	_check(is_equal_approx(mb.position.y, float(mb.get("bottom")) - mb.size.y),
 		"a speaker's bubble in the middle of the view sits on its bottom (%.1f, %.1f)" % [mb.position.y, float(mb.get("bottom")) - mb.size.y])
 	_check(is_equal_approx(mb.position.x, -mb.size.x / 2.0), "centred on the speaker")
+	high.free()
+	mid.free()
+
+	# Two speakers standing close, in the middle of the view: the cub further back, the clone in front.
+	var back := _speaker(world, Vector2(-8, 40), "Polar bear clone, batch 1\nMrrf!")
+	var front := _speaker(world, Vector2(16, 60))
+	await _frames(3)
+	var bb: Control = back.get_node("BarkBubble")
+	var fb: Control = front.get_node("BarkBubble")
+	_check(not _reach(bb).intersects(_reach(fb)), "two speakers' bubbles do not overlap (%s, %s)" % [_reach(bb), _reach(fb)])
+	_check(is_equal_approx(fb.position.y, float(fb.get("bottom")) - fb.size.y), "the front one stays on its bottom")
+	_check(_reach(bb).end.y <= fb.get_global_rect().position.y, "the one further back goes up over it")
+	_check(_reach(bb).position.y >= view_top + 1.0, "inside the view")
+	fb.hide()
+	await _frames(2)
+	_check(is_equal_approx(bb.position.y, float(bb.get("bottom")) - bb.size.y), "with the front one gone it is back on its bottom")
+	back.free()
+	front.free()
+
+	# The same pair at the top of the view: no room above, so the one further back goes under.
+	back = _speaker(world, Vector2(-8, -half.y + 40), "Polar bear clone, batch 1\nMrrf!")
+	front = _speaker(world, Vector2(16, -half.y + 60))
+	await _frames(3)
+	bb = back.get_node("BarkBubble")
+	fb = front.get_node("BarkBubble")
+	_check(not _reach(bb).intersects(_reach(fb)), "at the top of the view they do not overlap (%s, %s)" % [_reach(bb), _reach(fb)])
+	_check(_reach(bb).position.y >= fb.get_global_rect().end.y, "the one further back goes under the front one")
+	_check(fb.get_global_rect().position.y >= view_top + 1.0 and _reach(bb).end.y <= view_top + half.y * 2.0 - 1.0, "both inside the view")
 
 	print("RESULT: %s (%d failures)" % ["PASS" if _failures == 0 else "FAIL", _failures])
 	quit(1 if _failures else 0)
 
 
-func _speaker(world: Node2D, at: Vector2) -> Node2D:
+func _speaker(world: Node2D, at: Vector2, line := "A line that is long enough to wrap onto a second line.") -> Node2D:
 	var s := Node2D.new()
 	s.position = at
 	world.add_child(s)
@@ -50,8 +80,15 @@ func _speaker(world: Node2D, at: Vector2) -> Node2D:
 	b.name = "BarkBubble"
 	b.set("bottom", -54.0)
 	s.add_child(b)
-	b.call("say", "A line that is long enough to wrap onto a second line.")
+	b.call("say", line)
 	return s
+
+
+## A bubble with its tail under it (bark_bubble.tscn: the tail hangs 5 px).
+func _reach(b: Control) -> Rect2:
+	var r := b.get_global_rect()
+	r.size.y += 5.0
+	return r
 
 
 func _frames(n: int) -> void:
