@@ -166,13 +166,15 @@ godot --headless --path project -s tests/test_florida.gd
 # ...and the same for each tests/test_*.gd
 ```
 
-To run them all:
+To run them all (imports first, prints one line per test, exits non-zero if any fails):
 
 ```bash
-for t in project/tests/verify_slice.gd project/tests/test_*.gd; do
-  echo "$(basename "$t"): $(godot --headless --path project -s "tests/$(basename "$t")" 2>&1 | grep RESULT)"
-done
+tools/run_tests.sh                 # every test
+tools/run_tests.sh test_save       # just some; --no-import skips the import
 ```
+
+The tests use their own save and settings files, so they never touch your own progress or volume
+levels.
 
 Each script prints `RESULT: PASS` or lists its failures. Most tests back up your real
 `user://save.json` and restore it afterwards; `test_landing_crew.gd` does not yet, so back up your

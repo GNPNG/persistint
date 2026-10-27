@@ -37,3 +37,6 @@ project/build.json
 # web-render (tools/web_render submodule): run logs, debug dumps (account data), batch state, clasp state; the local secrets file
 .web-render/
 web-render.local.json
+
+# tools/run_tests.sh logs
+.cache/
