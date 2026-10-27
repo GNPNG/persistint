@@ -1,0 +1,87 @@
+Shot walk of tools/shots/wso.json at 76d5e19 with local changes
+4.6.3.stable.official.7d41c59c4, --rendering-driver opengl3, --fixed-fps 60, Xvfb 1280x720x24
+
+ok    florida-beach-overview.png
+ok    florida-beach-arrive.png
+ok    florida-beach-umbrella.png
+ok    florida-beach-west.png
+ok    florida-beach-east.png
+ok    florida-beach-sea.png
+ok    florida-beach-riding.png
+ok    florida-beach-crown_crab.png
+ok    florida-garden-overview.png
+ok    florida-garden-arrive.png
+ok    florida-garden-plots.png
+ok    florida-garden-seed_bag.png
+ok    florida-garden-craft_bench.png
+ok    florida-garden-father.png
+ok    florida-stable-overview.png
+ok    florida-stable-arrive.png
+ok    florida-stable-barn.png
+ok    florida-stable-ponies.png
+ok    florida-stable-pony_panel.png
+ok    florida-stable-friends.png
+ok    florida-aquarium-overview.png
+ok    florida-aquarium-arrive.png
+ok    florida-aquarium-tank.png
+ok    temple-temple-overview.png
+ok    temple-temple-arrive.png
+ok    temple-temple-priestess.png
+ok    temple-temple-icons.png
+ok    temple-temple-ritual_table.png
+ok    temple-temple-ruins_side.png
+ok    ruins-wreck-overview.png
+ok    ruins-wreck-arrive.png
+ok    ruins-wreck-piece.png
+ok    ruins-wreck-recovered.png
+ok    ruins-corridor-overview.png
+ok    ruins-corridor-arrive.png
+ok    ruins-core-overview.png
+ok    ruins-core-arrive.png
+ok    ruins-core-centre.png
+ok    ruins-bunker_lift-overview.png
+ok    ruins-bunker_lift-arrive.png
+ok    ruins-bunker_lift-clones.png
+ok    ruins-clone_hall-overview.png
+ok    ruins-clone_hall-arrive.png
+ok    ruins-clone_hall-bark.png (1 distinct engine errors in the log)
+        ERROR: 1 resources still in use at exit (run with --verbose for details).
+ok    ruins-clone_hall-east.png
+ok    ruins-records-overview.png
+ok    ruins-records-arrive.png
+ok    ruins-records-stacks.png
+ok    dialogue-garden-father_intro.png
+ok    dialogue-garden-father_choices.png
+ok    dialogue-beach-psychologists_hello.png
+ok    dialogue-beach-psychologists_man.png
+ok    dialogue-beach-psychologists_choices.png
+ok    dialogue-beach-psychologists_topics.png
+ok    dialogue-beach-psychologists_cited.png
+ok    dialogue-beach-father.png
+ok    dialogue-beach-daughter.png
+ok    dialogue-stable-daughter.png
+ok    dialogue-stable-hannah.png
+ok    dialogue-temple-priestess.png
+ok    dialogue-temple-priestess_choices.png (1 distinct engine errors in the log)
+        ERROR: 1 resources still in use at exit (run with --verbose for details).
+ok    interview-interview-intro.png
+ok    interview-interview-question.png
+ok    interview-interview-second.png
+ok    ui-studio_intro-gate.png
+ok    ui-studio_intro-sting.png
+ok    ui-main_menu-default.png
+ok    ui-main_menu-sunset.png
+ok    ui-main_menu-midnight.png
+ok    ui-main_menu-title_tapped.png
+ok    ui-credits-open.png
+ok    ui-settings-menu.png
+ok    ui-settings-controls.png
+ok    ui-settings-pause.png
+ok    ui-journal-temple.png
+ok    ui-wardrobe-temple.png
+ok    ui-help-temple.png
+ok    ui-hud-far_zoom.png
+ok    ui-chapter_end-island.png
+ok    ui-flashback_card-landing.png
+
+80/80 saved
