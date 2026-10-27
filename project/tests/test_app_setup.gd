@@ -43,7 +43,7 @@ func _run() -> void:
 	# --- GC-06 input actions: every control is a named action in project settings, and no
 	# script tests raw key codes or mouse buttons. ---
 	for action: String in ["move_left", "move_right", "move_up", "move_down", "toggle_wardrobe",
-			"toggle_journal", "dismount", "toggle_fullscreen", "click"]:
+			"toggle_journal", "dismount", "toggle_fullscreen", "click", "interact"]:
 		_check(ProjectSettings.has_setting("input/" + action) and not InputMap.action_get_events(action).is_empty(), "input action %s is in project settings with a binding" % action)
 	var raw := RegEx.create_from_string("\\b(KEY_[A-Z0-9_]+|MOUSE_BUTTON_[A-Z]+|JOY_[A-Z0-9_]+)\\b|\\.(physical_)?keycode\\b")
 	var raw_hits: Array[String] = []

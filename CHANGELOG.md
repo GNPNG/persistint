@@ -5,6 +5,15 @@ All notable changes, newest first. The format follows
 [Semantic Versioning](https://semver.org/). `tools/version.py bump` turns the Unreleased section
 into the new version's heading; the Updates page on the site shows the released versions.
 
+## Unreleased
+
+### Added
+
+- E talks to whoever is next to you (or uses the mirror, a door or a pickup), so the game plays
+  from the keyboard alone.
+- A clothes-hanger sticker and a book sticker under the settings gear open the wardrobe and the
+  journal with a tap or a click.
+
 ## v0.3.3 — 2026-10-27
 
 A pause menu, and fixes:

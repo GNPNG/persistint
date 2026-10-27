@@ -1,6 +1,7 @@
 extends Node2D
 ## Map — common behavior for every map area: place the player at the requested
-## spawn marker, build the HUD (clock + calendar), P toggles the wardrobe.
+## spawn marker, build the HUD (clock + calendar); P (or the hanger sticker) toggles the
+## wardrobe, J (or the book sticker) the journal.
 
 const WARDROBE_SCENE := "res://scenes/ui/wardrobe.tscn"
 
@@ -72,6 +73,15 @@ func _build_hud() -> void:
 	_hud_label = Label.new()
 	_hud_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	row.add_child(_hud_label)
+	# Tap stickers under the settings gear for the wardrobe and the journal, so a finger or a
+	# mouse alone reaches what P and J open (bd ctw, QA-07).
+	for pair: Array in [["WardrobeSticker", "hanger", 1, toggle_wardrobe], ["JournalSticker", "book", 2, toggle_journal]]:
+		var s := StickerButton.new()
+		s.name = pair[0]
+		s.kind = pair[1]
+		s.slot = pair[2]
+		s.pressed.connect(pair[3])
+		layer.add_child(s)
 	_update_hud()
 
 

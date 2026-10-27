@@ -68,7 +68,7 @@ text = "Settings"
 [node name="Hint" type="Label" parent="Center/Panel/VBox"]
 layout_mode = 2
 theme_type_variation = &"HintLabel"
-text = "click or arrow keys to walk · click people to talk · P for wardrobe"
+text = "click or arrow keys to walk · click people or press E to talk · P for wardrobe"
 horizontal_alignment = 1
 
 [node name="Wordmark" type="Node2D" parent="."]

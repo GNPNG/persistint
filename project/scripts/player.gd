@@ -29,6 +29,8 @@ var _speed := SPEED
 var _ride_ui: CanvasLayer
 var _in_dialogue := false
 var _facing := Vector2.DOWN
+## How near (world px) the interact key reaches.
+const INTERACT_RANGE := 56.0
 
 
 func _ready() -> void:
@@ -73,6 +75,30 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("click"):
 		_interact_target = null
 		nav.target_position = get_global_mouse_position()
+	elif event.is_action_pressed("interact") and not _in_dialogue:
+		if interact_nearest() != null:
+			get_viewport().set_input_as_handled()
+
+
+## The interact key (E): the nearest thing within INTERACT_RANGE that has interact() (a person,
+## the mirror, a door, a pickup, a Florida critter) is walked to and used, as a click on it would
+## be, so the game plays from the keyboard alone (QA-07). Returns it, or null when nothing is near.
+func interact_nearest() -> Node2D:
+	var best: Node2D = null
+	var best_d := INTERACT_RANGE
+	var scene := get_tree().current_scene
+	if scene == null:
+		return null
+	for n in scene.find_children("*", "Area2D", true, false):
+		if n == self or not n.has_method("interact") or not n.is_visible_in_tree():
+			continue
+		var d := global_position.distance_to(n.global_position)
+		if d < best_d:
+			best = n
+			best_d = d
+	if best:
+		approach(best)
+	return best
 
 
 ## Walk toward a node; call its interact() on arrival. (NPCs/mirrors call this on click.)
