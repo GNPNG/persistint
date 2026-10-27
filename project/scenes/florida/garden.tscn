@@ -18,6 +18,7 @@
 [ext_resource type="PackedScene" path="res://scenes/florida/seed_bag.tscn" id="16"]
 [ext_resource type="PackedScene" path="res://scenes/florida/craft_bench.tscn" id="17"]
 [ext_resource type="PackedScene" path="res://scenes/florida/critter.tscn" id="18"]
+[ext_resource type="PackedScene" path="res://scenes/npc/npc.tscn" id="19"]
 
 [sub_resource type="NavigationPolygon" id="navpoly"]
 vertices = PackedVector2Array(40, 210, 920, 210, 920, 526, 40, 526)
@@ -234,3 +235,12 @@ position = Vector2(780, 452)
 kind = "gull"
 nickname = "gull_pickle"
 wander = Rect2(700, 422, 150, 70)
+
+[node name="Father" parent="." instance=ExtResource("19")]
+position = Vector2(620, 262)
+npc_id = "father"
+display_name = "Father"
+sprite_texture = "npc_father"
+dialogue_path = "res://dialogue/florida_garden.dialogue"
+dialogue_title = "father"
+voice_pitch = 0.8

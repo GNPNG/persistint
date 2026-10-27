@@ -1,0 +1,16 @@
+[remap]
+
+importer="dialogue_manager"
+importer_version=15
+type="Resource"
+uid="uid://dbko0ufuxxqnb"
+path="res://.godot/imported/florida_garden.dialogue-574b2edf9a92cb823573ce78bba9347a.tres"
+
+[deps]
+
+source_file="res://dialogue/florida_garden.dialogue"
+dest_files=["res://.godot/imported/florida_garden.dialogue-574b2edf9a92cb823573ce78bba9347a.tres"]
+
+[params]
+
+defaults=true

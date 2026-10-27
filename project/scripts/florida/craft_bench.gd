@@ -29,7 +29,7 @@ func _build() -> void:
 	for item: String in Florida.inventory():
 		if int(Florida.inventory()[item]) > 0:
 			parts.append("%s x%d" % [_label(item), Florida.inventory()[item]])
-	have.text = ", ".join(parts) if not parts.is_empty() else "(nothing yet)"
+	have.text = "You have: " + (", ".join(parts) if not parts.is_empty() else "nothing yet")
 	box.add_child(have)
 	for id: String in Florida.data()["recipes"]:
 		var recipe: Dictionary = Florida.data()["recipes"][id]
@@ -55,7 +55,4 @@ func _build() -> void:
 
 
 func _label(item: String) -> String:
-	var plants: Dictionary = Florida.data()["plants"]
-	if plants.has(item):
-		return plants[item]["label"]
-	return item.capitalize().replace("_", " ")
+	return Florida.label(item)

@@ -1,5 +1,5 @@
 {
-	"_note": "Tropical Florida Keys sandbox (DESIGN.md section 3). Pure play, no scoring, nothing can be done wrong. Plants grow with days (GameClock); watering only speeds them up. Recipes with a 'wear' block go on the paper doll; the rest are just made, kept and enjoyed. A critter 'surprise' fires when the doll's outfit matches 'when' (first match wins; the entry without 'when' is every critter's default, so every outfit gets a delighted reaction). 'lines' are spoken as the critter's bubble through Voice.speak; 'names' are the critters' cast ids in data/cast.json (set per placed critter as nickname; shown through Cast.short).",
+	"_note": "Tropical Florida Keys sandbox (DESIGN.md section 3). Pure play, no scoring, nothing can be done wrong. Plants grow with days (GameClock); watering only speeds them up. Every item shows by its 'label' (Florida.label): plants, recipes, and 'items' (things found, not grown or made). Recipes with a 'wear' block go on the paper doll; the rest are just made, kept and enjoyed. A critter 'surprise' fires when the doll's outfit matches 'when' (first match wins; the entry without 'when' is every critter's default, so every outfit gets a delighted reaction). 'lines' are spoken as the critter's bubble through Voice.speak; 'names' are the critters' cast ids in data/cast.json (set per placed critter as nickname; shown through Cast.short).",
 	"plants": {
 		"hibiscus": {
 			"label": "Hibiscus",
@@ -60,6 +60,11 @@
 		"mango",
 		"coconut"
 	],
+	"items": {
+		"shell": {
+			"label": "Shell"
+		}
+	},
 	"recipes": {
 		"flower_crown": {
 			"label": "Flower crown",

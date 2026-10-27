@@ -1,0 +1,29 @@
+~ father
+if WorldState.has_flag("fl_met_garden")
+	Father: Back in the garden. Something's always coming up out here.
+else
+	do WorldState.set_flag("fl_met_garden", true)
+	Father: You found the garden. Good. Those six beds of soil are yours, if you want them.
+	Father: Nothing in here keeps score. You can't plant it wrong.
+Father: Ask me anything. I know about half of it.
+- What's the garden for?
+	Father: Growing things, and watching them grow. That's most of it.
+	Father: Click the seed bag to pick a seed. Each click hands you the next kind.
+	Father: Click an empty bed to plant it. Click it again to water it, and it's ready a day sooner.
+	Father: When it's ready, click it and you pick it. Then the bed's free for the next one.
+- What grows here?
+	Father: Hibiscus, sea grape, key lime, bougainvillea, plumeria, guava, mango and coconut.
+	Father: Most of it's ready in two or three days. Mango and coconut take four. I've stopped taking it personally.
+	Father: The seed bag never runs out, so plant whatever you like.
+- What's the bench for?
+	Father: That's the craft bench. Bring it what you've picked, and shells from the beach, and it makes things.
+	Father: A flower crown, a plumeria lei, a bougainvillea wreath, a shell garland. Those you can wear straight off the bench.
+	Father: Key lime pie, sea grape jelly, a guava pastry, a mango smoothie, a shell wind chime. Those you just keep.
+	- Why make any of it?
+		Father: Wear something you made down to the water and see what the dolphins think.
+		Father: The crabs and the gulls have opinions too. All of them good.
+	- Do I have to?
+		Father: No. Nothing out here is a chore. It's just nice to make something.
+- I'll just look around.
+	Father: That's allowed. The garden isn't going anywhere.
+=> END
