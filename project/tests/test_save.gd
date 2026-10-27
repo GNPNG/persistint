@@ -23,6 +23,9 @@ func _run() -> void:
 	var ws: Node = root.get_node("/root/WorldState")
 	var real_save: String = ws.SAVE_PATH
 	var real_flags: Dictionary = ws.flags.duplicate(true)
+	# QA-04: a test run never sees the player's save; WorldState switched before its first load.
+	_check(ws.running_tests() and real_save == ws.TEST_SAVE_PATH and real_save != "user://save.json", "a test run uses the test save, not user://save.json")
+	_check(real_flags.is_empty(), "a test run starts from an empty save")
 	ws.SAVE_PATH = TEMP_SAVE
 	_clean(ws)
 

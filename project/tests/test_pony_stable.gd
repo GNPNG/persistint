@@ -287,7 +287,8 @@ func _run() -> void:
 	leaving.queue_free()
 	await process_frame
 
-	DirAccess.remove_absolute(ProjectSettings.globalize_path(TEMP_SAVE))
+	for suffix in ["", ".bak"]:  # the save keeps a backup of the previous write (GC-07)
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(TEMP_SAVE + suffix))
 	ws.SAVE_PATH = real_save
 	print("RESULT: %s (%d failures)" % ["PASS" if _failures == 0 else "FAIL", _failures])
 	quit(0 if _failures == 0 else 1)

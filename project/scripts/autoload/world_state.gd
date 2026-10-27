@@ -20,6 +20,9 @@ const SAVED_MIN_INTERVAL := 4.0
 
 ## A var so headless tests can point it at a temp file instead of the player's real save.
 var SAVE_PATH := "user://save.json"
+## A headless test run (godot -s tests/<name>.gd) uses this save, emptied at start, so no test
+## reads or writes the player's save (QA-04, sops/09).
+const TEST_SAVE_PATH := "user://test_run_save.json"
 
 var flags: Dictionary = {}
 ## Outcome of the last load_save(): "" (loaded, or no save yet), "recovered" (the save was
@@ -33,9 +36,23 @@ var _saved_at := -INF
 
 
 func _ready() -> void:
+	if running_tests():
+		SAVE_PATH = TEST_SAVE_PATH
+		for suffix in ["", ".tmp", ".bak", ".corrupt", ".newer"]:
+			if FileAccess.file_exists(SAVE_PATH + suffix):
+				DirAccess.remove_absolute(_abs(SAVE_PATH + suffix))
 	load_save()
 	_add_saved_indicator()
 	saved.connect(_show_saved)
+
+
+## True when the main loop is a script under tests/ (godot -s tests/<name>.gd).
+static func running_tests() -> bool:
+	var args := OS.get_cmdline_args()
+	for i in args.size() - 1:
+		if args[i] in ["-s", "--script"] and "tests/" in args[i + 1].replace("\\", "/"):
+			return true
+	return false
 
 
 func get_flag(key: String, default: Variant = null) -> Variant:
