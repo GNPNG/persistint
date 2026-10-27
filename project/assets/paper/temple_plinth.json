@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/temple/temple_plinth.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [128, 56],
+  "scaled_frame": [128, 56],
+  "frame": [184, 112],
+  "pad": 28,
+  "scale": 4.0,
+  "world_h": 14.0,
+  "feet": 0.75,
+  "world_h_padded": 28.0,
+  "edges": [2],
+  "files": {
+    "edge2_white": "temple_plinth_edge2_white.png",
+    "shadow_soft": "temple_plinth_shadow_soft.png"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/canon/prop_seal_o.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [180, 170],
+  "scaled_frame": [180, 170],
+  "frame": [246, 236],
+  "pad": 33,
+  "scale": 4.722222222222222,
+  "world_h": 36.0,
+  "feet": 0.8601694915254238,
+  "world_h_padded": 49.976470588235294,
+  "edges": [2],
+  "files": {
+    "edge2_white": "prop_seal_o_edge2_white.png",
+    "shadow_soft": "prop_seal_o_shadow_soft.png"
+  }
+}

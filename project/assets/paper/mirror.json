@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/island/mirror.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [104, 160],
+  "scaled_frame": [104, 160],
+  "frame": [160, 216],
+  "pad": 28,
+  "scale": 4.0,
+  "world_h": 40.0,
+  "feet": 0.8703703703703703,
+  "world_h_padded": 54.0,
+  "edges": [2],
+  "files": {
+    "edge2_white": "mirror_edge2_white.png",
+    "shadow_soft": "mirror_shadow_soft.png"
+  }
+}

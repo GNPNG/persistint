@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/temple/temple_urn.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [112, 144],
+  "scaled_frame": [112, 144],
+  "frame": [168, 200],
+  "pad": 28,
+  "scale": 4.0,
+  "world_h": 36.0,
+  "feet": 0.86,
+  "world_h_padded": 50.0,
+  "edges": [2],
+  "files": {
+    "edge2_white": "temple_urn_edge2_white.png",
+    "shadow_soft": "temple_urn_shadow_soft.png"
+  }
+}

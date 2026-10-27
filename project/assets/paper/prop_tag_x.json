@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/canon/prop_tag_x.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [510, 672],
+  "scaled_frame": [164, 216],
+  "frame": [246, 298],
+  "pad": 41,
+  "scale": 6.0,
+  "world_h": 36.0,
+  "feet": 0.8624161073825504,
+  "world_h_padded": 49.666666666666664,
+  "edges": [2],
+  "files": {
+    "edge2_white": "prop_tag_x_edge2_white.png",
+    "shadow_soft": "prop_tag_x_shadow_soft.png"
+  }
+}

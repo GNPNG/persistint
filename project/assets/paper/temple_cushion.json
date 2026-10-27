@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/temple/temple_cushion.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [120, 80],
+  "scaled_frame": [120, 80],
+  "frame": [176, 136],
+  "pad": 28,
+  "scale": 4.0,
+  "world_h": 20.0,
+  "feet": 0.7941176470588235,
+  "world_h_padded": 34.0,
+  "edges": [2],
+  "files": {
+    "edge2_white": "temple_cushion_edge2_white.png",
+    "shadow_soft": "temple_cushion_shadow_soft.png"
+  }
+}

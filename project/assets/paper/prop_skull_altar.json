@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/canon/prop_skull_altar.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [171, 216],
+  "scaled_frame": [171, 216],
+  "frame": [235, 280],
+  "pad": 32,
+  "scale": 4.5,
+  "world_h": 48.0,
+  "feet": 0.8857142857142857,
+  "world_h_padded": 62.22222222222222,
+  "edges": [2],
+  "files": {
+    "edge2_white": "prop_skull_altar_edge2_white.png",
+    "shadow_soft": "prop_skull_altar_shadow_soft.png"
+  }
+}
