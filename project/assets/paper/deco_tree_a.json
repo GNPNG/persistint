@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/canon/deco_tree_a.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [160, 208],
+  "scaled_frame": [160, 208],
+  "frame": [216, 264],
+  "pad": 28,
+  "scale": 4.0,
+  "world_h": 52.0,
+  "feet": 0.8939393939393939,
+  "world_h_padded": 66.0,
+  "edges": [2],
+  "files": {
+    "edge2_white": "deco_tree_a_edge2_white.png",
+    "shadow_soft": "deco_tree_a_shadow_soft.png"
+  }
+}

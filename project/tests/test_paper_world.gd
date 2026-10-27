@@ -13,7 +13,7 @@ const PAPER := "res://assets/paper/"
 ## pony (Florida).
 const EXEMPT := ["temple_shadow", "deco_heart", "deco_sparkle", "temple_candles", "temple_twinkle", "door_marker"]
 ## Source art whose bake lands in a later commit of the rollout.
-const PENDING := ["deco_tree_a", "deco_tree_b", "deco_tree_c", "deco_flowers",
+const PENDING := [
 	"prop_bunker", "prop_fence_a", "prop_fence_b", "prop_sign_a", "prop_sign_b", "prop_tag_x",
 	"prop_icon_queen_mother", "prop_seal_o", "prop_ship", "prop_calendar", "prop_pillar_orb",
 	"prop_skull_altar", "temple_pavilion", "mirror", "temple_plinth", "temple_urn", "temple_cushion"]
