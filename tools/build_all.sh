@@ -5,7 +5,8 @@
 # desktop presets (BD-01, decision 7) are picked up as they are added.
 #
 # Usage: tools/build_all.sh [--allow-dirty] [--debug]
-#   --allow-dirty  build from a tree with uncommitted changes (the build id gets "-dirty")
+#   --allow-dirty  build from a tree with uncommitted changes (the build id gets "-dirty");
+#                  the tracker's own files (.beads/, .beads.gate.lock) never count
 #   --debug        --export-debug instead of --export-release
 #
 # Like tools/deploy_site.sh it writes res://build.json (the build id the main menu shows), imports
@@ -32,7 +33,7 @@ die() { echo "build_all: $*" >&2; exit 1; }
 command -v "$GODOT" >/dev/null || die "$GODOT not found (set GODOT)"
 VERSION="$(tr -d '[:space:]' < VERSION)"
 BUILD_ID="$(git rev-parse --short HEAD)"
-if [[ -n "$(git status --porcelain -- . ':!.beads')" ]]; then
+if [[ -n "$(git status --porcelain -- . ':!.beads' ':!.beads.gate.lock')" ]]; then
   [[ $ALLOW_DIRTY -eq 1 ]] || die "uncommitted changes; commit them or pass --allow-dirty"
   BUILD_ID="$BUILD_ID-dirty"
 fi
