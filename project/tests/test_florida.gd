@@ -1,9 +1,13 @@
 extends SceneTree
 ## Headless check of the tropical Florida Keys sandbox: gardening grows with days, crafting
 ## consumes ingredients, crafted pieces go on the paper doll, critters react to any outfit,
-## everything survives save/load, and the maps load.
+## everything survives save/load, and the maps load. Every seed and item shows by its name from
+## the data, and the Father in the garden explains the garden and the craft bench on the first
+## visit, in words that match the data (bd ke5).
 ## Run: godot --headless --path project -s tests/test_florida.gd
 ## The player's real save (user://save.json) is backed up and restored.
+
+const GARDEN_DIALOGUE := "res://dialogue/florida_garden.dialogue"
 
 var _failures := 0
 
@@ -76,6 +80,19 @@ func _run() -> void:
 		for item: String in Florida.data()["recipes"][r]["needs"]:
 			_check(item == "shell" or Florida.data()["plants"].has(item), "recipe %s ingredient %s is grown or found" % [r, item])
 
+	# Names: every seed, ingredient and made thing shows by its label from the data, never its id
+	var named: Array = Florida.data()["seeds"].duplicate()
+	for r: String in Florida.data()["recipes"]:
+		named.append(r)
+		named.append_array(Florida.data()["recipes"][r]["needs"].keys())
+	for item: String in named:
+		var entry: Dictionary = {}
+		for group: String in ["plants", "recipes", "items"]:
+			if Florida.data().get(group, {}).has(item):
+				entry = Florida.data()[group][item]
+		_check(entry.has("label") and Florida.label(item) == entry["label"] and not Florida.label(item).contains("_"),
+			"%s has a name in the data (%s)" % [item, Florida.label(item)])
+
 	# Save/load
 	ws.flags = {}
 	ws.load_save()
@@ -97,8 +114,12 @@ func _run() -> void:
 			ws.reset()
 			p.interact()
 			_check(p.state() == "growing", "garden: clicking soil plants the selected seed")
+			_check(_floated(p) == "%s planted" % Florida.label("hibiscus"), "garden: planting says what went in")
 			scene.get_node("SeedBag").interact()
 			_check(Florida.selected_seed() == "sea_grape", "garden: the seed bag switches seeds")
+			_check(_floated(scene.get_node("SeedBag")) == "Now planting: %s" % Florida.label("sea_grape"),
+				"garden: the seed bag says which seed it is now")
+			await _garden_father(scene, ws)
 		if m == "beach":
 			var shell: Node = scene.get_node("Shell1")
 			shell.interact()
@@ -113,6 +134,74 @@ func _run() -> void:
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(ws.SAVE_PATH))
 	print("RESULT: %s (%d failures)" % ["PASS" if _failures == 0 else "FAIL", _failures])
 	quit(0 if _failures == 0 else 1)
+
+
+## The Father in the garden (bd ke5): he is there, his first-visit conversation explains the
+## beds, the seed bag, what grows and what the bench makes (plant and recipe names exactly as the
+## data labels them), it is remembered, and clicking him opens the conversation.
+func _garden_father(scene: Node, ws: Node) -> void:
+	var father: Node = scene.get_node_or_null("Father")
+	_check(father != null and father.npc_id == "father" and father.is_present(), "garden: the Father is in the garden")
+	if father == null:
+		return
+	_check(father.dialogue_path == GARDEN_DIALOGUE and ResourceLoader.exists(GARDEN_DIALOGUE) and father.dialogue_title == "father",
+		"garden: the Father has the garden conversation")
+	var dm: Node = root.get_node("/root/DialogueManager")
+	var res: Resource = load(GARDEN_DIALOGUE)
+	ws.set_flag("fl_met_garden", false)
+	var first: Array = []
+	await _walk(dm, res, "father", first)
+	var text := "\n".join(first)
+	_check(text.contains("You found the garden"), "garden intro: the first-visit opener plays")
+	_check(ws.has_flag("fl_met_garden"), "garden intro: the first visit is remembered")
+	for want: String in ["six beds", "seed bag", "plant it", "water it", "a day sooner", "you pick it", "craft bench",
+			"shells from the beach", "wear straight off the bench", "you just keep", "dolphins", "can't plant it wrong"]:
+		_check(text.contains(want), "garden intro explains: %s" % want)
+	for id: String in Florida.data()["seeds"]:
+		_check(text.to_lower().contains(Florida.label(id).to_lower()), "garden intro names %s as the data does" % id)
+	for id: String in Florida.data()["recipes"]:
+		_check(text.to_lower().contains(Florida.label(id).to_lower()), "garden intro names %s as the data does" % id)
+	_check(text.contains("Mango and coconut take four") and int(Florida.data()["plants"]["mango"]["grow_days"]) == 4
+		and int(Florida.data()["plants"]["coconut"]["grow_days"]) == 4, "garden intro: grow times match the data")
+	for id: String in Florida.data()["plants"]:
+		var days := int(Florida.data()["plants"][id]["grow_days"])
+		_check(id in ["mango", "coconut"] or days in [2, 3], "garden intro: %s is ready in two or three days" % id)
+	_check(not text.contains("{{"), "garden intro: every {{...}} resolves")
+	var again: Array = []
+	await _walk(dm, res, "father", again)
+	_check("\n".join(again).contains("Back in the garden") and not "\n".join(again).contains("You found the garden"),
+		"garden intro: a return visit gets the welcome back")
+	# Clicking him (arriving beside him) opens the conversation
+	father.interact()
+	for i in 4:
+		await process_frame
+	_check(not get_nodes_in_group("dialogue_balloon").is_empty(), "garden: talking to the Father opens the conversation")
+	for b in get_nodes_in_group("dialogue_balloon"):
+		b.queue_free()
+	await process_frame
+
+
+## Text of the newest floating label over a Florida thing (Clickable.float_text).
+func _floated(node: Node) -> String:
+	var labels := node.get_children().filter(func(c: Node) -> bool: return c is Label)
+	return (labels.back() as Label).text if not labels.is_empty() else ""
+
+
+## Plays the dialogue from title, following every response into its own branch (nested ones
+## too); appends each line's speaker and text to out (as in test_pony_stable.gd).
+func _walk(dm: Node, res: Resource, title: String, out: Array, depth := 0) -> void:
+	var line = await dm.get_next_dialogue_line(res, title)
+	var steps := 0
+	while line != null and steps < 60:
+		steps += 1
+		out.append("%s: %s" % [line.character, line.text])
+		if line.responses.size() > 0:
+			for r in line.responses:
+				out.append("> " + r.text)
+				if depth < 4:
+					await _walk(dm, res, r.next_id, out, depth + 1)
+			return
+		line = await dm.get_next_dialogue_line(res, line.next_id)
 
 
 func _check(ok: bool, what: String) -> void:

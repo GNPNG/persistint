@@ -34,12 +34,12 @@ func interact() -> void:
 	match state():
 		"empty":
 			if Florida.plant(plot_id, Florida.selected_seed(), GameClock.day):
-				float_text(Florida.data()["plants"][Florida.selected_seed()]["label"])
+				float_text("%s planted" % Florida.label(Florida.selected_seed()))
 		"growing":
 			if Florida.water(plot_id):
 				float_text("watered")
 		"ready":
 			var plant_id := Florida.harvest(plot_id, GameClock.day)
 			if plant_id != "":
-				float_text("+%d %s" % [Florida.data()["plants"][plant_id]["yield"], Florida.data()["plants"][plant_id]["label"]])
+				float_text("+%d %s" % [Florida.data()["plants"][plant_id]["yield"], Florida.label(plant_id)])
 	refresh()

@@ -21,5 +21,5 @@ func interact() -> void:
 		return
 	Florida.add_item("shell")
 	WorldState.set_flag("fl_shell_%s" % name, GameClock.day)
-	float_text("+1 shell")
+	float_text("+1 %s" % Florida.label("shell"))
 	hide()

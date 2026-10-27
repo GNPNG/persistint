@@ -18,6 +18,16 @@ static func data() -> Dictionary:
 	return _data
 
 
+## The name an item shows by: a plant's, a recipe's or a found item's "label" in the data
+## (ids never show; bd ke5). An id with no label anywhere falls back to its words.
+static func label(item: String) -> String:
+	for group: String in ["plants", "recipes", "items"]:
+		var entry: Dictionary = data().get(group, {}).get(item, {})
+		if entry.has("label"):
+			return entry["label"]
+	return item.capitalize()
+
+
 # --- inventory ---------------------------------------------------------------
 
 static func inventory() -> Dictionary:
