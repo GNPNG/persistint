@@ -630,22 +630,22 @@
     "clip": "res://audio/voice/f45df37ee6125b923228299aeb0f27e8.wav"
   },
   {
-    "speaker": "psychologists",
+    "speaker": "Vacationers",
     "text": "Still out here. The stars don't need us to publish anything.",
-    "key": "4a080ccbabd23cf004f4aabf345438e9",
-    "clip": "res://audio/voice/4a080ccbabd23cf004f4aabf345438e9.wav"
+    "key": "bbc43cb516ff8b24de66938e7d31188b",
+    "clip": "res://audio/voice/bbc43cb516ff8b24de66938e7d31188b.wav"
   },
   {
-    "speaker": "psychologists",
+    "speaker": "Vacationers",
     "text": "Back again? The sun's free. So is the research.",
-    "key": "3691871bbc5483ab6b7f5c677ccd1085",
-    "clip": "res://audio/voice/3691871bbc5483ab6b7f5c677ccd1085.wav"
+    "key": "3212973de5affc848c2e452301993c41",
+    "clip": "res://audio/voice/3212973de5affc848c2e452301993c41.wav"
   },
   {
-    "speaker": "psychologists",
+    "speaker": "Vacationers",
     "text": "Beautiful day. Second margarita. No plans at all.",
-    "key": "c3144996d79c2f99bc8ef7c8f2edbbec",
-    "clip": "res://audio/voice/c3144996d79c2f99bc8ef7c8f2edbbec.wav"
+    "key": "5a9b8caa3aeb7ed7a3e2595a950bc1e4",
+    "clip": "res://audio/voice/5a9b8caa3aeb7ed7a3e2595a950bc1e4.wav"
   },
   {
     "speaker": "Father",

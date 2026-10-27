@@ -6,7 +6,10 @@ extends SceneTree
 ## the landing, the interview as "oprah", the Florida critters by kind, the ponies as "pony", the
 ## polar bear cubs, the clones' quotes, the title letters and their chime-ins). Each speaker with a
 ## spoken line is in the manifest, every such line is there under the key Voice.line_key gives it,
-## and every manifest entry's key and clip path are Voice's own.
+## and every manifest entry's key and clip path are Voice's own. A villager's barks are spoken under
+## the speaker npc.gd hands Voice.speak (the node's display_name, Cast.full(npc_id) when the scene
+## sets none): the beach psychologists speak as "Vacationers", their cast.json name, and their barks
+## are in the manifest under it, none under the npc id "psychologists".
 ## Run: godot --headless --path project -s tests/test_voice_manifest.gd
 
 ## Loaded in _run, after the autoloads (Voice, Cast) exist: a const preload compiles
@@ -14,6 +17,8 @@ extends SceneTree
 var VoiceReview: GDScript
 var VoiceScript: GDScript
 const MANIFEST := "res://audio/voice/manifest.json"
+const BARKS := "res://data/barks.json"
+const BEACH := "res://scenes/florida/beach.tscn"
 ## The speakers tools/export_voice_lines.py left out; named so the test fails if a source is lost.
 const ADDED := ["oprah", "crab", "gull", "dolphin", "mermaid", "pony", "polar_bear_clone", "silverman", "warren", "richter"]
 
@@ -75,6 +80,28 @@ func _run() -> void:
 	for s: String in ADDED:
 		_check(found.has(s) and speakers.has(s), "%s speaks and is in the manifest" % s)
 	_check(not speakers.has("Oprah Winfrey") and speakers.has("oprah"), "Oprah's clips are keyed by her speaker id, oprah")
+
+	# The beach psychologists' barks, under the speaker npc.gd gives Voice.speak: the scene's
+	# display_name, or Cast.full(npc_id) when it sets none (the node is read, not added to the tree).
+	var cast: Node = root.get_node("/root/Cast")
+	var beach: Node = load(BEACH).instantiate()
+	var npc: Node = beach.get_node_or_null("Psychologists")
+	var said_as := ""
+	if npc:
+		said_as = String(npc.display_name) if String(npc.display_name) != "" else String(cast.full(String(npc.npc_id)))
+	beach.free()
+	_check(said_as == "Vacationers" and cast.full("psychologists") == said_as,
+		"the beach psychologists speak as Vacationers, their cast.json name (%s)" % said_as)
+	var barks: Variant = JSON.parse_string(FileAccess.get_file_as_string(BARKS))
+	var psych: Array = barks.get("psychologists", []) if barks is Dictionary else []
+	var unkeyed: Array = []
+	for b: Variant in psych:
+		var t := str(b.get("text", "")) if b is Dictionary else ""
+		if VoiceScript.spoken_text(t) != "" and not keys.has(VoiceScript.line_key(said_as, t)):
+			unkeyed.append(t)
+	_check(not psych.is_empty() and unkeyed.is_empty(), "all %d of the psychologists' barks are in the manifest under %s (%d missing%s)"
+		% [psych.size(), said_as, unkeyed.size(), (": " + String(unkeyed[0])) if not unkeyed.is_empty() else ""])
+	_check(not speakers.has("psychologists"), "no bark is keyed under the npc id psychologists")
 
 	print("RESULT: %s (%d failures)" % ["PASS" if _failures == 0 else "FAIL", _failures])
 	quit(0 if _failures == 0 else 1)
