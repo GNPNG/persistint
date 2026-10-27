@@ -1,0 +1,46 @@
+{
+	"_note": "Conquest review slice (scenes/test/conquest.tscn). Names, sides, castes and numbers are placeholders for the author to settle: the player side is the Sisterhood; the rival side, the leaders other than Priestess Betty, the livestock and the lean days are open questions. Cells are island_layout.json cells (32 world px). A leader's name_cast takes the name from data/cast.json instead of name.",
+	"sides": {
+		"player": {"name": "The Sisterhood"},
+		"rival": {"name": "Rivals"}
+	},
+	"postures": {
+		"polite": {"label": "Polite", "push": 0.8, "draft": 0.15, "gathers": true},
+		"firm": {"label": "Firm", "push": 1.0, "draft": 0.35, "gathers": true},
+		"persistent": {"label": "Persistent", "push": 1.35, "draft": 0.7, "gathers": false}
+	},
+	"tuning": {
+		"speed": 34.0,
+		"courier_speed": 140.0,
+		"eat_rate": 0.02,
+		"lean_factor": 2.0,
+		"day_seconds": 20.0,
+		"days_per_cycle": 28,
+		"lean_days": [22, 23, 24, 25, 26, 27, 28],
+		"settlement_defense": 0.5,
+		"produce_rate": 0.04,
+		"grow_seconds": 12.0,
+		"gather_rate": 2.0,
+		"livestock_food": 25.0,
+		"scatter_share": 0.6,
+		"roll_spread": 0.25
+	},
+	"settlements": [
+		{"name": "Temple", "cell": [6.8, 27.9], "pop": 12, "food": 40, "owner": "player"},
+		{"name": "Main House", "cell": [22.6, 5.2], "pop": 14, "food": 30, "owner": "neutral"},
+		{"name": "Pool House", "cell": [4.7, 14.2], "pop": 8, "food": 20, "owner": "neutral"},
+		{"name": "The Pitch", "cell": [13.8, 21.5], "pop": 10, "food": 20, "owner": "neutral"},
+		{"name": "Helipad", "cell": [23.7, 16.2], "pop": 9, "food": 20, "owner": "neutral"},
+		{"name": "Ruins", "cell": [18.3, 24.8], "pop": 6, "food": 15, "owner": "neutral"},
+		{"name": "Tower", "cell": [28.4, 21.6], "pop": 8, "food": 20, "owner": "neutral"},
+		{"name": "Far Shed", "cell": [32.1, 29.5], "pop": 12, "food": 40, "owner": "rival"}
+	],
+	"leaders": [
+		{"side": "player", "name_cast": "priestess", "name": "Priestess", "caste": "npc_priestess", "follower_caste": "npc_initiate", "cell": [7.6, 26.6], "men": 6, "food": 30, "posture": "firm"},
+		{"side": "player", "name": "Mother", "caste": "npc_mother", "follower_caste": "npc_initiate", "cell": [9.0, 27.6], "men": 5, "food": 25, "posture": "firm"},
+		{"side": "player", "name": "Initiate", "caste": "npc_initiate", "follower_caste": "npc_initiate", "cell": [5.6, 25.6], "men": 5, "food": 25, "posture": "polite"},
+		{"side": "rival", "name": "Drone One", "caste": "npc_drone", "follower_caste": "npc_drone", "cell": [31.0, 28.2], "men": 7, "food": 35, "posture": "firm"},
+		{"side": "rival", "name": "Drone Two", "caste": "npc_drone", "follower_caste": "npc_drone", "cell": [33.0, 28.6], "men": 6, "food": 30, "posture": "firm"}
+	],
+	"livestock": [[10, 18], [15, 15], [20, 20], [26, 25], [9, 24], [30, 26]]
+}
