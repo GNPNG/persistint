@@ -81,7 +81,7 @@ def main() -> None:
 <meta name="description" content="What's new in the current version of PERSISTINT and what's coming next.">
 <meta name="theme-color" content="#fdf6e3">
 <meta name="color-scheme" content="light">
-<link rel="canonical" href="https://{SITE_HOST}/updates.html">
+<link rel="canonical" href="https://{SITE_HOST}/updates">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
