@@ -59,5 +59,10 @@
 		{ "when": { "phase": "night" }, "text": "Shh, they're sleepy. I'm just doing her mane one more time. She likes it." },
 		{ "if": { "fl_met_ponies": true }, "text": "You came back! I saved you the sparkly brush. It doesn't do anything. It's just sparkly." },
 		{ "text": "Hi! I'm doing the tangly bit of her mane. Slow and gentle, from the bottom up." }
+	],
+	"psychologists": [
+		{ "when": { "phase": "night" }, "text": "Still out here. The stars don't need us to publish anything." },
+		{ "if": { "fl_met_psychologists": true }, "text": "Back again? The sun's free. So is the research." },
+		{ "text": "Beautiful day. Second margarita. No plans at all." }
 	]
 }
