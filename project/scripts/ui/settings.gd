@@ -36,6 +36,7 @@ func _ready() -> void:
 		row.add_child(slider)
 		rows.add_child(row)
 		_sliders[which] = slider
+	_sliders["master"].add_to_group(PadFocus.DEFAULT)  # a pad starts on the first slider (QA-13)
 	_add_text_row(rows)
 	_add_screen_row(rows)
 	_add_save_row(rows)

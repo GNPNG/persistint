@@ -15,6 +15,8 @@ func _ready() -> void:
 	%SettingsButton.pressed.connect(AudioSettings.open)
 	%CreditsButton.pressed.connect($Credits.open)
 	%BeginButton.visible = WorldState.get_flag("_location") is Dictionary
+	# A pad starts on Continue when there is a game to continue, else New Game (QA-13, PadFocus).
+	(%BeginButton if %BeginButton.visible else %NewButton).add_to_group(PadFocus.DEFAULT)
 	_add_fullscreen_button()
 	_add_quit_button()
 	_add_version_label()
@@ -56,7 +58,7 @@ static func toggle_fullscreen() -> void:
 	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED if is_fullscreen() else DisplayServer.WINDOW_MODE_FULLSCREEN)
 
 
-func _unhandled_key_input(event: InputEvent) -> void:
+func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("toggle_fullscreen"):
 		toggle_fullscreen()
 

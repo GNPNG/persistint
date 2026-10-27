@@ -164,7 +164,12 @@ func _update_gear() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not event.is_action_pressed("ui_cancel"):
+	# A pad's Start opens and closes it; its B (ui_cancel) only closes it, since in play B gets
+	# off the pony (QA-13). Escape on the keyboard opens and closes it.
+	var pad := event is InputEventJoypadButton
+	if event.is_action_pressed("pause") or (pad and event.is_action_pressed("ui_cancel") and is_open()):
+		pass
+	elif pad or not event.is_action_pressed("ui_cancel"):
 		return
 	var scene := get_tree().current_scene
 	var path := scene.scene_file_path if scene else ""

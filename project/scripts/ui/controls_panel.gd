@@ -38,6 +38,8 @@ func _ready() -> void:
 		row.add_child(b)
 		rows.add_child(row)
 		_buttons[pair[0]] = b
+		if _buttons.size() == 1:
+			b.add_to_group(PadFocus.DEFAULT)  # a pad starts on the first action (QA-13)
 	var foot := HBoxContainer.new()
 	foot.alignment = BoxContainer.ALIGNMENT_CENTER
 	for pair: Array in [["ResetButton", "Reset", _on_reset], ["BackButton", "Back", close]]:

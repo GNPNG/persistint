@@ -14,6 +14,7 @@ var data: Dictionary = {}
 
 
 func _ready() -> void:
+	%DoneButton.add_to_group(PadFocus.DEFAULT)  # where a pad starts (QA-13)
 	data = load_data()
 	$Dim.gui_input.connect(_on_dim_input)
 	%DoneButton.pressed.connect(close)
