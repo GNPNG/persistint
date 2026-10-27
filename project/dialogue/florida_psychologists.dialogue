@@ -37,17 +37,24 @@ Woman with a Margarita: Ask us anything. It's all published. [#chat]
 	Man with a Margarita: I don't gossip online. I gossip here, with a margarita, like a professional. [#chat]
 	=> topics
 - Violence between partners?
-	Woman with a Margarita: A 2023 review of ninety-nine papers: lesbian, bisexual and other sexual minority women are more likely than straight women to report violence from a partner. [#cite=porsch2023_more]
-	- Wait, more than straight women? How?
-		Man with a Margarita: The risk factors the review found include prior trauma and victimization, substance use, and minority stressors like stigma and discrimination. [#cite=porsch2023_risk]
-		Woman with a Margarita: Large U.S. probability samples suggest bisexual women are the most likely to report it, more than lesbian or straight women. [#cite=porsch2023_bisexual]
-		Man with a Margarita: Thirteen studies compared these women with other sexual and gender minority groups. Several found higher rates among the women than among sexual minority men, some found no difference, and overall the findings are largely inconsistent. [#cite=porsch2023_inconsistent]
-		Woman with a Margarita: We wrote all that down. It's very well footnoted. [#chat]
+	Woman with a Margarita: The highest rate of violence is actually between same-sex female couples. [#author=ipv_highest]
+	- Wait, how?
+		Woman with a Margarita: Women spend their lives providing for their children and grandchildren, so they have to minimize their risk of physical harm. [#cite=benenson2013_harm]
+		Man with a Margarita: From early childhood, girls compete in ways that minimize the risk of retaliation. [#cite=benenson2013_retaliation]
+		Woman with a Margarita: Which fits with indirect aggression being a low-cost, effective way for young women to compete. [#cite=stockley2013_lowcost]
+		Man with a Margarita: So with a man and a woman, she knows he's stronger, and she keeps it indirect. [#interp=deterrence_mixed]
+		Woman with a Margarita: Two men? Each one knows the other could beat the stuffing out of him. That's a good reason to keep your hands to yourself. [#interp=deterrence_two_men]
+		Man with a Margarita: Two women? Neither one is the one who could really hurt the other, so that brake isn't there. [#interp=deterrence_two_women]
+		Woman with a Margarita: We explained all this at a conference once. Everyone left for the bar. [#chat]
 	- Why don't I ever hear about this?
+		Woman with a Margarita: A 2023 review of ninety-nine papers: lesbian, bisexual and other sexual minority women are more likely than straight women to report violence from a partner. [#cite=porsch2023_more]
+		Man with a Margarita: Several studies found more physical partner violence against lesbian and bisexual women than against gay and bisexual men. [#cite=porsch2023_smw_smm]
 		Woman with a Margarita: It's hard to study. There are myths about whether women can be aggressive toward other women, and fear of stigmatizing sexual minorities even more. [#cite=porsch2023_myths]
 		Man with a Margarita: In partner violence research, sexual minority women are understudied compared with straight women. [#cite=porsch2023_understudied]
 		Woman with a Margarita: Most of the studies looked at victims. The review says emerging findings show perpetration is prevalent among these women, and understanding why is imperative. [#cite=porsch2023_perpetration]
 		Man with a Margarita: So we publish, and it waits. [#chat]
+	- What makes it more likely?
+		Woman with a Margarita: The risk factors the review found include prior trauma and victimization, substance use, and minority stressors like stigma and discrimination. [#cite=porsch2023_risk]
 	- What about control, without hitting?
 		Man with a Margarita: The measures and theories of coercive control mostly look at men coercing women. [#cite=hilton2024_measures]
 		Woman with a Margarita: A 2024 review found coercive control was more common among Two Spirit and LGBTQ+ people, and related to mental health challenges. [#cite=hilton2024_more]

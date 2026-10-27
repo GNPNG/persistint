@@ -1,11 +1,13 @@
 extends SceneTree
 ## Headless check of the vacationing psychologists on the Florida beach (bd kge): they lounge
 ## under the beach umbrella with their conversation; it is optional (the first choice can end it);
-## every line they speak is tagged, [#chat] for their own talk or [#cite=<id>] naming a claim in
-## data/florida_psychologists.json whose words are the line's exactly; every claim is verified
-## against its source (verified=true, the DOI, the record checked, the source's own words, a check
-## date; SOP-06), is spoken somewhere, and cites a work on the site's citations page; meeting them
-## is remembered; walking near them gets a bark and talking to them opens the conversation.
+## every line they speak is tagged in data/florida_psychologists.json's terms, its words exactly the
+## entry's: [#cite=<id>] a claim verified against its source (verified=true, the DOI, the record
+## checked, the source's own words, a check date; SOP-06) from the site's citations page or the
+## author's references; [#author=<id>] a line the author wrote, with verified support from those
+## sources and the gap stated; [#interp=<id>] the psychologists' explanation, never marked as
+## sourced; [#chat] their own talk. Every claim is spoken; meeting them is remembered; walking near
+## them gets a bark and talking to them opens the conversation.
 ## Run: godot --headless --path project -s tests/test_florida_psychologists.gd
 ## The test run uses WorldState's test save (QA-04).
 
@@ -14,6 +16,8 @@ const CLAIMS := "res://data/florida_psychologists.json"
 const BEACH := "res://scenes/florida/beach.tscn"
 const SPEAKERS := ["Woman with a Margarita", "Man with a Margarita"]
 const SKIP := "I'll let you enjoy it."
+## The author's reference collection (dev/, git-crypt), where works not on the citations page are listed.
+const AUTHOR_REFS := "../dev/notebook/biological-and-social-foundations-of-the-covenant-hierarchy.md"
 
 var _failures := 0
 
@@ -30,9 +34,11 @@ func _run() -> void:
 	var claims: Dictionary = doc.get("claims", {})
 	_check(claims.size() > 0, "claims load")
 
-	# Every claim is verified against its source and cites a work on the site's citations page.
+	# Every claim is verified against its source and cites a work on the site's citations page or in
+	# the author's references.
 	var page := FileAccess.get_file_as_string(ProjectSettings.globalize_path("res://").path_join("../site/public/citations.html"))
 	_check(page.contains("Further reading"), "the site's citations page is readable")
+	var refs := FileAccess.get_file_as_string(ProjectSettings.globalize_path("res://").path_join(AUTHOR_REFS))
 	var date := RegEx.create_from_string("^\\d{4}-\\d{2}-\\d{2}$")
 	var n_verified := 0
 	for id: String in claims:
@@ -43,14 +49,32 @@ func _run() -> void:
 			and date.search(String(c.get("checked_on", ""))) != null
 		_check(ok, "claim %s: verified, with its source, DOI, the record checked, the source's words and a date" % id)
 		var doi := String(c.get("url", "")).trim_prefix("https://doi.org/")
-		_check(doi != "" and page.contains(doi), "claim %s cites a work on the citations page (%s)" % [id, doi])
+		var listed: bool = page.contains(doi) if doi != "" else false
+		if not listed and c.has("title"):
+			listed = refs.contains(String(c["title"]))
+		_check(listed, "claim %s cites a work on the citations page or in the author's references (%s)" % [id, doi])
 		if c.get("verified") == true:
 			n_verified += 1
+	var authors: Dictionary = doc.get("author_lines", {})
+	for id: String in authors:
+		var a: Dictionary = authors[id]
+		var sup_ok: bool = a.get("support", []).size() > 0
+		for s: Dictionary in a.get("support", []):
+			sup_ok = sup_ok and s.get("verified") == true and String(s.get("quote", "")) != "" \
+				and String(s.get("checked_url", "")).begins_with("https://") and String(s.get("population", "")) != ""
+		_check(String(a.get("text", "")) != "" and String(a.get("author_words", "")).contains("Author") and sup_ok
+			and a.get("gap", []).size() > 0 and not a.has("verified"),
+			"author line %s: his words, verified support with populations, the gap stated, not itself marked verified" % id)
+	var interps: Dictionary = doc.get("interpretations", {})
+	for id: String in interps:
+		var i: Dictionary = interps[id]
+		_check(i.get("kind") == "interpretation" and not i.has("verified") and not i.has("url") and String(i.get("note", "")) != "",
+			"interpretation %s is never presented as sourced" % id)
 	var meta: Dictionary = doc.get("_verification", {})
 	_check(int(meta.get("total", -1)) == claims.size() and int(meta.get("verified", -1)) == n_verified,
 		"_verification counts match the claims")
 
-	# Every line they speak: a cited, verified claim in its exact words, or chat.
+	# Every line they speak: a cited, verified claim, the author's line or an interpretation, in its exact words, or chat.
 	var dm: Node = root.get_node("/root/DialogueManager")
 	var res: Resource = load(DIALOGUE)
 	_check(res != null, "the conversation loads")
@@ -65,7 +89,17 @@ func _run() -> void:
 	for l: Array in lines:
 		_check(l[0] in SPEAKERS, "only the two psychologists speak (%s)" % l[0])
 		var cite := _tag_value(l[2], "cite")
-		if cite != "":
+		var author := _tag_value(l[2], "author")
+		var interp := _tag_value(l[2], "interp")
+		if author != "":
+			_check(authors.has(author) and String(authors[author]["text"]) == String(l[1]).strip_edges(),
+				"the author's line %s is spoken as he wrote it" % author)
+			used["author:" + author] = true
+		elif interp != "":
+			_check(interps.has(interp) and String(interps[interp]["text"]) == String(l[1]).strip_edges(),
+				"interpretation %s is spoken as written" % interp)
+			used["interp:" + interp] = true
+		elif cite != "":
 			var c: Dictionary = claims.get(cite, {})
 			_check(not c.is_empty() and c.get("verified") == true and String(c["text"]) == String(l[1]).strip_edges(),
 				"the line citing %s says its verified claim's words exactly" % cite)
@@ -73,13 +107,19 @@ func _run() -> void:
 		elif not l[2].has("chat"):
 			untagged += 1
 			print("  untagged line: %s: %s" % [l[0], l[1]])
-	_check(untagged == 0, "every line they speak is a cited claim or chat")
+	_check(untagged == 0, "every line they speak is tagged: claim, author line, interpretation or chat")
 	for id: String in claims:
 		_check(used.has(id), "claim %s is spoken" % id)
+	for id: String in authors:
+		_check(used.has("author:" + id), "author line %s is spoken" % id)
+	for id: String in interps:
+		_check(used.has("interp:" + id), "interpretation %s is spoken" % id)
+	_check(lines.any(func(l: Array) -> bool: return _tag_value(l[2], "author") == "ipv_highest") and asked.has("Wait, how?"),
+		"the author's line is spoken and the player can ask how")
 	_check(not lines.any(func(l: Array) -> bool: return String(l[1]).contains("[#") or String(l[1]).contains("{{")),
 		"no tag or {{...}} shows in a line")
 	for want: String in [SKIP, "What do you two do, back home?", "Violence between partners?",
-			"Wait, more than straight women? How?", "Why don't I ever hear about this?", "That's enough research for one vacation."]:
+			"Wait, how?", "Why don't I ever hear about this?", "That's enough research for one vacation."]:
 		_check(asked.has(want), "the player can say: %s" % want)
 
 	# Optional: the first choice can end it before any research, and a return visit is welcomed.

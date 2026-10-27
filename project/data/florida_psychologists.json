@@ -1,12 +1,12 @@
 {
-	"_note": "What the vacationing psychologists on the Florida beach say about the research (bd kge; dialogue/florida_psychologists.dialogue). Each factual line in that dialogue carries [#cite=<id>] naming a claim here, and its words are the claim's 'text' exactly; every other line they speak carries [#chat]. Every source is on the site's citations page (site/public/citations.html, Further reading); no other literature is used. Claims are not quotes: the line restates what the source's own text says, and 'evidence' holds that source text.",
+	"_note": "What the vacationing psychologists on the Florida beach say about the research (bd kge; dialogue/florida_psychologists.dialogue). Every line they speak carries a tag: [#cite=<id>] names a claim here, verified against its source, whose 'text' is the line's words exactly; [#author=<id>] names a line the author wrote, shipped as he wrote it, with the source text that supports it and what the sources do not show (author_lines); [#interp=<id>] names the psychologists' explanation, the author's rationale with no source (interpretations); [#chat] is their own talk. Sources are the site's citations page (Further reading) and the author's reference collection; no other literature is used. Claims are not quotes: a claim restates what the source's own text says, and 'evidence' holds that text.",
 	"_verification": {
-		"method": "SOP-06 adapted to claims, 2026-10-27: each line was compared against the cited work's own text, fetched raw (not a model summary): the abstract from NCBI E-utilities (PubMed), the full text from PubMed Central where open (Porsch 2023), or the abstract in the DOI's Crossref record. 'evidence' is the source sentence(s) the line restates, '...' marking a gap between sentences. A line the source does not support is not in the dialogue.",
-		"fields": "per claim: text, source, url (the DOI), aggregator, checked_url (the record whose text was compared), evidence, verified, checked_on, note",
+		"method": "SOP-06 adapted to claims, 2026-10-27: each claim and each support or gap quote was compared against the cited work's own text, fetched raw (not a model summary): the abstract from NCBI E-utilities (PubMed), the full text from PubMed Central where open (Porsch 2023), or the abstract in the DOI's Crossref record. 'evidence' and 'quote' are the source's sentences, '...' marking a gap between them. Interpretations and the author's own lines are not marked verified: no source states them as worded.",
+		"fields": "claims: text, source, url (the DOI), aggregator, collection, population, checked_url, evidence, verified, checked_on, note (title when the work is in the author's references rather than on the citations page). author_lines: text, author_words, status, support (source, quote, statistic, population, verified), gap. interpretations: text, kind, author_words, note.",
 		"date": "2026-10-27",
-		"total": 21,
-		"verified": 21,
-		"rule": "Only claims with verified=true may be spoken (tests/test_florida_psychologists.gd)."
+		"total": 23,
+		"verified": 23,
+		"rule": "A [#cite] line must be a verified claim; an [#author] line must have verified support and a stated gap; an [#interp] line is never presented as sourced (tests/test_florida_psychologists.gd)."
 	},
 	"claims": {
 		"vaillancourt2013_what": {
@@ -14,6 +14,8 @@
 			"source": "Vaillancourt, T. (2013). Do human females use indirect aggression as an intrasexual competition strategy? Philosophical Transactions of the Royal Society B, 368(1631), 20130080.",
 			"url": "https://doi.org/10.1098/rstb.2013.0080",
 			"aggregator": false,
+			"collection": "site/public/citations.html",
+			"population": "review of the research on indirect aggression among girls and women",
 			"checked_url": "https://pubmed.ncbi.nlm.nih.gov/24167310/",
 			"evidence": "Indirect aggression includes behaviours such as criticizing a competitor's appearance, spreading rumours about a person's sexual behaviour and social exclusion.",
 			"verified": true,
@@ -25,6 +27,8 @@
 			"source": "Vaillancourt, T. (2013). Do human females use indirect aggression as an intrasexual competition strategy? Philosophical Transactions of the Royal Society B, 368(1631), 20130080.",
 			"url": "https://doi.org/10.1098/rstb.2013.0080",
 			"aggregator": false,
+			"collection": "site/public/citations.html",
+			"population": "review of the research on indirect aggression among girls and women",
 			"checked_url": "https://pubmed.ncbi.nlm.nih.gov/24167310/",
 			"evidence": "Human females have a particular proclivity for using indirect aggression, which is typically directed at other females, especially attractive and sexually available females, in the context of intrasexual competition for mates.",
 			"verified": true,
@@ -36,6 +40,8 @@
 			"source": "Crick, N. R., & Grotpeter, J. K. (1995). Relational aggression, gender, and social-psychological adjustment. Child Development, 66(3), 710–722.",
 			"url": "https://doi.org/10.1111/j.1467-8624.1995.tb00900.x",
 			"aggregator": false,
+			"collection": "site/public/citations.html",
+			"population": "491 children in grades 3 to 6; peer nominations and self-report",
 			"checked_url": "https://pubmed.ncbi.nlm.nih.gov/7789197/",
 			"evidence": "Prior studies of childhood aggression have demonstrated that, as a group, boys are more aggressive than girls. ... Overt aggression (i.e., physical and verbal aggression as assessed in past research) and social-psychological adjustment were also assessed.",
 			"verified": true,
@@ -47,6 +53,8 @@
 			"source": "Crick, N. R., & Grotpeter, J. K. (1995). Relational aggression, gender, and social-psychological adjustment. Child Development, 66(3), 710–722.",
 			"url": "https://doi.org/10.1111/j.1467-8624.1995.tb00900.x",
 			"aggregator": false,
+			"collection": "site/public/citations.html",
+			"population": "491 children in grades 3 to 6; peer nominations and self-report",
 			"checked_url": "https://pubmed.ncbi.nlm.nih.gov/7789197/",
 			"evidence": "In the present study, a form of aggression hypothesized to be typical of girls, relational aggression, was assessed with a peer nomination instrument for a sample of 491 third-through sixth-grade children. ... Further, they indicated that, as predicted, girls were significantly more relationally aggressive than were boys.",
 			"verified": true,
@@ -58,6 +66,8 @@
 			"source": "Crick, N. R., & Grotpeter, J. K. (1995). Relational aggression, gender, and social-psychological adjustment. Child Development, 66(3), 710–722.",
 			"url": "https://doi.org/10.1111/j.1467-8624.1995.tb00900.x",
 			"aggregator": false,
+			"collection": "site/public/citations.html",
+			"population": "491 children in grades 3 to 6; peer nominations and self-report",
 			"checked_url": "https://pubmed.ncbi.nlm.nih.gov/7789197/",
 			"evidence": "Results also indicated that relationally aggressive children may be at risk for serious adjustment difficulties (e.g., they were significantly more rejected and reported significantly higher levels of loneliness, depression, and isolation relative to their nonrelationally aggressive peers).",
 			"verified": true,
@@ -69,6 +79,8 @@
 			"source": "Vaillancourt, T., & Sharma, A. (2011). Intolerance of sexy peers: Intrasexual competition among women. Aggressive Behavior, 37(6), 569–577.",
 			"url": "https://doi.org/10.1002/ab.20413",
 			"aggregator": false,
+			"collection": "site/public/citations.html",
+			"population": "two experiments with women participants; their reactions to a female confederate rated by independent raters blind to condition",
 			"checked_url": "https://pubmed.ncbi.nlm.nih.gov/21932332/",
 			"evidence": "Using independent raters, blind to condition, we found that almost all women were rated as reacting negatively (\"bitchy\") to an attractive female confederate when she was dressed in a sexually provocative manner. In contrast, when she was dressed conservatively, the same confederate was barely noticed by the participants.",
 			"verified": true,
@@ -80,6 +92,8 @@
 			"source": "Vaillancourt, T., & Sharma, A. (2011). Intolerance of sexy peers: Intrasexual competition among women. Aggressive Behavior, 37(6), 569–577.",
 			"url": "https://doi.org/10.1002/ab.20413",
 			"aggregator": false,
+			"collection": "site/public/citations.html",
+			"population": "two experiments with women participants; their reactions to a female confederate rated by independent raters blind to condition",
 			"checked_url": "https://pubmed.ncbi.nlm.nih.gov/21932332/",
 			"evidence": "we found that almost all women were rated as reacting negatively (\"bitchy\") to an attractive female confederate when she was dressed in a sexually provocative manner. In contrast, when she was dressed conservatively, the same confederate was barely noticed by the participants.",
 			"verified": true,
@@ -91,6 +105,8 @@
 			"source": "Vaillancourt, T., & Sharma, A. (2011). Intolerance of sexy peers: Intrasexual competition among women. Aggressive Behavior, 37(6), 569–577.",
 			"url": "https://doi.org/10.1002/ab.20413",
 			"aggregator": false,
+			"collection": "site/public/citations.html",
+			"population": "two experiments with women participants; their reactions to a female confederate rated by independent raters blind to condition",
 			"checked_url": "https://pubmed.ncbi.nlm.nih.gov/21932332/",
 			"evidence": "In Study 2, an experimental design was used to assess whether the sexy female confederate from Study 1 was viewed as a sexual rival by women. Results indicated that as hypothesized, women did not want to introduce her to their boyfriend, allow him to spend time alone with her, or be friends with her.",
 			"verified": true,
@@ -102,6 +118,8 @@
 			"source": "García-Fernández, C. M., Moreno-Moya, M., Ortega-Ruiz, R., & Romera, E. M. (2022). Adolescent involvement in cybergossip: Influence on social adjustment, bullying and cyberbullying. The Spanish Journal of Psychology, 25, e6.",
 			"url": "https://doi.org/10.1017/SJP.2022.3",
 			"aggregator": false,
+			"collection": "site/public/citations.html",
+			"population": "510 secondary school students aged 12 to 17 (49.4% girls); self-report questionnaires",
 			"checked_url": "https://api.crossref.org/works/10.1017/SJP.2022.3",
 			"evidence": "A total of 510 secondary school students (49.4% girls) aged 12 to 17 years old ( M = 14.01; SD = 1.38) were surveyed by self-report. ... The results showed that a high prevalence of involvement in cybergossip was associated with bullying and cyberbullying behavior (aggression and victimization), with girls showing the greatest involvement in cybergossip.",
 			"verified": true,
@@ -113,6 +131,8 @@
 			"source": "García-Fernández, C. M., Moreno-Moya, M., Ortega-Ruiz, R., & Romera, E. M. (2022). Adolescent involvement in cybergossip: Influence on social adjustment, bullying and cyberbullying. The Spanish Journal of Psychology, 25, e6.",
 			"url": "https://doi.org/10.1017/SJP.2022.3",
 			"aggregator": false,
+			"collection": "site/public/citations.html",
+			"population": "510 secondary school students aged 12 to 17 (49.4% girls); self-report questionnaires",
 			"checked_url": "https://api.crossref.org/works/10.1017/SJP.2022.3",
 			"evidence": "with girls showing the greatest involvement in cybergossip.",
 			"verified": true,
@@ -124,30 +144,10 @@
 			"source": "Porsch, L. M., Xu, M., Veldhuis, C. B., Bochicchio, L. A., Zollweg, S. S., & Hughes, T. L. (2023). Intimate partner violence among sexual minority women: A scoping review. Trauma, Violence, & Abuse, 24(5), 3014–3036.",
 			"url": "https://doi.org/10.1177/15248380221122815",
 			"aggregator": false,
+			"collection": "site/public/citations.html",
+			"population": "scoping review of 99 quantitative papers (2000 to 2021) on partner violence against adult sexual minority women; mostly survey (self-report) data",
 			"checked_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10039964/",
 			"evidence": "After independent reviewers screened these papers for relevance, 99 were included in the final review. ... Findings of this review provide additional evidence that SMW are more likely than heterosexual women to report IPV.",
-			"verified": true,
-			"checked_on": "2026-10-27",
-			"note": "Compared against the full text, PubMed Central PMC10039964 (NCBI raw text), and the abstract, PubMed record 36154756."
-		},
-		"porsch2023_bisexual": {
-			"text": "Large U.S. probability samples suggest bisexual women are the most likely to report it, more than lesbian or straight women.",
-			"source": "Porsch, L. M., Xu, M., Veldhuis, C. B., Bochicchio, L. A., Zollweg, S. S., & Hughes, T. L. (2023). Intimate partner violence among sexual minority women: A scoping review. Trauma, Violence, & Abuse, 24(5), 3014–3036.",
-			"url": "https://doi.org/10.1177/15248380221122815",
-			"aggregator": false,
-			"checked_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10039964/",
-			"evidence": "Findings from studies using large U.S. probability samples suggest that bisexual women are significantly more likely than both heterosexual or lesbian women to report physical, sexual, and/or psychological IPV victimization",
-			"verified": true,
-			"checked_on": "2026-10-27",
-			"note": "Compared against the full text, PubMed Central PMC10039964 (NCBI raw text), and the abstract, PubMed record 36154756."
-		},
-		"porsch2023_inconsistent": {
-			"text": "Thirteen studies compared these women with other sexual and gender minority groups. Several found higher rates among the women than among sexual minority men, some found no difference, and overall the findings are largely inconsistent.",
-			"source": "Porsch, L. M., Xu, M., Veldhuis, C. B., Bochicchio, L. A., Zollweg, S. S., & Hughes, T. L. (2023). Intimate partner violence among sexual minority women: A scoping review. Trauma, Violence, & Abuse, 24(5), 3014–3036.",
-			"url": "https://doi.org/10.1177/15248380221122815",
-			"aggregator": false,
-			"checked_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10039964/",
-			"evidence": "Thirteen studies compared the IPV prevalence among SMW and other SGM groups; findings from these studies are largely inconsistent. Three studies using convenience samples of sexual minority individuals found no significant gender differences in IPV victimization ... However, several convenience sample studies from Southeast Texas ... found higher rates of physical IPV victimization ... among SMW compared to SMM.",
 			"verified": true,
 			"checked_on": "2026-10-27",
 			"note": "Compared against the full text, PubMed Central PMC10039964 (NCBI raw text), and the abstract, PubMed record 36154756."
@@ -157,6 +157,8 @@
 			"source": "Porsch, L. M., Xu, M., Veldhuis, C. B., Bochicchio, L. A., Zollweg, S. S., & Hughes, T. L. (2023). Intimate partner violence among sexual minority women: A scoping review. Trauma, Violence, & Abuse, 24(5), 3014–3036.",
 			"url": "https://doi.org/10.1177/15248380221122815",
 			"aggregator": false,
+			"collection": "site/public/citations.html",
+			"population": "scoping review of 99 quantitative papers (2000 to 2021) on partner violence against adult sexual minority women; mostly survey (self-report) data",
 			"checked_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10039964/",
 			"evidence": "the bulk of studies identified for this review focused on victimization ... given emerging findings that IPV perpetration is prevalent among SMW, it is imperative to better understand mechanisms underlying IPV among SMW, that is, why SMW may be aggressive with their partners",
 			"verified": true,
@@ -168,6 +170,8 @@
 			"source": "Porsch, L. M., Xu, M., Veldhuis, C. B., Bochicchio, L. A., Zollweg, S. S., & Hughes, T. L. (2023). Intimate partner violence among sexual minority women: A scoping review. Trauma, Violence, & Abuse, 24(5), 3014–3036.",
 			"url": "https://doi.org/10.1177/15248380221122815",
 			"aggregator": false,
+			"collection": "site/public/citations.html",
+			"population": "scoping review of 99 quantitative papers (2000 to 2021) on partner violence against adult sexual minority women; mostly survey (self-report) data",
 			"checked_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10039964/",
 			"evidence": "It is important to note that there are unique challenges in studying IPV among SMW, such as differing perceptions and myths about women's ability to be aggressive towards other women, and fear of further stigmatization of sexual minority populations",
 			"verified": true,
@@ -179,6 +183,8 @@
 			"source": "Porsch, L. M., Xu, M., Veldhuis, C. B., Bochicchio, L. A., Zollweg, S. S., & Hughes, T. L. (2023). Intimate partner violence among sexual minority women: A scoping review. Trauma, Violence, & Abuse, 24(5), 3014–3036.",
 			"url": "https://doi.org/10.1177/15248380221122815",
 			"aggregator": false,
+			"collection": "site/public/citations.html",
+			"population": "scoping review of 99 quantitative papers (2000 to 2021) on partner violence against adult sexual minority women; mostly survey (self-report) data",
 			"checked_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10039964/",
 			"evidence": "However, compared to IPV research with heterosexual women and other LGBTQ+ population groups, SMW are understudied.",
 			"verified": true,
@@ -190,6 +196,8 @@
 			"source": "Porsch, L. M., Xu, M., Veldhuis, C. B., Bochicchio, L. A., Zollweg, S. S., & Hughes, T. L. (2023). Intimate partner violence among sexual minority women: A scoping review. Trauma, Violence, & Abuse, 24(5), 3014–3036.",
 			"url": "https://doi.org/10.1177/15248380221122815",
 			"aggregator": false,
+			"collection": "site/public/citations.html",
+			"population": "scoping review of 99 quantitative papers (2000 to 2021) on partner violence against adult sexual minority women; mostly survey (self-report) data",
 			"checked_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10039964/",
 			"evidence": "Risk factors for IPV in this population include prior trauma and victimization, psychological and emotional concerns, substance use, and minority stressors. ... SMW's risk of IPV is also likely affected by sexual minority-specific factors such as stigma, discrimination, internalized homophobia (IH), and concealment of sexual identities",
 			"verified": true,
@@ -201,6 +209,8 @@
 			"source": "Hilton, N. Z., Ham, E., Radatz, D. L., Smith, C. M., Snow, N., Wintermute, J., Jennings-Fitz-Gerald, E., Lee, J., & Patterson, S. (2024). Coercive control in 2SLGBTQQIA+ relationships: A scoping review. Trauma, Violence, & Abuse, 25(5), 3713–3728.",
 			"url": "https://doi.org/10.1177/15248380241257957",
 			"aggregator": false,
+			"collection": "site/public/citations.html",
+			"population": "scoping review of 277 documents (2014 to 2022) on coercive control in 2SLGBTQQIA+ relationships, gray literature included",
 			"checked_url": "https://pubmed.ncbi.nlm.nih.gov/39066513/",
 			"evidence": "Existing measures and theories of intimate partner coercive control largely evaluate men's coercion of women.",
 			"verified": true,
@@ -212,6 +222,8 @@
 			"source": "Hilton, N. Z., Ham, E., Radatz, D. L., Smith, C. M., Snow, N., Wintermute, J., Jennings-Fitz-Gerald, E., Lee, J., & Patterson, S. (2024). Coercive control in 2SLGBTQQIA+ relationships: A scoping review. Trauma, Violence, & Abuse, 25(5), 3713–3728.",
 			"url": "https://doi.org/10.1177/15248380241257957",
 			"aggregator": false,
+			"collection": "site/public/citations.html",
+			"population": "scoping review of 277 documents (2014 to 2022) on coercive control in 2SLGBTQQIA+ relationships, gray literature included",
 			"checked_url": "https://pubmed.ncbi.nlm.nih.gov/39066513/",
 			"evidence": "we examined and synthesized original studies on coercive control by (perpetration) or against (victimization) Two Spirit, lesbian, gay, bisexual, trans, queer, questioning, intersex, and asexual individuals within intimate partner relationships. ... Coercive control was more common among minority individuals and was related to mental health challenges.",
 			"verified": true,
@@ -223,6 +235,8 @@
 			"source": "Hilton, N. Z., Ham, E., Radatz, D. L., Smith, C. M., Snow, N., Wintermute, J., Jennings-Fitz-Gerald, E., Lee, J., & Patterson, S. (2024). Coercive control in 2SLGBTQQIA+ relationships: A scoping review. Trauma, Violence, & Abuse, 25(5), 3713–3728.",
 			"url": "https://doi.org/10.1177/15248380241257957",
 			"aggregator": false,
+			"collection": "site/public/citations.html",
+			"population": "scoping review of 277 documents (2014 to 2022) on coercive control in 2SLGBTQQIA+ relationships, gray literature included",
 			"checked_url": "https://pubmed.ncbi.nlm.nih.gov/39066513/",
 			"evidence": "This review revealed a lack of agreed definition of coercive control or accepted standard of measurement",
 			"verified": true,
@@ -234,11 +248,174 @@
 			"source": "Sheppard, L. D., & Aquino, K. (2017). Sisters at arms: A theory of female same-sex conflict and its problematization in organizations. Journal of Management, 43(3), 691–715.",
 			"url": "https://doi.org/10.1177/0149206314539348",
 			"aggregator": false,
+			"collection": "site/public/citations.html",
+			"population": "theory paper, no new data: how third parties judge conflict between women and between men at work",
 			"checked_url": "https://api.crossref.org/works/10.1177/0149206314539348",
 			"evidence": "we set aside consideration of possible gender differences in same-sex conflict frequency and draw from attribution theory to propose that female same-sex conflict is more problematized by third parties than male same-sex conflict, which could produce the exaggerated perception that women have more dysfunctional same-sex workplace relationships than men.",
 			"verified": true,
 			"checked_on": "2026-10-27",
 			"note": "Compared against the article's abstract in the Crossref record for the DOI (raw JSON). A theory paper: the line says what it proposes, not a finding."
+		},
+		"porsch2023_smw_smm": {
+			"text": "Several studies found more physical partner violence against lesbian and bisexual women than against gay and bisexual men.",
+			"source": "Porsch, L. M., Xu, M., Veldhuis, C. B., Bochicchio, L. A., Zollweg, S. S., & Hughes, T. L. (2023). Intimate partner violence among sexual minority women: A scoping review. Trauma, Violence, & Abuse, 24(5), 3014–3036.",
+			"url": "https://doi.org/10.1177/15248380221122815",
+			"aggregator": false,
+			"collection": "site/public/citations.html",
+			"population": "scoping review of 99 quantitative papers (2000 to 2021) on partner violence against adult sexual minority women; mostly survey (self-report) data",
+			"checked_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10039964/",
+			"evidence": "However, several convenience sample studies from Southeast Texas ... found higher rates of physical IPV victimization ... among SMW compared to SMM.",
+			"verified": true,
+			"checked_on": "2026-10-27",
+			"note": "Compared against the full text, PubMed Central PMC10039964 (NCBI raw text), and the abstract, PubMed record 36154756."
+		},
+		"benenson2013_harm": {
+			"text": "Women spend their lives providing for their children and grandchildren, so they have to minimize their risk of physical harm.",
+			"source": "Benenson, J. F. (2013). The development of human female competition: allies and adversaries. Philosophical Transactions of the Royal Society B, 368(1631), 20130079.",
+			"url": "https://doi.org/10.1098/rstb.2013.0079",
+			"aggregator": false,
+			"collection": "the author's reference list (dev/)",
+			"population": "review of human female competition from early childhood on",
+			"checked_url": "https://pubmed.ncbi.nlm.nih.gov/24167309/",
+			"evidence": "Throughout their lives, women provide for their own and their children's and grandchildren's needs and thus must minimize their risk of incurring physical harm.",
+			"verified": true,
+			"checked_on": "2026-10-27",
+			"note": "Compared against the article's abstract, PubMed record 24167309 (NCBI E-utilities raw text).",
+			"title": "The development of human female competition: allies and adversaries"
+		},
+		"benenson2013_retaliation": {
+			"text": "From early childhood, girls compete in ways that minimize the risk of retaliation.",
+			"source": "Benenson, J. F. (2013). The development of human female competition: allies and adversaries. Philosophical Transactions of the Royal Society B, 368(1631), 20130079.",
+			"url": "https://doi.org/10.1098/rstb.2013.0079",
+			"aggregator": false,
+			"collection": "the author's reference list (dev/)",
+			"population": "review of human female competition from early childhood on",
+			"checked_url": "https://pubmed.ncbi.nlm.nih.gov/24167309/",
+			"evidence": "From early childhood onwards, girls compete using strategies that minimize the risk of retaliation and reduce the strength of other girls.",
+			"verified": true,
+			"checked_on": "2026-10-27",
+			"note": "Compared against the article's abstract, PubMed record 24167309 (NCBI E-utilities raw text).",
+			"title": "The development of human female competition: allies and adversaries"
+		},
+		"stockley2013_lowcost": {
+			"text": "Which fits with indirect aggression being a low-cost, effective way for young women to compete.",
+			"source": "Stockley, P., & Campbell, A. (2013). Female competition and aggression: interdisciplinary perspectives. Philosophical Transactions of the Royal Society B, 368(1631), 20130073.",
+			"url": "https://doi.org/10.1098/rstb.2013.0073",
+			"aggregator": false,
+			"collection": "the author's reference list (dev/)",
+			"population": "introduction to an interdisciplinary theme issue on female competition and aggression in humans and other vertebrates",
+			"checked_url": "https://pubmed.ncbi.nlm.nih.gov/24167303/",
+			"evidence": "Although female aggression takes diverse forms, under most circumstances relatively low-risk competitive strategies are favoured ... coalitions or alliances may reduce risk of retaliation. Consistent with these trends, indirect aggression is a low cost but effective form of competition among young women.",
+			"verified": true,
+			"checked_on": "2026-10-27",
+			"note": "Compared against the article's abstract, PubMed record 24167303 (NCBI E-utilities raw text).",
+			"title": "Female competition and aggression: interdisciplinary perspectives"
+		}
+	},
+	"author_lines": {
+		"ipv_highest": {
+			"text": "The highest rate of violence is actually between same-sex female couples.",
+			"author_words": "Author 2026-10-27, bead persistint-game-kge: his line, as he gave it for the psychologists",
+			"status": "The author's line, shipped as he wrote it. The cited sources support parts of it (support); what they do not show is in gap.",
+			"support": [
+				{
+					"source": "Porsch, L. M., Xu, M., Veldhuis, C. B., Bochicchio, L. A., Zollweg, S. S., & Hughes, T. L. (2023). Intimate partner violence among sexual minority women: A scoping review. Trauma, Violence, & Abuse, 24(5), 3014–3036.",
+					"url": "https://doi.org/10.1177/15248380221122815",
+					"checked_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10039964/",
+					"quote": "Findings of this review provide additional evidence that SMW are more likely than heterosexual women to report IPV.",
+					"statistic": "none in the sentence (a synthesis of 99 papers)",
+					"population": "sexual minority women vs heterosexual women; victimization reported by the women; mostly survey data",
+					"verified": true,
+					"checked_on": "2026-10-27"
+				},
+				{
+					"source": "Porsch, L. M., Xu, M., Veldhuis, C. B., Bochicchio, L. A., Zollweg, S. S., & Hughes, T. L. (2023). Intimate partner violence among sexual minority women: A scoping review. Trauma, Violence, & Abuse, 24(5), 3014–3036.",
+					"url": "https://doi.org/10.1177/15248380221122815",
+					"checked_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10039964/",
+					"quote": "In a secondary analysis of U.S. National Intimate Partner and Sexual Violence Survey (NISVS) data, ... found that LGB women were more likely than heterosexual women to experience psychological and physical aggression, coercive control and entrapment, revictimization, and polyvictimization.",
+					"statistic": "none given in the review",
+					"population": "LGB women vs heterosexual women; NISVS, a U.S. national survey (self-report)",
+					"verified": true,
+					"checked_on": "2026-10-27"
+				},
+				{
+					"source": "Porsch, L. M., Xu, M., Veldhuis, C. B., Bochicchio, L. A., Zollweg, S. S., & Hughes, T. L. (2023). Intimate partner violence among sexual minority women: A scoping review. Trauma, Violence, & Abuse, 24(5), 3014–3036.",
+					"url": "https://doi.org/10.1177/15248380221122815",
+					"checked_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10039964/",
+					"quote": "However, several convenience sample studies from Southeast Texas ... found higher rates of physical IPV victimization ... among SMW compared to SMM.",
+					"statistic": "none given in the review",
+					"population": "sexual minority women vs sexual minority men (individuals, not couples); convenience samples; victimization",
+					"verified": true,
+					"checked_on": "2026-10-27"
+				},
+				{
+					"source": "Porsch, L. M., Xu, M., Veldhuis, C. B., Bochicchio, L. A., Zollweg, S. S., & Hughes, T. L. (2023). Intimate partner violence among sexual minority women: A scoping review. Trauma, Violence, & Abuse, 24(5), 3014–3036.",
+					"url": "https://doi.org/10.1177/15248380221122815",
+					"checked_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10039964/",
+					"quote": "using National Violent Death Reporting System data (N=6,348) ... found that bidirectional violence was more commonly reported among female and male same-sex couples than among different-sex couples.",
+					"statistic": "N=6,348 deaths",
+					"population": "female and male same-sex couples together vs different-sex couples; violent death records; how often violence ran both ways, not how often it happened",
+					"verified": true,
+					"checked_on": "2026-10-27"
+				},
+				{
+					"source": "Porsch, L. M., Xu, M., Veldhuis, C. B., Bochicchio, L. A., Zollweg, S. S., & Hughes, T. L. (2023). Intimate partner violence among sexual minority women: A scoping review. Trauma, Violence, & Abuse, 24(5), 3014–3036.",
+					"url": "https://doi.org/10.1177/15248380221122815",
+					"checked_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10039964/",
+					"quote": "Using data from the Federal Bureau of Investigation Supplementary Homicide Reports, ... found lesbian women were more likely than heterosexual women to kill their partners in more violent ways (defined as beating or stabbing)",
+					"statistic": "none given in the review",
+					"population": "lesbian vs heterosexual women who killed a partner; FBI homicide reports (police data); method of killing, not rate",
+					"verified": true,
+					"checked_on": "2026-10-27"
+				}
+			],
+			"gap": [
+				{
+					"quote": "although rates of partner homicide were lower among lesbian couples than among gay male or heterosexual couples",
+					"population": "partner homicide; FBI Supplementary Homicide Reports (police data)",
+					"reads": "partner homicide rates in these police data: lower for lesbian couples than for gay male or heterosexual couples"
+				},
+				{
+					"quote": "Findings from studies using large U.S. probability samples suggest that bisexual women are significantly more likely than both heterosexual or lesbian women to report physical, sexual, and/or psychological IPV victimization",
+					"population": "large U.S. probability samples (surveys); bisexual, lesbian and heterosexual women; partner's gender not given",
+					"reads": "in the large surveys, bisexual women report the most, more than lesbian or heterosexual women"
+				},
+				{
+					"quote": "Thirteen studies compared the IPV prevalence among SMW and other SGM groups; findings from these studies are largely inconsistent.",
+					"population": "sexual minority women vs other sexual and gender minority groups, mostly men",
+					"reads": "comparisons of sexual minority women with other sexual and gender minority groups vary between studies"
+				},
+				{
+					"quote": "analyzed more than 2.5 million cases of IPV reported to law enforcement in the U.S. and found that female-female couples involved in these incidents were significantly younger than male-male and male-female couples",
+					"population": "IPV reported to U.S. law enforcement (police data)",
+					"reads": "this police-report study of couple types reports their ages, not their rates"
+				},
+				{
+					"quote": "",
+					"population": "",
+					"reads": "The review measures violence against sexual minority women, mostly by survey, and mostly does not say the partner's gender; it does not compare rates between female same-sex, male same-sex and different-sex couples. No meta-analysis or police domestic-incident study comparing those rates was found in the sources checked (the citations page and the author's reference list). Renzetti (1992) is on the citations page; its text was not read."
+				}
+			]
+		}
+	},
+	"interpretations": {
+		"deterrence_mixed": {
+			"text": "So with a man and a woman, she knows he's stronger, and she keeps it indirect.",
+			"kind": "interpretation",
+			"author_words": "Author 2026-10-27, bead persistint-game-kge: his explanation for the \"Wait, how?\" beat (relayed by cc-win11-coord)",
+			"note": "The author's rationale (expected cost of retaliation), voiced by the psychologists as their explanation. No source in the collection states it for couples; benenson2013_harm and benenson2013_retaliation are the nearest cited findings, about girls and women in general."
+		},
+		"deterrence_two_men": {
+			"text": "Two men? Each one knows the other could beat the stuffing out of him. That's a good reason to keep your hands to yourself.",
+			"kind": "interpretation",
+			"author_words": "Author 2026-10-27, bead persistint-game-kge: his explanation for the \"Wait, how?\" beat (relayed by cc-win11-coord)",
+			"note": "The author's rationale, in his words made beach-polite. No source in the collection states it."
+		},
+		"deterrence_two_women": {
+			"text": "Two women? Neither one is the one who could really hurt the other, so that brake isn't there.",
+			"kind": "interpretation",
+			"author_words": "Author 2026-10-27, bead persistint-game-kge: his explanation for the \"Wait, how?\" beat (relayed by cc-win11-coord)",
+			"note": "Completes the author's mechanism (the expected cost of retaliation) for two women, as the coordinator asked for the \"Wait, how?\" answer. No source in the collection states it."
 		}
 	}
 }
