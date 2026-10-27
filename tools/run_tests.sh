@@ -6,7 +6,7 @@
 #   --no-import       skip `godot --import` (the .godot/ cache is already current)
 #   --timeout=SECONDS per test (default 400); a test that runs longer counts as failed
 #   NAME ...          only these tests (test_save, tests/test_save.gd, ...); default: the asset
-#                     gate (tools/check_assets.py) and every
+#                     gate (tools/check_assets.mjs) and every
 #                     project/tests/*.gd (verify_slice.gd and each test_*.gd)
 #
 # A test passes when Godot exits 0 and the log has a "RESULT: PASS" line and no "RESULT: FAIL".
@@ -51,9 +51,10 @@ fi
 
 failed=()
 start=$(date +%s)
-# The asset conformance gate (tools/check_assets.py, bd 4wb) counts as a test.
+# The asset conformance gate (bd 4wb) counts as a test: tools/check_assets.mjs, the Node port of
+# tools/check_assets.py (same checks and messages; its gen_sources.mjs writes the same SOURCES.md).
 if [[ $NAMED -eq 0 ]]; then
-  if python3 -I -B "$ROOT/tools/check_assets.py" > "$LOGS/check_assets.log" 2>&1; then
+  if node "$ROOT/tools/check_assets.mjs" > "$LOGS/check_assets.log" 2>&1; then
     printf 'PASS     %-24s        %s\n' check_assets "$(tail -1 "$LOGS/check_assets.log")"
   else
     printf 'FAIL     %-24s        %s\n' check_assets "$(tail -1 "$LOGS/check_assets.log")"
