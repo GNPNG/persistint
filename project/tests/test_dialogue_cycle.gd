@@ -30,7 +30,7 @@ func _run() -> void:
 			holding += 1
 	_check(holding == 0, "no line of the resource holds the resource (%d do)" % holding)
 
-	var ref := weakref(res)
+	var ref: WeakRef = weakref(res)
 	line = null
 	res = null
 	await _frames(3)  # got_dialogue is emitted deferred, with the line
