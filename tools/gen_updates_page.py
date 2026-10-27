@@ -22,6 +22,7 @@ def md_to_html(text: str) -> str:
         if para:
             out.append(f"<p>{inline(' '.join(para))}</p>")
             para = []
+        items = [i for i in items if i.strip()]
         if items:
             out.append("<ul>" + "".join(f"<li>{inline(i)}</li>" for i in items) + "</ul>")
             items = []
@@ -32,10 +33,10 @@ def md_to_html(text: str) -> str:
         if line.startswith("## "):
             flush()
             out.append(f"<h2>{inline(line[3:].strip())}</h2>")
-        elif line.startswith("- "):
+        elif line.startswith("- ") or line.rstrip() == "-":
             if para:
                 flush()
-            items.append(line[2:].strip())
+            items.append(line[1:].strip())
         elif line.startswith("  ") and items:
             items[-1] += " " + line.strip()
         elif line.strip() == "":
@@ -84,7 +85,11 @@ def main() -> None:
   </a>
   <nav aria-label="Site">
     <ul>
+      <li class="nav-sec"><a href="/#trailer">Trailer</a></li>
       <li class="nav-sec"><a href="/#worlds">Worlds</a></li>
+      <li class="nav-sec"><a href="/#name-it">Name It</a></li>
+      <li class="nav-sec"><a href="/#cruise">Cruise</a></li>
+      <li><a href="/updates.html">Updates</a></li>
       <li><a href="/citations.html">Citations</a></li>
       <li><a href="/support.html">Support</a></li>
       <li><a class="nav-play" href="/play/">Play</a></li>
@@ -119,14 +124,16 @@ def main() -> None:
     </div>
     <div class="footer-links">
       <a class="gnpng" href="https://gnpng.org">gnpng.org</a>
+      <a href="https://www.youtube.com/watch?v=8GxFjrDAJf4">Book trailer on YouTube</a>
       <a href="/play/">Play <span data-version>v{VERSION}</span></a>
       <a href="/updates.html">Updates &amp; what's next</a>
-      <a href="/citations.html">Citations &amp; further reading</a>
-      <a href="/support.html">Online safety &amp; support</a>
+      <a href="/citations.html" data-modal="cite-modal">Citations &amp; further reading</a>
+      <a class="safety-badge" href="/support.html"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5z" fill="#5ad1d6" stroke="#ffffff" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 16.5s-4-2.4-4-5.1A2.2 2.2 0 0 1 12 10a2.2 2.2 0 0 1 4 1.4c0 2.7-4 5.1-4 5.1z" fill="#ffffff"/></svg>Online safety &amp; support</a>
     </div>
   </div>
   <div class="wrap legal">
-    <p>&copy; Brett Whitty. All rights reserved. Made with the <a href="https://godotengine.org">Godot Engine</a>.</p>
+    <p>&copy; Brett Whitty. All rights reserved. Made with the <a href="https://godotengine.org">Godot Engine</a>.
+      Headings set in Fredoka (<a href="/fonts/OFL.txt">SIL Open Font License</a>).</p>
   </div>
 </footer>
 <script src="/js/ambience.js" defer></script>

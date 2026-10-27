@@ -5,7 +5,7 @@
 Playtest hotfix for v0.2.0 (performance drop, sound going wrong, background music stopping):
 
 - No real-time audio processing: the clone children's kid voices are baked into offline copies
-  of their clips and groans (tools/bake_clone_voices.py); the audio buses carry no effects.
+  of their clips and groans (`tools/bake_clone_voices.py`); the audio buses carry no effects.
 - No text-to-speech anywhere: every line is a pre-rendered clip, and a line with no clip yet shows
   its bubble silently.
 - The crisp pixel look is back for every sprite (nearest filtering), the player included.
@@ -29,14 +29,14 @@ The first playtest build. Everything since v0.1.0:
   clone gets pounced by the nearest cub.
 - Music: twelve world tracks rendered (title theme, island, Florida, cruise) with crossfades.
 - The promo site plays the title theme quietly on a toggle and rains hearts on clicks and scrolls.
-- Web build: index.pck down to 66 MB (112 kbps music, WebP-lossy big textures); builds deploy to
+- Web build: `index.pck` down to 66 MB (112 kbps music, WebP-lossy big textures); builds deploy to
   the Cloudflare Pages project behind persistint.dataglut.org; the game data is served in parts.
 - Renderer: Google's check page is its own "blocked" outcome; batch mode submits and harvests
   Gemini chats in one reused tab; prompt files can mark author-rendered assets.
 - Private development material (design doc, style bible, canon sheets, lore notebook) moved under
-  the encrypted dev/ folder.
+  the encrypted `dev/` folder.
 
 ## v0.1.0 — 2026-10-23
 
-- 
+- Versioning starts: one version number for the whole project, shown on the main menu.
 
