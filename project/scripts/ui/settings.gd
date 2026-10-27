@@ -5,6 +5,7 @@ extends Control
 
 const MAIN_MENU := "res://scenes/ui/main_menu.tscn"
 const MainMenu := preload("res://scripts/ui/main_menu.gd")  # its static fullscreen helpers
+const TextDownload := preload("res://scripts/util/text_download.gd")
 
 var _sliders: Dictionary = {}
 
@@ -154,19 +155,13 @@ func save_status() -> String:
 func export_save() -> void:
 	var text := WorldState.export_text()
 	var file_name := WorldState.export_file_name()
+	var where := TextDownload.save(file_name, text)
 	if OS.has_feature("web"):
-		var js := "(function(){var s=%s;var b=new Blob([s],{type:'application/json'});var u=URL.createObjectURL(b);var a=document.createElement('a');a.href=u;a.download=%s;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},2000);return 'ok';})()" % [JSON.stringify(text), JSON.stringify(file_name)]
-		var ok := str(JavaScriptBridge.eval(js, true)) == "ok"
-		_save_status.text = ("Downloaded %s. Keep it somewhere safe; Import save brings it back." % file_name) if ok else "The download didn't start. Try again, or allow downloads for this page."
-		return
-	var path := "user://" + file_name
-	var f := FileAccess.open(path, FileAccess.WRITE)
-	if f == null:
-		_save_status.text = "Couldn't write %s." % ProjectSettings.globalize_path(path)
-		return
-	f.store_string(text)
-	f.close()
-	_save_status.text = "Saved a copy as %s." % ProjectSettings.globalize_path(path)
+		_save_status.text = ("Downloaded %s. Keep it somewhere safe; Import save brings it back." % file_name) if where != "" else "The download didn't start. Try again, or allow downloads for this page."
+	elif where == "":
+		_save_status.text = "Couldn't write %s." % ProjectSettings.globalize_path("user://" + file_name)
+	else:
+		_save_status.text = "Saved a copy as %s." % where
 
 
 func import_save() -> void:
