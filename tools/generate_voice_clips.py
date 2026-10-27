@@ -17,6 +17,9 @@ whose torch build has no kernels, force CPU with CUDA_VISIBLE_DEVICES="".
 import argparse
 import json
 from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import audio_levels  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 MANIFEST = ROOT / "project/audio/voice/manifest.json"
@@ -72,6 +75,8 @@ def main():
     tts = TTS("tts_models/multilingual/multi-dataset/xtts_v2").to(device)
     for line, voice, clip in todo:
         tts.tts_to_file(text=line["text"], language="en", file_path=str(clip), **voice)
+        # XTTS peak-normalizes to 0 dBFS; every clip gets the voice level (-16 LUFS, -1 dBTP).
+        audio_levels.normalize(clip, clip, audio_levels.VOICE, ("-codec:a", "pcm_s16le"))
         print(f"{line['speaker']}: {line['text'][:60]} -> {clip.name}")
 
 

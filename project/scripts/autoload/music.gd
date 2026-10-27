@@ -9,6 +9,11 @@ extends Node
 ## imported, or read straight from the .mp3 when the editor has not imported it yet.
 ## The music volume is a player setting, kept in user://settings.cfg (not the save game,
 ## which New Game wipes).
+## A track starting from silence fades in over FADE_IN_SECONDS, not the crossfade length, so a
+## scene's music is there as soon as the scene is (author 2026-10-24: music lagged kicking in);
+## every track is loaded into memory a frame at a time after start so a scene change never
+## reads its track from the pack first. While a voice line plays, the loop ducks by voice_duck_db
+## (Voice calls duck_voice) so speech sits above the music.
 
 signal track_changed(track_id: String)
 
@@ -17,6 +22,7 @@ const BUS := "Music"
 const SETTINGS_SECTION := "audio"
 const SETTINGS_KEY := "music_volume"
 const DUCK_SECONDS := 0.4
+const FADE_IN_SECONDS := 0.3
 const SILENT := 0.00001
 
 ## A var so headless tests can point it at a temp file instead of the player's real settings.
@@ -25,12 +31,16 @@ var SETTINGS_PATH := "user://settings.cfg"
 var data: Dictionary = {}
 var crossfade_seconds := 2.0
 var duck_db := -12.0
+var voice_duck_db := -6.0
 ## The track the current scene asks for ("" is silence); it may be missing and so not audible.
 var current := ""
 
 var _players: Array[AudioStreamPlayer] = []
 var _fade: Array[float] = [0.0, 0.0]
 var _target: Array[float] = [0.0, 0.0]
+var _fade_seconds: Array[float] = [2.0, 2.0]  # how long each player's current fade takes
+var _voice_ducking := false
+var _preloaded := false
 var _active := 0
 var _stinger: AudioStreamPlayer
 var _duck := 1.0
@@ -48,6 +58,7 @@ func _ready() -> void:
 		data = parsed
 	crossfade_seconds = float(data.get("crossfade_seconds", crossfade_seconds))
 	duck_db = float(data.get("duck_db", duck_db))
+	voice_duck_db = float(data.get("voice_duck_db", voice_duck_db))
 	for i in 2:
 		var p := AudioStreamPlayer.new()
 		p.name = "Loop%d" % i
@@ -66,6 +77,7 @@ func _ready() -> void:
 		clock.phase_changed.connect(func(_p: String) -> void: refresh())
 		clock.day_changed.connect(func(_d: int) -> void: refresh())
 	_on_scene_changed.call_deferred()  # the main scene is already in when autoloads start
+	_preload_tracks.call_deferred()
 
 
 # --- Scenes -------------------------------------------------------------------------------
@@ -147,7 +159,9 @@ func play(track_id: String) -> void:
 			_note("Music: unknown track id '%s'" % track_id)
 		else:
 			stream = _load(path, true)
+	var from_silence := not (live.playing and _fade[_active] > 0.001)
 	_target[_active] = 0.0
+	_fade_seconds[_active] = crossfade_seconds
 	if stream:
 		_active = 1 - _active
 		var p := _players[_active]
@@ -155,6 +169,8 @@ func play(track_id: String) -> void:
 		p.stream = stream
 		_fade[_active] = 0.0
 		_target[_active] = 1.0
+		# Nothing audible to cross from: come in quickly instead of over the whole crossfade.
+		_fade_seconds[_active] = FADE_IN_SECONDS if from_silence else crossfade_seconds
 		_apply_volumes()
 		p.play()
 	track_changed.emit(track_id)
@@ -231,14 +247,42 @@ func _process(delta: float) -> void:
 
 ## Advances crossfades and ducking by `delta` seconds (called every frame; tests call it directly).
 func step(delta: float) -> void:
-	var rate := delta / maxf(crossfade_seconds, 0.001)
 	for i in 2:
-		_fade[i] = move_toward(_fade[i], _target[i], rate)
+		_fade[i] = move_toward(_fade[i], _target[i], delta / maxf(_fade_seconds[i], 0.001))
 		if _fade[i] <= 0.0 and _target[i] <= 0.0 and _players[i].playing:
 			_players[i].stop()
-	var duck_to := db_to_linear(duck_db) if _stinger.playing else 1.0
+	var duck_to := 1.0
+	if _stinger.playing:
+		duck_to = db_to_linear(duck_db)
+	elif _voice_ducking:
+		duck_to = db_to_linear(voice_duck_db)
 	_duck = move_toward(_duck, duck_to, delta / DUCK_SECONDS)
 	_apply_volumes()
+
+
+## Voice calls this while a spoken line plays: the loop sits voice_duck_db under it meanwhile.
+func duck_voice(on: bool) -> void:
+	_voice_ducking = on
+
+
+func voice_ducking() -> bool:
+	return _voice_ducking
+
+
+## Loads every track into memory, one per frame, so a scene change never waits on the pack.
+func _preload_tracks() -> void:
+	if _preloaded:
+		return
+	_preloaded = true
+	for path: String in data.get("tracks", {}).values():
+		if not _streams.has(path):
+			_load(path, true)
+			if is_inside_tree():
+				await get_tree().process_frame
+
+
+func preloaded_count() -> int:
+	return _streams.size()
 
 
 func _apply_volumes() -> void:

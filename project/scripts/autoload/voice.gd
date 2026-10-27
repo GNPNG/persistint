@@ -16,6 +16,8 @@ extends Node
 ## vocalizations (tools/bake_clone_voices.py), which play when the line goes through that bus.
 ## Nothing is processed in real time and nothing is read by text-to-speech: a line with no clip
 ## shows its bubble and stays silent.
+## While a clip or vocalization plays, Music ducks the loop (Music.duck_voice, a volume move, no
+## audio effect) so speech sits above it.
 
 ## Every line handed to speak(), clip or text-to-speech (tests listen to it): the text as a
 ## bubble shows it, brackets removed.
@@ -144,6 +146,13 @@ func speak(text: String, pitch := 1.0, speaker := "", bus := "Voice") -> void:
 	_play_next()
 
 
+func _duck(on: bool) -> void:
+	var music := get_node_or_null("/root/Music")
+	if music and music.has_method("duck_voice"):
+		music.duck_voice(on)
+
+
+
 ## What is still to play of the current line (sounds and words), in order.
 func pending() -> Array:
 	return _queue.duplicate()
@@ -156,12 +165,15 @@ func _play_next() -> void:
 			var path := clone_variant("%s/%s.wav" % [SFX_DIR, part["sfx"]], _player.bus)
 			if ResourceLoader.exists(path):
 				_player.stream = load(path)
+				_duck(true)
 				_player.play()
 				return  # finished -> the next part
 			continue
 		var clip := clone_variant(clip_path(_speaker, part["say"]), _player.bus)
 		if ResourceLoader.exists(clip):
 			_player.stream = load(clip)
+			_duck(true)
 			_player.play()
 			return
 		# no clip yet: the bubble shows the words; the next part follows at once
+	_duck(false)

@@ -2,6 +2,7 @@
 	"_note": "Music (scripts/autoload/music.gd). 'scenes' maps every scene the game changes to (maps, menus, mini-games, chapter cards) to a loop track id: a string, \"\" for silence, or {\"track\": default, \"when\": [{\"when\": {...}, \"track\": id}, ...]} where the first rule whose 'when' block holds (GameClock.matches_when: phase, festival, cycle_day_min/max, ...) wins and is re-checked on every phase and day change. Same track as the one playing: it keeps playing. A scene not listed keeps the music that is playing. 'chapter_end_stingers' plays a stinger on the time-jump card of the chapter being left (chapter id -> stinger id); 'events' are stingers fired by game moments (Music.event(name)). While a stinger plays the loop ducks by 'duck_db'. 'tracks' and 'stingers' (id -> res:// path) are generated from the prompts' front matter (id:, game:) by tools/gen_music_map.py; do not edit them by hand. A missing file plays nothing until the rendered file is synced in.",
 	"crossfade_seconds": 2.0,
 	"duck_db": -12.0,
+	"voice_duck_db": -6.0,
 	"scenes": {
 		"res://scenes/ui/main_menu.tscn": "title_theme",
 		"res://scenes/ui/studio_intro.tscn": "",

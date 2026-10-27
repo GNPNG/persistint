@@ -19,6 +19,9 @@ import wave
 from pathlib import Path
 
 import numpy as np
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import audio_levels  # noqa: E402
 
 OUT = Path(__file__).resolve().parent.parent / "project/audio/sfx"
 RATE = 22050
@@ -42,9 +45,18 @@ def lowpass(x, k=8):
 
 
 def save(name, x):
+    """Writes the sound, then sets its level to the target for its kind (tools/audio_levels.py:
+    vocalizations -16 LUFS like the voice clips, short effects -12 LUFS momentary) with ffmpeg."""
     x = x / (np.max(np.abs(x)) + 1e-9) * 0.8
     OUT.mkdir(parents=True, exist_ok=True)
-    with wave.open(str(OUT / f"{name}.wav"), "wb") as w:
+    path = OUT / f"{name}.wav"
+    _write(path, x)
+    if audio_levels.have_ffmpeg():
+        audio_levels.normalize(path, path, audio_levels.target_for(path), ("-codec:a", "pcm_s16le"))
+
+
+def _write(path, x):
+    with wave.open(str(path), "wb") as w:
         w.setnchannels(1)
         w.setsampwidth(2)
         w.setframerate(RATE)
@@ -164,7 +176,11 @@ def growl():
     s = t(seconds)
     x = voice(seconds, 96, 78, ((400, 4, 0.9), (1300, 6, 0.5), (3000, 8, 0.25)), vibrato=7.0, depth=0.03, breath=0.4, trill=27.0, trill_from=0.15)
     fry = 0.6 + 0.4 * np.sign(np.sin(2 * np.pi * 31 * s + np.cumsum(rng.standard_normal(len(s))) * 0.002))
-    return x * fry * env(len(s), 0.04, 0.2)
+    x = x * fry * env(len(s), 0.04, 0.2)
+    # a chest growl is dense, not spiky: a soft clip rounds the fry's peaks so the sound can sit
+    # at the vocalization level without a limiter squashing it
+    x = x / (np.max(np.abs(x)) + 1e-9)
+    return np.tanh(x * 2.2) / np.tanh(2.2)
 
 
 if __name__ == "__main__":

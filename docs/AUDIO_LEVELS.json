@@ -1,0 +1,1253 @@
+{
+ "_note": "Written by tools/audio_report.py; readings per file, cached by sha1.",
+ "files": {
+  "project/audio/music/cruise/cruise_lounge.mp3": {
+   "I": -18.4,
+   "LRA": 5.0,
+   "M": -13.1,
+   "TP": -5.7,
+   "mean": -20.6,
+   "sha1": "6b88679520684a7755eb7e6be0ac836b1ca2bae1"
+  },
+  "project/audio/music/cruise/hottest_of_the_hot.mp3": {
+   "I": -18.4,
+   "LRA": 8.8,
+   "M": -14.4,
+   "TP": -4.4,
+   "mean": -20.1,
+   "sha1": "ec0ccef06cbd00221c5e5dcf57edcaf0a48205c1"
+  },
+  "project/audio/music/cruise/next_top_comic.mp3": {
+   "I": -18.4,
+   "LRA": 8.7,
+   "M": -13.3,
+   "TP": -5.3,
+   "mean": -20.8,
+   "sha1": "7879d63effedce12e93bc05ff6bc89175a4528b9"
+  },
+  "project/audio/music/cruise/the_interview.mp3": {
+   "I": -18.4,
+   "LRA": 3.5,
+   "M": -14.3,
+   "TP": -5.4,
+   "mean": -20.9,
+   "sha1": "bf6645b4db381ebed2d2c96a7686d625af388f4b"
+  },
+  "project/audio/music/cruise/the_landing.mp3": {
+   "I": -18.4,
+   "LRA": 5.7,
+   "M": -14.5,
+   "TP": -5.3,
+   "mean": -20.8,
+   "sha1": "666292bd1d0735ebbee8991a162d2d6a0e664ca7"
+  },
+  "project/audio/music/florida/florida_aquarium.mp3": {
+   "I": -18.5,
+   "LRA": 8.9,
+   "M": -13.1,
+   "TP": -6.4,
+   "mean": -21.4,
+   "sha1": "ac3cd4ed64697f2dd161d2fd5c47249525cf098b"
+  },
+  "project/audio/music/florida/florida_beach.mp3": {
+   "I": -18.4,
+   "LRA": 3.9,
+   "M": -14.5,
+   "TP": -6.0,
+   "mean": -21.0,
+   "sha1": "6791494b2addc7865b70477742ae5c0987c3297c"
+  },
+  "project/audio/music/florida/florida_garden.mp3": {
+   "I": -18.4,
+   "LRA": 8.1,
+   "M": -13.5,
+   "TP": -5.7,
+   "mean": -20.9,
+   "sha1": "7eea4f7e8b800086958b583c1a468ab097eba4c2"
+  },
+  "project/audio/music/florida/pony_stable.mp3": {
+   "I": -18.5,
+   "LRA": 8.9,
+   "M": -13.4,
+   "TP": -5.5,
+   "mean": -21.2,
+   "sha1": "fd2b65dc7fc2ad9b2e3b99248711edac157d1c19"
+  },
+  "project/audio/music/island/festival_fourteenth.mp3": {
+   "I": -18.4,
+   "LRA": 4.1,
+   "M": -14.0,
+   "TP": -5.8,
+   "mean": -20.8,
+   "sha1": "c3b10d6438a53d0de001860638b836d91cd4d182"
+  },
+  "project/audio/music/island/island_night.mp3": {
+   "I": -18.5,
+   "LRA": 7.6,
+   "M": -13.5,
+   "TP": -6.1,
+   "mean": -20.8,
+   "sha1": "ae17d659e6ec1f8fa1f214704d289ca4670033fc"
+  },
+  "project/audio/music/ui/title_theme.mp3": {
+   "I": -18.4,
+   "LRA": 7.4,
+   "M": -12.4,
+   "TP": -6.0,
+   "mean": -21.3,
+   "sha1": "ba82bc4f568dd37866ea8770cdc69ed1dd49b5ee"
+  },
+  "project/audio/sfx/boing.wav": {
+   "I": -14.3,
+   "LRA": 0.0,
+   "M": -14.3,
+   "TP": -7.6,
+   "mean": -14.0,
+   "sha1": "48605ae7dd029eec6159bc0aa53834cd410b0765"
+  },
+  "project/audio/sfx/burp.wav": {
+   "I": -15.3,
+   "LRA": 0.0,
+   "M": -15.3,
+   "TP": -4.7,
+   "mean": -14.0,
+   "sha1": "259599979210db35b06cdfb371e0c54ff9f91447"
+  },
+  "project/audio/sfx/chomp.wav": {
+   "I": null,
+   "LRA": 0.0,
+   "M": null,
+   "TP": -1.6,
+   "mean": -15.2,
+   "sha1": "356a2455d1ff31e0e11f3b44da5ea41a713a87e0"
+  },
+  "project/audio/sfx/groan_1.wav": {
+   "I": -16.1,
+   "LRA": 0.0,
+   "M": -14.5,
+   "TP": -1.6,
+   "mean": -16.5,
+   "sha1": "564dfb18bd0d92d618ccecb58ef5d46007061397"
+  },
+  "project/audio/sfx/groan_2.wav": {
+   "I": -16.1,
+   "LRA": 0.0,
+   "M": -15.1,
+   "TP": -1.4,
+   "mean": -16.6,
+   "sha1": "ae2dcdc702f3eaa783700319fc63f267e148e028"
+  },
+  "project/audio/sfx/groan_3.wav": {
+   "I": -16.1,
+   "LRA": 0.0,
+   "M": -14.2,
+   "TP": -1.5,
+   "mean": -16.3,
+   "sha1": "e3efb3c9449141dc79cb9fe5289fdb33e77d7465"
+  },
+  "project/audio/sfx/growl.wav": {
+   "I": -16.0,
+   "LRA": 0.0,
+   "M": -15.5,
+   "TP": -1.5,
+   "mean": -16.0,
+   "sha1": "b90edcec1d5144c72b2b0e9af408e2158ad9d14d"
+  },
+  "project/audio/sfx/moan.wav": {
+   "I": -16.1,
+   "LRA": 0.0,
+   "M": -13.9,
+   "TP": -1.8,
+   "mean": -15.8,
+   "sha1": "c55f929f4ed89c22daac0cd8a0125bb3f5d9fb7f"
+  },
+  "project/audio/sfx/snore.wav": {
+   "I": -16.2,
+   "LRA": 0.0,
+   "M": -13.8,
+   "TP": -1.8,
+   "mean": -14.9,
+   "sha1": "4c7f3d2c26cc3ade28f566602a48afb75ac658a9"
+  },
+  "project/audio/sfx/splat.wav": {
+   "I": null,
+   "LRA": 0.0,
+   "M": null,
+   "TP": -1.8,
+   "mean": -15.2,
+   "sha1": "5492d8f4f52d0b2f9fe76bb72123531fa74d1c84"
+  },
+  "project/audio/voice/0accfa496a78336036a2d7c8c3a66b92.wav": {
+   "I": -16.0,
+   "LRA": 2.8,
+   "M": -12.8,
+   "TP": -1.0,
+   "mean": -16.2,
+   "sha1": "8a92160e6e430a75452ca254002bb29fffd621a5"
+  },
+  "project/audio/voice/0ddd3f4367e1ebd1c58ef3c2687e23e4.wav": {
+   "I": -16.0,
+   "LRA": 2.2,
+   "M": -11.9,
+   "TP": -0.9,
+   "mean": -16.7,
+   "sha1": "8fb11fe9ed94263f9481cfd3f705644ee61e7559"
+  },
+  "project/audio/voice/0fec091cdc1d4688446ca4dfe32d94dc.wav": {
+   "I": -16.1,
+   "LRA": 2.9,
+   "M": -12.2,
+   "TP": -1.0,
+   "mean": -16.6,
+   "sha1": "4eeb83134d2d4a3381607d7b33e60c8620be2a59"
+  },
+  "project/audio/voice/1064acac98016d428990eae06d99dca6.wav": {
+   "I": -16.0,
+   "LRA": 0.0,
+   "M": -12.6,
+   "TP": -1.2,
+   "mean": -16.2,
+   "sha1": "a1d4e8a8c2f2ea48d4042fcbd5395236614e37c1"
+  },
+  "project/audio/voice/133b41f53fb2452ab39e6018113a91fd.wav": {
+   "I": -16.0,
+   "LRA": 0.0,
+   "M": -14.5,
+   "TP": -2.1,
+   "mean": -19.0,
+   "sha1": "6c54c84c344c9731359826f093fc48c74b6a728c"
+  },
+  "project/audio/voice/16b9522ccab5dbe35cb4a1e351da8a72.wav": {
+   "I": -16.4,
+   "LRA": 0.0,
+   "M": -12.1,
+   "TP": -0.9,
+   "mean": -16.6,
+   "sha1": "6a4a2f8bbb304fe808c6b42960e4d5e4b2ac0fe0"
+  },
+  "project/audio/voice/170b62bab460c643c09d0745a5ce4d8c.wav": {
+   "I": -16.0,
+   "LRA": 2.7,
+   "M": -12.5,
+   "TP": -1.0,
+   "mean": -16.4,
+   "sha1": "13cf85313281abf275c99e06f7ada5b949e79f0e"
+  },
+  "project/audio/voice/181b48975f69770535af04d7f6d0fe69.wav": {
+   "I": -16.0,
+   "LRA": 0.0,
+   "M": -13.0,
+   "TP": -2.4,
+   "mean": -20.4,
+   "sha1": "b49ca14c390099072df078be2e6a7c21716b7222"
+  },
+  "project/audio/voice/1a04b0de179ff2d3eda0e59ab98d7e94.wav": {
+   "I": -16.1,
+   "LRA": 0.0,
+   "M": -12.4,
+   "TP": -1.0,
+   "mean": -16.3,
+   "sha1": "3ae1356e1c462bb793d2f56ea21067d2fbcadf0c"
+  },
+  "project/audio/voice/1c197d50fc9a1e95ab023ef34faa4351.wav": {
+   "I": -16.0,
+   "LRA": 0.0,
+   "M": -12.5,
+   "TP": -1.0,
+   "mean": -16.4,
+   "sha1": "111d31fb906433f879ddc247fb6aca59268a51b6"
+  },
+  "project/audio/voice/1cceed4bbf0aaf65822e60afcde67804.wav": {
+   "I": -16.0,
+   "LRA": 7.5,
+   "M": -13.3,
+   "TP": -1.0,
+   "mean": -18.5,
+   "sha1": "b0ab70ae4a607ba25d82021987f93d3a44ee8622"
+  },
+  "project/audio/voice/1d99a9bc124aff8bf2a0866c41b26c09.wav": {
+   "I": -16.0,
+   "LRA": 0.0,
+   "M": -13.5,
+   "TP": -1.0,
+   "mean": -17.3,
+   "sha1": "fb9764479a70af15a70eeeabe0386476f1e3a4ae"
+  },
+  "project/audio/voice/1ed248ebb9ebfcd9738eea3c5c1d45c1.wav": {
+   "I": -16.1,
+   "LRA": 1.4,
+   "M": -13.6,
+   "TP": -1.0,
+   "mean": -16.9,
+   "sha1": "b7ade7a64e043117ab651c94fb4828d86077011d"
+  },
+  "project/audio/voice/25ac29ac26c09a0fbbd5c7e2f9b664d4.wav": {
+   "I": -16.5,
+   "LRA": 2.0,
+   "M": -12.9,
+   "TP": -0.8,
+   "mean": -17.5,
+   "sha1": "64faf4b0ca5fe110a49b0ca5e52e0ced250fa398"
+  },
+  "project/audio/voice/295dd4fdd0558bb349e6fb2c7f21fa43.wav": {
+   "I": -16.2,
+   "LRA": 0.0,
+   "M": -13.2,
+   "TP": -0.9,
+   "mean": -16.7,
+   "sha1": "7233b8cbfede0f61d5bde293ffa22bb81a684838"
+  },
+  "project/audio/voice/2a54b99f3630f096b98c021d5ed2e6ff.wav": {
+   "I": -16.1,
+   "LRA": 0.0,
+   "M": -13.8,
+   "TP": -0.9,
+   "mean": -17.2,
+   "sha1": "f1709fe8bd5855a14f554e0bf53f059e5c9d8cf9"
+  },
+  "project/audio/voice/2d03020c68b5be408196189a237e9aad.wav": {
+   "I": -16.2,
+   "LRA": 2.2,
+   "M": -12.5,
+   "TP": -0.9,
+   "mean": -16.2,
+   "sha1": "0f0036c114722f9ee719b3a46df0a02714f217f6"
+  },
+  "project/audio/voice/2dcaa75f725ca37cfb20e4485a914c75.wav": {
+   "I": -15.9,
+   "LRA": 0.0,
+   "M": -13.3,
+   "TP": -1.5,
+   "mean": -16.5,
+   "sha1": "dd8386f8d676bebbea572c71eb0672f1d5e9c8d4"
+  },
+  "project/audio/voice/2fb9c97e61f6b7d9bfe188835bcc9f04.wav": {
+   "I": -16.2,
+   "LRA": 2.6,
+   "M": -11.1,
+   "TP": -0.9,
+   "mean": -16.9,
+   "sha1": "d90d0c4dc219d638d822eb979ef649d9f64f91e6"
+  },
+  "project/audio/voice/331234f0d1709716b4423cfd3ded7b65.wav": {
+   "I": -16.0,
+   "LRA": 1.5,
+   "M": -12.9,
+   "TP": -0.9,
+   "mean": -16.5,
+   "sha1": "bff866a1eae60ac5b94707a6713020c6691ab33f"
+  },
+  "project/audio/voice/359c8fa3378dc7b707a9591b9b303e81.wav": {
+   "I": -16.3,
+   "LRA": 2.1,
+   "M": -11.8,
+   "TP": -0.9,
+   "mean": -17.3,
+   "sha1": "781617bc7c66de222bbb1323d4e68e4fadd44440"
+  },
+  "project/audio/voice/35e0ef36153090b8076c2e45bad1b9b7.wav": {
+   "I": -16.1,
+   "LRA": 2.6,
+   "M": -13.0,
+   "TP": -1.0,
+   "mean": -16.4,
+   "sha1": "2a30094a7e63bec5f49482ad6b71701a1c52458d"
+  },
+  "project/audio/voice/35ff4da2c7a871de62c20d9d2b8aa451.wav": {
+   "I": -16.4,
+   "LRA": 5.2,
+   "M": -11.2,
+   "TP": -0.9,
+   "mean": -17.2,
+   "sha1": "699cc481058aeca22fe75e712e2fe9627ad32956"
+  },
+  "project/audio/voice/3916036e7309ffc739318f748226996a.wav": {
+   "I": -16.1,
+   "LRA": 0.0,
+   "M": -12.8,
+   "TP": -0.9,
+   "mean": -16.4,
+   "sha1": "ae743695cf0242eaa59f10616a2729274c5128b3"
+  },
+  "project/audio/voice/3954caf8c5d4c0c7052774d16f735b37.wav": {
+   "I": -16.4,
+   "LRA": 8.8,
+   "M": -13.4,
+   "TP": -0.8,
+   "mean": -19.6,
+   "sha1": "d25e3a9321040e901f8ae255da81f0466fb06ad0"
+  },
+  "project/audio/voice/3a769aaba7d2a1f3d933038cee245266.wav": {
+   "I": -16.0,
+   "LRA": 1.2,
+   "M": -12.5,
+   "TP": -1.0,
+   "mean": -16.6,
+   "sha1": "bdd2c2cac7e056108025f7c50c77c737fd8c1f7a"
+  },
+  "project/audio/voice/3ae8576826af39df87942a160a1821b5.wav": {
+   "I": -16.8,
+   "LRA": 20.0,
+   "M": -12.7,
+   "TP": -0.9,
+   "mean": -17.6,
+   "sha1": "eaf0d4675e3460adcfc5ac49e13e34ed7bd0deca"
+  },
+  "project/audio/voice/3b86191298a12fed939917dbc168e808.wav": {
+   "I": -16.7,
+   "LRA": 3.2,
+   "M": -12.1,
+   "TP": -0.8,
+   "mean": -17.1,
+   "sha1": "4c2c92d79533ab6465fb83ff9dfea80d37f24be8"
+  },
+  "project/audio/voice/4061ab6e434635897399f900beca0048.wav": {
+   "I": -16.0,
+   "LRA": 2.2,
+   "M": -11.8,
+   "TP": -1.0,
+   "mean": -16.1,
+   "sha1": "bb34d363a99501d943bc19ef5aca7ed21d494f9c"
+  },
+  "project/audio/voice/44f9e6d90e70a6f5dae84a8ba2e0deb0.wav": {
+   "I": -16.1,
+   "LRA": 4.4,
+   "M": -11.9,
+   "TP": -1.0,
+   "mean": -16.1,
+   "sha1": "2348acc1c1e7f938a32dbad98f6c2776b063aa8b"
+  },
+  "project/audio/voice/469d075ad4a65d56343bbe43b4d7a11b.wav": {
+   "I": -16.0,
+   "LRA": 0.0,
+   "M": -13.3,
+   "TP": -1.0,
+   "mean": -16.6,
+   "sha1": "d24cdabbd1dd56fdb550f3d49b32b2aaef53216b"
+  },
+  "project/audio/voice/484c4a2b14ae8dd492645394ab07ba69.wav": {
+   "I": -16.0,
+   "LRA": 20.0,
+   "M": -11.6,
+   "TP": -1.0,
+   "mean": -16.2,
+   "sha1": "f2f9287e7673852347b098b059cdd2c5b5c5c31c"
+  },
+  "project/audio/voice/48c7d739c2e092b23b1b0134702e6b62.wav": {
+   "I": -16.7,
+   "LRA": 3.5,
+   "M": -12.1,
+   "TP": -0.9,
+   "mean": -16.8,
+   "sha1": "336033398747d08a379e2f8bc1e4f3c22c4158ba"
+  },
+  "project/audio/voice/495693be7c13b70c20f28686a41cc092.wav": {
+   "I": -16.4,
+   "LRA": 20.0,
+   "M": -13.2,
+   "TP": -0.9,
+   "mean": -16.9,
+   "sha1": "927ca3ba618cfdbf7a24277cf8dd0f67e4238b72"
+  },
+  "project/audio/voice/4bab20ffe7cb69ba39fe8a5d2fe95ad0.wav": {
+   "I": -16.1,
+   "LRA": 1.3,
+   "M": -13.1,
+   "TP": -1.0,
+   "mean": -16.8,
+   "sha1": "c224caa8f12ffd593bc3ba813a88a6053b90551f"
+  },
+  "project/audio/voice/4e8b45e7c481313d71337578a0d98464.wav": {
+   "I": -16.0,
+   "LRA": 2.2,
+   "M": -12.5,
+   "TP": -0.8,
+   "mean": -17.1,
+   "sha1": "5b43b304ae392f5bb4f043a68dc02ab5c66a6596"
+  },
+  "project/audio/voice/4ecfdab1409e481a8af2de5df273d3ed.wav": {
+   "I": -16.1,
+   "LRA": 0.7,
+   "M": -12.8,
+   "TP": -0.9,
+   "mean": -16.1,
+   "sha1": "5a67956f7e70e598f1f2a41c2e77ec9b3c695fd4"
+  },
+  "project/audio/voice/54aa3c6592680fff9443c2a0f659d55b.wav": {
+   "I": -16.0,
+   "LRA": 0.9,
+   "M": -11.7,
+   "TP": -0.9,
+   "mean": -17.0,
+   "sha1": "c30f1768d9f2ecb1e8568fd9889242e2d9b95baf"
+  },
+  "project/audio/voice/5d3f4480734376c1320403b3e5b91393.wav": {
+   "I": -16.0,
+   "LRA": 4.2,
+   "M": -11.5,
+   "TP": -1.0,
+   "mean": -16.2,
+   "sha1": "abe340b19a3fa0ae011c944c7634593d28850bbd"
+  },
+  "project/audio/voice/5e33351401981654385996ad149f2c8a.wav": {
+   "I": -16.0,
+   "LRA": 1.4,
+   "M": -12.3,
+   "TP": -1.7,
+   "mean": -18.8,
+   "sha1": "7ba47feada4187735b0c32661363baccda11c8c8"
+  },
+  "project/audio/voice/63df19b4a00287ea7e51e3f54d8e1d1c.wav": {
+   "I": -16.4,
+   "LRA": 1.5,
+   "M": -11.7,
+   "TP": -0.9,
+   "mean": -17.9,
+   "sha1": "c0a542d4c5d289b86ee4e762443d5ce78de941d1"
+  },
+  "project/audio/voice/649a7cd686f8d31d8c820541e5213aba.wav": {
+   "I": -16.2,
+   "LRA": 1.8,
+   "M": -10.7,
+   "TP": -0.9,
+   "mean": -16.4,
+   "sha1": "dfb2acdcac6f1cda1f8d6d94584afbba4f059e50"
+  },
+  "project/audio/voice/677721e2fa96815b593418cd6abedae9.wav": {
+   "I": -15.9,
+   "LRA": 0.0,
+   "M": -14.5,
+   "TP": -1.3,
+   "mean": -16.6,
+   "sha1": "12871910cb5cd529997512872f88bbfb2db227f9"
+  },
+  "project/audio/voice/679fa011cac79603d53a645344c4b709.wav": {
+   "I": -16.0,
+   "LRA": 2.3,
+   "M": -11.7,
+   "TP": -1.0,
+   "mean": -16.6,
+   "sha1": "43dad9c38fead5aa5f46b96f2418753ec099df93"
+  },
+  "project/audio/voice/6b8388f0412b2dd85f1d18e731e9498a.wav": {
+   "I": -16.1,
+   "LRA": 2.2,
+   "M": -12.3,
+   "TP": -0.9,
+   "mean": -16.3,
+   "sha1": "c1bb60688e9def6470ff698e3a0169c35d0d8dfb"
+  },
+  "project/audio/voice/6c084e8f28ca686cec36a4d458399c2b.wav": {
+   "I": -16.2,
+   "LRA": 1.6,
+   "M": -11.2,
+   "TP": -0.9,
+   "mean": -16.6,
+   "sha1": "59a8f6d1499c083de3e4fe720287b3a1c699593d"
+  },
+  "project/audio/voice/6e2f949d290e438e0f1950632a086486.wav": {
+   "I": -16.0,
+   "LRA": 1.9,
+   "M": -13.4,
+   "TP": -0.9,
+   "mean": -16.9,
+   "sha1": "681701430056ec205f55fbf42580c8325cb41403"
+  },
+  "project/audio/voice/6fac3d50d8f137b527938a5e9e081684.wav": {
+   "I": -16.1,
+   "LRA": 20.2,
+   "M": -13.1,
+   "TP": -0.9,
+   "mean": -16.0,
+   "sha1": "6ba04c85dfc55906fa975d0b57eb5117ee3a32be"
+  },
+  "project/audio/voice/71ff71cd9ad739c87fe071ad5c1581d3.wav": {
+   "I": -16.1,
+   "LRA": 1.9,
+   "M": -11.6,
+   "TP": -0.9,
+   "mean": -16.4,
+   "sha1": "cc00a660010d8fca1109f0ab5c8004086463c02c"
+  },
+  "project/audio/voice/727df43c2cd5cf62e85d4f2652672479.wav": {
+   "I": -16.1,
+   "LRA": 20.4,
+   "M": -12.0,
+   "TP": -0.9,
+   "mean": -16.2,
+   "sha1": "fc6a4ac096571d424be0013e787ccb4f5dbd6d9c"
+  },
+  "project/audio/voice/73df37e0c5c127c40b291233d3e1e90d.wav": {
+   "I": -16.0,
+   "LRA": 2.2,
+   "M": -10.6,
+   "TP": -0.9,
+   "mean": -16.4,
+   "sha1": "f4ddbbf746ad74ad2435b5e43fe8db39a3978758"
+  },
+  "project/audio/voice/753aa9cb9ce219c9068dc34f2401490a.wav": {
+   "I": -16.1,
+   "LRA": 2.9,
+   "M": -11.9,
+   "TP": -0.9,
+   "mean": -16.8,
+   "sha1": "bfae2b773ca9a5ae74f5d7a44f541f7cdf6f43d1"
+  },
+  "project/audio/voice/758592b55dd0618e42bd9da56554e2df.wav": {
+   "I": -16.1,
+   "LRA": 0.0,
+   "M": -13.1,
+   "TP": -0.9,
+   "mean": -16.4,
+   "sha1": "5e226bc8787ddc285adaedec9a5938f6cc241ca5"
+  },
+  "project/audio/voice/76d912bbd7e7fffc1c0c7bbbaa50c04c.wav": {
+   "I": -16.0,
+   "LRA": 0.0,
+   "M": -13.9,
+   "TP": -3.2,
+   "mean": -17.9,
+   "sha1": "891030e327d7937a5bba232f1bbaba38f69b6c06"
+  },
+  "project/audio/voice/77635f28f57e3595644db23725a88e23.wav": {
+   "I": -16.0,
+   "LRA": 0.0,
+   "M": -12.2,
+   "TP": -1.0,
+   "mean": -16.4,
+   "sha1": "b976b6e4c49154765587cd2987d40a8ef898c3cc"
+  },
+  "project/audio/voice/777bb609783f4b264129380ea41e4ae0.wav": {
+   "I": -16.2,
+   "LRA": 0.7,
+   "M": -10.4,
+   "TP": -0.9,
+   "mean": -16.8,
+   "sha1": "415ce401a75330a0258c9ab0530065354cc8310c"
+  },
+  "project/audio/voice/77b697b88b3903fab3aa9e62eb18b532.wav": {
+   "I": -16.2,
+   "LRA": 3.2,
+   "M": -13.6,
+   "TP": -0.9,
+   "mean": -18.7,
+   "sha1": "34cbe64adef435b442570115159ab9c1403fe716"
+  },
+  "project/audio/voice/793a9059c53cdc9fd2c487fc1da2c4e3.wav": {
+   "I": -16.0,
+   "LRA": 1.9,
+   "M": -12.7,
+   "TP": -1.0,
+   "mean": -16.9,
+   "sha1": "138fe9c420203ad95cdeeea24aa09df7f3a1be0d"
+  },
+  "project/audio/voice/7e5168d6b18571ffd24afe06d9160881.wav": {
+   "I": -16.0,
+   "LRA": 2.4,
+   "M": -11.2,
+   "TP": -1.1,
+   "mean": -16.2,
+   "sha1": "669c4b52bad600a105e0be68eed2756a7502752f"
+  },
+  "project/audio/voice/7f77d38278451c831ed54b7cdae0794d.wav": {
+   "I": -16.0,
+   "LRA": 2.4,
+   "M": -12.5,
+   "TP": -1.0,
+   "mean": -16.4,
+   "sha1": "7fa80aeb2d14408b3b8b8b68f5998d25dd12b62d"
+  },
+  "project/audio/voice/80cf61cb09cc45065081f00120452e38.wav": {
+   "I": -16.2,
+   "LRA": 0.0,
+   "M": -14.0,
+   "TP": -0.9,
+   "mean": -16.9,
+   "sha1": "5989a4e4c12c93a01e51c2d04c931e1a2231f95f"
+  },
+  "project/audio/voice/85c431f5c23175a151a445c467d4e58d.wav": {
+   "I": -16.0,
+   "LRA": 0.0,
+   "M": -14.2,
+   "TP": -1.0,
+   "mean": -17.9,
+   "sha1": "9e6dcd88233a239646bb86cd3745384abc971fb2"
+  },
+  "project/audio/voice/8915674730af3361660fb409a5b43309.wav": {
+   "I": -16.1,
+   "LRA": 8.5,
+   "M": -12.1,
+   "TP": -0.9,
+   "mean": -18.1,
+   "sha1": "03779cc150d95d149c9a478ca7c9adfe1e9f08dd"
+  },
+  "project/audio/voice/89282e391bb5484f7b9fb9859eea7796.wav": {
+   "I": -15.9,
+   "LRA": 3.0,
+   "M": -12.5,
+   "TP": -1.1,
+   "mean": -16.3,
+   "sha1": "25f3591b9d45010bb3cbea45e8b016ccca4a2559"
+  },
+  "project/audio/voice/8cea1055223c38bff9e56abb8d2e8459.wav": {
+   "I": -16.0,
+   "LRA": 0.0,
+   "M": -14.3,
+   "TP": -2.9,
+   "mean": -18.1,
+   "sha1": "7c03ed3835ddf1434e5526d9b5d6e18eccecf02a"
+  },
+  "project/audio/voice/90a3830aa73f5936a15fd7dd7822a889.wav": {
+   "I": -16.1,
+   "LRA": 4.7,
+   "M": -11.2,
+   "TP": -1.0,
+   "mean": -16.5,
+   "sha1": "bd40719989e53d3cf49c122c4bf0227b6f34d4b1"
+  },
+  "project/audio/voice/90e6df75be19f7ac691594f94695bc60.wav": {
+   "I": -16.0,
+   "LRA": 2.3,
+   "M": -12.6,
+   "TP": -1.0,
+   "mean": -16.9,
+   "sha1": "233d999e1e4cb63abdaa41c1b3b657fa606d8e1e"
+  },
+  "project/audio/voice/91c1ec27cd52b491b9bffd517c5f22ba.wav": {
+   "I": -16.0,
+   "LRA": 1.9,
+   "M": -11.5,
+   "TP": -0.9,
+   "mean": -16.7,
+   "sha1": "4556aa4825478d1e7e46153bea458bc7c735f5a4"
+  },
+  "project/audio/voice/970893e4aa0bdbcab2ee3a0cf68d7815.wav": {
+   "I": -16.0,
+   "LRA": 0.0,
+   "M": -13.4,
+   "TP": -1.6,
+   "mean": -16.9,
+   "sha1": "56247526118b616f51fd21bd9c618cdef6a577fd"
+  },
+  "project/audio/voice/979bb8ad58ffe4f5c9bead3ecbec6853.wav": {
+   "I": -16.3,
+   "LRA": 2.1,
+   "M": -11.4,
+   "TP": -1.0,
+   "mean": -16.8,
+   "sha1": "2cc3faeff62b72f75eb87f9620d54f1f325ca1b1"
+  },
+  "project/audio/voice/99a953be85d6b11691d6a75604476765.wav": {
+   "I": -16.3,
+   "LRA": 1.1,
+   "M": -13.2,
+   "TP": -0.9,
+   "mean": -16.7,
+   "sha1": "589db354b1a019b6e58060b7bb0006b6e6a62447"
+  },
+  "project/audio/voice/9e65d53a992df97f7bcfc059736831e6.wav": {
+   "I": -16.0,
+   "LRA": 2.8,
+   "M": -13.2,
+   "TP": -1.0,
+   "mean": -16.3,
+   "sha1": "2e2798aa132c68815df33e4573d1612fa92ec244"
+  },
+  "project/audio/voice/9f97d4c61bae2a316a81d34728360e67.wav": {
+   "I": -16.0,
+   "LRA": 20.3,
+   "M": -13.0,
+   "TP": -2.3,
+   "mean": -16.5,
+   "sha1": "4080b0a250cd3290b9f4c21fa02d0b246333c3b5"
+  },
+  "project/audio/voice/a1a1a8d8b8a5847d45263399227f9dbd.wav": {
+   "I": -16.1,
+   "LRA": 2.3,
+   "M": -12.3,
+   "TP": -1.0,
+   "mean": -16.8,
+   "sha1": "01eda61dc2fbec49b821eb8bebb4950d8b01e962"
+  },
+  "project/audio/voice/a1b13cf8de5bd20f02bffa54873b7c38.wav": {
+   "I": -16.1,
+   "LRA": 1.7,
+   "M": -12.5,
+   "TP": -0.9,
+   "mean": -16.1,
+   "sha1": "46377aa1eaf3bb89ee81b5deb5054bf5ea296df3"
+  },
+  "project/audio/voice/a2acea2d1feb4aa7d3d79c2a3f2ab7ab.wav": {
+   "I": -16.1,
+   "LRA": 5.8,
+   "M": -12.6,
+   "TP": -0.9,
+   "mean": -17.4,
+   "sha1": "f921b8ca126b6247aaca2790fe5922627bf6cf0b"
+  },
+  "project/audio/voice/a33861c9fb241dad4f3ec99dbc822603.wav": {
+   "I": -16.3,
+   "LRA": 2.5,
+   "M": -12.5,
+   "TP": -1.0,
+   "mean": -17.1,
+   "sha1": "48fb60f630cdbd70eca68b98c1df8594e6dda9dc"
+  },
+  "project/audio/voice/a381e986702c14a4813a46f992670cb0.wav": {
+   "I": -16.2,
+   "LRA": 0.0,
+   "M": -13.1,
+   "TP": -0.9,
+   "mean": -16.7,
+   "sha1": "394b2cbe557095ffdc83c5cc34142d2f22e20735"
+  },
+  "project/audio/voice/a4ce93ed0ac1f88e8413e2402d6d37d3.wav": {
+   "I": -16.1,
+   "LRA": 2.3,
+   "M": -12.1,
+   "TP": -0.9,
+   "mean": -16.6,
+   "sha1": "d840b9f77c4d7bac037aaf3a76f2cdd373568751"
+  },
+  "project/audio/voice/a5b7f4a155bab958b6cbc2f7230c6976.wav": {
+   "I": -16.3,
+   "LRA": 4.2,
+   "M": -13.3,
+   "TP": -0.9,
+   "mean": -17.6,
+   "sha1": "8e5a2a001c30f06cd82b82b00bc87c6c7aba2d4d"
+  },
+  "project/audio/voice/a5b88f42631a4a2d7d7d155c0c36a166.wav": {
+   "I": -16.2,
+   "LRA": 20.6,
+   "M": -11.8,
+   "TP": -0.9,
+   "mean": -16.7,
+   "sha1": "4807aafd4a00ccf2b36fcf1a1fd5176d84340d67"
+  },
+  "project/audio/voice/a77e17ee86c8f9a93618b50c4cfb27cb.wav": {
+   "I": -16.0,
+   "LRA": 20.1,
+   "M": -11.4,
+   "TP": -0.9,
+   "mean": -16.7,
+   "sha1": "71260d3b2c6e117b286711a7d99a58f41908db93"
+  },
+  "project/audio/voice/a8d1823879ed9b161f0f6b00b95584b6.wav": {
+   "I": -16.2,
+   "LRA": 2.2,
+   "M": -12.1,
+   "TP": -1.1,
+   "mean": -16.4,
+   "sha1": "41f7c6a74c469d84d8e426ded76e207fc7458856"
+  },
+  "project/audio/voice/aa9ca4cab5e021588f709e4db8731c82.wav": {
+   "I": -16.0,
+   "LRA": 2.1,
+   "M": -11.8,
+   "TP": -1.0,
+   "mean": -16.2,
+   "sha1": "654cb40368ebb2533e6a2e46c8a38d6dceafbfa5"
+  },
+  "project/audio/voice/ade41740cd2b84ec557cd5ab2eeccf0c.wav": {
+   "I": -16.4,
+   "LRA": 20.0,
+   "M": -13.2,
+   "TP": -0.9,
+   "mean": -17.1,
+   "sha1": "2ae8f697e5a31ae9930af2f44ebd3fde3d8e03e6"
+  },
+  "project/audio/voice/af4b55d4cd9ff710117c8367cc540c42.wav": {
+   "I": -16.1,
+   "LRA": 1.6,
+   "M": -13.8,
+   "TP": -0.9,
+   "mean": -17.3,
+   "sha1": "b7054cbb37f7a3a4333d27ff34694a3084adb353"
+  },
+  "project/audio/voice/afc6a69e3f64247a90a8adad6f5e70c0.wav": {
+   "I": -16.0,
+   "LRA": 0.0,
+   "M": -13.3,
+   "TP": -1.0,
+   "mean": -16.9,
+   "sha1": "cfd4283ed8b6cc825cc5d7919dc3ba8f7a0f16e2"
+  },
+  "project/audio/voice/b12e7de7521eb39480f1ef16b0c32b6e.wav": {
+   "I": -15.9,
+   "LRA": 1.6,
+   "M": -12.4,
+   "TP": -0.8,
+   "mean": -16.6,
+   "sha1": "d574e0cf2bbca7a645b847b6f5dc880984be345c"
+  },
+  "project/audio/voice/b2f6c3a90bec2a4e211babd7c0ade844.wav": {
+   "I": -16.2,
+   "LRA": 2.5,
+   "M": -11.9,
+   "TP": -0.8,
+   "mean": -16.5,
+   "sha1": "d05109eb0c880c806b1193e63927ba9f427e620c"
+  },
+  "project/audio/voice/b46d51e209f7433528091686f575dcfb.wav": {
+   "I": -16.0,
+   "LRA": 1.0,
+   "M": -13.1,
+   "TP": -1.2,
+   "mean": -16.8,
+   "sha1": "f40dc98c5d0c4e3485457b0c23aa0d8b402801d4"
+  },
+  "project/audio/voice/bc5fca0cb1f6a7b767ae62dea3a993f5.wav": {
+   "I": -16.0,
+   "LRA": 3.2,
+   "M": -12.8,
+   "TP": -1.1,
+   "mean": -16.9,
+   "sha1": "f4af3c47f3e02a21eadb7d930ad33ccde0d8ed7a"
+  },
+  "project/audio/voice/bd37b7d070fb0ec8f03b5ce67028ba3c.wav": {
+   "I": -16.0,
+   "LRA": 3.8,
+   "M": -11.3,
+   "TP": -1.0,
+   "mean": -17.5,
+   "sha1": "192b98a61dc38dc4529530358497a4427f2e0101"
+  },
+  "project/audio/voice/bfcbcb1922f94d7f2e18a5a36073e3fe.wav": {
+   "I": -16.1,
+   "LRA": 0.0,
+   "M": -13.4,
+   "TP": -1.0,
+   "mean": -17.4,
+   "sha1": "b43085ce52cc3be45551ca1843b4f601c470d645"
+  },
+  "project/audio/voice/c098bd113b6ccf2d71140a6e7c03a70b.wav": {
+   "I": -16.2,
+   "LRA": 5.0,
+   "M": -12.5,
+   "TP": -0.9,
+   "mean": -17.8,
+   "sha1": "f2947ddb18c005867a58ea3a577dde159cbbaf73"
+  },
+  "project/audio/voice/c5611da7f0e88d3dd81ae74a5c20a80d.wav": {
+   "I": -16.1,
+   "LRA": 1.8,
+   "M": -11.7,
+   "TP": -1.0,
+   "mean": -16.7,
+   "sha1": "e84edc4cbe895fcfdb9f7c0dcc7cdf95dfe57fcd"
+  },
+  "project/audio/voice/c5feeda3650dbfdad16b780ea6455dd8.wav": {
+   "I": -16.0,
+   "LRA": 0.0,
+   "M": -13.3,
+   "TP": -1.0,
+   "mean": -16.7,
+   "sha1": "7a5e68b0944a524852c050a497dbf6288c8ac14b"
+  },
+  "project/audio/voice/c615599de00feccd683c15f318cfd05a.wav": {
+   "I": -16.6,
+   "LRA": 3.0,
+   "M": -11.0,
+   "TP": -0.8,
+   "mean": -16.9,
+   "sha1": "e522dfa674e466b0e032789d64ca748a1f9fd77d"
+  },
+  "project/audio/voice/c8cc14c703bab8efc5f35151c0b38edc.wav": {
+   "I": -16.1,
+   "LRA": 2.9,
+   "M": -11.4,
+   "TP": -1.0,
+   "mean": -16.1,
+   "sha1": "ce40dc35eea8ee5b8ed4b33ea2c6f737173f4d1e"
+  },
+  "project/audio/voice/c9b7457afa18ae7db3143bd79b17dceb.wav": {
+   "I": -16.1,
+   "LRA": 1.7,
+   "M": -12.3,
+   "TP": -0.9,
+   "mean": -16.4,
+   "sha1": "80d381736fd771c8114199bce3b96055b86dd07d"
+  },
+  "project/audio/voice/cc07fbc277fbb1e7ef63918da43dfaba.wav": {
+   "I": -16.0,
+   "LRA": 1.0,
+   "M": -13.3,
+   "TP": -1.1,
+   "mean": -16.5,
+   "sha1": "c4b85e94f83c8bb87db27a94808d14555faec5e6"
+  },
+  "project/audio/voice/ccc9c2be27ebdb59f1ada84c2afad6bb.wav": {
+   "I": -16.0,
+   "LRA": 0.0,
+   "M": -13.5,
+   "TP": -1.2,
+   "mean": -17.5,
+   "sha1": "36a9d1c7825e35c723ee83918367385cc5c4087f"
+  },
+  "project/audio/voice/cd8d9cf1cc57e61f8734dd8eed56672c.wav": {
+   "I": -15.9,
+   "LRA": 1.4,
+   "M": -12.0,
+   "TP": -0.9,
+   "mean": -17.2,
+   "sha1": "02618d9d9f3f59a050c1f20ada9d19229883fdc1"
+  },
+  "project/audio/voice/ce8918e2bc6d3246fb5ec977aacf42c8.wav": {
+   "I": -15.9,
+   "LRA": 0.0,
+   "M": -11.8,
+   "TP": -1.1,
+   "mean": -16.1,
+   "sha1": "ce924ada7ae60f784c1dfc80d10570713b31a29f"
+  },
+  "project/audio/voice/d17a1f3d9ed787a3d4c1cfa349342c5b.wav": {
+   "I": -16.1,
+   "LRA": 3.7,
+   "M": -12.4,
+   "TP": -1.0,
+   "mean": -16.6,
+   "sha1": "62b740ec6fea283593b9d455b0761ca0ee7cb1f9"
+  },
+  "project/audio/voice/d18db25f95f385d31fe5f85a2015c587.wav": {
+   "I": -16.0,
+   "LRA": 2.5,
+   "M": -12.4,
+   "TP": -1.3,
+   "mean": -16.9,
+   "sha1": "43e012cf2baa55a4a84c44dcf5fb72a26ee6258a"
+  },
+  "project/audio/voice/daca9a5cd5471cb060d9784936208b0e.wav": {
+   "I": -16.2,
+   "LRA": 3.9,
+   "M": -12.1,
+   "TP": -1.0,
+   "mean": -16.6,
+   "sha1": "ba76672b0e1f8ed2b0dd2d966faeac233c02084c"
+  },
+  "project/audio/voice/db2876634c59892219abbf45e266e45b.wav": {
+   "I": -16.1,
+   "LRA": 20.4,
+   "M": -11.9,
+   "TP": -0.9,
+   "mean": -16.4,
+   "sha1": "9b1b8b4e2446336b001024f21c4f1f8254d10c3b"
+  },
+  "project/audio/voice/dbd4ee9a3a35930c7ae39671440cd14a.wav": {
+   "I": -16.1,
+   "LRA": 2.2,
+   "M": -11.2,
+   "TP": -0.9,
+   "mean": -16.2,
+   "sha1": "ab587ff8ab15d4492d30c434adac5438765e6a6e"
+  },
+  "project/audio/voice/ddd3c96b69069ba16079ce52588e6778.wav": {
+   "I": -16.0,
+   "LRA": 0.0,
+   "M": -14.2,
+   "TP": -1.0,
+   "mean": -17.0,
+   "sha1": "9cd59edd1d24045df0f009b98ddd1af53616b16f"
+  },
+  "project/audio/voice/de6e64051dd505bd0b9ede46dd965a65.wav": {
+   "I": -16.1,
+   "LRA": 4.3,
+   "M": -11.3,
+   "TP": -0.8,
+   "mean": -16.2,
+   "sha1": "6d8fe7400c9386ca02ecf60b6c935abb0d778465"
+  },
+  "project/audio/voice/e0daf78272b013bb525c1edc450ddf03.wav": {
+   "I": -16.3,
+   "LRA": 2.8,
+   "M": -13.0,
+   "TP": -0.8,
+   "mean": -16.9,
+   "sha1": "8636fb0752879aadb855475f9ef3debe236fc747"
+  },
+  "project/audio/voice/e1d946a36443acc27887e543be2dd20e.wav": {
+   "I": -16.0,
+   "LRA": 0.7,
+   "M": -12.3,
+   "TP": -0.9,
+   "mean": -16.2,
+   "sha1": "4dd267aab3b176d6d5bdc18aa41c52519c48cbf6"
+  },
+  "project/audio/voice/e32d379af6b7198d74f23b1c58b40d29.wav": {
+   "I": -16.5,
+   "LRA": 3.1,
+   "M": -11.2,
+   "TP": -0.9,
+   "mean": -16.9,
+   "sha1": "3f66070b646e17d42e160f1e5c369218392208a2"
+  },
+  "project/audio/voice/e71fd515c4d7ad6df64b74b315258674.wav": {
+   "I": -16.1,
+   "LRA": 2.5,
+   "M": -12.1,
+   "TP": -1.0,
+   "mean": -17.2,
+   "sha1": "4edf2a4c44e8e493651f6c26ac3b892317854089"
+  },
+  "project/audio/voice/e79074a82693a78cd692e3b8289a131e.wav": {
+   "I": -16.1,
+   "LRA": 0.0,
+   "M": -12.9,
+   "TP": -1.0,
+   "mean": -18.1,
+   "sha1": "0f8d243082adae71bfd5515093f94ffe8a9c31be"
+  },
+  "project/audio/voice/e869fc07164992691daafd27aa9e649a.wav": {
+   "I": -16.0,
+   "LRA": 2.1,
+   "M": -11.9,
+   "TP": -1.0,
+   "mean": -16.1,
+   "sha1": "8e3e457a994b79f3082e0494fb1767e96c0f82e2"
+  },
+  "project/audio/voice/e8727232bce8fd489149eadee7c1fbfc.wav": {
+   "I": -16.2,
+   "LRA": 1.5,
+   "M": -13.0,
+   "TP": -0.9,
+   "mean": -17.1,
+   "sha1": "b4ac2aca486741724e1501b991eb6ebda5846dc4"
+  },
+  "project/audio/voice/e93184f113e4981184a51e5d141bc5c7.wav": {
+   "I": -16.1,
+   "LRA": 0.0,
+   "M": -13.6,
+   "TP": -1.0,
+   "mean": -16.5,
+   "sha1": "7a7673837c9bdc9b4355d848cfbb9d8743154e53"
+  },
+  "project/audio/voice/f10155d6af1bf7cee821dc9af6e3671b.wav": {
+   "I": -16.0,
+   "LRA": 0.0,
+   "M": -12.9,
+   "TP": -1.3,
+   "mean": -16.6,
+   "sha1": "5e962a5d12bc77270c9e5421d55b4c59748da60a"
+  },
+  "project/audio/voice/f192a3821259c3f8840751ec05d82d2e.wav": {
+   "I": -16.0,
+   "LRA": 20.1,
+   "M": -13.2,
+   "TP": -1.2,
+   "mean": -16.4,
+   "sha1": "f53c819f9e70aae2527ff52fcd07ff18c4c8ee74"
+  },
+  "project/audio/voice/f1f253e64d22d9aeccf60e025cb42f41.wav": {
+   "I": -16.1,
+   "LRA": 4.0,
+   "M": -11.2,
+   "TP": -0.8,
+   "mean": -16.6,
+   "sha1": "da190f2bd7b1ceebd12e6f53daa7da1b51216ce3"
+  },
+  "project/audio/voice/f284b0e5f2f094ff1af2ce4101cecb59.wav": {
+   "I": -16.3,
+   "LRA": 2.0,
+   "M": -11.8,
+   "TP": -0.8,
+   "mean": -17.0,
+   "sha1": "471e364a1ed1a0d55fbf1437a58c44111700d647"
+  },
+  "project/audio/voice/f3d0afa6ea6737f68075b5a21a644794.wav": {
+   "I": -16.1,
+   "LRA": 20.5,
+   "M": -12.7,
+   "TP": -0.9,
+   "mean": -16.2,
+   "sha1": "19e86f7146dfb85828bd3e39b26a628708d77c9a"
+  },
+  "project/audio/voice/f59dbbeb31ec704a751e259fee025f32.wav": {
+   "I": -16.1,
+   "LRA": 1.8,
+   "M": -12.2,
+   "TP": -1.0,
+   "mean": -16.3,
+   "sha1": "7558e96a271ef88819a49ca3ca390047011b1e0b"
+  },
+  "project/audio/voice/f740c508ff83ed45bdf6b7bfb9dc664c.wav": {
+   "I": -16.0,
+   "LRA": 7.5,
+   "M": -13.7,
+   "TP": -1.3,
+   "mean": -17.3,
+   "sha1": "cce7a91e63745d2fbc2b73d397e5e5fbbbba6f2c"
+  },
+  "project/audio/voice/f80647a5d0273a3058a5dab73e035298.wav": {
+   "I": -16.2,
+   "LRA": 4.1,
+   "M": -11.8,
+   "TP": -0.8,
+   "mean": -18.2,
+   "sha1": "d3c8180e3ebc6623c5837e2ce39503a89519f5e5"
+  },
+  "project/audio/voice/f845d2dc94758b77f7f99ad57d2670f3.wav": {
+   "I": -16.0,
+   "LRA": 2.6,
+   "M": -11.3,
+   "TP": -0.9,
+   "mean": -16.1,
+   "sha1": "c1fdd0fb8e64cd47f290e984ff6af06c5edc45a6"
+  },
+  "project/audio/voice/fcd62e73725005c314209b30702c5f26.wav": {
+   "I": -16.0,
+   "LRA": 0.0,
+   "M": -11.8,
+   "TP": -1.0,
+   "mean": -16.8,
+   "sha1": "3d5f612ef860a49403e24930f5aa080736bda997"
+  },
+  "project/audio/voice/fcdfbddcb49076dc8cb77a1afb4d28db.wav": {
+   "I": -16.5,
+   "LRA": 2.5,
+   "M": -12.6,
+   "TP": -0.8,
+   "mean": -16.9,
+   "sha1": "46fd9a86c9223e5c230dcaf942583eddc43adb2f"
+  },
+  "project/audio/voice/fde4c897e35a84916f16f7199b5a174a.wav": {
+   "I": -16.2,
+   "LRA": 1.6,
+   "M": -11.8,
+   "TP": -1.1,
+   "mean": -16.5,
+   "sha1": "1a954844ea5869432d49ec79058f6b583151c219"
+  },
+  "project/audio/voice/fe7903027a8fc04fbca93c461de365e0.wav": {
+   "I": -16.0,
+   "LRA": 0.0,
+   "M": -12.7,
+   "TP": -1.0,
+   "mean": -16.5,
+   "sha1": "9443e05238f237b4522a081795353d68bc987541"
+  },
+  "project/audio/voice/fe87614b87bfd174230284b3cfbcc861.wav": {
+   "I": -16.2,
+   "LRA": 0.0,
+   "M": -13.9,
+   "TP": -1.9,
+   "mean": -17.1,
+   "sha1": "f2f37ddce4d8d0e5c6a66fb509d255c667c809e7"
+  },
+  "project/audio/voice/fed8931c3a14a2fd3d5e3b195b2adc9c.wav": {
+   "I": -16.0,
+   "LRA": 1.0,
+   "M": -12.6,
+   "TP": -0.9,
+   "mean": -16.3,
+   "sha1": "d90e97ed68da4fcbb30bfaa2954006ea13052af2"
+  },
+  "project/audio/voice/ffdf3b24684391de29c99c2a0f1af75f.wav": {
+   "I": -16.0,
+   "LRA": 0.0,
+   "M": -14.0,
+   "TP": -2.4,
+   "mean": -16.8,
+   "sha1": "083a55890ce9927f7d536cd7fdb3fb029e6f71eb"
+  }
+ }
+}
