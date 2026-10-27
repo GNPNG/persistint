@@ -40,6 +40,7 @@ func _run() -> void:
 	change_scene_to_file(ProjectSettings.get_setting("application/run/main_scene"))
 	await _frames(3)
 	_check(current_scene != null and current_scene.visible and current_scene.get_node("Video").is_playing(), "the studio intro shows and plays")
+	await create_timer(current_scene.SKIP_GRACE + 0.1).timeout  # a click right away is ignored (the gate's tap)
 	_click(root.get_visible_rect().size / 2.0)
 	await _frames(4)
 	_check(_scene() == MENU, "a click skips the intro to the main menu")
