@@ -91,3 +91,32 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource("3_imprint")
+
+[node name="Colophon" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -130.0
+offset_top = -28.0
+offset_right = 130.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+theme_override_constants/separation = 1
+alignment = 2
+
+[node name="Copyright" type="Label" parent="Colophon"]
+layout_mode = 2
+theme_type_variation = &"HintLabel"
+text = "© 2026 Brett Whitty"
+horizontal_alignment = 1
+
+[node name="BasedOn" type="Label" parent="Colophon"]
+layout_mode = 2
+theme_type_variation = &"HintLabel"
+text = "Based on characters and themes from the book ‘Persistint’"
+horizontal_alignment = 1

@@ -290,6 +290,8 @@ PERSISTINT is written and designed by Brett Whitty as a companion to his novel *
 coming soon from [GNPNG](https://gnpng.org), an independent Canadian press. The book trailer is
 [on YouTube](https://www.youtube.com/watch?v=8GxFjrDAJf4).
 
+© 2026 Brett Whitty. Based on characters and themes from the book ‘Persistint’.
+
 ## License
 
 License: not yet chosen; all rights reserved by the author until then.
