@@ -4,10 +4,11 @@ extends SceneTree
 ## every line they speak is tagged in data/florida_psychologists.json's terms, its words exactly the
 ## entry's: [#cite=<id>] a claim verified against its source (verified=true, the DOI, the record
 ## checked, the source's own words, a check date; SOP-06) from the site's citations page or the
-## author's references; [#author=<id>] a line the author wrote, with verified support from those
-## sources and the gap stated; [#interp=<id>] the psychologists' explanation, never marked as
-## sourced; [#chat] their own talk. Every claim is spoken; meeting them is remembered; walking near
-## them gets a bark and talking to them opens the conversation.
+## author's references, and never resting on survey data (the author's rule, 2026-10-27: no
+## statistics from surveys); [#author=<id>] a line the author wrote, as his words, with no source;
+## [#interp=<id>] the psychologists' explanation, never marked as sourced; [#chat] their own talk.
+## Every claim is spoken; meeting them is remembered; walking near them gets a bark and talking to
+## them opens the conversation.
 ## Run: godot --headless --path project -s tests/test_florida_psychologists.gd
 ## The test run uses WorldState's test save (QA-04).
 
@@ -40,6 +41,7 @@ func _run() -> void:
 	_check(page.contains("Further reading"), "the site's citations page is readable")
 	var refs := FileAccess.get_file_as_string(ProjectSettings.globalize_path("res://").path_join(AUTHOR_REFS))
 	var date := RegEx.create_from_string("^\\d{4}-\\d{2}-\\d{2}$")
+	var survey := RegEx.create_from_string("(?i)survey|self-report|questionnaire|peer nomination")
 	var n_verified := 0
 	for id: String in claims:
 		var c: Dictionary = claims[id]
@@ -53,18 +55,16 @@ func _run() -> void:
 		if not listed and c.has("title"):
 			listed = refs.contains(String(c["title"]))
 		_check(listed, "claim %s cites a work on the citations page or in the author's references (%s)" % [id, doi])
+		_check(survey.search(String(c.get("population", "")) + " " + String(c.get("evidence", ""))) == null,
+			"claim %s does not rest on survey data" % id)
 		if c.get("verified") == true:
 			n_verified += 1
 	var authors: Dictionary = doc.get("author_lines", {})
 	for id: String in authors:
 		var a: Dictionary = authors[id]
-		var sup_ok: bool = a.get("support", []).size() > 0
-		for s: Dictionary in a.get("support", []):
-			sup_ok = sup_ok and s.get("verified") == true and String(s.get("quote", "")) != "" \
-				and String(s.get("checked_url", "")).begins_with("https://") and String(s.get("population", "")) != ""
-		_check(String(a.get("text", "")) != "" and String(a.get("author_words", "")).contains("Author") and sup_ok
-			and a.get("gap", []).size() > 0 and not a.has("verified"),
-			"author line %s: his words, verified support with populations, the gap stated, not itself marked verified" % id)
+		_check(String(a.get("text", "")) != "" and String(a.get("author_words", "")).contains("Author")
+			and not (a.has("support") or a.has("gap") or a.has("source") or a.has("url") or a.has("verified")),
+			"author line %s: his words, with no source, support or gap record, not marked verified" % id)
 	var interps: Dictionary = doc.get("interpretations", {})
 	for id: String in interps:
 		var i: Dictionary = interps[id]
@@ -119,7 +119,7 @@ func _run() -> void:
 	_check(not lines.any(func(l: Array) -> bool: return String(l[1]).contains("[#") or String(l[1]).contains("{{")),
 		"no tag or {{...}} shows in a line")
 	for want: String in [SKIP, "What do you two do, back home?", "Violence between partners?",
-			"Wait, how?", "Why don't I ever hear about this?", "That's enough research for one vacation."]:
+			"Wait, how?", "What about control, without hitting?", "That's enough research for one vacation."]:
 		_check(asked.has(want), "the player can say: %s" % want)
 
 	# Optional: the first choice can end it before any research, and a return visit is welcomed.
