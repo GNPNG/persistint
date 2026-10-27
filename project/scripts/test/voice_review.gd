@@ -29,6 +29,7 @@ const VoiceScript := preload("res://scripts/autoload/voice.gd")
 
 const MANIFEST := "res://audio/voice/manifest.json"
 const CAST_PATH := "res://data/cast.json"
+const VOICES_PATH := "res://data/voices.json"
 const BUBBLE := "res://scenes/ui/bark_bubble.tscn"
 const CLONE_IDS := ["epstein", "bill_clinton", "hillary_clinton", "bill_gates"]
 const CUB_ID := "polar_bear_clone"
@@ -45,7 +46,7 @@ const STAGE_FEET := Vector2(196, 238)
 const BUBBLE_SCALE := 2.4
 const SWIPE := 40.0
 
-## {speaker, id, name, short, sub, bus, art: {kind, path}, lines: [{text, key, has_clip, source}]} per character.
+## {speaker, id, name, short, sub, voice (its voices.json set-up), bus, art: {kind, path}, lines: [{text, key, has_clip, source}]} per character.
 var roster: Array = []
 ## Saved verdicts: {"characters": {speaker: {verdict, at, name}}, "lines": {key: {thumb, at, speaker, text}}}.
 var review: Dictionary = {"characters": {}, "lines": {}}
@@ -245,7 +246,15 @@ static func _make_entry(speaker: String, cast: Dictionary, critters: Dictionary)
 	elif speaker == speaker.to_lower():
 		name = speaker.capitalize()
 	var clone_bus: bool = id in CLONE_IDS or id == CUB_ID
-	return {"speaker": speaker, "id": id, "name": name, "short": short if short != "" else name, "sub": sub, "bus": "Clones" if clone_bus else "Voice",
+	var voices: Dictionary = _json(VOICES_PATH)
+	var cfg: Variant = voices.get(id, voices.get(speaker))
+	var setup := "no voice set up in voices.json"
+	if cfg is Dictionary and cfg.has("ref"):
+		var extra: int = cfg["extra_refs"].size() if cfg.get("extra_refs") is Array else 0
+		setup = "voice cloned from %s" % str(cfg["ref"]).get_file() + (" + %d more" % extra if extra > 0 else "")
+	elif cfg is Dictionary and cfg.has("builtin"):
+		setup = "built-in XTTS voice %s" % cfg["builtin"]
+	return {"speaker": speaker, "id": id, "name": name, "short": short if short != "" else name, "sub": sub, "voice": setup, "bus": "Clones" if clone_bus else "Voice",
 		"art": art_for(id), "lines": []}
 
 
@@ -605,7 +614,7 @@ func select(i: int, speak := true) -> void:
 	_sub.text = e["sub"]
 	var c := clips_of(e)
 	var n: int = e["lines"].size()
-	_clips.text = ("%d of %d lines have a clip" % [c, n]) if c > 0 else "NO VOICE YET: none of its %d lines has a clip" % n
+	_clips.text = (("%d of %d lines have a clip" % [c, n]) if c > 0 else "NO VOICE YET: none of its %d lines has a clip" % n) + "\n" + e["voice"]
 	_good.set_pressed_no_signal(verdict_of(e["speaker"]) == "good")
 	_sucks.set_pressed_no_signal(verdict_of(e["speaker"]) == "sucks")
 	if speak:
@@ -840,7 +849,7 @@ func load_review() -> void:
 func export_json() -> String:
 	var chars: Array = []
 	for e: Dictionary in roster:
-		chars.append({"speaker": e["speaker"], "name": e["name"], "lines": e["lines"].size(), "clips": clips_of(e),
+		chars.append({"speaker": e["speaker"], "name": e["name"], "lines": e["lines"].size(), "clips": clips_of(e), "voice": e["voice"],
 			"verdict": verdict_of(e["speaker"])})
 	return JSON.stringify({"build": BuildInfo.id(), "date": _now(), "counts": counts(), "roster": chars,
 		"characters": review["characters"], "lines": review["lines"]}, "  ")

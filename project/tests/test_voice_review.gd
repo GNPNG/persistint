@@ -81,6 +81,7 @@ func _run() -> void:
 	_check(scene.art_for("crab")["kind"] == "sheet" and scene.art_for("pony")["kind"] == "pony" and scene.art_for("polar_bear_clone")["kind"] == "cub", "crab, pony and cub are their game art")
 	_check(scene.art_for("father")["kind"] == "sheet" and scene.art_for("daughter")["kind"] == "sheet", "Father and Daughter are their Florida sheets")
 	_check(scene.art_for("initiate")["kind"] == "rig" and scene.art_for("hillary_clinton")["kind"] == "clone", "Gloria is her caste rig, the Hillary clone the clone sheet")
+	_check(speakers["crab"]["voice"] == "no voice set up in voices.json" and speakers["Gloria"]["voice"].begins_with("built-in XTTS voice") and speakers["epstein"]["voice"].begins_with("voice cloned from"), "each character shows its voices.json set-up (%s / %s / %s)" % [speakers["crab"]["voice"], speakers["Gloria"]["voice"], speakers["epstein"]["voice"]])
 	_check("Sidestep" in speakers["crab"]["sub"], "the crabs card names Sidestep (%s)" % speakers["crab"]["sub"])
 
 	# --- Arrows move the selection (keys through _unhandled_input, and the methods), wrapping.
