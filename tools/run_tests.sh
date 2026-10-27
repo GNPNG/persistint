@@ -5,7 +5,8 @@
 # Usage: tools/run_tests.sh [--no-import] [--timeout=SECONDS] [NAME ...]
 #   --no-import       skip `godot --import` (the .godot/ cache is already current)
 #   --timeout=SECONDS per test (default 400); a test that runs longer counts as failed
-#   NAME ...          only these tests (test_save, tests/test_save.gd, ...); default: every
+#   NAME ...          only these tests (test_save, tests/test_save.gd, ...); default: the asset
+#                     gate (tools/check_assets.py) and every
 #                     project/tests/*.gd (verify_slice.gd and each test_*.gd)
 #
 # A test passes when Godot exits 0 and the log has a "RESULT: PASS" line and no "RESULT: FAIL".
@@ -33,6 +34,7 @@ command -v "$GODOT" >/dev/null || { echo "run_tests: $GODOT not found (set GODOT
 LOGS="$ROOT/.cache/tests"
 mkdir -p "$LOGS"
 
+NAMED=$([[ ${#NAMES[@]} -gt 0 ]] && echo 1 || echo 0)
 if [[ ${#NAMES[@]} -eq 0 ]]; then
   for t in "$ROOT"/project/tests/*.gd; do
     NAMES+=("$(basename "$t" .gd)")
@@ -49,6 +51,16 @@ fi
 
 failed=()
 start=$(date +%s)
+# The asset conformance gate (tools/check_assets.py, bd 4wb) counts as a test.
+if [[ $NAMED -eq 0 ]]; then
+  if python3 -I -B "$ROOT/tools/check_assets.py" > "$LOGS/check_assets.log" 2>&1; then
+    printf 'PASS     %-24s        %s\n' check_assets "$(tail -1 "$LOGS/check_assets.log")"
+  else
+    printf 'FAIL     %-24s        %s\n' check_assets "$(tail -1 "$LOGS/check_assets.log")"
+    grep '^FAIL' "$LOGS/check_assets.log" | head -20 | sed 's/^/           /'
+    failed+=(check_assets)
+  fi
+fi
 for name in "${NAMES[@]}"; do
   if [[ ! -f "$ROOT/project/tests/$name.gd" ]]; then
     echo "MISSING  $name"
@@ -73,7 +85,7 @@ for name in "${NAMES[@]}"; do
   fi
 done
 
-total=${#NAMES[@]}
+total=$(( ${#NAMES[@]} + (NAMED == 0 ? 1 : 0) ))
 echo "== $(( total - ${#failed[@]} ))/$total passed in $(( $(date +%s) - start ))s; logs in ${LOGS#$ROOT/}/"
 if [[ ${#failed[@]} -gt 0 ]]; then
   echo "failed: ${failed[*]}"

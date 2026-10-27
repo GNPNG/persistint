@@ -13,7 +13,9 @@ them again (22.05 kHz, 16-bit mono).
 | `splat.wav` | `splat()` | a wet splat |
 | `burp.wav` | `burp()` | a cute burp |
 | `snore.wav` | `snore()` | a little cub snore |
-| `groan_1.wav`, `groan_2.wav`, `groan_3.wav` | `groan()` | a cartoon voice ("Uuunnngh"): a glottal pulse train with vibrato through two vowel formants, plus breath noise |
+| `groan_1.wav` | `groan()` | a cartoon voice ("Uuunnngh"): a glottal pulse train with vibrato through two vowel formants, plus breath noise |
+| `groan_2.wav` | `groan()` | the same, a second variant |
+| `groan_3.wav` | `groan()` | the same, a third variant |
 | `moan.wav` | `moan()` | the same cartoon voice, closed-mouth ("Mmmrrrh") |
 | `growl.wav` | `growl()` | a small chest growl ("Grrrr"), fry and trill, soft-clipped to reach its level |
 
