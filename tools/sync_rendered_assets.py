@@ -18,6 +18,22 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import audio_levels  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
+
+
+def changed_at(path):
+    """When the file last changed: its last commit time if it is committed and unmodified, else
+    its mtime. Checkout order sets mtimes on a fresh clone, so git is the better clock (bd 9yj)."""
+    rel = str(path.relative_to(ROOT))
+    dirty = subprocess.run(["git", "-C", str(ROOT), "status", "--porcelain", "--", rel],
+                           capture_output=True, text=True).stdout.strip()
+    if not dirty:
+        t = subprocess.run(["git", "-C", str(ROOT), "log", "-1", "--format=%ct", "--", rel],
+                           capture_output=True, text=True).stdout.strip()
+        if t:
+            return int(t)
+    return path.stat().st_mtime
+
+
 FORCE = "--force" in sys.argv
 FORCE_EXT = next((a for a in sys.argv[sys.argv.index("--force") + 1:] if not a.startswith("-")), None) if FORCE else None
 missing = []
@@ -35,7 +51,7 @@ for prompt in sorted((ROOT / "prompts").rglob("*.md")):
         continue
     dest.parent.mkdir(parents=True, exist_ok=True)
     forced = FORCE and (FORCE_EXT is None or dest.suffix == "." + FORCE_EXT.lstrip("."))
-    if not forced and dest.exists() and dest.stat().st_mtime >= src.stat().st_mtime and (
+    if not forced and dest.exists() and changed_at(dest) >= changed_at(src) and (
             dest.suffix != src.suffix or dest.suffix == ".mp3"):
         # Already converted from this drop: re-encoding would only churn the committed file.
         continue
