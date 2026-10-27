@@ -77,6 +77,7 @@ var mutation_cooldown: Timer = Timer.new()
 
 
 func _ready() -> void:
+	add_to_group("dialogue_balloon")  # the player watches it leave (player.gd, bd d15.84)
 	balloon.hide()
 	Engine.get_singleton("DialogueManager").mutated.connect(_on_mutated)
 

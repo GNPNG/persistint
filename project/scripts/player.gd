@@ -43,8 +43,9 @@ func _ready() -> void:
 	_ensure_move_actions()
 	var dm := get_node_or_null("/root/DialogueManager")
 	if dm:
-		dm.dialogue_started.connect(func(_r) -> void: _in_dialogue = true)
-		dm.dialogue_ended.connect(func(_r) -> void: _in_dialogue = false)
+		dm.dialogue_started.connect(_on_dialogue_started)
+		dm.dialogue_ended.connect(_on_dialogue_ended)
+	get_tree().scene_changed.connect(_on_dialogue_ended.bind(null))
 	WorldState.flag_changed.connect(_on_flag_changed)
 	refresh_outfit()
 	refresh_mount()
@@ -177,6 +178,33 @@ func _show_ride_ui(show_it: bool) -> void:
 	b.position -= Vector2(90, 30)
 	b.pressed.connect(Ponies.dismount)
 	_ride_ui.add_child(b)
+
+
+## Keys stop moving the player while a conversation is up. The flag clears when the dialogue ends,
+## and also when its balloon leaves the tree or the scene changes, so a balloon that goes away
+## without ending its dialogue (a scene change mid-conversation) cannot lock the keys (bd d15.84).
+func _on_dialogue_started(_resource: Resource) -> void:
+	_in_dialogue = true
+	await get_tree().process_frame  # the balloon is added after the dialogue starts
+	if not is_inside_tree():
+		return
+	for b in get_tree().get_nodes_in_group("dialogue_balloon"):
+		if not b.tree_exited.is_connected(_on_balloon_gone):
+			b.tree_exited.connect(_on_balloon_gone, CONNECT_ONE_SHOT)
+
+
+func _on_dialogue_ended(_resource: Variant) -> void:
+	_in_dialogue = false
+
+
+func _on_balloon_gone() -> void:
+	if is_inside_tree() and get_tree().get_nodes_in_group("dialogue_balloon").filter(
+			func(b: Node) -> bool: return b.is_inside_tree()).is_empty():
+		_in_dialogue = false
+
+
+func in_dialogue() -> bool:
+	return _in_dialogue
 
 
 func _on_flag_changed(key: String, _value: Variant) -> void:
