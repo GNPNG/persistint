@@ -3,7 +3,8 @@ extends SceneTree
 ## consumes ingredients, crafted pieces go on the paper doll, critters react to any outfit,
 ## everything survives save/load, and the maps load. Every seed and item shows by its name from
 ## the data, and the Father in the garden explains the garden and the craft bench on the first
-## visit, in words that match the data (bd ke5).
+## visit, in words that match the data (bd ke5). A thing's floating text (the seed's name, a
+## shell's +1) stays inside the camera's view and outlives a thing that hides (bd wso.2).
 ## Run: godot --headless --path project -s tests/test_florida.gd
 ## The player's real save (user://save.json) is backed up and restored.
 
@@ -120,10 +121,18 @@ func _run() -> void:
 			_check(_floated(scene.get_node("SeedBag")) == "Now planting: %s" % Florida.label("sea_grape"),
 				"garden: the seed bag says which seed it is now")
 			await _garden_father(scene, ws)
+			await _float_in_view(scene, "SeedBag", Vector2(0, 34), "approached from below (high in the view)")
+			await _float_in_view(scene, "SeedBag", Vector2(150, 0), "at the left edge of the view")
+			var rose: float = await _float_in_view(scene, "SeedBag", Vector2(0, -30), "low in the view")
+			var rise: float = scene.get_node("SeedBag").FLOAT_RISE  # Clickable's
+			_check(rose >= rise - 1.0, "garden: with room above, the text rises its full %.0f px (%.1f)" % [rise, rose])
 		if m == "beach":
 			var shell: Node = scene.get_node("Shell1")
 			shell.interact()
 			_check(Florida.count("shell") == 1 and not shell.visible, "beach: a shell can be picked up")
+			var plus := _float_label(shell)
+			_check(plus != null and plus.is_visible_in_tree() and plus.text == "+1 %s" % Florida.label("shell"),
+				"beach: the shell's +1 floats up though the shell is gone")
 		scene.queue_free()
 		await process_frame
 
@@ -183,8 +192,54 @@ func _garden_father(scene: Node, ws: Node) -> void:
 
 ## Text of the newest floating label over a Florida thing (Clickable.float_text).
 func _floated(node: Node) -> String:
-	var labels := node.get_children().filter(func(c: Node) -> bool: return c is Label)
-	return (labels.back() as Label).text if not labels.is_empty() else ""
+	var l := _float_label(node)
+	return l.text if l != null else ""
+
+
+## The newest floating label over a Florida thing: it hangs in the thing's parent, marked with the
+## thing's name ("over").
+func _float_label(node: Node) -> Label:
+	var labels := node.get_parent().get_children().filter(func(c: Node) -> bool:
+		return c is Label and c.get_meta("over", &"") == node.name)
+	return (labels.back() as Label) if not labels.is_empty() else null
+
+
+## With the player standing at `stand` from a thing, its floating text is inside the camera's view
+## over its whole rise (the seed bag approached from below floated its name off the top: bd
+## wso.2). Returns how far the text rose.
+func _float_in_view(scene: Node, thing_name: String, stand: Vector2, what: String) -> float:
+	var thing: Node2D = scene.get_node(thing_name)
+	var player: Node2D = scene.get_node("Player")
+	var cam: Camera2D = player.get_node("Camera2D")
+	player.global_position = thing.global_position + stand
+	cam.reset_smoothing()
+	cam.force_update_scroll()
+	await process_frame
+	thing.interact()
+	var l := _float_label(thing)
+	if l == null:
+		_check(false, "garden: the %s floats a label" % thing_name)
+		return 0.0
+	var start := l.global_position.y
+	var least := INF  # how far inside the view the text came, at the least
+	var rose := 0.0
+	while is_instance_valid(l):
+		var half := root.get_visible_rect().size / cam.zoom / 2.0
+		var view := Rect2(cam.get_screen_center_position() - half, half * 2.0)
+		var text := _text_rect(l)
+		least = minf(least, minf(text.position.y - view.position.y, minf(text.position.x - view.position.x, view.end.x - text.end.x)))
+		rose = maxf(rose, start - l.global_position.y)
+		await process_frame
+	_check(least >= 0.0, "garden: the %s's text, %s, stays inside the view (%.1f px in at the least)" % [thing_name, what, least])
+	return rose
+
+
+## Where a floating label's one line of text is drawn: centred across its rect.
+func _text_rect(l: Label) -> Rect2:
+	var font := l.get_theme_font("font")
+	var w := font.get_string_size(l.text, HORIZONTAL_ALIGNMENT_LEFT, -1, l.get_theme_font_size("font_size")).x
+	var r := l.get_global_rect()
+	return Rect2(r.position.x + (r.size.x - w) / 2.0, r.position.y, w, r.size.y)
 
 
 ## Plays the dialogue from title, following every response into its own branch (nested ones
