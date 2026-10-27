@@ -296,4 +296,6 @@ coming soon from [GNPNG](https://gnpng.org), an independent Canadian press. The 
 
 License: not yet chosen; all rights reserved by the author until then.
 
-Third-party components keep their own licences (see the table above).
+Third-party components keep their own licences (see the table above). [THIRD_PARTY.md](THIRD_PARTY.md)
+lists every one with its licence, source and notice; the game shows the same list, with the full
+licence texts, under **Credits & Licences** on the main menu.

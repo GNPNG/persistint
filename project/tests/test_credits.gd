@@ -4,7 +4,7 @@ extends SceneTree
 ## Credits & Licences button opens the screen and Escape closes it; the screen carries the
 ## engine's licence and the parts built into the engine, and every third-party notice in the
 ## data; Dialogue Manager's text is its LICENSE file word for word; the CPML and OpenStreetMap
-## notices are there.
+## notices are there; THIRD_PARTY.md at the repo root lists every component.
 ## Run: godot --headless --path project -s tests/test_credits.gd
 
 const MAIN_MENU := "res://scenes/ui/main_menu.tscn"
@@ -65,6 +65,12 @@ func _run() -> void:
 	_check(text.contains(Credits._esc(dm_license)) and text.contains(Credits._esc(cpml)) and text.contains(Credits._esc(osm)),
 		"the screen carries every notice in the data")
 	_check(Credits._esc("[b]x[/b]") == "[lb]b]x[lb]/b]", "brackets in licence texts stay text")
+
+	var third_party := FileAccess.get_file_as_string(ProjectSettings.globalize_path("res://").path_join("../THIRD_PARTY.md"))
+	var listed := third_party != ""
+	for n: String in by_name:
+		listed = listed and third_party.contains(n)
+	_check(listed, "THIRD_PARTY.md lists every component the credits screen does")
 
 	change_scene_to_file(MAIN_MENU)
 	await _frames(3)
