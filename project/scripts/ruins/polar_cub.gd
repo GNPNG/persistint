@@ -111,7 +111,9 @@ func say(text: String) -> String:
 		return ""
 	_talking = true
 	bubble.say("%s\n%s" % [designation(), text])
-	Voice.speak(text, float(data().get("pitch", 1.5)), data().get("cast", "polar_bear_clone"))
+	# from the cub's own positional player, like the clones: it never cuts a clone or the cast off
+	var bus := String(ForbiddenKnowledge.data().get("clone_children", {}).get("bus", "Clones"))
+	Voice.speak_at(self, text, data().get("cast", "polar_bear_clone"), bus)
 	get_tree().create_timer(2.5).timeout.connect(func() -> void:
 		bubble.hide()
 		_talking = false)

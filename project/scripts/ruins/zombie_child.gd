@@ -34,6 +34,7 @@ var dancing := false  # mid-floss or mid-dab
 var _talking := false
 var _facing := "down"
 var _shamble_tw: Tween
+var _quiet_until_ms := 0  # ambient barks stay silent until then (data "voices" -> "cooldown")
 
 
 func _ready() -> void:
@@ -46,6 +47,10 @@ func _ready() -> void:
 		sprite.frame = randi() % 2
 		SheetRig.fit(sprite, SheetRig.CLONE)
 	bubble.hide()
+	var v := voices()
+	var p: AudioStreamPlayer2D = Voice.player_at(self, bus())
+	p.max_distance = float(v.get("max_distance", p.max_distance))
+	p.attenuation = float(v.get("attenuation", p.attenuation))
 	area_entered.connect(_on_bumped)
 	body_entered.connect(_on_bumped)
 	if DisplayServer.get_name() != "headless":
@@ -56,6 +61,13 @@ func _ready() -> void:
 
 static func data() -> Dictionary:
 	return ForbiddenKnowledge.data().get("clone_children", {})
+
+
+## How the clones sound together (data "voices"): "max_at_once" lines from clones playing at a
+## time for an ambient bark, "cooldown" seconds a clone stays quiet after a line, and each
+## clone's positional player's "max_distance" (px) and "attenuation" (Voice.speak_at).
+static func voices() -> Dictionary:
+	return data().get("voices", {})
 
 
 ## The audio bus a clone speaks through ("Clones" unless data says otherwise).
@@ -136,7 +148,7 @@ func _walk_towards(target: Vector2) -> void:
 func _groan_later() -> void:
 	get_tree().create_timer(randf_range(8.0, 20.0)).timeout.connect(func() -> void:
 		if is_inside_tree():
-			bark("barks")
+			bark("barks", true)
 			_groan_later())
 
 
@@ -185,16 +197,22 @@ func interact() -> void:
 func _on_bumped(other: Node) -> void:
 	if other == self or not (other.is_in_group("player") or other.has_method("pick_target")):
 		return
-	bark("bump_barks")
+	bark("bump_barks", true)
 	var tw := create_tween()
 	tw.tween_property(sprite, "position:x", 4.0 if sprite.flip_h else -4.0, 0.12)
 	tw.tween_property(sprite, "position:x", 0.0, 0.2)
 
 
-## Shows and speaks one line from the given list; returns it ("" if already talking).
-func bark(list := "barks") -> String:
+## Shows and speaks one line from the given list; returns it ("" if already talking). The line
+## plays from the clone's own positional player (Voice.speak_at), so clones talk over each other
+## and over the cast instead of cutting anyone off. An `ambient` bark (the groan timer, a bump)
+## is skipped, bubble and all, unless may_vocalize(); a click (interact) always shows its bubble
+## and plays unless the clone is still mid-line.
+func bark(list := "barks", ambient := false) -> String:
 	var lines: Array = data().get(list, [])
 	if lines.is_empty() or _talking:
+		return ""
+	if ambient and not may_vocalize():
 		return ""
 	_talking = true
 	var text: String = lines.pick_random()
@@ -202,11 +220,20 @@ func bark(list := "barks") -> String:
 	bubble.say("%s\n%s" % [designation(), Voice.display_text(text)] + ("\n\"%s\"" % spoken if spoken != "" else ""))
 	# the bark's sounds, then the original's line (its clip is keyed on the words alone)
 	var line := text if spoken == "" else ("%s %s" % [Voice.brackets_of(text), spoken]).strip_edges()
-	Voice.speak(line, float(data().get("pitch", 1.0)), original, bus())
+	var cap := int(voices().get("max_at_once", 3)) if ambient else 0
+	if Voice.speak_at(self, line, original, bus(), cap):
+		_quiet_until_ms = Time.get_ticks_msec() + int(float(voices().get("cooldown", 10.0)) * 1000.0)
 	get_tree().create_timer(3.5).timeout.connect(func() -> void:
 		bubble.hide()
 		_talking = false)
 	return text
+
+
+## True when an ambient bark may play now: out of its cooldown, not mid-line, and fewer than
+## voices "max_at_once" positional lines playing.
+func may_vocalize() -> bool:
+	return Time.get_ticks_msec() >= _quiet_until_ms and not Voice.speaking_at(self) \
+		and Voice.voices_at() < int(voices().get("max_at_once", 3))
 
 
 ## Eaten by a polar bear cub (CloneLab.pounce): a kawaii puff where it stood, then gone.

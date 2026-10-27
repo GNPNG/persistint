@@ -870,6 +870,13 @@
 		"designation": "%s clone, batch %d",
 		"pitch": 1.5,
 		"bus": "Clones",
+		"voices": {
+			"_note": "Each clone speaks from its own positional player (Voice.speak_at): lines overlap and fade with distance instead of cutting each other off. max_at_once: how many clone lines may play at once before an ambient bark (groan timer, bump) is skipped; cooldown: seconds a clone stays quiet after a line before its next ambient bark; max_distance (px) and attenuation: the player's distance falloff (player properties, no audio effect).",
+			"max_at_once": 3,
+			"cooldown": 10.0,
+			"max_distance": 720.0,
+			"attenuation": 1.5
+		},
 		"others_radius": 96.0,
 		"dance": {
 			"interval_min": 25.0,
