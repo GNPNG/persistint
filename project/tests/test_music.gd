@@ -201,6 +201,9 @@ func _run() -> void:
 	music.register_track("test_a", a)
 	music.play("test_a")
 	music.step(1.1)
+	# The chapter-end and Name It stingers fired above are real files now and outlast the test's
+	# stepped time: silence them so the reference level is the undocked loop.
+	_quiet(music)
 	var full_db: float = music.active_player().volume_db
 	music.register_stinger("test_sting", _tone(880.0, 2.0, false))
 	music.play_stinger("test_sting")
@@ -245,7 +248,7 @@ func _run() -> void:
 	music.load_settings()
 
 	print("RESULT: %s (%d failures)" % ["PASS" if _failures == 0 else "FAIL", _failures])
-	quit()
+	quit(1 if _failures else 0)
 
 
 ## id -> res:// path from every prompt's front matter under `dir`.
@@ -332,3 +335,13 @@ func _check(ok: bool, what: String) -> void:
 	if not ok:
 		_failures += 1
 		print("FAIL: ", what)
+
+
+## Stops the stinger and any voice line still playing, releases the duck, and lets it settle.
+func _quiet(music: Node) -> void:
+	music.get_node("Stinger").stop()
+	var voice: Node = root.get_node("/root/Voice")
+	voice._queue.clear()
+	voice._player.stop()
+	music.duck_voice(false)
+	music.step(1.0)

@@ -103,6 +103,9 @@ func _run() -> void:
 	music.play("test_duck")
 	music.step(0.35)
 	_check(music.fade_levels()[music._active] >= 0.99, "a track starting from silence is up within %.1f s" % music.FADE_IN_SECONDS)
+	# Real clips and stingers exist now and outlast the test's stepped time: silence them so the
+	# reference level is the undocked loop.
+	_quiet(music)
 	var full_db: float = music.active_player().volume_db
 	music.duck_voice(true)
 	music.step(0.5)
@@ -148,3 +151,13 @@ func _check(ok: bool, what: String) -> void:
 	if not ok:
 		_failures += 1
 		print("FAIL: ", what)
+
+
+## Stops the stinger and any voice line still playing, releases the duck, and lets it settle.
+func _quiet(music: Node) -> void:
+	music.get_node("Stinger").stop()
+	var voice: Node = root.get_node("/root/Voice")
+	voice._queue.clear()
+	voice._player.stop()
+	music.duck_voice(false)
+	music.step(1.0)
