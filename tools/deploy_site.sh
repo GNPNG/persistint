@@ -24,7 +24,9 @@
 # 25 MiB that is not in oversized_files -> copy the rest to site/public/play/<build-id>/ (older
 # local build folders are pruned; their R2 objects stay) -> write site/public/play/index.html
 # and site/public/_redirects (/play/current/* alias) -> generate site/wrangler.toml and
-# site/src/worker.js -> make the social-card URLs in site/public/index.html absolute -> link
+# site/src/worker.js -> make the social-card URLs in site/public/index.html absolute -> size
+# limits (tools/check_deploy_sizes.sh, BD-06: every file in site/public against Cloudflare's
+# 25 MiB per file and 20,000 files, the export against itch.io's HTML5 limits) -> link
 # check (tools/check_site_links.py) -> ensure the R2 bucket, upload oversized files to
 # {build_bucket}/<build-id>/ -> `npx -y wrangler@4 deploy` from site/.
 # build-id = short commit hash.
@@ -63,7 +65,7 @@ cd "$ROOT"
 SITE="$ROOT/site"
 PUBLIC="$SITE/public"
 CONFIG="$SITE/site.config.json"
-MAX_ASSET_BYTES=26214400          # Cloudflare Workers static assets: 25 MiB per file
+MAX_ASSET_BYTES=26214400          # Cloudflare static assets: 25 MiB per file (sources and the full check: tools/check_deploy_sizes.sh)
 MAX_R2_PUT_BYTES=314572800        # wrangler r2 object put: 300 MiB per object
 PART_BYTES=$((24 * 1024 * 1024))  # oversized_mode gzip: part size for a file whose gzip is still over 25 MiB
 COMPAT_DATE="2026-10-01"          # pinned so wrangler.toml stays deterministic
@@ -631,6 +633,19 @@ if s != src:
 else:
     print("index.html already up to date")
 PY
+
+# ---------------------------------------------------------------- size limits (BD-06)
+# What is uploaded, not what was exported: site/public after the gzip/parts step (the raw
+# oversized files are not in it), so landing-page media count too. The itch.io check reads the
+# export, which is what an itch.io HTML5 zip would carry.
+log "Size limits (BD-06)"
+sizes=(--cloudflare="$PUBLIC")
+if ((SITE_ONLY)); then
+  echo "  itch.io: skipped (--site-only: no export)"
+else
+  sizes+=(--itch="$EXPORT")
+fi
+tools/check_deploy_sizes.sh "${sizes[@]}" || die "a file is over a host's limit; nothing was uploaded or deployed"
 
 # ---------------------------------------------------------------- link check
 log "Version"
