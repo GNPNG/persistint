@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Persistint"
-config/version="0.3.3"
+config/version="0.3.4"
 config/description="A free companion game to Persistint, a novel by Brett Whitty, coming soon from GNPNG, an independent Canadian press."
 run/main_scene="res://scenes/ui/studio_intro.tscn"
 config/features=PackedStringArray("4.6", "GL Compatibility")
