@@ -16,6 +16,7 @@ func _ready() -> void:
 	%CreditsButton.pressed.connect($Credits.open)
 	%BeginButton.visible = WorldState.get_flag("_location") is Dictionary
 	_add_version_label()
+	_add_save_notice()
 	move_child($Credits, -1)  # over the version label too
 
 
@@ -57,6 +58,28 @@ func _add_version_label() -> void:
 	label.add_theme_color_override("font_color", Color(0.6, 0.5, 0.55, 1))
 	label.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT)
 	label.position -= Vector2(36, 14)
+	add_child(label)
+
+
+## When the save could not be read at start (WorldState.load_report, GC-07), say so at the top of
+## the menu instead of quietly starting over.
+func _add_save_notice() -> void:
+	var text := WorldState.load_report_text()
+	if text == "":
+		return
+	var label := Label.new()
+	label.name = "SaveNotice"
+	label.text = text
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.add_theme_font_size_override("font_size", 9)
+	label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+	label.add_theme_color_override("font_outline_color", Color(0.35, 0.05, 0.1, 1))
+	label.add_theme_constant_override("outline_size", 4)
+	label.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
+	label.offset_left = 40
+	label.offset_right = -40
+	label.offset_top = 6
 	add_child(label)
 
 
