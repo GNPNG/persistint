@@ -96,7 +96,8 @@ func _run() -> void:
 	var text: String = z.bark()
 	_check(text != "" and not z.bubble.text.contains("[") and not z.bubble.text.contains("]"), "the bubble shows no brackets: %s" % z.bubble.text.replace("\n", " / "))
 	_check(heard.size() == 1 and heard[0][0] == z.original and not heard[0][1].contains("["), "Voice hears the clone's line without brackets (%s)" % [heard])
-	_check(voice._player.bus == "Clones", "the clone's line plays through the Clones bus (%s)" % voice._player.bus)
+	var z_player: Node = z.get_node_or_null(voice.VOICE_AT)
+	_check(z_player is AudioStreamPlayer2D and z_player.bus == &"Clones", "the clone's line plays from its own player on the Clones bus (%s)" % (z_player.bus if z_player else "none"))
 	if text.contains("["):
 		var spoken: String = heard[0][1] if heard.size() == 1 else ""
 		_check(voice.parts(text)[0].has("sfx") or spoken != "", "a bark with a sound plays the sound first")

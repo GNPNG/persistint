@@ -16,12 +16,23 @@ extends Node
 ## vocalizations (tools/bake_clone_voices.py), which play when the line goes through that bus.
 ## Nothing is processed in real time and nothing is read by text-to-speech: a line with no clip
 ## shows its bubble and stays silent.
-## While a clip or vocalization plays, Music ducks the loop (Music.duck_voice, a volume move, no
-## audio effect) so speech sits above it.
+## While a clip or vocalization of the cast plays, Music ducks the loop (Music.duck_voice, a volume
+## move, no audio effect) so speech sits above it.
+## Two kinds of player (the author, 2026-10-27, on the clone hall: one zombie noise "starts playing
+## and the other one stops playing"):
+## - speak(): the cast's one channel, a plain AudioStreamPlayer; a new line replaces the one before
+##   it (dialogue lines follow each other), and only these lines duck the music.
+## - speak_at(): a line from a node in the world (the clone children, the polar bear cubs) on that
+##   node's own AudioStreamPlayer2D (VOICE_AT, made on first use): lines from different nodes
+##   overlap and fade with distance, never cut each other or the cast's line off, and never duck
+##   the music. A node mid-line doesn't start another; a caller can cap how many play at once.
 
-## Every line handed to speak(), clip or text-to-speech (tests listen to it): the text as a
+## Every line handed to speak() or speak_at(), clip or not (tests listen to it): the text as a
 ## bubble shows it, brackets removed.
 signal spoke(speaker: String, text: String)
+
+## The name of the positional player speak_at() gives a node.
+const VOICE_AT := "VoiceAt"
 
 const CLIP_DIR := "res://audio/voice"
 const SFX_DIR := "res://audio/sfx"
@@ -34,6 +45,8 @@ static var _letters := RegEx.create_from_string("[^a-z]")
 var _player: AudioStreamPlayer
 var _queue: Array = []  # what is left to play of the current line: {"sfx": path} | {"say": text}
 var _speaker := ""
+## Positional players mid-line (speak_at): player -> {"queue": parts left, "speaker": String}.
+var _at := {}
 
 
 func _ready() -> void:
@@ -146,34 +159,89 @@ func speak(text: String, pitch := 1.0, speaker := "", bus := "Voice") -> void:
 	_play_next()
 
 
+## Speaks `text` as `speaker` from `source`'s own positional player (VOICE_AT, an
+## AudioStreamPlayer2D made on first use on bus `bus`): its bracketed sounds, then its words, in
+## order, like speak(). Lines from different nodes overlap; none is cut off by another, by the
+## cast's speak(), or by this one. Returns true when the line starts playing; false (the line
+## silent, `spoke` still fires so the bubble can show it) when `source` is still mid-line, when
+## `max_voices` > 0 and that many positional lines already play, or when it has nothing to play.
+func speak_at(source: Node2D, text: String, speaker := "", bus := "Clones", max_voices := 0) -> bool:
+	var shown := display_text(text)
+	if shown.is_empty() or source == null or not source.is_inside_tree():
+		return false
+	spoke.emit(speaker, shown)
+	var p := player_at(source, bus)
+	if speaking_at(source) or (max_voices > 0 and voices_at() >= max_voices):
+		return false
+	_at[p] = {"queue": parts(text), "speaker": speaker}
+	_next_at(p)
+	return _at.has(p)
+
+
+## `source`'s positional player, made on first use: an AudioStreamPlayer2D child named VOICE_AT
+## on `bus` (Clones when there is no such bus), one sound at a time. Its distance falloff
+## (max_distance, attenuation) is the caller's to set; plain player properties, no audio effect.
+func player_at(source: Node2D, bus := "Clones") -> AudioStreamPlayer2D:
+	var p := source.get_node_or_null(VOICE_AT) as AudioStreamPlayer2D
+	if p == null:
+		p = AudioStreamPlayer2D.new()
+		p.name = VOICE_AT
+		p.max_polyphony = 1
+		p.max_distance = 720.0
+		p.attenuation = 1.5
+		p.finished.connect(_next_at.bind(p))
+		p.tree_exiting.connect(func() -> void: _at.erase(p))
+		source.add_child(p)
+	p.bus = bus if AudioServer.get_bus_index(bus) >= 0 else "Clones"
+	return p
+
+
+## True while `source` is mid-line through speak_at().
+func speaking_at(source: Node) -> bool:
+	var p := source.get_node_or_null(VOICE_AT) if source else null
+	return p != null and _at.has(p)
+
+
+## How many positional lines (speak_at) are playing now.
+func voices_at() -> int:
+	for p: Variant in _at.keys():
+		if not is_instance_valid(p):
+			_at.erase(p)
+	return _at.size()
+
+
+func _next_at(p: AudioStreamPlayer2D) -> void:
+	if not _at.has(p):
+		return
+	if not is_instance_valid(p) or not _start_next(p, _at[p]["queue"], _at[p]["speaker"]):
+		_at.erase(p)
+
+
 func _duck(on: bool) -> void:
 	var music := get_node_or_null("/root/Music")
 	if music and music.has_method("duck_voice"):
 		music.duck_voice(on)
 
 
-
-## What is still to play of the current line (sounds and words), in order.
+## What is still to play of the cast's current line (sounds and words), in order.
 func pending() -> Array:
 	return _queue.duplicate()
 
 
 func _play_next() -> void:
-	while not _queue.is_empty():
-		var part: Dictionary = _queue.pop_front()
-		if part.has("sfx"):
-			var path := clone_variant("%s/%s.wav" % [SFX_DIR, part["sfx"]], _player.bus)
-			if ResourceLoader.exists(path):
-				_player.stream = load(path)
-				_duck(true)
-				_player.play()
-				return  # finished -> the next part
-			continue
-		var clip := clone_variant(clip_path(_speaker, part["say"]), _player.bus)
-		if ResourceLoader.exists(clip):
-			_player.stream = load(clip)
-			_duck(true)
-			_player.play()
-			return
-		# no clip yet: the bubble shows the words; the next part follows at once
-	_duck(false)
+	_duck(_start_next(_player, _queue, _speaker))
+
+
+## Starts the next playable part of a line on `player` (a vocalization, or the words' clip; a part
+## with no file is skipped: the bubble shows it). Returns false when nothing is left to play.
+## The player's `finished` calls back for the part after.
+func _start_next(player: Node, queue: Array, speaker: String) -> bool:
+	while not queue.is_empty():
+		var part: Dictionary = queue.pop_front()
+		var path: String = "%s/%s.wav" % [SFX_DIR, part["sfx"]] if part.has("sfx") else clip_path(speaker, part["say"])
+		path = clone_variant(path, String(player.bus))
+		if ResourceLoader.exists(path):
+			player.stream = load(path)
+			player.play()
+			return true
+	return false
