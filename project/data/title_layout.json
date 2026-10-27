@@ -1,0 +1,111 @@
+{
+  "_note": "Written by tools/gen_title_fx.py for scenes/ui/main_menu_backdrop.tscn; 640x360 world px.",
+  "sea_top": 196,
+  "island": {
+    "x": 36,
+    "y": 170,
+    "scale": 0.25
+  },
+  "foam": {
+    "x": 24,
+    "y": 224,
+    "frame_w": 592,
+    "frame_h": 136,
+    "frames": 6,
+    "scale": 0.5,
+    "fps": 5
+  },
+  "waves": {
+    "y": 196,
+    "frame_w": 640,
+    "frame_h": 164,
+    "frames": 4,
+    "scale": 0.5,
+    "fps": 3
+  },
+  "clouds": {
+    "scale": 0.5,
+    "y": 0
+  },
+  "trees": [
+    {
+      "x": 80,
+      "y": 316,
+      "kind": "a"
+    },
+    {
+      "x": 330,
+      "y": 300,
+      "kind": "b"
+    },
+    {
+      "x": 400,
+      "y": 330,
+      "kind": "c"
+    },
+    {
+      "x": 210,
+      "y": 340,
+      "kind": "a"
+    },
+    {
+      "x": 300,
+      "y": 352,
+      "kind": "b"
+    },
+    {
+      "x": 110,
+      "y": 356,
+      "kind": "c"
+    }
+  ],
+  "palms": [
+    {
+      "x": 62,
+      "y": 296,
+      "kind": "a"
+    },
+    {
+      "x": 455,
+      "y": 357,
+      "kind": "b"
+    }
+  ],
+  "perches": [
+    [
+      150,
+      236
+    ],
+    [
+      250,
+      238
+    ],
+    [
+      385,
+      220
+    ],
+    [
+      548,
+      188
+    ],
+    [
+      80,
+      266
+    ],
+    [
+      455,
+      296
+    ]
+  ],
+  "o": {
+    "cx": 100,
+    "cy": 118,
+    "r": 54,
+    "ring_w": 150,
+    "ring_h": 230,
+    "ring_cx": 75,
+    "ring_cy": 78,
+    "scale": 0.25
+  },
+  "track_seconds_fallback": 172.0
+}

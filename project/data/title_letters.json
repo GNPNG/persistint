@@ -1,0 +1,21 @@
+{
+	"_note": "The title screen's PERSISTINT letters (scripts/ui/title_letters.gd). The author's own lines (2026-10-24), not quotes. Each letter jiggles to the title theme's beat (bpm; beat phase from Music's playback position); a tap makes it jiggle harder, pop hearts and say a line. Taps add to a counter that decays back toward the giggles ('decay_per_second'); 'tiers' pick the letters' line by the counter ('min' = the lowest count the tier covers; lines rotate within a tier); a tier with 'sulk_seconds' makes the letters droop and ignore taps that long. 'chime_ins' are other speakers who step in once each time the counter crosses their 'min' (and again once it has decayed below and crossed again). Speakers are Voice speaker ids: 'letters' = silverman (Sarah Silverman clone), 'reason' = warren (Elizabeth Warren), 'last_word' = richter (Andy Richter); clips come from the voice pipeline, TTS until then.",
+	"bpm": 84,
+	"speakers": {"letters": "silverman", "reason": "warren", "last_word": "richter"},
+	"decay_per_second": 0.4,
+	"hard_jiggle_seconds": 0.8,
+	"hearts_per_tap": 3,
+	"tiers": [
+		{"min": 1, "hearts": true, "lines": ["hee hee hee", "tee hee hee", "ooh, stop it"]},
+		{"min": 4, "lines": ["come on, enough"]},
+		{"min": 5, "sulk_seconds": 2.5, "lines": ["ooh, okay, enough, please, enough, bad touch"]},
+		{"min": 6, "lines": ["are you going to sit here and touch me all day, or are you going to play the game?"]},
+		{"min": 8, "lines": ["see that button? click on that. Okay. Thank you. Thank you. Thaaank you."]},
+		{"min": 10, "lines": ["thanks. The game, please. Thanks."]},
+		{"min": 12, "sulk_seconds": 3.0, "lines": ["Stop. Okay. Enough. Look, are you going to sit here all day? Please, please, enough, enough."]}
+	],
+	"chime_ins": [
+		{"min": 9, "speaker": "reason", "line": "Look, did you hear what she said? Click the button, okay? Okay?"},
+		{"min": 14, "speaker": "last_word", "line": "Okay, look, you gotta just click on the thing to start the game. We're not going to allow any more of this. Okay? Thank you."}
+	]
+}

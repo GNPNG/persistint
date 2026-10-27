@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/main_menu.gd" id="1"]
-[ext_resource type="Texture2D" path="res://assets/ui/title/title_screen_plain.png" id="2_art"]
+[ext_resource type="PackedScene" path="res://scenes/ui/main_menu_backdrop.tscn" id="2_backdrop"]
 [ext_resource type="Script" path="res://scripts/ui/imprint_mark.gd" id="3_imprint"]
-[ext_resource type="Texture2D" path="res://assets/ui/title/wordmark.png" id="4_wordmark"]
+[ext_resource type="Script" path="res://scripts/ui/title_letters.gd" id="4_letters"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -19,30 +19,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color(0.988235, 0.905882, 0.937255, 1)
 
-[node name="Art" type="TextureRect" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 2
-texture = ExtResource("2_art")
-expand_mode = 1
-stretch_mode = 6
-
-[node name="Wordmark" type="TextureRect" parent="."]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -170.0
-offset_top = 10.0
-offset_right = 170.0
-offset_bottom = 67.0
-grow_horizontal = 2
-mouse_filter = 2
-texture = ExtResource("4_wordmark")
-expand_mode = 1
-stretch_mode = 5
+[node name="Backdrop" parent="." instance=ExtResource("2_backdrop")]
 
 [node name="Center" type="CenterContainer" parent="."]
 layout_mode = 1
@@ -87,6 +64,9 @@ layout_mode = 2
 theme_type_variation = &"HintLabel"
 text = "click or arrow keys to walk · click people to talk · P for wardrobe"
 horizontal_alignment = 1
+
+[node name="Wordmark" type="Node2D" parent="."]
+script = ExtResource("4_letters")
 
 [node name="Imprint" type="Control" parent="."]
 layout_mode = 1
