@@ -75,6 +75,9 @@ func _add_version_label() -> void:
 		label.text += " · %s" % build
 	label.add_theme_font_size_override("font_size", 8)
 	label.add_theme_color_override("font_color", Color(0.6, 0.5, 0.55, 1))
+	# Over the island art, like the colophon: dark text off a panel gets a white outline (STYLE 4.8).
+	label.add_theme_color_override("font_outline_color", Color.WHITE)
+	label.add_theme_constant_override("outline_size", 3)
 	label.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT)
 	label.position -= Vector2(36, 14)
 	add_child(label)

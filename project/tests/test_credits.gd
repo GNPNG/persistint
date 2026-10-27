@@ -79,6 +79,11 @@ func _run() -> void:
 	var based_on: Label = menu.get_node_or_null("Colophon/BasedOn")
 	_check(copyright != null and copyright.text == data.get("copyright"), "the main menu shows © 2026 Brett Whitty")
 	_check(based_on != null and based_on.text == data.get("based_on"), "the main menu shows the book credit")
+	# They and the version sit on the island art, not on a panel: dark text with a white outline
+	# (STYLE 4.8), readable over the flowers and trees (bd wso).
+	for l: Label in [copyright, based_on, menu.get_node_or_null("Version") as Label]:
+		_check(l != null and l.get_theme_color("font_outline_color") == Color.WHITE and l.get_theme_constant("outline_size") >= 2,
+			"%s has a white outline" % (l.name if l else "a colophon line"))
 	_check(menu.get_node_or_null("Imprint/Mark") != null, "the G|P|G mark is on the main menu")
 	var screen: Control = menu.get_node_or_null("Credits")
 	var button: Button = menu.get_node_or_null("%CreditsButton")

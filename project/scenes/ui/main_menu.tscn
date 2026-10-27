@@ -119,12 +119,16 @@ text = "Credits & Licences"
 [node name="Copyright" type="Label" parent="Colophon"]
 layout_mode = 2
 theme_type_variation = &"HintLabel"
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 3
 text = "© 2026 Brett Whitty"
 horizontal_alignment = 1
 
 [node name="BasedOn" type="Label" parent="Colophon"]
 layout_mode = 2
 theme_type_variation = &"HintLabel"
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 3
 text = "Based on characters and themes from the book ‘Persistint’"
 horizontal_alignment = 1
 
