@@ -4,13 +4,10 @@ What's coming, by version. Dates are estimates. Updates arrive as minor versions
 fixes within a version are patches (0.3.1). Right now they're frequent; over time they'll spread out.
 Some items carry a code name until they ship.
 
-## v0.3.0 — target 2026-10-26 (minor)
+## v0.4.0 (minor)
 
-- Animated title screen: the island at golden hour, day turning to night, waves, birds, charms
-  drifting down, and letters that react when you tap them.
 - Touch controls: tap icons for the wardrobe, the journal and help, so it plays on a tablet with
   no keyboard.
-- More music: the remaining island, temple and ruins tracks.
 - The clone children's remaining lines in their own voices.
 
 ## Later (dates to follow)

@@ -1,5 +1,29 @@
 # Changelog
 
+## v0.3.0 — 2026-10-27
+
+Everything since v0.2.1:
+
+- Animated title screen: the island and the wreck under a sky that turns from day to golden hour
+  to night, surf, drifting clouds, trees and palms in the breeze, seabirds, and charms falling
+  like petals; the book trailer's red O paints itself in over the title theme. The PERSISTINT
+  letters jiggle on the beat, and tapping them pops hearts.
+- A Settings screen: Master, Music, Voices and Effects sliders, from the main menu, Escape in
+  play, or a gear you can tap. Your levels are saved.
+- Sound levels fixed: the music is quieter and no longer clips, every voice clip is at one
+  loudness so the zombies are heard, music starts at once instead of fading in slowly, and the
+  music dips while someone speaks.
+- The rest of the music: the island village, the temple, the ruins, the clone lab and the ritual
+  puzzle, plus the chapter-end and Name It stingers. Every world track now exists.
+- 61 more voice clips: lines the voice list named but that had no recording now speak, and 17
+  clips are re-recorded.
+- Site: every page shares one header and footer, the Updates page renders cleanly, the title
+  theme plays far more quietly, and the sound toggle is a speaker that pulses while music plays.
+- Development: large art and audio files are in Git LFS; the web-render engine is its own
+  repository, `gnomatix/web-render`, included as a submodule; review scenes open with
+  `?scene=<name>` and stay out of the player build; each agent workspace keeps its notes in its
+  own encrypted folder.
+
 ## v0.2.1 — 2026-10-24
 
 Playtest hotfix for v0.2.0 (performance drop, sound going wrong, background music stopping):

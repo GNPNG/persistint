@@ -38,7 +38,7 @@
 <main id="main" class="doc-page">
 <div class="wrap narrow">
   <h1>Updates</h1>
-  <p class="doc-lede">The game you can play right now is <strong>v0.2.1</strong>. Here is what went into it,
+  <p class="doc-lede">The game you can play right now is <strong>v0.3.0</strong>. Here is what went into it,
     and what's coming next. Dates are estimates.</p>
   <ul class="toc" aria-label="On this page">
     <li><a href="#next">What's next</a></li>
@@ -47,13 +47,16 @@
   <section id="next" aria-labelledby="next-h">
     <h2 id="next-h" class="doc-h">What's next</h2>
 <p>What's coming, by version. Dates are estimates. Updates arrive as minor versions (0.3.0, 0.4.0, ...); fixes within a version are patches (0.3.1). Right now they're frequent; over time they'll spread out. Some items carry a code name until they ship.</p>
-<h2>v0.3.0 — target 2026-10-26 (minor)</h2>
-<ul><li>Animated title screen: the island at golden hour, day turning to night, waves, birds, charms drifting down, and letters that react when you tap them.</li><li>Touch controls: tap icons for the wardrobe, the journal and help, so it plays on a tablet with no keyboard.</li><li>More music: the remaining island, temple and ruins tracks.</li><li>The clone children's remaining lines in their own voices.</li></ul>
+<h2>v0.4.0 (minor)</h2>
+<ul><li>Touch controls: tap icons for the wardrobe, the journal and help, so it plays on a tablet with no keyboard.</li><li>The clone children's remaining lines in their own voices.</li></ul>
 <h2>Later (dates to follow)</h2>
 <ul><li>Paper look: paper edges and shadows across the world, a zoom-out for the ship's crowded decks, and a cute overhead map.</li><li>Classroom path: a guided 30-minute route through the game with a teacher's sheet.</li><li>Butterscotch.</li><li>Pedestal.</li><li>Open Mic.</li><li>Stable Voices.</li></ul>
   </section>
   <section id="new" aria-labelledby="new-h">
     <h2 id="new-h" class="doc-h">What's new</h2>
+<h2>v0.3.0 — 2026-10-27</h2>
+<p>Everything since v0.2.1:</p>
+<ul><li>Animated title screen: the island and the wreck under a sky that turns from day to golden hour to night, surf, drifting clouds, trees and palms in the breeze, seabirds, and charms falling like petals; the book trailer's red O paints itself in over the title theme. The PERSISTINT letters jiggle on the beat, and tapping them pops hearts.</li><li>A Settings screen: Master, Music, Voices and Effects sliders, from the main menu, Escape in play, or a gear you can tap. Your levels are saved.</li><li>Sound levels fixed: the music is quieter and no longer clips, every voice clip is at one loudness so the zombies are heard, music starts at once instead of fading in slowly, and the music dips while someone speaks.</li><li>The rest of the music: the island village, the temple, the ruins, the clone lab and the ritual puzzle, plus the chapter-end and Name It stingers. Every world track now exists.</li><li>61 more voice clips: lines the voice list named but that had no recording now speak, and 17 clips are re-recorded.</li><li>Site: every page shares one header and footer, the Updates page renders cleanly, the title theme plays far more quietly, and the sound toggle is a speaker that pulses while music plays.</li><li>Development: large art and audio files are in Git LFS; the web-render engine is its own repository, <code>gnomatix/web-render</code>, included as a submodule; review scenes open with <code>?scene=&lt;name&gt;</code> and stay out of the player build; each agent workspace keeps its notes in its own encrypted folder.</li></ul>
 <h2>v0.2.1 — 2026-10-24</h2>
 <p>Playtest hotfix for v0.2.0 (performance drop, sound going wrong, background music stopping):</p>
 <ul><li>No real-time audio processing: the clone children's kid voices are baked into offline copies of their clips and groans (<code>tools/bake_clone_voices.py</code>); the audio buses carry no effects.</li><li>No text-to-speech anywhere: every line is a pre-rendered clip, and a line with no clip yet shows its bubble silently.</li><li>The crisp pixel look is back for every sprite (nearest filtering), the player included.</li><li>A Fullscreen button on the main menu, and F toggles it.</li><li>Site: fewer, faster, subtler hearts; they fade out at once when you scroll back up.</li></ul>
@@ -75,7 +78,7 @@
     <div class="footer-links">
       <a class="gnpng" href="https://gnpng.org">gnpng.org</a>
       <a href="https://www.youtube.com/watch?v=8GxFjrDAJf4">Book trailer on YouTube</a>
-      <a href="/play/">Play <span data-version>v0.2.1</span></a>
+      <a href="/play/">Play <span data-version>v0.3.0</span></a>
       <a href="/updates.html">Updates &amp; what's next</a>
       <a href="/citations.html" data-modal="cite-modal">Citations &amp; further reading</a>
       <a class="safety-badge" href="/support.html"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5z" fill="#5ad1d6" stroke="#ffffff" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 16.5s-4-2.4-4-5.1A2.2 2.2 0 0 1 12 10a2.2 2.2 0 0 1 4 1.4c0 2.7-4 5.1-4 5.1z" fill="#ffffff"/></svg>Online safety &amp; support</a>
