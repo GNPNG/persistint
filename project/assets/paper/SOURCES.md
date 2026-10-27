@@ -12,14 +12,14 @@ What made each file here (release checklist LP-04, sops/09). Prompt files carry 
 | `acc_shell_garland_rig_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `body_base_rig_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `body_base_rig_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
-| `deco_flowers_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `deco_flowers_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `deco_tree_a_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `deco_tree_a_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `deco_tree_b_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `deco_tree_b_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `deco_tree_c_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `deco_tree_c_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
+| `deco_flowers_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
+| `deco_flowers_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
+| `deco_tree_a_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
+| `deco_tree_a_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
+| `deco_tree_b_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
+| `deco_tree_b_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
+| `deco_tree_c_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
+| `deco_tree_c_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `dress_robe_rig_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `dress_uniform_rig_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `dress_white_rig_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
