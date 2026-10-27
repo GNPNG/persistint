@@ -1,0 +1,40 @@
+# GitHub Releases for the public mirror. Gitea push-mirrors this repository (and its tags) to
+# GitHub; Gitea releases do not mirror, so this workflow makes the GitHub Release for each v* tag
+# from that version's CHANGELOG.md section. Run it by hand (workflow_dispatch) to backfill every
+# existing tag.
+name: release
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to release (blank = every v* tag without a release)"
+        required: false
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: false
+      - name: Create releases
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          INPUT_TAG: ${{ github.event.inputs.tag }}
+        run: |
+          set -euo pipefail
+          if [[ "${GITHUB_REF_TYPE:-}" == "tag" ]]; then tags="$GITHUB_REF_NAME"
+          elif [[ -n "${INPUT_TAG:-}" ]]; then tags="$INPUT_TAG"
+          else tags="$(git tag -l 'v*' --sort=version:refname)"; fi
+          for t in $tags; do
+            if gh release view "$t" >/dev/null 2>&1; then echo "$t: release exists"; continue; fi
+            # The CHANGELOG section that starts at "## $t" and ends before the next "## v".
+            awk -v t="$t" '$0 ~ "^## "t"( |$)" {p=1; next} p && /^## v/ {exit} p' CHANGELOG.md > notes.md
+            [[ -s notes.md ]] || echo "See CHANGELOG.md." > notes.md
+            printf '\nPlay this version in the browser: https://persistint.dataglut.org/play/\n' >> notes.md
+            gh release create "$t" --title "$t" --notes-file notes.md --verify-tag
+          done
