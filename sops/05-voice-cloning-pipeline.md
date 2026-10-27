@@ -64,7 +64,7 @@ Tools by exact name:
    - De-duplicate by key.
    Check: `grep -c '{{' {manifest}` (or the project's template opener) returns 0; for one plain line and one line that had an interpolation or markup, the manifest key equals the key the runtime computes for that line (log `line_key(speaker, text)` at runtime and compare).
 
-4. **Choose a voice per speaker.** The key uses the exact speaker string the runtime passes (step 1), normally the display name. `voices.json` may be keyed by cast id only if the generator maps display name to cast id through the cast table; speakers that are not in the cast table (literal labels such as a role title) are keyed as is. Give each speaker either `ref` (path to a reference wav) plus `source`, `span` and `from`, or `builtin` (a stock XTTS studio voice name) for fictional characters. Leave a speaker out to keep it on system TTS.
+4. **Choose a voice per speaker.** The key uses the exact speaker string the runtime passes (step 1), normally the display name. `voices.json` may be keyed by cast id only if the generator maps display name to cast id through the cast table; speakers that are not in the cast table (literal labels such as a role title) are keyed as is. Give each speaker either `ref` (path to a reference wav) plus `source`, `span`, `from` and `captured` (the date the audio was downloaded, YYYY-MM-DD; `"unknown"` where it was never recorded), or `builtin` (a stock XTTS studio voice name) for fictional characters. Leave a speaker out to keep it on system TTS.
    Check: every speaker that should be voiced appears in `voices.json` under the key the generator will look up; the generator's "no voice yet (skipped)" line lists only speakers meant to stay on TTS.
 
 5. **Cut reference recordings.** For each `ref` speaker, download audio with `yt-dlp`, cut the 30 s span where the person speaks alone (no music, no second voice, no applause) with `ffmpeg`, downmix to mono, resample to 22050 Hz. Store under a gitignored refs directory. Never commit the recordings. Because refs are not in git, every new render machine starts without them: regenerate each missing ref from its `source` and `span` in `voices.json`.
@@ -173,7 +173,7 @@ tools/
 ```json
 {
   "_note": "{what ref and builtin mean; keyed by cast id, mapped from display name through cast.json}",
-  "{cast_id}": { "ref": "{refs_dir}/{cast_id}.wav", "source": "https://www.youtube.com/watch?v={id}", "span": "{mm:ss}-{mm:ss}", "from": "{event, year, outlet}" },
+  "{cast_id}": { "ref": "{refs_dir}/{cast_id}.wav", "source": "https://www.youtube.com/watch?v={id}", "span": "{mm:ss}-{mm:ss}", "from": "{event, year, outlet}", "captured": "{YYYY-MM-DD}" },
   "{fictional_id}": { "builtin": "{XTTS studio voice name}" },
   "{literal speaker label}": { "builtin": "{XTTS studio voice name}" }
 }
