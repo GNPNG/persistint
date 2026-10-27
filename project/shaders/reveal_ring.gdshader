@@ -8,7 +8,7 @@ uniform vec2 center = vec2(300.0, 312.0);
 uniform float feather : hint_range(0.0, 0.2) = 0.012;
 
 void fragment() {
-	vec4 c = texture(TEXTURE, UV);
+	vec4 c = COLOR;                                 // the texture times the sprite's modulate (its fade)
 	vec2 d = UV / TEXTURE_PIXEL_SIZE - center;
 	float a = atan(d.x, -d.y);                      // 0 at the top, growing clockwise
 	float turn = (a < 0.0 ? a + TAU : a) / TAU;
