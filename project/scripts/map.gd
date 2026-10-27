@@ -81,9 +81,9 @@ func _update_hud() -> void:
 
 
 func _unhandled_key_input(event: InputEvent) -> void:
-	if event is InputEventKey and event.pressed and event.keycode == KEY_P:
+	if event.is_action_pressed("toggle_wardrobe"):
 		toggle_wardrobe()
-	elif event is InputEventKey and event.pressed and event.keycode == KEY_J:
+	elif event.is_action_pressed("toggle_journal"):
 		toggle_journal()
 
 

@@ -30,17 +30,9 @@ var _ride_ui: CanvasLayer
 var _in_dialogue := false
 var _facing := Vector2.DOWN
 
-const MOVE_KEYS := {
-	"move_left": [KEY_LEFT, KEY_A],
-	"move_right": [KEY_RIGHT, KEY_D],
-	"move_up": [KEY_UP, KEY_W],
-	"move_down": [KEY_DOWN, KEY_S],
-}
-
 
 func _ready() -> void:
 	add_to_group("player")
-	_ensure_move_actions()
 	var dm := get_node_or_null("/root/DialogueManager")
 	if dm:
 		dm.dialogue_started.connect(_on_dialogue_started)
@@ -74,11 +66,11 @@ func _process(_delta: float) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventKey and event.pressed and event.keycode == KEY_H and is_mounted():
+	if event.is_action_pressed("dismount") and is_mounted():
 		Ponies.dismount()
 		get_viewport().set_input_as_handled()
 		return
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+	if event.is_action_pressed("click"):
 		_interact_target = null
 		nav.target_position = get_global_mouse_position()
 
@@ -87,18 +79,6 @@ func _unhandled_input(event: InputEvent) -> void:
 func approach(target: Node2D) -> void:
 	_interact_target = target
 	nav.target_position = target.global_position
-
-
-## Keyboard movement actions (arrows + WASD), added to the InputMap once if missing.
-static func _ensure_move_actions() -> void:
-	for action: String in MOVE_KEYS:
-		if InputMap.has_action(action):
-			continue
-		InputMap.add_action(action)
-		for key: Key in MOVE_KEYS[action]:
-			var ev := InputEventKey.new()
-			ev.physical_keycode = key
-			InputMap.action_add_event(action, ev)
 
 
 func _key_direction() -> Vector2:

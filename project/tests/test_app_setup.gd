@@ -40,6 +40,29 @@ func _run() -> void:
 	var splash: String = ProjectSettings.get_setting("application/boot_splash/image", "")
 	_check(splash != "" and FileAccess.file_exists(splash), "the boot splash is set and exists (%s)" % splash)
 
+	# --- GC-06 input actions: every control is a named action in project settings, and no
+	# script tests raw key codes or mouse buttons. ---
+	for action: String in ["move_left", "move_right", "move_up", "move_down", "toggle_wardrobe",
+			"toggle_journal", "dismount", "toggle_fullscreen", "click"]:
+		_check(ProjectSettings.has_setting("input/" + action) and not InputMap.action_get_events(action).is_empty(), "input action %s is in project settings with a binding" % action)
+	var raw := RegEx.create_from_string("\\b(KEY_[A-Z0-9_]+|MOUSE_BUTTON_[A-Z]+|JOY_[A-Z0-9_]+)\\b|\\.(physical_)?keycode\\b")
+	var raw_hits: Array[String] = []
+	for path in _files("res://scripts", ".gd"):
+		var n := 0
+		for line in FileAccess.get_file_as_string(path).split("\n"):
+			n += 1
+			if not line.strip_edges().begins_with("#") and raw.search(line):
+				raw_hits.append("%s:%d" % [path.trim_prefix("res://"), n])
+	_check(raw_hits.is_empty(), "no script tests raw key codes or mouse buttons (%s)" % ", ".join(raw_hits))
+	var wardrobe := InputEventKey.new()
+	wardrobe.keycode = KEY_P
+	wardrobe.pressed = true
+	_check(wardrobe.is_action_pressed("toggle_wardrobe"), "P is the wardrobe")
+	var left := InputEventKey.new()
+	left.physical_keycode = KEY_A
+	left.pressed = true
+	_check(left.is_action_pressed("move_left"), "A (by position) moves left")
+
 	# --- BD-03 version. ---
 	var version: String = ProjectSettings.get_setting("application/config/version", "")
 	var semver := RegEx.create_from_string("^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(-[0-9A-Za-z.-]+)?(\\+[0-9A-Za-z.-]+)?$")

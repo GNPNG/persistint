@@ -274,7 +274,7 @@ func _process(delta: float) -> void:
 
 # ---------------------------------------------------------------- tap to pixelate (gsd / 2xr)
 func _on_subject_input(_viewport: Node, event: InputEvent, _idx: int, e: Dictionary) -> void:
-	var tap: bool = (event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT) \
+	var tap: bool = event.is_action_pressed("click") \
 		or (event is InputEventScreenTouch and event.pressed)
 	if not tap:
 		return

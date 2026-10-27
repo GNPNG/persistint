@@ -165,7 +165,7 @@ func current_bark() -> String:
 
 
 func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+	if event.is_action_pressed("click"):
 		var player := get_tree().get_first_node_in_group("player")
 		if player:
 			player.approach(self)

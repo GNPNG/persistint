@@ -163,7 +163,7 @@ func _process(delta: float) -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	var pressed: bool = (event is InputEventScreenTouch and event.pressed) \
-		or (event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT)
+		or (event.is_action_pressed("click"))
 	if not pressed:
 		return
 	var local: InputEvent = make_input_local(event)
