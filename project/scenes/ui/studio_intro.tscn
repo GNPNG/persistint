@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/studio_intro.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://bqomtcjrk7b7" path="res://assets/ui/brand/boot_splash.png" id="2_splash"]
 
 [node name="StudioIntro" type="Control"]
 layout_mode = 3
@@ -22,3 +23,42 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 expand = true
+
+[node name="Gate" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="Bg" type="ColorRect" parent="Gate"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+color = Color(0.992157, 0.964706, 0.890196, 1)
+
+[node name="Splash" type="TextureRect" parent="Gate"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+texture = ExtResource("2_splash")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Prompt" type="Label" parent="Gate"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 0.8
+anchor_right = 1.0
+anchor_bottom = 0.92
+grow_horizontal = 2
+mouse_filter = 2
+theme_type_variation = &"TitleLabel"
+text = "tap to start"
+horizontal_alignment = 1
+vertical_alignment = 1

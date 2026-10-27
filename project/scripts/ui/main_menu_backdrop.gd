@@ -48,6 +48,12 @@ const STAR_COUNT := 14
 const TREE_SCALE := 0.25         # canon trees are 4x of 40x52 world px
 const PALM_SCALE := 0.17         # Florida palms are 4x; 52x65 world px here
 const WINK_SECONDS := 0.22
+## The O is a background layer, seen almost in the background: drawn just over the sky, stars,
+## sun and moon and under the clouds, sea, island and everything after them (and under the menu
+## panel and wordmark, which come after the backdrop), large, centred behind the menu, and faint.
+const O_BG_CENTRE := Vector2(320, 150)   # world px, the ring's centre (behind the menu panel)
+const O_BG_SCALE := 0.7                  # of the 4x ring art: a ring about 150 world px in radius
+const O_BG_ALPHA := 0.42                 # its strongest; the end-of-track fade scales this
 
 var layout: Dictionary = {}
 var day_t := 0.0                 # 0 sunrise, 0.25 noon, 0.5 sunset, 0.75 midnight
@@ -77,8 +83,8 @@ func _ready() -> void:
 	for key: String in TEXTURES:
 		_tex[key] = load(TEXTURES[key])
 	_build_sky()
+	_build_o()        # before the world: the O is a background layer, behind clouds and island
 	_build_world()
-	_build_o()
 	_apply_sky(day_t)
 	_apply_o()
 	# The charms come a frame later: creating all forty-odd textures inside one frame stalls
@@ -268,14 +274,15 @@ func _perch(i: int) -> Vector2:
 
 func _build_o() -> void:
 	var o: Dictionary = layout.get("o", {"cx": 100, "cy": 118, "r": 54, "ring_w": 150, "ring_h": 230, "ring_cx": 75, "ring_cy": 78, "scale": 0.25})
-	var scale_ := float(o.get("scale", 0.25))
-	var centre := Vector2(float(o.get("ring_cx", 75)), float(o.get("ring_cy", 78)))
-	var top_left := Vector2(float(o.get("cx", 100)), float(o.get("cy", 118))) - centre
+	# The layout's ring centre is in world px at the layout's scale; in texture px it is that / scale.
+	var tex_centre := Vector2(float(o.get("ring_cx", 75)), float(o.get("ring_cy", 78))) / float(o.get("scale", 0.25))
+	var scale_ := O_BG_SCALE
+	var top_left := O_BG_CENTRE - tex_centre * scale_
 	_o_ring = _sprite("o_ring", top_left, scale_, false)
 	_o_ring.name = "ORing"
 	_o_mat = ShaderMaterial.new()
 	_o_mat.shader = load(REVEAL_SHADER)
-	_o_mat.set_shader_parameter("center", centre / scale_)
+	_o_mat.set_shader_parameter("center", tex_centre)
 	_o_mat.set_shader_parameter("progress", 0.0)
 	_o_ring.material = _o_mat
 	_o_drip = _sprite("o_drip", top_left, scale_, false)
@@ -458,7 +465,7 @@ func _apply_o() -> void:
 	var shown := floorf(float(tl["trickle"]) * tex.get_height())
 	_o_drip.region_rect = Rect2(0, 0, tex.get_width(), shown)
 	_o_drip.visible = shown >= 1.0
-	var a: float = tl["alpha"]
+	var a: float = float(tl["alpha"]) * O_BG_ALPHA
 	_o_ring.modulate.a = a
 	_o_drip.modulate.a = a
 

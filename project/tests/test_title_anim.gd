@@ -81,6 +81,24 @@ func _run() -> void:
 	_check(current_scene.get_node_or_null("Imprint/Mark") != null, "the G|P|G mark is still there")
 	var idx_bd := current_scene.get_node("Backdrop").get_index()
 	_check(idx_bd < current_scene.get_node("Wordmark").get_index() and idx_bd > current_scene.get_node("Bg").get_index(), "the backdrop sits behind the menu, over the colour")
+	_check(idx_bd < current_scene.get_node("Center").get_index(), "the backdrop (and so the O) draws before the menu panel")
+	if bd != null:
+		# The O is a background layer: over the sky, under the clouds, sea and island (the World),
+		# and so under the menu panel and the wordmark; large and faint.
+		var ring: Sprite2D = bd.get_node("ORing")
+		var drip: Sprite2D = bd.get_node("ODrip")
+		var world_i: int = bd.get_node("World").get_index()
+		_check(ring.get_index() < world_i and drip.get_index() < world_i, "the O and its drips draw behind the world (clouds, sea, island)")
+		_check(ring.get_index() > bd.get_node("SkyNight").get_index() and ring.get_index() > bd.get_node("Moon").get_index(), "the O draws over the sky")
+		_check(ring.get_index() < bd.get_node("Charms").get_index(), "the falling charms draw over the O")
+		_check(ring.z_index == 0 and not ring.top_level and drip.z_index == 0 and not drip.top_level, "nothing lifts the O out of its place in the draw order")
+		_check(ring.scale.x >= 0.5, "the O is large (scale %.2f, was 0.25)" % ring.scale.x)
+		var ring_centre: Vector2 = ring.position + Vector2(bd.get_node("ORing").material.get_shader_parameter("center")) * ring.scale.x
+		var panel_rect: Rect2 = current_scene.get_node("Center/Panel").get_global_rect()
+		_check(panel_rect.has_point(ring_centre), "the O is centred behind the menu panel (%s in %s)" % [ring_centre, panel_rect])
+		bd.set_time(bd.track_length() * 0.5)
+		_check(ring.modulate.a > 0.2 and ring.modulate.a <= 0.5, "the O is faint (alpha %.2f)" % ring.modulate.a)
+		_check((load(Backdrop.REVEAL_SHADER) as Shader).code.contains("= COLOR;"), "the reveal shader keeps the sprite's modulate (its faintness and fade)")
 	if bd != null:
 		_check(bd.charms.size() == 18 and bd.birds.size() == 3 and bd.trees.size() == 8, "18 charms, 3 birds, 8 trees and palms")
 		var kinds := {}
