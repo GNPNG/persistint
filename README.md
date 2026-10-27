@@ -44,12 +44,12 @@ notes).
 
 | | |
 |---|---|
-| ![Priestess Betty greets the player in the village](docs/screenshots/village-dialogue.png) | ![The paper-doll wardrobe](docs/screenshots/wardrobe.png) |
-| The village on Little St. Piere Island | The paper-doll wardrobe |
-| ![The Promenade Deck in the Ruins of Utopia](docs/screenshots/ruins-promenade-deck.png) | ![The Landing bridge mini-game](docs/screenshots/cruise-landing.png) |
-| Ruins of Utopia: the sideways Promenade Deck | The Landing: panic on the bridge (placeholder UI) |
-| ![Hottest of the HOT get-ready chain](docs/screenshots/cruise-hottest-chains.png) | ![Title screen](docs/screenshots/main-menu.png) |
-| Hottest of the HOT: the get-ready chain (placeholder UI) | The title screen |
+| ![Priestess Betty greets the player in the Temple](docs/screenshots/temple-dialogue.png) | ![The paper-doll wardrobe](docs/screenshots/wardrobe.png) |
+| Priestess Betty in the Temple on Little St. Piere Island | The paper-doll wardrobe |
+| ![The Promenade Deck in the Ruins of Utopia](docs/screenshots/ruins-promenade-deck.png) | ![The Landing flashback card: a cruise ship at sunset](docs/screenshots/cruise-landing.png) |
+| Ruins of Utopia: the sideways Promenade Deck | Before the Wreck: the card that opens The Landing |
+| ![The Interview with Oprah Winfrey](docs/screenshots/cruise-interview.png) | ![Title screen](docs/screenshots/main-menu.png) |
+| The Interview: your answers set your stats | The title screen |
 
 Much of the art is still placeholder (see [Asset pipeline](#asset-pipeline)).
 
