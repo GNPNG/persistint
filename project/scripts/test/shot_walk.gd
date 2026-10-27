@@ -405,7 +405,9 @@ func _camera(step: Dictionary) -> void:
 		map_size = current_scene.get("map_size")
 	var center: Variant = step.get("center", null)
 	if step.has("zoom"):
-		if String(step["zoom"]) == "fit":
+		# A JSON number is a float, and String has no constructor from one: test the type first.
+		var zoom: Variant = step["zoom"]
+		if zoom is String and zoom == "fit":
 			if map_size == Vector2.ZERO:
 				_why = "zoom fit needs the scene's map_size"
 				return
@@ -413,8 +415,11 @@ func _camera(step: Dictionary) -> void:
 			cam.zoom = Vector2(z, z)
 			if center == null:
 				center = "map"
+		elif (zoom is float or zoom is int) and float(zoom) > 0.0:
+			cam.zoom = Vector2.ONE * float(zoom)
 		else:
-			cam.zoom = Vector2.ONE * float(step["zoom"])
+			_why = "zoom %s is not a number or \"fit\"" % [zoom]
+			return
 	if center != null:
 		var at := Vector2.ZERO
 		if center is String and center == "map":
@@ -424,12 +429,15 @@ func _camera(step: Dictionary) -> void:
 			at = map_size / 2.0
 		elif center is Array:
 			at = _vec(center)
-		else:
-			var n := _node(String(center)) as Node2D
+		elif center is String:
+			var n := _node(center) as Node2D
 			if n == null:
 				_why = "no node %s" % center
 				return
 			at = n.global_position
+		else:
+			_why = "center %s is not \"map\", [x, y] or a node" % [center]
+			return
 		if _why != "":
 			return
 		cam.top_level = true
