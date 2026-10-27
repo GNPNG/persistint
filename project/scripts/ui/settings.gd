@@ -35,8 +35,40 @@ func _ready() -> void:
 		row.add_child(slider)
 		rows.add_child(row)
 		_sliders[which] = slider
+	_add_text_row(rows)
 	_add_save_row(rows)
 	refresh()
+
+
+## Text size (QA-06): Normal, Large, Larger (TextSize); the name shows beside the slider.
+var _text_slider: HSlider
+var _text_name: Label
+
+
+func _add_text_row(rows: VBoxContainer) -> void:
+	var row := HBoxContainer.new()
+	row.name = "Text"
+	var label := Label.new()
+	label.text = "Text"
+	label.custom_minimum_size = Vector2(72, 0)
+	row.add_child(label)
+	_text_slider = HSlider.new()
+	_text_slider.name = "Slider"
+	_text_slider.min_value = 0
+	_text_slider.max_value = TextSize.STEPS.size() - 1
+	_text_slider.step = 1
+	_text_slider.tick_count = TextSize.STEPS.size()
+	_text_slider.ticks_on_borders = true
+	_text_slider.custom_minimum_size = Vector2(110, 20)
+	_text_slider.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_text_slider.value_changed.connect(func(v: float) -> void:
+		TextSize.set_step(int(v))
+		_text_name.text = TextSize.step_name())
+	row.add_child(_text_slider)
+	_text_name = Label.new()
+	_text_name.custom_minimum_size = Vector2(46, 0)
+	row.add_child(_text_name)
+	rows.add_child(row)
 
 
 ## --- Save file (GC-13): Export save hands the save over as a file (a download in the browser, a
@@ -137,6 +169,9 @@ func refresh() -> void:
 		s.set_value_no_signal(AudioSettings.level(which))
 	if _save_status:
 		_save_status.text = WorldState.persistence_warning_text()
+	if _text_slider:
+		_text_slider.set_value_no_signal(TextSize.step)
+		_text_name.text = TextSize.step_name()
 	# In play this is the pause menu (GC-03): Paused, Resume, Quit to Menu.
 	var playing := AudioSettings.in_play()
 	$Center/Panel/VBox/Title.text = "Paused" if playing else "Settings"
