@@ -1,6 +1,6 @@
 # PERSISTINT promo site values
 
-Persistint's values and measurements for the generic site plan in [`sops/templates/promo-site-plan.md`](../sops/templates/promo-site-plan.md) (pages, config schema, worker, headers, deploy steps). Checklist: [`docs/RELEASE_CHECKLIST.md`](RELEASE_CHECKLIST.md), items PW-01 to PW-14, SP-04 to SP-07 and PR-08. Written 2026-10-23 against commit 93870ee.
+Persistint's values and measurements for the generic site plan in [`sops/templates/promo-site-plan.md`](../sops/templates/promo-site-plan.md) (pages, config schema, worker, headers, deploy steps). Written 2026-10-23 against commit 93870ee.
 
 **Domain:** the site is hosted at **persistint.dataglut.org** (Cloudflare account brett@dataglut.org, 2026-10-23). **persistint.gnpng.org** is the public name the author points at it from the GNPNG Cloudflare account. A plain CNAME between two Cloudflare accounts fails with error 1014 "CNAME Cross-User Banned" unless the target uses Cloudflare for SaaS (https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-1xxx-errors/error-1014/), so on the GNPNG side use a proxied placeholder record plus a Redirect Rule to https://persistint.dataglut.org (preserving path and query).
 
@@ -96,6 +96,5 @@ tools/deploy_site.sh --check-external       # link check also fetches external l
 
 ## 7. Open items
 
-- Blocked on author decisions in `docs/RELEASE_CHECKLIST.md`: domain spelling (1), real-person review (5), mirror (6), disclosure text (9), data collection (10), contact and takedown route (12).
 - Unverified: Gitea Actions on the project's Gitea instance; edge behaviour for precompressed wasm; the content type Workers infers for `.pck` (the `_headers` rule sets it anyway).
 - `site/public/404.html` (template section 6 starter) does not exist yet; with `not_found_handling = "404-page"` Workers then returns a plain 404.

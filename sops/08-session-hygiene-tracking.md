@@ -4,7 +4,7 @@ Status: active
 Owner: Brett Whitty
 Applies to: any project where coding agents work in a git repository with an issue tracker
 Last reviewed: 2026-10-24
-Related SOPs: SOP-01 (01-parallel-agents-worktrees.md: worktree notes, close reasons and cleanup follow this SOP); SOP-04 (04-generative-render-pipeline.md: generation-gap tickets follow the issue lifecycle here and are reported at each standup); SOP-07 (07-playtest-bug-triage.md: leftovers from bug fixing are filed under step 13); SOP-11 (11-versioning-and-playtest-cadence.md: sprint and playtest labels, the version commit and tag, the owner's reports as issues); SOP-12 (12-team-roles-and-dispatch.md: the owner's standup notes, status wording, which session writes what)
+Related SOPs: SOP-01 (01-parallel-agents-worktrees.md: worktree notes, close reasons and cleanup follow this SOP); SOP-04 (04-generative-render-pipeline.md: generation-gap tickets follow the issue lifecycle here and are reported at each standup); SOP-07 (07-playtest-bug-triage.md: leftovers from bug fixing are filed under step 13); SOP-11 (11-versioning-and-playtest-cadence.md: sprint and playtest labels, the version commit and tag, the owner's reports as issues); SOP-12 (12-team-roles-and-dispatch.md: the owner's standup notes, status wording, which session writes what); SOP-16 (16-agent-secure-notes.md: agent notes and questions for the author go in the per-workspace encrypted folder)
 
 ## 1. Purpose
 

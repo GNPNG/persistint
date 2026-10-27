@@ -121,8 +121,7 @@ There is no keyboard-only or gamepad control yet.
 ### Planned
 
 What is left before a public release (menus, audio settings, accessibility, a credits screen,
-final art, builds, licensing and more) is tracked in
-[docs/RELEASE_CHECKLIST.md](docs/RELEASE_CHECKLIST.md). Longer term, a
+final art, builds, licensing and more) is tracked in the project issue tracker. Longer term, a
 social-influence "god-game" is a stretch goal.
 
 ## Getting started
@@ -195,7 +194,7 @@ godot --path project -s tools/screenshot_scenes.gd -- <out_dir> [prefix]
 |---|---|
 | `project/` | The Godot project: `scenes/`, `scripts/` (autoloads, maps, mini-games, ruins, Florida, chapters, UI), `data/` (game content as JSON), `dialogue/` (Dialogue Manager files), `assets/`, `audio/`, `themes/`, `tests/`, `tools/`, `addons/` |
 | `dev/` | `dev/` (encrypted, author's design notes): world backstory and novel world-building material |
-| `docs/` | The release checklist, the promo site plan, the author's banner images and the screenshots above |
+| `docs/` | The promo site plan, the author's banner images and the screenshots above |
 | `prompts/` | One generator prompt per asset (image, video, music) |
 | `tools/` | Python, shell and GDScript tools: island map building, sprite cutting, placeholder art, prompt checks, asset rendering and syncing, voice clips, quote checks |
 | `sops/` | Reusable standard operating procedures written while making this game |
@@ -249,7 +248,7 @@ dehumanization, shown in a deliberately cute style.
 | Dialogue system | [Dialogue Manager](https://github.com/nathanhoad/godot_dialogue_manager) 3.10.4 by Nathan Hoad and contributors, in `project/addons/dialogue_manager/` | MIT (see its `LICENSE`) |
 | Island map data | OpenStreetMap via the Overpass API; see [art/reference/little_st_james/SOURCES.md](art/reference/little_st_james/SOURCES.md) | ODbL 1.0, © OpenStreetMap contributors |
 | Island reference photos | Wikimedia Commons, U.S. Virgin Islands government (visual reference only); same `SOURCES.md` | Public domain |
-| Voice model | [Coqui XTTS v2](https://huggingface.co/coqui/XTTS-v2) | Coqui Public Model License (CPML) ([licence text](https://huggingface.co/coqui/XTTS-v2/raw/main/LICENSE.txt); see decision 4 in [docs/RELEASE_CHECKLIST.md](docs/RELEASE_CHECKLIST.md)) |
+| Voice model | [Coqui XTTS v2](https://huggingface.co/coqui/XTTS-v2) | Coqui Public Model License (CPML) ([licence text](https://huggingface.co/coqui/XTTS-v2/raw/main/LICENSE.txt)) |
 
 **Quotes.** Real people's quoted lines come from `project/data/quotes/`, one file per person:
 `atwood.json` (Margaret Atwood), `chelsea.json` (Chelsea Clinton), `ellen.json` (Ellen DeGeneres),
@@ -271,7 +270,7 @@ XTTS v2.
 ## Citations
 
 Every work cited in the game and its documentation (quote sources, books, television and games
-named in the design, and the law and policy sources in the release checklist) is listed on the
+named in the design) is listed on the
 [Citations & Further Reading](https://persistint.dataglut.org/citations.html) page
 (`site/public/citations.html`), with further peer-reviewed reading on social aggression,
 cyberbullying, body-shaming and coercive control by girls and women.

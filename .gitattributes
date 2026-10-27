@@ -1,4 +1,5 @@
 dev/** filter=git-crypt diff=git-crypt
+dev/agents/claude-cli-gemini-exec-host-f2f8932c/** filter=git-crypt-claude-cli-gemini-exec-host-f2f8932c diff=git-crypt-claude-cli-gemini-exec-host-f2f8932c
 *.mp3 filter=lfs diff=lfs merge=lfs -text
 *.wav filter=lfs diff=lfs merge=lfs -text
 *.ogg filter=lfs diff=lfs merge=lfs -text
