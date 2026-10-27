@@ -4,8 +4,10 @@ extends SceneTree
 ## every line they speak is tagged in data/florida_psychologists.json's terms, its words exactly the
 ## entry's: [#cite=<id>] a claim verified against its source (verified=true, the DOI, the record
 ## checked, the source's own words, a check date; SOP-06) from the site's citations page or the
-## author's references, and never resting on survey data (the author's rule, 2026-10-27: no
-## statistics from surveys); [#author=<id>] a line the author wrote, as his words, with no source;
+## author's references; a claim resting on survey or self-report data says so in its record and
+## names the objective data it is set against, or that none was found (self_report_problem; the
+## author, 2026-10-27: such sources may come in to show the disparity with objective data, such as
+## .gov agency figures); [#author=<id>] a line the author wrote, as his words, with no source;
 ## [#interp=<id>] the psychologists' explanation, never marked as sourced; [#chat] their own talk.
 ## Every claim is spoken; meeting them is remembered; walking near them gets a bark and talking to
 ## them opens the conversation.
@@ -41,7 +43,6 @@ func _run() -> void:
 	_check(page.contains("Further reading"), "the site's citations page is readable")
 	var refs := FileAccess.get_file_as_string(ProjectSettings.globalize_path("res://").path_join(AUTHOR_REFS))
 	var date := RegEx.create_from_string("^\\d{4}-\\d{2}-\\d{2}$")
-	var survey := RegEx.create_from_string("(?i)survey|self-report|questionnaire|peer nomination")
 	var n_verified := 0
 	for id: String in claims:
 		var c: Dictionary = claims[id]
@@ -55,10 +56,12 @@ func _run() -> void:
 		if not listed and c.has("title"):
 			listed = refs.contains(String(c["title"]))
 		_check(listed, "claim %s cites a work on the citations page or in the author's references (%s)" % [id, doi])
-		_check(survey.search(String(c.get("population", "")) + " " + String(c.get("evidence", ""))) == null,
-			"claim %s does not rest on survey data" % id)
+		var problem := self_report_problem(id, c, doc)
+		_check(problem == "", "claim %s: self-report data tagged and set against objective data%s"
+			% [id, (" (" + problem + ")") if problem != "" else ""])
 		if c.get("verified") == true:
 			n_verified += 1
+	_check_self_report_rule()
 	var authors: Dictionary = doc.get("author_lines", {})
 	for id: String in authors:
 		var a: Dictionary = authors[id]
@@ -185,6 +188,69 @@ func _walk(dm: Node, res: Resource, title: String, out: Array, asked: Array, see
 				await _walk(dm, res, r.next_id, out, asked, seen)
 			return
 		line = await dm.get_next_dialogue_line(res, line.next_id)
+
+
+## The rule on self-report data (the author, 2026-10-27): a claim may rest on survey or self-report
+## data (its population or evidence says survey, self-report, questionnaire or peer nomination, or
+## its record says so) only when its record carries evidence_kind "self-report" and objective: the
+## id of a record in the same file with the objective data it is set against (an objective_data
+## record with its source and a .gov url, or a claim that is not self-report itself), or "none
+## found". Returns "" when claim `id` keeps the rule, else what is missing.
+static func self_report_problem(id: String, c: Dictionary, doc: Dictionary) -> String:
+	var survey := RegEx.create_from_string("(?i)survey|self-report|questionnaire|peer nomination")
+	var tagged: bool = c.get("evidence_kind", "") == "self-report"
+	if not tagged and survey.search("%s %s" % [c.get("population", ""), c.get("evidence", "")]) == null:
+		return ""
+	if not tagged:
+		return "rests on survey or self-report data, but evidence_kind is not \"self-report\""
+	var against := String(c.get("objective", ""))
+	if against == "none found":
+		return ""
+	if against == "" or against == id:
+		return "no objective: give the id of the objective data it is set against, or \"none found\""
+	var objective: Dictionary = doc.get("objective_data", {})
+	if objective.has(against):
+		var o: Dictionary = objective[against]
+		var host := String(o.get("url", "")).trim_prefix("https://").get_slice("/", 0)
+		if String(o.get("source", "")) == "" or not host.ends_with(".gov"):
+			return "objective record %s needs its source and a .gov url" % against
+		return ""
+	var claims: Dictionary = doc.get("claims", {})
+	if claims.has(against):
+		var other: Dictionary = claims[against]
+		if other.get("evidence_kind", "") == "self-report" \
+				or survey.search("%s %s" % [other.get("population", ""), other.get("evidence", "")]) != null:
+			return "set against %s, which is self-report data too" % against
+		return ""
+	return "objective %s is not a record in this file" % against
+
+
+## The rule fires: in-memory records (the shipped data has no self-report claim, so the check on it
+## passes without exercising the rule).
+func _check_self_report_rule() -> void:
+	var doc := {
+		"claims": {
+			"review": {"population": "review of the research", "evidence": "A review says so, in its own words."},
+			"poll": {"population": "512 students; self-report questionnaires", "evidence": "Students were surveyed."},
+		},
+		"objective_data": {
+			"agency": {"source": "Fixture agency table", "url": "https://records.example.gov/fixture"},
+			"elsewhere": {"source": "Fixture page", "url": "https://example.com/fixture"},
+		},
+	}
+	var c: Dictionary = {"population": "640 adults; self-report survey", "evidence": "Adults were surveyed by self-report."}
+	_check(self_report_problem("fx", c, doc) != "", "self-report rule fires: survey data without evidence_kind")
+	c["evidence_kind"] = "self-report"
+	_check(self_report_problem("fx", c, doc) != "", "self-report rule fires: no objective")
+	for bad: String in ["missing", "elsewhere", "poll", "fx"]:
+		c["objective"] = bad
+		_check(self_report_problem("fx", c, doc) != "", "self-report rule fires: objective %s" % bad)
+	for good: String in ["agency", "review", "none found"]:
+		c["objective"] = good
+		_check(self_report_problem("fx", c, doc) == "", "self-report rule passes: objective %s" % good)
+	var tagged: Dictionary = {"population": "a panel", "evidence": "The panel said so.", "evidence_kind": "self-report"}
+	_check(self_report_problem("fx", tagged, doc) != "", "self-report rule fires: tagged self-report with no objective")
+	_check(self_report_problem("review", doc["claims"]["review"], doc) == "", "self-report rule leaves other claims alone")
 
 
 func _tag_value(tags: PackedStringArray, key: String) -> String:
