@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.3.1 — 2026-10-27
+
+Playtest hotfix for v0.3.0 (the opening sting held on its last frame until a key was pressed):
+
+- The G|P|G sting ends on its own at the end of the clip, and a click or tap skips it, so phones
+  and tablets reach the main menu.
+- A Credits & Licences screen on the main menu: the people and tools behind the game, and every
+  third-party licence in full.
+- The main menu shows the copyright and the credit to the book.
+
 ## v0.3.0 — 2026-10-27
 
 Everything since v0.2.1:
