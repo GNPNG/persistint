@@ -4,6 +4,7 @@ extends Control
 ## it is the pause menu (GC-03): the title reads Paused, Done reads Resume, and Quit to Menu shows.
 
 const MAIN_MENU := "res://scenes/ui/main_menu.tscn"
+const MainMenu := preload("res://scripts/ui/main_menu.gd")  # its static fullscreen helpers
 
 var _sliders: Dictionary = {}
 
@@ -36,8 +37,51 @@ func _ready() -> void:
 		rows.add_child(row)
 		_sliders[which] = slider
 	_add_text_row(rows)
+	_add_screen_row(rows)
 	_add_save_row(rows)
 	refresh()
+
+
+## Screen (GC-04): a Fullscreen toggle, and Controls… opens the key remapping panel over this one.
+var _fullscreen: CheckButton
+var _controls: PanelContainer
+
+
+func _add_screen_row(rows: VBoxContainer) -> void:
+	var row := HBoxContainer.new()
+	row.name = "Screen"
+	var label := Label.new()
+	label.text = "Screen"
+	label.custom_minimum_size = Vector2(72, 0)
+	row.add_child(label)
+	_fullscreen = CheckButton.new()
+	_fullscreen.name = "Fullscreen"
+	_fullscreen.text = "Fullscreen"
+	_fullscreen.toggled.connect(func(on: bool) -> void:
+		if on != MainMenu.is_fullscreen():
+			MainMenu.toggle_fullscreen())
+	row.add_child(_fullscreen)
+	var controls := Button.new()
+	controls.name = "ControlsButton"
+	controls.text = "Controls…"
+	controls.pressed.connect(open_controls)
+	row.add_child(controls)
+	rows.add_child(row)
+
+
+## Shows the key remapping panel in place of the settings panel.
+func open_controls() -> void:
+	if _controls == null:
+		_controls = preload("res://scripts/ui/controls_panel.gd").new()
+		_controls.closed.connect(func() -> void: $Center/Panel.show())
+		$Center.add_child(_controls)
+	_controls.refresh()
+	_controls.show()
+	$Center/Panel.hide()
+
+
+func controls_panel() -> PanelContainer:
+	return _controls
 
 
 ## Text size (QA-06): Normal, Large, Larger (TextSize); the name shows beside the slider.
@@ -169,6 +213,10 @@ func refresh() -> void:
 		s.set_value_no_signal(AudioSettings.level(which))
 	if _save_status:
 		_save_status.text = WorldState.persistence_warning_text()
+	if _fullscreen:
+		_fullscreen.set_pressed_no_signal(MainMenu.is_fullscreen())
+	if _controls and _controls.visible:
+		_controls.close()
 	if _text_slider:
 		_text_slider.set_value_no_signal(TextSize.step)
 		_text_name.text = TextSize.step_name()

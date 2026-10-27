@@ -14,6 +14,8 @@ into the new version's heading; the Updates page on the site shows the released 
 - A clothes-hanger sticker and a book sticker under the settings gear open the wardrobe and the
   journal with a tap or a click.
 - Text size in Settings: Normal, Large or Larger, for every menu, bubble and label.
+- Controls in Settings: give any action a different key (Reset puts them back), and a Fullscreen
+  toggle.
 
 ## v0.3.3 — 2026-10-27
 

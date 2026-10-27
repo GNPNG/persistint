@@ -47,7 +47,7 @@ func _run() -> void:
 		_check(ProjectSettings.has_setting("input/" + action) and not InputMap.action_get_events(action).is_empty(), "input action %s is in project settings with a binding" % action)
 	var raw := RegEx.create_from_string("\\b(KEY_[A-Z0-9_]+|MOUSE_BUTTON_[A-Z]+|JOY_[A-Z0-9_]+)\\b|\\.(physical_)?keycode\\b")
 	var raw_hits: Array[String] = []
-	for path in _files("res://scripts", ".gd"):
+	for path in _files("res://scripts", ".gd").filter(func(p: String) -> bool: return not p.ends_with("autoload/controls.gd")):  # key remapping owns key events
 		var n := 0
 		for line in FileAccess.get_file_as_string(path).split("\n"):
 			n += 1
