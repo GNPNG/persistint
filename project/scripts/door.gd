@@ -95,6 +95,25 @@ func _process(_delta: float) -> void:
 	var player := get_tree().get_first_node_in_group("player") as Node2D
 	var near := player != null and player.global_position.distance_to(global_position) <= NEAR_DISTANCE
 	_name_label.visible = (_hovered or near) and not label.visible
+	for l: Label in [label, _name_label]:
+		if l.visible:
+			keep_on_screen(l)
+
+
+## Slides a label sideways so its text stays inside the camera's view: a door on the map's edge
+## (the temple's way into the ruins, at x 24) names its destination without the start cut off.
+func keep_on_screen(l: Label) -> void:
+	var cam := get_viewport().get_camera_2d()
+	if cam == null:
+		return
+	var half := get_viewport().get_visible_rect().size / cam.zoom / 2.0
+	var center := cam.get_screen_center_position()
+	var font := l.get_theme_font("font")
+	var w := font.get_string_size(l.text, HORIZONTAL_ALIGNMENT_LEFT, -1, l.get_theme_font_size("font_size")).x
+	w = minf(w + 2.0 * l.get_theme_constant("outline_size"), l.size.x)
+	var lo := center.x - half.x + w / 2.0 + 2.0
+	var hi := maxf(lo, center.x + half.x - w / 2.0 - 2.0)
+	l.position.x = -l.size.x / 2.0 + clampf(global_position.x, lo, hi) - global_position.x
 
 
 func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:

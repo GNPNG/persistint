@@ -33,7 +33,7 @@ navigation_polygon = SubResource("navpoly")
 position = Vector2(470, 382)
 
 [node name="spawn_from_beach" type="Marker2D" parent="."]
-position = Vector2(480, 486)
+position = Vector2(480, 469)
 
 [node name="Player" parent="." instance=ExtResource("3")]
 position = Vector2(470, 366)
