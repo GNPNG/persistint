@@ -7,11 +7,14 @@ kept. Run after every version bump or roadmap edit, then commit the page:
     python3 tools/gen_updates_page.py
 """
 import html
+import json
 import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 VERSION = (ROOT / "VERSION").read_text().strip()
+# The host is a per-game value: it lives only in site/site.config.json (PW-02).
+SITE_HOST = json.loads((ROOT / "site" / "site.config.json").read_text(encoding="utf-8"))["site_host"]
 
 
 def md_to_html(text: str) -> str:
@@ -68,7 +71,7 @@ def main() -> None:
 <meta name="description" content="What's new in the current version of PERSISTINT and what's coming next.">
 <meta name="theme-color" content="#fdf6e3">
 <meta name="color-scheme" content="light">
-<link rel="canonical" href="https://persistint.dataglut.org/updates.html">
+<link rel="canonical" href="https://{SITE_HOST}/updates.html">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">

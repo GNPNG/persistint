@@ -632,6 +632,20 @@ if s != src:
     print("index.html updated (commit it)")
 else:
     print("index.html already up to date")
+# Every other page's canonical link follows site_host too (PW-02: the host lives only in
+# site.config.json).
+import glob, os
+for page in sorted(glob.glob(os.path.join(os.path.dirname(path), "*.html"))):
+    name = os.path.basename(page)
+    if name == "index.html":
+        continue
+    with open(page, encoding="utf-8") as f:
+        src = f.read()
+    s = re.sub(r'<link rel="canonical" href="[^"]*">', f'<link rel="canonical" href="{base}/{name}">', src)
+    if s != src:
+        with open(page, "w", encoding="utf-8") as f:
+            f.write(s)
+        print(f"{name} canonical updated (commit it)")
 PY
 
 # ---------------------------------------------------------------- size limits (BD-06)
