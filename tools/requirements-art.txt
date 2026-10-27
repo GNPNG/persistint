@@ -1,10 +1,12 @@
-# Versions the art tools (tools/cut_*.py, tools/cut_canon_sprites.sh, tools/gen_*.py) were last
-# run with; with these, every cutter and generator reproduces the committed PNGs byte for byte
-# (checked by rerunning them and `git status` showing no change). The cutters' background removal
-# (scipy.ndimage label / binary morphology / gaussian_filter) and Pillow's LANCZOS and PNG writer
-# are the version-sensitive parts: other versions can move edge alpha by a level or two.
+# Versions the art tools (tools/cut_*.py, tools/cut_canon_sprites.sh, tools/gen_*.py) run with;
+# with these, every cutter and generator reproduces the committed PNGs pixel for pixel (checked
+# 2026-10-27 by rerunning cut_island_props, cut_paperdoll, gen_florida_cast and gen_player_rig:
+# 40 files rewritten, 0 differing in any pixel; the PNG bytes themselves can differ by encoder
+# build). The cutters' background removal (scipy.ndimage label / binary morphology /
+# gaussian_filter) and Pillow's LANCZOS and PNG writer are the version-sensitive parts: other
+# versions can move edge alpha by a level or two. scipy 1.14.1 needs numpy < 2.3.
 #   python3 -m pip install -r tools/requirements-art.txt
-numpy==2.4.4
+numpy==2.2.6
 scipy==1.14.1
 Pillow==10.4.0
 # Not pip packages: ImageMagick 7.1.2-31 (magick, tools/cut_canon_sprites.sh) and
