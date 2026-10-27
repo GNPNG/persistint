@@ -190,6 +190,17 @@ run it without `--headless`:
 godot --path project -s tools/screenshot_scenes.gd -- <out_dir> [prefix]
 ```
 
+For a visual pass, `tools/shot_walk.sh` renders a shot list (`tools/shots/*.json`: per shot, a scene
+and the steps that set it up, such as opening a dialogue line or a UI screen or moving the player or
+the camera) as one PNG per shot, under Xvfb when it is installed, and writes a `SUMMARY.txt` of what
+rendered and what failed. The list is checked against the scenes and scripts first; `--check` only
+checks it. The format is in `project/scripts/test/shot_walk.gd`.
+
+```bash
+tools/shot_walk.sh tools/shots/wso.json <out_dir>
+tools/shot_walk.sh --check tools/shots/wso.json
+```
+
 ## Repository layout
 
 | Path | Contents |
