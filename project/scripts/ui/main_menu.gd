@@ -61,10 +61,12 @@ func _add_version_label() -> void:
 	add_child(label)
 
 
-## When the save could not be read at start (WorldState.load_report, GC-07), say so at the top of
-## the menu instead of quietly starting over.
+## When the save could not be read at start (WorldState.load_report, GC-07), or the browser is not
+## keeping saves (GC-13), say so at the top of the menu instead of quietly starting over.
 func _add_save_notice() -> void:
-	var text := WorldState.load_report_text()
+	var lines := [WorldState.load_report_text(), WorldState.persistence_warning_text()].filter(
+		func(s: String) -> bool: return s != "")
+	var text := "\n".join(lines)
 	if text == "":
 		return
 	var label := Label.new()

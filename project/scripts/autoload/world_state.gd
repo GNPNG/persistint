@@ -24,7 +24,8 @@ var SAVE_PATH := "user://save.json"
 var flags: Dictionary = {}
 ## Outcome of the last load_save(): "" (loaded, or no save yet), "recovered" (the save was
 ## unreadable, the backup loaded), "fresh" (neither could be read), "newer" (the save is from a
-## newer schema; the backup loaded if it could, otherwise fresh).
+## newer schema; the backup loaded if it could, otherwise fresh), "imported" (a save file was loaded
+## from Settings, GC-13).
 var load_report := ""
 
 var _saved_label: Label
@@ -126,15 +127,65 @@ func load_report_text() -> String:
 		"newer":
 			return "Your save comes from a newer version of the game. It is kept unchanged; this version uses %s." % (
 				"the save before it" if not flags.is_empty() else "a new game")
+		"imported":
+			return "Save loaded from the file. Your previous save is kept as the backup."
 	return ""
+
+
+## --- Web save persistence and save files (GC-13) ---
+## In a browser user:// lives in IndexedDB, which a private window, blocked site data or an embed
+## without third-party cookies does not keep; the player is told, and can keep the save as a file.
+
+## Tests set this to see the warning on a desktop, where user:// always persists.
+var pretend_not_persistent := false
+
+
+func userfs_persistent() -> bool:
+	return OS.is_userfs_persistent() and not pretend_not_persistent
+
+
+## What the main menu and the settings screen say when saves will not survive the tab.
+func persistence_warning_text() -> String:
+	if userfs_persistent():
+		return ""
+	return "This browser is not keeping saves (a private window, or site storage turned off), so progress ends when the page closes. Settings > Export save keeps it as a file."
+
+
+## The save as a file's text, the same shape as the save itself.
+func export_text() -> String:
+	return JSON.stringify({"schema": SCHEMA, "flags": flags}, "\t")
+
+
+func export_file_name() -> String:
+	return "persistint-save-%s.json" % Time.get_date_string_from_system()
+
+
+## Loads a save file's text in place of the current flags and saves it (so the current save goes
+## to the backup first). Returns "" when it worked, otherwise a message for the player; a file that
+## cannot be read changes nothing.
+func import_text(text: String) -> String:
+	var got := _parse(text)
+	match got["state"]:
+		"ok":
+			flags = got["flags"]
+			save()
+			load_report = "imported"
+			return ""
+		"newer":
+			return "That save file comes from a newer version of the game, so this version can't load it."
+	return "That file isn't a PERSISTINT save, or it is damaged. Nothing was changed."
 
 
 ## {"state": "ok" | "missing" | "bad" | "newer", "flags": Dictionary}
 func _read(path: String) -> Dictionary:
 	if not FileAccess.file_exists(path):
 		return {"state": "missing", "flags": {}}
+	return _parse(FileAccess.get_file_as_string(path))
+
+
+func _parse(text: String) -> Dictionary:
 	var json := JSON.new()  # an instance, so a bad save is reported here, not as an engine error
-	if json.parse(FileAccess.get_file_as_string(path)) != OK:
+	if json.parse(text) != OK:
 		return {"state": "bad", "flags": {}}
 	var parsed: Variant = json.data
 	if not parsed is Dictionary:
