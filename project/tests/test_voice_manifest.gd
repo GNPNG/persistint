@@ -9,8 +9,10 @@ extends SceneTree
 ## and every manifest entry's key and clip path are Voice's own.
 ## Run: godot --headless --path project -s tests/test_voice_manifest.gd
 
-const VoiceReview := preload("res://scripts/test/voice_review.gd")
-const VoiceScript := preload("res://scripts/autoload/voice.gd")
+## Loaded in _run, after the autoloads (Voice, Cast) exist: a const preload compiles
+## voice_review.gd before them under -s and fails ('Identifier not found: Voice').
+var VoiceReview: GDScript
+var VoiceScript: GDScript
 const MANIFEST := "res://audio/voice/manifest.json"
 ## The speakers tools/export_voice_lines.py left out; named so the test fails if a source is lost.
 const ADDED := ["oprah", "crab", "gull", "dolphin", "mermaid", "pony", "polar_bear_clone", "silverman", "warren", "richter"]
@@ -29,6 +31,8 @@ func _check(ok: bool, what: String) -> void:
 
 
 func _run() -> void:
+	VoiceReview = load("res://scripts/test/voice_review.gd")
+	VoiceScript = load("res://scripts/autoload/voice.gd")
 	await process_frame
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(MANIFEST))
 	var manifest: Array = parsed if parsed is Array else []
