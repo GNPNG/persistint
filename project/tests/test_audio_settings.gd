@@ -79,6 +79,11 @@ func _run() -> void:
 	_check(settings.is_open(), "the settings screen opens")
 	var overlay: Control = settings._overlay
 	_check(overlay.slider("music") != null and is_equal_approx(overlay.slider("music").value, 0.6), "the Music slider shows the level")
+	# The project theme dresses the sliders in the bar chrome (blush track, rose fill), not the
+	# engine's grey (bd wso).
+	var music_slider: HSlider = overlay.slider("music")
+	_check(music_slider.get_theme_stylebox("slider") is StyleBoxTexture and music_slider.get_theme_stylebox("grabber_area") is StyleBoxTexture,
+		"the sliders wear the theme's bar chrome")
 	overlay.slider("sfx").value = 0.8
 	_check(is_equal_approx(settings.level("sfx"), 0.8), "moving a slider sets the level")
 	settings.close()
