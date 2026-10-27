@@ -51,7 +51,7 @@ func _build_ui() -> void:
 	heading.theme_type_variation = &"CardLabel"
 	heading.add_theme_color_override("font_color", Color.WHITE)
 	heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	heading.add_theme_font_size_override("font_size", 16)
+	heading.add_theme_font_size_override("font_size", 30)  # STYLE.md 4.10, as on the flashback card
 	box.add_child(heading)
 	for line: String in card.get("lines", []):
 		var l := Label.new()

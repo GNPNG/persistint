@@ -52,6 +52,8 @@ func _run() -> void:
 	await process_frame
 	_check(card.from == "island" and card.find_child("Heading", true, false).text == island["end_card"]["heading"],
 		"card shows the island chapter's end card")
+	var heading_size: int = (card.find_child("Heading", true, false) as Label).get_theme_font_size("font_size")
+	_check(heading_size == 30, "its heading is 30 px, as STYLE.md 4.10 has it and the flashback card shows it (%d)" % heading_size)
 	_check(ws.get_flag("chapter") == "cruise", "jump sets chapter to cruise")
 	var archive: Variant = ws.get_flag("chapter_archive_island")
 	_check(archive is Dictionary and archive.get("outfit_hair") == "hair_rose" and archive.get("outfit_dress") == "dress_teal",
