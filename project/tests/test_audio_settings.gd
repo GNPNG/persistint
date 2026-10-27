@@ -38,6 +38,8 @@ func _run() -> void:
 	# --- Levels persist and set their buses. ---
 	var real_path: String = settings.SETTINGS_PATH
 	var real_music_path: String = music.SETTINGS_PATH
+	var test_run_path: String = root.get_node("/root/WorldState").TEST_SETTINGS_PATH
+	_check(real_path == test_run_path and real_music_path == test_run_path, "a test run uses the test settings file, not user://settings.cfg (QA-04)")
 	var test_path := "user://test_audio_settings.cfg"
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(test_path))
 	settings.SETTINGS_PATH = test_path

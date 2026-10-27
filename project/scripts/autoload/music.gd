@@ -51,6 +51,9 @@ var _volume := 1.0
 
 
 func _ready() -> void:
+	if WorldState.running_tests():  # QA-04: a test run never reads or writes the player's settings
+		SETTINGS_PATH = WorldState.TEST_SETTINGS_PATH
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(SETTINGS_PATH))
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_ensure_bus()
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(DATA_PATH))

@@ -27,6 +27,8 @@ var _gear: Control
 
 
 func _ready() -> void:
+	if WorldState.running_tests():  # QA-04: the test settings file Music emptied at start
+		SETTINGS_PATH = WorldState.TEST_SETTINGS_PATH
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	for which: String in BUSES:
 		_ensure_bus(BUSES[which])

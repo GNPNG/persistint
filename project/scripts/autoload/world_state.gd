@@ -23,6 +23,8 @@ var SAVE_PATH := "user://save.json"
 ## A headless test run (godot -s tests/<name>.gd) uses this save, emptied at start, so no test
 ## reads or writes the player's save (QA-04, sops/09).
 const TEST_SAVE_PATH := "user://test_run_save.json"
+## And the audio levels file for the same runs (Music empties it at start; AudioSettings shares it).
+const TEST_SETTINGS_PATH := "user://test_run_settings.cfg"
 
 var flags: Dictionary = {}
 ## Outcome of the last load_save(): "" (loaded, or no save yet), "recovered" (the save was
