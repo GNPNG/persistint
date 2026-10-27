@@ -90,52 +90,52 @@
    "sha1": "ae17d659e6ec1f8fa1f214704d289ca4670033fc"
   },
   "project/audio/music/island/island_village.mp3": {
-   "I": -12.3,
+   "I": -18.5,
    "LRA": 11.8,
-   "M": -7.1,
-   "TP": 0.7,
-   "mean": -14.7,
-   "sha1": "4226bd5b5bd6bf5e408525b4852c4c2cf2b831c0"
+   "M": -13.3,
+   "TP": -5.6,
+   "mean": -20.9,
+   "sha1": "36ffe8e5768313084be2378cfdbc4ad7a48ec66b"
   },
   "project/audio/music/island/ritual_puzzle.mp3": {
-   "I": -12.8,
+   "I": -18.5,
    "LRA": 10.9,
-   "M": -5.5,
-   "TP": 1.2,
-   "mean": -14.8,
-   "sha1": "f667dc8ce06bcbc7425e11d54341a8e109841cd8"
+   "M": -11.2,
+   "TP": -3.9,
+   "mean": -20.5,
+   "sha1": "a990bfefd7d4a484360eb144cf9ec3fcc25be699"
   },
   "project/audio/music/ruins/bunker_clone_lab.mp3": {
-   "I": -13.5,
+   "I": -18.5,
    "LRA": 1.8,
-   "M": -10.3,
-   "TP": 0.5,
-   "mean": -14.7,
-   "sha1": "a8ec6daa4fba54a60ee8b2f99bff7221013825a3"
+   "M": -15.3,
+   "TP": -4.6,
+   "mean": -19.7,
+   "sha1": "64fd6a0b67540fcaa89784894ac7048c1ce060ab"
   },
   "project/audio/music/ruins/ruins_colony.mp3": {
-   "I": -13.8,
+   "I": -18.5,
    "LRA": 4.6,
-   "M": -9.3,
-   "TP": -0.0,
-   "mean": -14.7,
-   "sha1": "194f39748b77e9ad180fa483e2f7a4bed367c728"
+   "M": -14.0,
+   "TP": -4.8,
+   "mean": -19.4,
+   "sha1": "b69b13b223a2d088076598ac3b44ab30c7963692"
   },
   "project/audio/music/ruins/ruins_wreck.mp3": {
-   "I": -13.7,
+   "I": -18.5,
    "LRA": 4.0,
-   "M": -8.6,
-   "TP": 0.7,
-   "mean": -14.7,
-   "sha1": "b79da60022ff21e8b758200190d726d54eadb7bd"
+   "M": -13.4,
+   "TP": -4.0,
+   "mean": -19.5,
+   "sha1": "c51aeeaadb12689cfc629b83164322f9281e63a0"
   },
   "project/audio/music/temple/temple.mp3": {
-   "I": -12.3,
+   "I": -18.5,
    "LRA": 4.8,
-   "M": -7.2,
-   "TP": -0.1,
-   "mean": -14.7,
-   "sha1": "8b37429f7f60a8430848ad518fdab747b0edc1de"
+   "M": -13.5,
+   "TP": -6.4,
+   "mean": -20.9,
+   "sha1": "941e7ed73e436ca769f8762eab687569fb57fca2"
   },
   "project/audio/music/ui/title_theme.mp3": {
    "I": -18.4,
