@@ -1,0 +1,18 @@
+# gitleaks configuration (PR-07 secrets scan, sops/09). The default rules, plus one narrow
+# allowlist on the generic-api-key rule only: the voice manifest's "key" field is
+# md5("speaker|text") (Voice.line_key), the name of the line's clip, not a credential. Only that
+# exact line shape in that file is allowed; every other rule, and generic-api-key anywhere else,
+# still reports.
+#   gitleaks git --log-opts="--all" --redact .
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "generic-api-key"
+[[rules.allowlists]]
+description = "voice manifest line keys: md5 of speaker|text, the clip's file name"
+condition = "AND"
+paths = ['''(^|/)project/audio/voice/manifest\.json$''']
+regexTarget = "line"
+regexes = ['''^\s*"key": "[0-9a-f]{32}",?\s*$''']
