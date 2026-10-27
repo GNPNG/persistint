@@ -11,6 +11,7 @@ func _ready() -> void:
 	super()
 	$Sprite2D.texture = load("res://assets/florida/shell_%s.png" % look)
 	SpriteFit.fit($Sprite2D, HEIGHT)
+	PaperBake.dress($Sprite2D as Sprite2D)  # the paper look (tools/bake_paper.sh florida)
 	GameClock.day_changed.connect(func(_d: int) -> void: show())
 	if WorldState.get_flag("fl_shell_%s" % name, 0) == GameClock.day:
 		hide()

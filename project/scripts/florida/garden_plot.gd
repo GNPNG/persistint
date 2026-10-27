@@ -28,6 +28,7 @@ func refresh() -> void:
 		sprite.texture = load(path)
 		# Florida art is drawn at 4x (tools/florida_draw.D); the soil stands on the origin.
 		SpriteFit.fit(sprite, sprite.texture.get_height() / 4.0)
+		PaperBake.dress(sprite)  # the paper look for this stage (tools/bake_paper.sh florida)
 
 
 func interact() -> void:

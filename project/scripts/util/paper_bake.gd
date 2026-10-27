@@ -79,3 +79,48 @@ static func resample(name: String) -> Vector2:
 static func style_shadow(shadow: Node2D, parent_scale := Vector2.ONE) -> void:
 	shadow.modulate = SHADOW_COLOR
 	shadow.position = SHADOW_OFFSET / parent_scale
+
+
+## The paper look for a Sprite2D already showing its source art (texture, offset and scale set),
+## for maps that are not built by tools/build_island_maps.gd (Florida, the ruins): when that art
+## has a bake, the sprite shows the bordered sheet at the same size and place (the sheet is
+## resampled by k and padded evenly, so the centre stays: offset x k, scale / k) over a soft shadow
+## child drawn behind it (PaperShadow, show_behind_parent), as _paper in build_island_maps.gd does.
+## Art with no bake (or a bake of another file with the same name) is left as it is. Call it again
+## after giving the sprite new source art (a garden plot that grew): the shadow is reused, or
+## removed when the new art has none. Returns true when the sprite shows a baked sheet.
+static func dress(s: Sprite2D) -> bool:
+	var src := s.texture.resource_path if s.texture else ""
+	if src.begins_with(DIR):
+		return true  # already dressed
+	var old := s.get_node_or_null("PaperShadow") as Sprite2D
+	var bake := name_of(src)
+	var edge := sheet(bake, EDGE) if src != "" else ""
+	var from: Array = side(bake).get("source", []) if edge != "" else []
+	if edge == "" or (not from.is_empty() and String(from[0]) != "project/" + src.trim_prefix("res://")):
+		_drop(s, old)
+		return false
+	var k := resample(bake)
+	s.texture = load(edge)
+	s.offset *= k
+	s.scale /= k
+	var shadow_path := sheet(bake, SHADOW)
+	if shadow_path == "":
+		_drop(s, old)
+		return true
+	var sh := old if old else Sprite2D.new()
+	sh.name = "PaperShadow"
+	sh.texture = load(shadow_path)
+	sh.offset = s.offset
+	sh.flip_h = s.flip_h
+	sh.show_behind_parent = true
+	style_shadow(sh, s.scale)
+	if sh.get_parent() == null:
+		s.add_child(sh)
+	return true
+
+
+static func _drop(s: Node, shadow: Node) -> void:
+	if shadow:
+		s.remove_child(shadow)
+		shadow.queue_free()

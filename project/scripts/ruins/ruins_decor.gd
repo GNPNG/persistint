@@ -6,7 +6,9 @@ extends Node2D
 ## note when the pointer rests on it.
 ## Props standing on the floor sort by their feet with the player and the clones (the room
 ## root and this node are y-sorted); "wall" props hang on the wall band behind everyone and
-## "floor" props are painted flat on the floor.
+## "floor" props are painted flat on the floor. Standing and wall props get the paper look when
+## their art is baked (bd gsd; tools/bake_paper.sh ruins, PaperBake): the bordered sheet over a
+## soft shadow; floor props stay flat.
 
 const ForbiddenKnowledge := preload("res://scripts/ruins/forbidden_knowledge.gd")
 const TILESET := preload("res://assets/ruins/ruins_tileset.tres")
@@ -158,8 +160,45 @@ func _add_prop(prop: Dictionary) -> void:
 	var s := node.scale.x
 	holder.add_child(node)
 	holder.set_meta("rect", Rect2(feet - Vector2(cell.x * s / 2.0, cell.y * s), cell * s))
+	holder.set_meta("place", place)
+	if place != "floor":  # floor props are painted flat on the floor: no paper edge, no shadow
+		_paper(node, tex, frames)
 	add_child(holder)
 	props.append(holder)
+
+
+## The paper look (bd gsd; tools/bake_paper.sh ruins) for a prop already fitted to its source art:
+## a still one through PaperBake.dress; an animated one (a tank) plays the bordered sheet's frames,
+## at the same size and place (offset x k, scale / k), over its baked shadow, which follows its
+## frame. Art with no bake stays as it is.
+func _paper(node: Node2D, tex: Texture2D, frames: int) -> void:
+	if node is Sprite2D:
+		PaperBake.dress(node as Sprite2D)
+		return
+	var anim := node as AnimatedSprite2D
+	var bake := PaperBake.name_of(tex.resource_path)
+	var edge := PaperBake.sheet(bake, PaperBake.EDGE)
+	if anim == null or edge == "":
+		return
+	var k := PaperBake.resample(bake)
+	var at := anim.frame
+	anim.sprite_frames = sheet_frames(load(edge) as Texture2D, frames, 6.0)
+	anim.play("default")
+	anim.frame = at
+	anim.offset *= k
+	anim.scale /= k
+	var shadow_path := PaperBake.sheet(bake, PaperBake.SHADOW)
+	if shadow_path == "":
+		return
+	var sh := AnimatedSprite2D.new()
+	sh.name = "PaperShadow"
+	sh.sprite_frames = sheet_frames(load(shadow_path) as Texture2D, frames, 6.0)
+	sh.offset = anim.offset
+	sh.show_behind_parent = true
+	PaperBake.style_shadow(sh, anim.scale)
+	anim.add_child(sh)
+	sh.frame = anim.frame
+	anim.frame_changed.connect(func() -> void: sh.frame = anim.frame)
 
 
 ## SpriteFrames over one row of a sheet: `frames` equal cells, looping at `fps`.

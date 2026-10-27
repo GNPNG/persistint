@@ -29,6 +29,7 @@ outlines = [PackedVector2Array(40, 210, 920, 210, 920, 526, 40, 526)]
 y_sort_enabled = true
 script = ExtResource("1")
 map_size = Vector2(960, 540)
+paper_props = true
 
 [node name="Background" type="Sprite2D" parent="."]
 z_index = -1

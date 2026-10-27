@@ -5,6 +5,11 @@ extends "res://scripts/florida/clickable.gd"
 var _ui: CanvasLayer
 
 
+func _ready() -> void:
+	super()
+	PaperBake.dress($Sprite2D as Sprite2D)  # the paper look (tools/bake_paper.sh florida)
+
+
 func interact() -> void:
 	if _ui and is_instance_valid(_ui):
 		return

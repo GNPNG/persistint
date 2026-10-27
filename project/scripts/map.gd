@@ -10,6 +10,11 @@ const WARDROBE_SCENE := "res://scenes/ui/wardrobe.tscn"
 ## their own, so they sort by where they stand (behind a pillar's top, in front of its base);
 ## ground art sits at negative z_index.
 @export var map_size := Vector2.ZERO
+## Paper look (bd gsd) for a hand-made map (the Florida maps): when it loads, each prop drawn by a
+## Sprite2D child of the map whose art tools/bake_paper.sh baked shows its bordered sheet over a
+## soft shadow (PaperBake.dress), once; nothing runs per frame. Maps built by
+## tools/build_island_maps.gd have the sheets in the scene already and leave this off.
+@export var paper_props := false
 
 var _hud_label: Label
 var _wardrobe: CanvasLayer
@@ -24,6 +29,10 @@ func _ready() -> void:
 	# Ponies stay in Florida: arriving anywhere else, the rider has already hopped down.
 	if not scene_file_path.contains("/florida/") and WorldState.get_flag("fl_riding", "") != "":
 		WorldState.set_flag("fl_riding", "")
+	if paper_props:
+		for c in get_children():
+			if c is Sprite2D:
+				PaperBake.dress(c as Sprite2D)
 	_spawn_player()
 	_limit_camera()
 	_build_hud()

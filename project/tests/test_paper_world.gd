@@ -1,19 +1,36 @@
 extends SceneTree
-## Paper look in the game (bd gsd): every world sprite on the main maps (village, temple) is drawn
-## from a baked paper sheet (assets/paper/, tools/bake_paper.sh, PaperBake) and has its baked soft
-## shadow: the caste NPCs' rigs, the player's paper-doll parts (a baked ring under each part's
-## art), the trees, the flowers and the props. Nothing on the maps uses a ShaderMaterial for it.
-## Exempt by design: EXEMPT below. Not yet rolled out: PENDING (emptied as each group lands).
+## Paper look in the game (bd gsd): every world sprite on the maps is drawn from a baked paper sheet
+## (assets/paper/, tools/bake_paper.sh, PaperBake) and has its baked soft shadow. Village and
+## temple: the caste NPCs' rigs, the player's paper-doll parts (a baked ring under each part's art),
+## the trees, the flowers and the props. Florida (beach, garden, stable, aquarium): the props, the
+## craft bench, the seed bag, the garden plots and the shells (PaperBake.dress at load). The ruins
+## rooms: every prop that stands or hangs on the wall (RuinsDecor). Nothing on the maps uses a
+## ShaderMaterial for it. Exempt by design: EXEMPT below, the pony a rider sits on (Mount) and the
+## ruins' "floor" props (painted flat). Not yet rolled out: PENDING and PENDING_SCRIPTS (emptied as
+## each group lands).
 ## Run: godot --headless --path project -s tests/test_paper_world.gd
 
-const MAPS := ["res://scenes/maps/village.tscn", "res://scenes/maps/temple.tscn"]
+const MAPS := [
+	"res://scenes/maps/village.tscn", "res://scenes/maps/temple.tscn",
+	"res://scenes/florida/beach.tscn", "res://scenes/florida/garden.tscn",
+	"res://scenes/florida/stable.tscn", "res://scenes/florida/aquarium.tscn",
+	"res://scenes/ruins/ruins_wreck.tscn", "res://scenes/ruins/ruins_corridor.tscn",
+	"res://scenes/ruins/ruins_core.tscn", "res://scenes/ruins/ruins_bunker_lift.tscn",
+	"res://scenes/ruins/ruins_clone_hall.tscn", "res://scenes/ruins/ruins_records.tscn",
+]
 const PAPER := "res://assets/paper/"
 ## Source art that is deliberately not baked: a shadow, two 14 px effects, the animated temple
-## candles and twinkle, the door markers (an interface cue over a door, not a cut-out), and the
-## pony (Florida).
-const EXEMPT := ["temple_shadow", "deco_heart", "deco_sparkle", "temple_candles", "temple_twinkle", "door_marker"]
-## Source art whose bake lands in a later commit of the rollout (none left on these maps).
-const PENDING := []
+## candles and twinkle, the door markers (an interface cue over a door, not a cut-out), the Florida
+## backgrounds (ground art) and the animated sea foam, the ruins pickups' glow and the gore effects.
+const EXEMPT := ["temple_shadow", "deco_heart", "deco_sparkle", "temple_candles", "temple_twinkle", "door_marker",
+	"bg_florida_beach", "bg_florida_garden", "bg_florida_stable", "bg_florida_aquarium", "sea_foam",
+	"glow", "gore_bone", "gore_chunk", "gore_drop", "gore_puddle", "gore_puff"]
+## Source art whose bake lands in a later commit of the rollout: the Florida NPCs' sheets.
+const PENDING := ["npc_daughter", "npc_father", "npc_stable_friend"]
+## Things drawn by these scripts are rolled out later too: the Florida critters, the aquarium fish
+## and the ponies, the clone children and the polar bear cubs, the ruins' knowledge pickups.
+const PENDING_SCRIPTS := ["critter.gd", "fish.gd", "pony.gd", "pony_doll.gd", "zombie_child.gd", "polar_cub.gd",
+	"knowledge_pickup.gd"]
 
 var _ok := true
 
@@ -71,10 +88,11 @@ func _check_map(map: Node, label: String) -> void:
 			if src.contains("_edge"):
 				_check(_has_shadow(n), what + " has its baked shadow")
 			continue
-		if EXEMPT.has(stem) or src.contains("/florida/") or n.get_parent().name == "Mount":
+		if EXEMPT.has(stem) or n.get_parent().name == "Mount" or n.get_parent().get_meta("place", "") == "floor":
 			continue
-		if PENDING.has(stem):
-			pending[stem] = true
+		var by := _pending_script(n, map)
+		if PENDING.has(stem) or by != "":
+			pending[by if by != "" else stem] = true
 			continue
 		# A paper-doll part's art is drawn over its baked ring.
 		var ring := n.get_parent().get_node_or_null(String(n.name) + "Ring")
@@ -85,6 +103,17 @@ func _check_map(map: Node, label: String) -> void:
 	_check(baked > 0, "%s draws %d baked paper sheets" % [label, baked])
 	if not pending.is_empty():
 		print("  info %s: not rolled out yet: %s" % [label, ", ".join(pending.keys())])
+
+
+## The PENDING_SCRIPTS script that draws n (n's own, or an ancestor's below the map), "" if none.
+func _pending_script(n: Node, map: Node) -> String:
+	var p := n
+	while p and p != map:
+		var sc: Script = p.get_script()
+		if sc and PENDING_SCRIPTS.has(sc.resource_path.get_file()):
+			return sc.resource_path.get_file()
+		p = p.get_parent()
+	return ""
 
 
 func _under_canvas_layer(n: Node) -> bool:
