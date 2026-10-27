@@ -38,6 +38,9 @@ static var _barks: Dictionary = {}
 
 ## The rigged sheet when the art has one; see _load_art.
 var rig: AnimatedSprite2D
+## The rig's baked paper shadow (PaperBake), when it has one.
+var _shadow: AnimatedSprite2D
+var _baked := false
 var _last_position := Vector2.ZERO
 
 
@@ -54,7 +57,9 @@ func _ready() -> void:
 	if sprite_texture != "":
 		_load_art()
 	var art: Node2D = rig if rig else $Sprite2D
-	if SpriteFit.frame_size(art).y > 0.0:
+	if _baked:
+		bubble.bottom = -RIG_HEIGHT - 2.0  # over the head (the baked frame is padded)
+	elif SpriteFit.frame_size(art).y > 0.0:
 		bubble.bottom = -SpriteFit.frame_size(art).y * art.scale.y - 2.0  # over the head
 	bubble.hide()
 	input_event.connect(_on_input_event)
@@ -94,15 +99,46 @@ func _load_art() -> void:
 
 
 func _build_rig() -> void:
-	## The rig replaces the single still sprite; its feet stand on the origin.
+	## The rig replaces the single still sprite; its feet stand on the origin. With a paper bake
+	## (PaperBake, assets/paper/) it is the bordered sheet, drawn over its baked soft shadow.
 	$Sprite2D.hide()
 	rig = AnimatedSprite2D.new()
 	rig.name = "Rig"
-	rig.sprite_frames = RigSheet.frames(RIG_PATH % sprite_texture)
+	var src := RIG_PATH % sprite_texture
+	var bake := PaperBake.name_of(src)
+	var edge := PaperBake.sheet(bake, PaperBake.EDGE)
+	_baked = edge != ""
+	rig.sprite_frames = RigSheet.frames(edge if _baked else src)
 	add_child(rig)
 	move_child(rig, $Sprite2D.get_index() + 1)
 	rig.play("idle_down")
-	SpriteFit.fit(rig, RIG_HEIGHT, RIG_FEET)
+	if not _baked:
+		SpriteFit.fit(rig, RIG_HEIGHT, RIG_FEET)
+		return
+	var h := PaperBake.padded_height(bake, RIG_HEIGHT)
+	var feet := PaperBake.padded_feet(bake, RIG_FEET)
+	SpriteFit.fit(rig, h, feet)
+	var shadow_path := PaperBake.sheet(bake, PaperBake.SHADOW)
+	if shadow_path == "":
+		return
+	_shadow = AnimatedSprite2D.new()
+	_shadow.name = "PaperShadow"
+	_shadow.sprite_frames = RigSheet.frames(shadow_path)
+	_shadow.animation = "idle_down"
+	add_child(_shadow)
+	move_child(_shadow, rig.get_index())
+	SpriteFit.fit(_shadow, h, feet)
+	PaperBake.style_shadow(_shadow)
+	# The shadow never plays on its own: it takes the rig's frame when that changes.
+	rig.frame_changed.connect(_sync_shadow)
+	rig.animation_changed.connect(_sync_shadow)
+
+
+func _sync_shadow() -> void:
+	_shadow.flip_h = rig.flip_h
+	if _shadow.animation != rig.animation:
+		_shadow.animation = rig.animation
+	_shadow.frame = rig.frame
 
 
 ## A rigged NPC walks when it moves (whatever moves it: its node's position changing between

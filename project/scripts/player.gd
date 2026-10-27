@@ -29,6 +29,11 @@ var _speed := SPEED
 var _ride_ui: CanvasLayer
 var _in_dialogue := false
 var _facing := Vector2.DOWN
+## Paper look (bd gsd, PaperBake): under the art stack, one paper ring per worn part (the
+## union of the rings is the border of the whole doll) and one soft shadow, baked from the body.
+## They are built once and take the body's frame with the layers; no shader, no extra work.
+var _rings: Dictionary = {}  # art layer -> its ring AnimatedSprite2D
+var _shadow: AnimatedSprite2D
 ## How near (world px) the interact key reaches.
 const INTERACT_RANGE := 56.0
 
@@ -41,12 +46,38 @@ func _ready() -> void:
 		dm.dialogue_ended.connect(_on_dialogue_ended)
 	get_tree().scene_changed.connect(_on_dialogue_ended.bind(null))
 	WorldState.flag_changed.connect(_on_flag_changed)
+	_build_paper()
 	refresh_outfit()
 	refresh_mount()
 
 
 func _layers() -> Array[AnimatedSprite2D]:
 	return [$Body, $Dress, $Hair, $Accessory]
+
+
+## The ring and shadow nodes: the shadow first (under the pony too), the rings right under the art.
+func _build_paper() -> void:
+	_shadow = AnimatedSprite2D.new()
+	_shadow.name = "PaperShadow"
+	add_child(_shadow)
+	move_child(_shadow, 0)
+	PaperBake.style_shadow(_shadow)
+	for layer in _layers():
+		var ring := AnimatedSprite2D.new()
+		ring.name = String(layer.name) + "Ring"
+		add_child(ring)
+		move_child(ring, $Body.get_index())
+		_rings[layer] = ring
+
+
+## Everything drawn for the doll: the art layers, their rings and the shadow.
+func _doll_nodes() -> Array[AnimatedSprite2D]:
+	var out: Array[AnimatedSprite2D] = _layers()
+	for layer in _rings:
+		out.append(_rings[layer])
+	if _shadow:
+		out.append(_shadow)
+	return out
 
 
 ## Idle or walk, facing the way she moves (or last moved); every layer on the same frame.
@@ -56,7 +87,7 @@ func _process(_delta: float) -> void:
 		_facing = velocity
 	var f := RigSheet.facing(_facing, "walk" if moving else "idle")
 	var body: AnimatedSprite2D = $Body
-	for layer in _layers():
+	for layer in _doll_nodes():
 		if layer.sprite_frames == null:
 			continue
 		layer.flip_h = f[1]
@@ -160,8 +191,10 @@ func refresh_mount() -> void:
 	_speed = SPEED * Ponies.speed_multiplier()
 	if id != "":
 		mount_doll.set_outfit(Ponies.parts(id))
-	for layer in _layers():
+	for layer in _doll_nodes():
 		layer.position = Vector2(0, -RIDE_LIFT) if id != "" else Vector2.ZERO
+	if _shadow:
+		_shadow.position += PaperBake.SHADOW_OFFSET
 	_show_ride_ui(id != "")
 
 
@@ -232,6 +265,11 @@ func refresh_outfit() -> void:
 	for layer: AnimatedSprite2D in outfit:
 		var item: String = outfit[layer]
 		var path := PaperDoll.part_path(pattern, item)
+		var ring: AnimatedSprite2D = _rings.get(layer)
+		if ring:
+			ring.sprite_frames = null
+		if layer == $Body and _shadow:
+			_shadow.sprite_frames = null
 		if item == "none" or not ResourceLoader.exists(path):
 			layer.sprite_frames = null
 			continue
@@ -239,4 +277,21 @@ func refresh_outfit() -> void:
 		layer.sprite_frames = RigSheet.frames(rig) if ResourceLoader.exists(rig) else RigSheet.still(path)
 		layer.play(RigSheet.facing(_facing, "idle")[0])
 		SpriteFit.fit(layer, DOLL_HEIGHT)
-		layer.position = Vector2(0, -RIDE_LIFT) if is_mounted() else Vector2.ZERO
+		var lift := Vector2(0, -RIDE_LIFT) if is_mounted() else Vector2.ZERO
+		layer.position = lift
+		# The part's baked paper ring (and, for the body, the shadow), on the same frame grid.
+		if not ResourceLoader.exists(rig):
+			continue
+		var bake := PaperBake.name_of(rig)
+		var paper: Array = [[ring, PaperBake.RING, Vector2.ZERO]]
+		if layer == $Body:
+			paper.append([_shadow, PaperBake.SHADOW, PaperBake.SHADOW_OFFSET])
+		for p: Array in paper:
+			var node: AnimatedSprite2D = p[0]
+			var sheet := PaperBake.sheet(bake, p[1])
+			if node == null or sheet == "":
+				continue
+			node.sprite_frames = RigSheet.frames(sheet)
+			node.play(layer.animation)
+			SpriteFit.fit(node, PaperBake.padded_height(bake, DOLL_HEIGHT), PaperBake.padded_feet(bake, 1.0))
+			node.position = lift + p[2]

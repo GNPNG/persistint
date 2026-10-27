@@ -78,7 +78,8 @@ func _run() -> void:
 	quit(0 if _failures == 0 else 1)
 
 
-## Lowest edge (global y) of a character's visible frames, NAN when it draws none.
+## Lowest edge (global y) of a character's visible frames, NAN when it draws none. A baked
+## paper sheet (PaperBake) counts from its art, not its padding; its shadow does not count.
 func _art_bottom(c: Node2D) -> float:
 	var bottom := NAN
 	for n in c.find_children("*", "", true, false):
@@ -88,8 +89,15 @@ func _art_bottom(c: Node2D) -> float:
 		var fr := SpriteFit.frame_size(item)
 		if fr.y <= 0.0:
 			continue
+		var pad := 0.0
+		var src := _source(item)
+		if src.begins_with(PaperBake.DIR):
+			if src.contains("_shadow_"):
+				continue
+			var side := PaperBake.side(src.get_file().get_basename().get_slice("_edge", 0).get_slice("_ring", 0))
+			pad = float(side.get("pad", 0))
 		var off: Vector2 = item.get("offset")
-		var local_bottom := off.y + (fr.y / 2.0 if item.get("centered") else fr.y)
+		var local_bottom := off.y + (fr.y / 2.0 if item.get("centered") else fr.y) - pad
 		var y := item.global_position.y + local_bottom * item.global_scale.y
 		bottom = y if is_nan(bottom) else maxf(bottom, y)
 	return bottom
@@ -101,3 +109,15 @@ func _feet_gap(c: Node2D) -> float:
 	if rig and rig.sprite_frames and rig.sprite_frames.has_animation("idle_down"):
 		return 52.0 * (1.0 - 50.0 / 52.0)
 	return 0.0
+
+
+## The texture a sprite shows (an AnimatedSprite2D's frame atlas), its resource path.
+func _source(n: Node2D) -> String:
+	var tex: Texture2D = null
+	if n is Sprite2D:
+		tex = n.texture
+	elif n is AnimatedSprite2D and n.sprite_frames and n.sprite_frames.has_animation(n.animation) 			and n.sprite_frames.get_frame_count(n.animation) > 0:
+		tex = n.sprite_frames.get_frame_texture(n.animation, 0)
+	if tex is AtlasTexture:
+		tex = (tex as AtlasTexture).atlas
+	return tex.resource_path if tex else ""
