@@ -210,13 +210,15 @@ func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> voi
 
 func interact() -> void:
 	if dialogue_path != "" and ResourceLoader.exists(dialogue_path):
+		bubble.hide()  # the conversation takes over from the walk-by bark
 		DialogueManager.show_dialogue_balloon(load(dialogue_path), dialogue_title)
 	else:
 		_show_bubble(current_bark())
 
 
+## Walking up barks, except while a conversation is up (its balloon says the lines then).
 func _on_proximity_entered(body: Node2D) -> void:
-	if body.is_in_group("player"):
+	if body.is_in_group("player") and get_tree().get_first_node_in_group("dialogue_balloon") == null:
 		_show_bubble(current_bark())
 
 
