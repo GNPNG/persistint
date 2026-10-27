@@ -228,8 +228,10 @@ func _shoot(spec: Dictionary, s: Dictionary, out_dir: String) -> String:
 	return ""
 
 
-## Between shots in one process: closes the settings screen (it pauses play) and frees the
-## layers left on the root (dialogue balloons), sparing the autoloads.
+## Between shots in one process, and before the run quits: closes the settings screen (it pauses
+## play), frees the layers left on the root (dialogue balloons), sparing the autoloads, and stops
+## every audio player still going (a line of Voice's or a node's VoiceAt still playing at quit
+## left its AudioStreamWAV and playback in use at exit).
 func _teardown() -> void:
 	var settings := root.get_node_or_null("AudioSettings")
 	if settings != null and bool(settings.call("is_open")):
@@ -242,6 +244,9 @@ func _teardown() -> void:
 	for c in root.get_children():
 		if c is CanvasLayer and not autoloads.has(String(c.name)):
 			c.queue_free()
+	for kind: String in ["AudioStreamPlayer", "AudioStreamPlayer2D"]:
+		for p: Node in root.find_children("*", kind, true, false):
+			p.call("stop")
 	root.get_node("SceneRouter").set("next_spawn", "spawn_default")
 	await _wait(2)
 
