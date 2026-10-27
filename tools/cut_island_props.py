@@ -16,8 +16,9 @@ height in world pixels (null for bases that generators draw over): the consumer 
 sprite to it, so the full-resolution cut is downsampled smoothly by the GPU (mipmaps) instead
 of being shrunk here. The cut() function is imported by the art generators that build on
 canon drawings at full resolution.
-Sheets are looked up under art/canon/*/ and dev/art/ (the world-building overview, which is
-kept in the git-crypt dev/ tree). A prop whose sheet is missing (a checkout without the
+Sheets are looked up under dev/art/canon-gemini/ (the Gemini canon sheets), dev/art/ (the
+world-building overview) and the old art/canon/*/, all kept in the git-crypt dev/ tree but the
+last. A prop whose sheet is missing (a checkout without the
 git-crypt key) is skipped and its committed PNG stays. The Queen Mother icon, the Seal of the O,
 the pillar orb, the skull altar, the heart and the sparkle come from that overview
 (dev/art/PERSISTINT_Novel_World-Building_Overview.png, sheet name "PERSISTINT").
@@ -36,7 +37,7 @@ sheets = {}
 
 
 def sheet_path(name):
-    for pattern in (f"art/canon/*/{name}*", f"dev/art/{name}*"):
+    for pattern in (f"dev/art/canon-gemini/{name}*", f"dev/art/{name}*", f"art/canon/*/{name}*"):
         for p in sorted(ROOT.glob(pattern)):
             try:  # a locked git-crypt file is not an image
                 Image.open(p).verify()
