@@ -1,7 +1,8 @@
 extends Control
 ## Main menu — New Game (fresh flags); Continue only when there is a save to continue.
 ## Help & Support opens the support page on the site in the system browser. Settings opens the
-## volume sliders (AudioSettings).
+## volume sliders (AudioSettings). At the bottom, the copyright lines and Credits & Licences, which
+## opens the credits screen (scenes/ui/credits.tscn, data/credits.json) over the menu.
 
 const FIRST_MAP := "res://scenes/maps/village.tscn"
 const SUPPORT_URL := "https://persistint.dataglut.org/support.html"
@@ -12,8 +13,10 @@ func _ready() -> void:
 	%NewButton.pressed.connect(_on_new_game)
 	%SupportButton.pressed.connect(_on_support)
 	%SettingsButton.pressed.connect(AudioSettings.open)
+	%CreditsButton.pressed.connect($Credits.open)
 	%BeginButton.visible = WorldState.get_flag("_location") is Dictionary
 	_add_version_label()
+	move_child($Credits, -1)  # over the version label too
 
 
 ## A Fullscreen button under the others (touch-first: no key needed); F toggles it too. On the

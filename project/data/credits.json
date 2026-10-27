@@ -1,0 +1,54 @@
+{
+	"_note": "The credits and licences screen (scenes/ui/credits.tscn, scripts/ui/credits.gd; checklist item GC-08 in sops/09-game-release-checklist.md), opened from the main menu, and the main menu's copyright lines. THIRD_PARTY.md at the repo root lists the same components (LP-03). An entry with \"engine\": true takes its licence text from the engine at run time (Engine.get_license_text), and the screen also lists the third-party parts inside the engine with their licence texts (Engine.get_copyright_info, Engine.get_license_info), so none of that is copied here. Every \"text\" is a verbatim licence text: Dialogue Manager's is project/addons/dialogue_manager/LICENSE (tests/test_credits.gd checks that they match); the CPML is https://huggingface.co/coqui/XTTS-v2/raw/main/LICENSE.txt as fetched on 2026-10-27.",
+	"copyright": "© 2026 Brett Whitty",
+	"based_on": "Based on characters and themes from the book ‘Persistint’",
+	"people": [
+		{
+			"role": "Written and designed by",
+			"name": "Brett Whitty"
+		},
+		{
+			"role": "Imprint",
+			"name": "GNPNG Ping Pong, an imprint of GNPNG (gnpng.org)"
+		}
+	],
+	"tools": [
+		"Godot Engine (godotengine.org)",
+		"Dialogue Manager by Nathan Hoad and contributors",
+		"Voices: Coqui XTTS v2",
+		"Generated art, music and video: Google Gemini (image, Lyria, Veo) and NotebookLM",
+		"Art tools: Pillow, NumPy, SciPy, ImageMagick and librsvg"
+	],
+	"third_party": [
+		{
+			"name": "Godot Engine",
+			"use": "the game engine",
+			"licence": "MIT (Expat)",
+			"url": "https://godotengine.org/license",
+			"notice": "This game uses Godot Engine, available under the following license:",
+			"engine": true
+		},
+		{
+			"name": "Dialogue Manager 3.10.4",
+			"use": "the dialogue system (addons/dialogue_manager)",
+			"licence": "MIT",
+			"url": "https://github.com/nathanhoad/godot_dialogue_manager",
+			"text": "MIT License\n\nCopyright (c) 2022-present Nathan Hoad and Dialogue Manager contributors.\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n"
+		},
+		{
+			"name": "Coqui XTTS v2",
+			"use": "every voice clip in the game, cloned voices and built-in studio voices alike, is output of this model",
+			"licence": "Coqui Public Model License 1.0.0 (CPML)",
+			"url": "https://coqui.ai/cpml.txt",
+			"notice": "The voice clips in this game are output of Coqui XTTS v2 (https://huggingface.co/coqui/XTTS-v2), a model made available under the Coqui Public Model License 1.0.0, whose terms follow.",
+			"text": "# Coqui Public Model License 1.0.0\nhttps://coqui.ai/cpml.txt\n\n\nThis license allows only non-commercial use of a machine learning model and its outputs.\n\n\n## Acceptance\n\n\nIn order to get any license under these terms, you must agree to them as both strict obligations and conditions to all your licenses.\n\n\n## Licenses\n\n\nThe licensor grants you a copyright license to do everything you might do with the model that would otherwise infringe the licensor's copyright in it, for any non-commercial purpose. The licensor grants you a patent license that covers patent claims the licensor can license, or becomes able to license, that you would infringe by using the model in the form provided by \nthe licensor, for any non-commercial purpose.\n\n\n## Non-commercial Purpose\n\n\nNon-commercial purposes include any of the following uses of the model or its output, but only so far as you do not receive any direct or indirect payment arising from the use of the model or its output.\n\n\n### Personal use for research, experiment, and testing for the benefit of public knowledge, personal study, private entertainment, hobby projects, amateur pursuits, or religious\nobservance. \n\n\n### Use by commercial or for-profit entities for testing, evaluation, or non-commercial research and development. Use of the model to train other models for commercial use is not a non-commercial purpose. \n\n\n### Use by any charitable organization for charitable purposes, or for testing or evaluation. Use for revenue-generating activity, including projects directly funded by government grants, is not a non-commercial purpose.\n\n\n## Notices\n\n\nYou must ensure that anyone who gets a copy of any part of the model, or any modification of the model, or their output, from you also gets a copy of these terms or the URL for them above.\n\n\n## No Other Rights\n\n\nThese terms do not allow you to sublicense or transfer any of your licenses to anyone else, or prevent the licensor from granting licenses to anyone else. These terms do not imply\nany other licenses.\n\n\n## Patent Defense\n\n\nIf you make any written claim that the model infringes or contributes to infringement of any patent, your licenses for the model granted under these terms ends immediately. If your company makes such a claim, your patent license ends immediately for work on behalf of your company.\n\n\n## Violations\n\n\nThe first time you are notified in writing that you have violated any of these terms, or done anything with the model or its output that is not covered by your licenses, your licenses can nonetheless continue if you come into full compliance with these terms, and take practical steps to correct past violations, within 30 days of receiving notice.  Otherwise, all your licenses\nend immediately.\n\n\n## No Liability\n\n\n***As far as the law allows, the model and its output come as is, without any warranty or condition, and the licensor will not be liable to you for any damages arising out of these terms or the use or nature of the model or its output, under any kind of legal claim. If this provision is not enforceable in your jurisdiction, your licenses are void.***\n\n\n## Definitions\n\n\nThe **licensor** is the individual or entity offering these terms, and the **model** is the model the licensor makes available under these terms, including any documentation or similar information about the model.\n\n\n**You** refers to the individual or entity agreeing to these terms.\n\n\n**Your company** is any legal entity, sole proprietorship, or other kind of organization that you work for, plus all organizations that have control over, are under the control of, or are under common control with that organization.  **Control** means ownership of substantially all the assets of an entity, or the power to direct its management and policies by vote, contract, or otherwise.  Control can be direct or indirect.\n\n\n**Your licenses** are all the licenses granted to you under these terms.\n\n\n**Use** means anything you do with the model or its output requiring one of your licenses."
+		},
+		{
+			"name": "OpenStreetMap",
+			"use": "the island map: data/island_layout.json is a database derived from OpenStreetMap data (Overpass API extract, data timestamp 2026-05-31T22:37:44Z)",
+			"licence": "Open Database License 1.0 (ODbL)",
+			"url": "https://www.openstreetmap.org/copyright",
+			"notice": "Map data © OpenStreetMap contributors, available under the Open Database License (https://opendatacommons.org/licenses/odbl/1-0/). The island layout (data/island_layout.json) is a database derived from this data."
+		}
+	]
+}
