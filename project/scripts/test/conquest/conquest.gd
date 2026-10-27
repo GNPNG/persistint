@@ -25,7 +25,7 @@ const LEADER_H := 52.0
 const FOLLOWER_H := 40.0
 const FEET := 50.0 / 52.0
 const SHOWN_FOLLOWERS := 9
-const ZOOMS := [0.35, 0.5, 0.75, 1.0]
+const ZOOMS := [0.5, 0.75, 1.0]  # 0.5 shows the island's full width
 const PAN_SPEED := 420.0
 const SIDE_COLORS := {0: Color(1.0, 0.55, 0.72), 1: Color(0.55, 0.68, 1.0), -1: Color(0.92, 0.9, 0.82)}
 
@@ -35,7 +35,7 @@ var selected := -1  # leader id, or -1
 
 var _world: Node2D
 var _cam: Camera2D
-var _zoom_i := 1
+var _zoom_i := 0
 var _leader_views: Dictionary = {}  # leader id -> {body, label, followers}
 var _settlement_views: Dictionary = {}  # settlement id -> {seal, label}
 var _beast_views: Dictionary = {}  # beast id -> AnimatedSprite2D
