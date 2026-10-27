@@ -5,9 +5,9 @@ What made each file here (release checklist LP-04, sops/09). Prompt files carry 
 
 | File | Made by | From | Added |
 |---|---|---|---|
-| `book.png` | `tools/gen_hud_stickers.py` | drawn or cut by the tool (its docstring names inputs) |  |
-| `book_pressed.png` | `tools/gen_hud_stickers.py` | drawn or cut by the tool (its docstring names inputs) |  |
-| `gear.png` | `tools/gen_hud_stickers.py` | drawn or cut by the tool (its docstring names inputs) |  |
-| `gear_pressed.png` | `tools/gen_hud_stickers.py` | drawn or cut by the tool (its docstring names inputs) |  |
-| `hanger.png` | `tools/gen_hud_stickers.py` | drawn or cut by the tool (its docstring names inputs) |  |
-| `hanger_pressed.png` | `tools/gen_hud_stickers.py` | drawn or cut by the tool (its docstring names inputs) |  |
+| `book.png` | `tools/gen_hud_stickers.py` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
+| `book_pressed.png` | `tools/gen_hud_stickers.py` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
+| `gear.png` | `tools/gen_hud_stickers.py` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
+| `gear_pressed.png` | `tools/gen_hud_stickers.py` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
+| `hanger.png` | `tools/gen_hud_stickers.py` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
+| `hanger_pressed.png` | `tools/gen_hud_stickers.py` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
