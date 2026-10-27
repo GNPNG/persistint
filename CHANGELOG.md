@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.3.2 — 2026-10-27
+
+Safer saves:
+
+- Your save can no longer be lost to a crash or a closed tab mid-save: the game keeps the save
+  before it as a backup, and if a save can't be read it picks up from the backup and tells you.
+- A small "Saved" note shows when the game saves.
+- Settings has Export save and Import save, so you can keep your progress as a file and bring it
+  back, in another browser too.
+- If your browser isn't keeping saves (a private window, or site storage turned off), the game
+  says so and suggests exporting your save.
+
 ## v0.3.1 — 2026-10-27
 
 Playtest hotfix for v0.3.0 (the opening sting held on its last frame until a key was pressed):
