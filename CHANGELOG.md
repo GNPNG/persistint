@@ -5,6 +5,26 @@ All notable changes, newest first. The format follows
 [Semantic Versioning](https://semver.org/). `tools/version.py bump` turns the Unreleased section
 into the new version's heading; the Updates page on the site shows the released versions.
 
+## v0.3.7 — 2026-10-27
+
+Sound on the web title, and the clone hall:
+
+### Added
+
+- On the web, the game opens on a "tap to start" card, so the studio sting and the title theme play
+  with their sound (on an iPad the title music never started before).
+- Citations: Disneynature's Monkey Kingdom (2015), a main source; the book trailer opens with it.
+
+### Changed
+
+- The red brush-stroke O on the title screen is a large, faint background layer.
+- Development: a review scene for the island conquest (not in the player build).
+
+### Fixed
+
+- In the clone hall every clone and cub speaks from its own place, so their noises overlap instead
+  of cutting each other off.
+
 ## v0.3.6 — 2026-10-27
 
 Zoom and help:
