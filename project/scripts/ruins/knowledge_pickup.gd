@@ -2,6 +2,8 @@ extends Area2D
 ## KnowledgePickup — a piece of Forbidden Knowledge lying in the ruins. Click to walk
 ## over and recover it (ForbiddenKnowledge.recover); gone from the map once recovered.
 ## Says so when the piece completes a cruise flashback (data/flashbacks.json).
+## What it says is put in its Label; in a ruins room the room's RuinsDecor shows it on screen
+## over the piece (show_found), and the Label itself shows only for a pickup outside a room.
 ## Shows the piece's "icon" (data/ruins.json; assets/ruins/icon_*.png or a canon cut) bobbing
 ## over a warm glow (AnimationPlayer "bob").
 
@@ -13,6 +15,8 @@ const RuinsDecor := preload("res://scripts/ruins/ruins_decor.gd")
 const ICON_HEIGHT := 20.0
 ## The warm glow under it, world px across.
 const GLOW_SIZE := 38.0
+## How long the recovered card stays up.
+const FOUND_SECONDS := 4.0
 
 @export var piece_id := ""
 
@@ -54,10 +58,20 @@ func interact() -> void:
 		label.text += "\n" + text
 	for id: String in Flashbacks.opened_by(piece_id):
 		label.text += "\nA memory of the cruise opens: %s (J: Journal)" % Flashbacks.flashback(id).get("title", id)
-	label.show()
+	var decor := _decor()
+	if decor:  # the card's bottom edge where the Label's would be
+		decor.show_found(label.text, global_position + Vector2(0, label.offset_bottom), FOUND_SECONDS)
+	else:
+		label.show()
 	_recovered = true
 	$Glow.hide()
 	icon.hide()
 	$CollisionShape2D.set_deferred("disabled", true)
-	await get_tree().create_timer(4.0).timeout
+	await get_tree().create_timer(FOUND_SECONDS).timeout
 	queue_free()
+
+
+## The room's RuinsDecor (the map's "Decor"), or null for a pickup outside a ruins room.
+func _decor() -> RuinsDecor:
+	var d: Node = get_parent().get_node_or_null("Decor") if get_parent() else null
+	return d as RuinsDecor

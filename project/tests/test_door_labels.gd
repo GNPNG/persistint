@@ -5,12 +5,15 @@ extends SceneTree
 ## checked once it shows: its text is all inside the camera's view across (the temple's way into
 ## the ruins sits at x 24 and named itself "...to the Ruins of Utopia" with the start cut off) and
 ## it is not drawn over the player standing there (the aquarium's arrival spawn put "Back to the
-## Beach" across her skirt).
+## Beach" across her skirt). In a ruins room the name is in the ruins captions' colours, lilac-white
+## on a dark plum outline (STYLE.md 6.3; bd wso.1: plum on a white outline came out plum on grey
+## over the dark walls).
 ## Run: godot --headless --path project -s tests/test_door_labels.gd
 
 const DIRS := ["res://scenes/maps", "res://scenes/ruins", "res://scenes/florida"]
 const DOOR_SCRIPT := "res://scripts/door.gd"
 const MAP_SCRIPT := "res://scripts/map.gd"
+const DECOR_SCRIPT := "res://scripts/ruins/ruins_decor.gd"
 const NEAR := 72.0  # door.gd NEAR_DISTANCE: the name shows when the player is this close
 ## The paper doll's drawn box from her feet (shot walk: 42 px of hair to hem, about 28 across).
 const BODY := Rect2(-14, -42, 28, 42)
@@ -80,6 +83,12 @@ func _check_pair(path: String, spawn: String, door_path: NodePath) -> void:
 		"%s: the name is inside the view across (text %.0f..%.0f, view %.0f..%.0f)" % [what, text.position.x, text.end.x, view.position.x, view.end.x])
 	var body := Rect2(player.global_position + BODY.position, BODY.size)
 	_check(not text.intersects(body), "%s: the name is not over the player (text %s, player %s)" % [what, text, body])
+	if path.begins_with("res://scenes/ruins/"):
+		var caption: Dictionary = (load(DECOR_SCRIPT) as Script).get_script_constant_map()
+		var fill := l.get_theme_color("font_color")
+		var edge := l.get_theme_color("font_outline_color")
+		_check(fill == caption["CAPTION_TEXT"] and edge == caption["CAPTION_PLUM"],
+			"%s: the name is lilac-white on a dark plum outline (%s on %s)" % [what, fill.to_html(false), edge.to_html(false)])
 
 
 ## Where a label's one line of text is drawn: centred across, on its bottom edge (door.tscn).

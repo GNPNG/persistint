@@ -2,8 +2,9 @@ extends Node2D
 ## RuinsDecor — a ruins room's look, read from data/ruins.json ("rooms"): the floor and wall
 ## tiles (assets/ruins/ruins_tiles.png through ruins_tileset.tres, painted over the whole map),
 ## the props as sprites (assets/ruins/<kind>.png from tools/gen_ruins_art.py, or a canon cut
-## in assets/canon), a title card on entering, ambient lines that cycle slowly, and a prop's
-## note when the pointer rests on it.
+## in assets/canon), a title card on entering, ambient lines that cycle slowly, a prop's note
+## when the pointer rests on it, a recovered piece's card (show_found), and the room's doors
+## named in the ruins captions' colours.
 ## Props standing on the floor sort by their feet with the player and the clones (the room
 ## root and this node are y-sorted); "wall" props hang on the wall band behind everyone and
 ## "floor" props are painted flat on the floor. Standing and wall props get the paper look when
@@ -15,6 +16,12 @@ const TILESET := preload("res://assets/ruins/ruins_tileset.tres")
 const VIGNETTE := preload("res://assets/ruins/vignette.png")
 const AMBIENT_SECONDS := 7.0
 const TITLE_SECONDS := 3.5
+## Ruins captions (STYLE.md 6.3): soft lilac-white on a dark plum.
+const CAPTION_TEXT := Color("#f2e6f2")
+const CAPTION_PLUM := Color("#331f40")
+## A recovered piece's card is this wide on screen (px at 640x360); its text wraps inside.
+const FOUND_WIDTH := 360.0
+const DOOR_SCRIPT := "res://scripts/door.gd"
 ## Generated ruins art (tools/gen_ruins_art.py, gen_clone_children.py) is drawn at this many
 ## texels per world pixel and shown at 1/TEXELS, smoothly filtered (mipmaps, linear).
 const TEXELS := 8.0
@@ -35,6 +42,11 @@ var _next := 0
 var _ambient: Label
 var _hint: Label
 var _hint_prop: Node2D
+var _title: Label
+var _title_fade: Tween
+var _found: Label
+var _found_at := Vector2.ZERO  # the world point a recovered piece's card hangs over
+var _found_tw: Tween
 
 
 func _ready() -> void:
@@ -44,6 +56,7 @@ func _ready() -> void:
 	for prop: Dictionary in r.get("props", []):
 		_add_prop(prop)
 	_build_screen(r)
+	_dress_doors.call_deferred()  # once the doors are ready and have made their name labels
 
 
 func room() -> Dictionary:
@@ -233,19 +246,19 @@ func _build_screen(r: Dictionary) -> void:
 	add_child(screen)
 	# Title card: shown on entering, then fades. Text sits on screen, not in the room: the
 	# camera shows only a slice of the room.
-	var title := Label.new()
-	title.name = "Title"
-	title.text = r.get("title", "")
-	title.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
-	title.grow_horizontal = Control.GROW_DIRECTION_BOTH
-	title.offset_top = 22
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_card(title, 13, 0.92)
-	screen.add_child(title)
+	_title = Label.new()
+	_title.name = "Title"
+	_title.text = r.get("title", "")
+	_title.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
+	_title.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	_title.offset_top = 22
+	_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_card(_title, 13, 0.92)
+	screen.add_child(_title)
 	if DisplayServer.get_name() != "headless":
-		var fade := title.create_tween()
-		fade.tween_interval(TITLE_SECONDS)
-		fade.tween_property(title, "modulate:a", 0.0, 1.2)
+		_title_fade = _title.create_tween()
+		_title_fade.tween_interval(TITLE_SECONDS)
+		_title_fade.tween_property(_title, "modulate:a", 0.0, 1.2)
 	_lines = r.get("ambient", [])
 	_ambient = Label.new()
 	_ambient.name = "Ambient"
@@ -263,6 +276,14 @@ func _build_screen(r: Dictionary) -> void:
 	_card(_hint, 8, 0.9)
 	_hint.hide()
 	screen.add_child(_hint)
+	_found = Label.new()
+	_found.name = "Found"
+	_found.custom_minimum_size = Vector2(FOUND_WIDTH, 0)
+	_found.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_found.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_card(_found, 9, 0.92)
+	_found.hide()
+	screen.add_child(_found)
 	if not _lines.is_empty():
 		var timer := Timer.new()
 		timer.wait_time = AMBIENT_SECONDS
@@ -275,6 +296,60 @@ func _build_screen(r: Dictionary) -> void:
 func _show_next() -> void:
 	_ambient.text = _lines[_next % _lines.size()]
 	_next += 1
+
+
+## Shows a recovered piece's card (KnowledgePickup) for `seconds`, over the world point `at` (its
+## bottom edge there), on the room's screen layer with the title and the notes: drawn at the
+## screen's resolution and over the gloom. In the room, 5 px under the 2x camera, its light
+## words were drawn at half the screen's resolution and their thin strokes came out grey on the
+## dark card. The title card gives way to it: a piece picked up in the first seconds in the room
+## had the title over the card's top.
+func show_found(text: String, at: Vector2, seconds: float) -> void:
+	_found_at = at
+	_found.text = text
+	_found.size = Vector2(FOUND_WIDTH, 0)  # as tall as the text wrapped at FOUND_WIDTH
+	_found.show()
+	_place_found()
+	if _found_tw:
+		_found_tw.kill()
+	_found_tw = _found.create_tween()
+	_found_tw.tween_interval(seconds)
+	_found_tw.tween_callback(_found.hide)
+	if _title.visible:
+		if _title_fade:
+			_title_fade.kill()
+		_title_fade = _title.create_tween()
+		_title_fade.tween_property(_title, "modulate:a", 0.0, 0.25)
+		_title_fade.tween_callback(_title.hide)
+
+
+func _process(_delta: float) -> void:
+	if _found and _found.visible:
+		_place_found()
+
+
+## The card stays over its place in the room while the camera moves, inside the screen.
+func _place_found() -> void:
+	var view := get_viewport().get_visible_rect().size
+	var p: Vector2 = get_viewport().get_canvas_transform() * _found_at
+	var far := view - _found.size - Vector2(4, 4)  # the furthest the card's corner may go
+	_found.position = Vector2(clampf(p.x - _found.size.x / 2.0, 4, maxf(4, far.x)), clampf(p.y - _found.size.y, 4, maxf(4, far.y)))
+
+
+## The room's doors name their way, and say they are sealed, in the ruins captions' colours.
+## Door names elsewhere are plum on a white outline, for the bright maps; on the dark walls that
+## outline (2 px round a 5 px word, drawn at half the screen's resolution under the 2x camera)
+## came out grey and the plum word on it hardly read.
+func _dress_doors() -> void:
+	if get_parent() == null:
+		return
+	for door in get_parent().find_children("*", "Area2D", true, false):
+		if door.get_script() == null or door.get_script().resource_path != DOOR_SCRIPT:
+			continue
+		for l in [door.get_node_or_null("Label"), door.get_node_or_null("NameLabel")]:
+			if l is Label:
+				l.add_theme_color_override("font_color", CAPTION_TEXT)
+				l.add_theme_color_override("font_outline_color", CAPTION_PLUM)
 
 
 ## Resting the pointer on a prop shows its note in a small card above the pointer.
@@ -303,9 +378,9 @@ func _unhandled_input(event: InputEvent) -> void:
 func _card(label: Label, size: int, alpha: float) -> void:
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	label.add_theme_font_size_override("font_size", size)
-	label.add_theme_color_override("font_color", Color("#f2e6f2"))
+	label.add_theme_color_override("font_color", CAPTION_TEXT)
 	var box := StyleBoxFlat.new()
-	box.bg_color = Color(Color("#331f40"), alpha)
+	box.bg_color = Color(CAPTION_PLUM, alpha)
 	box.border_color = Color(Color("#c9b3f0"), 0.55)
 	box.set_border_width_all(1)
 	box.set_corner_radius_all(6)

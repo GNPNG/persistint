@@ -1,7 +1,8 @@
 extends SceneTree
 ## Headless check of the Ruins of Utopia dungeon crawl: every ruins map loads, doors
 ## connect (wreck <-> corridor <-> core, exit to temple) with existing spawns, pieces are
-## defined in data/ruins.json, and recovery lands in WorldState and survives save/load.
+## defined in data/ruins.json, recovery lands in WorldState and survives save/load, and a
+## recovered piece's card shows on the room's screen layer with the title card out of its way.
 ## Run: godot --headless --path project -s tests/test_ruins.gd
 
 const FK := preload("res://scripts/ruins/forbidden_knowledge.gd")
@@ -80,6 +81,7 @@ func _run() -> void:
 		if not p.is_queued_for_deletion():
 			left += 1
 	_check(left == 1, "recovered pickup removed from map on reload (left=%d)" % left)
+	await _check_found(wreck)
 	wreck.queue_free()
 
 	await _check_clones(data, packed)
@@ -92,6 +94,33 @@ func _run() -> void:
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(ws.SAVE_PATH))
 	print("RESULT: %s" % ("PASS" if _failures == 0 else "FAIL (%d)" % _failures))
 	quit(0 if _failures == 0 else 1)
+
+
+## A recovered piece's card (bd wso.1) is on the room's screen layer with the title and the
+## notes, over the gloom and drawn at the screen's resolution (5 px in the room under the 2x
+## camera its words came out grey), inside the screen, saying what the pickup says; the room's
+## title card gives way to it (a piece picked up in the first seconds had the title over it).
+func _check_found(room: Node) -> void:
+	var pickup: Node = null
+	for p in _find_all(room, "KnowledgePickup"):
+		if not p.is_queued_for_deletion():
+			pickup = p
+	if pickup == null:
+		_check(false, "a piece is left to recover in the wreck")
+		return
+	var title: Label = room.get_node("Decor/RoomText/Title")
+	_check(title.visible, "the room's title card is up on entering")
+	pickup.interact()
+	var card: Label = room.get_node("Decor/RoomText/Found")
+	var said: String = pickup.get_node("Label").text
+	_check(card.visible and card.text == said and said.begins_with("Recovered: "),
+		"the recovered card says what the piece is (%s)" % said.get_slice("\n", 0))
+	_check(not pickup.get_node("Label").visible, "it is on the room's screen layer, not in the room")
+	_check((room.get_node("Decor/RoomText") as CanvasLayer).layer > (room.get_node("Decor/Gloom") as CanvasLayer).layer,
+		"over the gloom")
+	_check(root.get_visible_rect().encloses(card.get_rect()), "inside the screen (%s)" % card.get_rect())
+	await create_timer(0.4).timeout
+	_check(not title.visible, "the title card gives way to it")
 
 
 ## The failed clone children (zombies) and the polar bear cub batch: placed in the bunker
