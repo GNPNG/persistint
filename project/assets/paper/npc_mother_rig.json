@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/characters/npc_mother_rig.png"],
+  "cols": 8,
+  "rows": 3,
+  "src_frame": [295, 480],
+  "scaled_frame": [192, 312],
+  "frame": [274, 394],
+  "pad": 41,
+  "scale": 6.0,
+  "world_h": 52.0,
+  "feet": 0.8654822335025381,
+  "world_h_padded": 65.66666666666667,
+  "edges": [2],
+  "files": {
+    "edge2_white": "npc_mother_rig_edge2_white.png",
+    "shadow_soft": "npc_mother_rig_shadow_soft.png"
+  }
+}

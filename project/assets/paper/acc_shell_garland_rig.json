@@ -1,0 +1,17 @@
+{
+  "source": ["project/assets/characters/player/acc_shell_garland_rig.png"],
+  "cols": 8,
+  "rows": 3,
+  "src_frame": [364, 384],
+  "scaled_frame": [273, 288],
+  "frame": [355, 370],
+  "pad": 41,
+  "scale": 6.0,
+  "world_h": 48.0,
+  "feet": 0.8891891891891892,
+  "world_h_padded": 61.666666666666664,
+  "edges": [2],
+  "files": {
+    "ring2_white": "acc_shell_garland_rig_ring2_white.png"
+  }
+}

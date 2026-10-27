@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/canon/prop_icon_queen_mother.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [269, 293],
+  "scaled_frame": [269, 293],
+  "frame": [327, 351],
+  "pad": 29,
+  "scale": 4.069444444444445,
+  "world_h": 72.0,
+  "feet": 0.9173789173789174,
+  "world_h_padded": 86.25255972696246,
+  "edges": [2],
+  "files": {
+    "edge2_white": "prop_icon_queen_mother_edge2_white.png",
+    "shadow_soft": "prop_icon_queen_mother_shadow_soft.png"
+  }
+}

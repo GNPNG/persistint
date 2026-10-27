@@ -6,6 +6,8 @@ extends SceneTree
 ##   cd project && godot --headless --path . -s ../tools/build_island_maps.gd
 ##   (the canon props come from python3 -I tools/cut_island_props.py, the greenery from
 ##   python3 -I tools/gen_island_deco.py)
+## Paper look (bd gsd): tools/bake_paper.sh greenery props (and the import) before this; _prop and
+## _mirror then draw each baked prop from its bordered sheet over its soft shadow (PaperBake).
 ## Layouts live here as code (cell = 32 world px); the scenes are the output. Re-run after edits.
 ## Resolution: the art files are drawn at 4x their size on the map (tiles 128 px per 32 px cell,
 ## generated props ART_SCALE = 0.25) and canon cuts keep the sheet's own resolution, scaled to the
@@ -42,6 +44,7 @@ var _rng := RandomNumberGenerator.new()
 var _n := 0
 var _tile_px := 32  # atlas pixels per cell (from the tile index)
 var _heights: Dictionary = {}  # canon cut name -> display height
+var _art_heights: Dictionary = {}  # prop Sprite2D -> height of its art on the map, world px
 
 
 func _process(_delta: float) -> bool:
@@ -261,14 +264,45 @@ func _prop(tex: String, base: Vector2, node_name: String, flip := false, scale :
 	## A sprite standing at base (its bottom edge on base, so it y-sorts by its foot).
 	## scale multiplies the art's own display scale (_art_scale).
 	var s := Sprite2D.new()
-	var t: Texture2D = load(tex if tex.begins_with("res://") else PROPS_DIR + tex + ".png")
-	s.texture = t
-	s.offset = Vector2(0, -t.get_height() / 2.0)
+	var path := tex if tex.begins_with("res://") else PROPS_DIR + tex + ".png"
+	var t: Texture2D = load(path)
 	s.position = base
 	s.flip_h = flip
-	s.scale = scale * _art_scale(tex, t)
+	var world := scale * _art_scale(tex, t)
+	var shadow := _paper(s, path, t, world, Vector2(0, -t.get_height() / 2.0))
 	_add(s, node_name)
+	if shadow:
+		_add(shadow, "PaperShadow", s)
+	_art_heights[s] = t.get_height() * world.y
 	return s
+
+
+func _paper(s: Sprite2D, src: String, t: Texture2D, world: Vector2, offset: Vector2) -> Sprite2D:
+	## Paper look (bd gsd): art that tools/bake_paper.sh baked (PaperBake, assets/paper/) is drawn
+	## from its bordered sheet at the same size and place (the sheet is resampled by k and padded
+	## evenly, so the centre stays: offset x k, scale / k), over a soft shadow drawn behind it.
+	## Returns the shadow sprite to add under s, or null; unbaked art is set up as before.
+	var bake := PaperBake.name_of(src)
+	var edge := PaperBake.sheet(bake, PaperBake.EDGE)
+	if edge == "":
+		s.texture = t
+		s.offset = offset
+		s.scale = world
+		return null
+	var k := PaperBake.resample(bake)
+	s.texture = load(edge)
+	s.offset = offset * k
+	s.scale = world / k
+	var shadow_path := PaperBake.sheet(bake, PaperBake.SHADOW)
+	if shadow_path == "":
+		return null
+	var sh := Sprite2D.new()
+	sh.texture = load(shadow_path)
+	sh.offset = s.offset
+	sh.flip_h = s.flip_h
+	sh.show_behind_parent = true
+	PaperBake.style_shadow(sh, s.scale)
+	return sh
 
 
 func _art_scale(tex: String, t: Texture2D) -> float:
@@ -561,10 +595,10 @@ func _hearts_and_sparkles() -> void:
 	for n: String in ["MainHouse", "Dwelling_1", "Dwelling_2"]:
 		var b: Sprite2D = _root.get_node(n)
 		# On the roof's left shoulder, about half the building's height up.
-		_prop("deco_heart", b.position + Vector2(-34, -0.517 * b.texture.get_height() * b.scale.y), "Heart_" + n)
+		_prop("deco_heart", b.position + Vector2(-34, -0.517 * _art_heights[b]), "Heart_" + n)
 	for n: String in ["Ship", "Seal_Gate"]:
 		var b: Sprite2D = _root.get_node(n)
-		_prop("deco_sparkle", b.position + Vector2(30, -b.texture.get_height() * b.scale.y), "Sparkle_" + n)
+		_prop("deco_sparkle", b.position + Vector2(30, -_art_heights[b]), "Sparkle_" + n)
 
 
 func _mirror(pos: Vector2) -> void:
@@ -572,9 +606,9 @@ func _mirror(pos: Vector2) -> void:
 	m.position = pos
 	m.set_script(load("res://scripts/mirror.gd"))
 	var sp := Sprite2D.new()
-	sp.texture = load("res://assets/island/mirror.png")  # tools/gen_village_props.py
-	sp.scale = Vector2.ONE * ART_SCALE
-	sp.offset = Vector2(0, -17 / ART_SCALE)  # foot line on the node, so it y-sorts by its feet
+	var mirror := "res://assets/island/mirror.png"  # tools/gen_village_props.py
+	# Foot line on the node, so it y-sorts by its feet.
+	var mirror_shadow := _paper(sp, mirror, load(mirror), Vector2.ONE * ART_SCALE, Vector2(0, -17 / ART_SCALE))
 	var cs := CollisionShape2D.new()
 	cs.position = Vector2(0, -14)
 	var shape := CircleShape2D.new()
@@ -582,6 +616,8 @@ func _mirror(pos: Vector2) -> void:
 	cs.shape = shape
 	_add(m, "Mirror")
 	_add(sp, "Sprite2D", m)
+	if mirror_shadow:
+		_add(mirror_shadow, "PaperShadow", sp)
 	_add(cs, "CollisionShape2D", m)
 
 

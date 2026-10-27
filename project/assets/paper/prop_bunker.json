@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/canon/prop_bunker.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [890, 790],
+  "scaled_frame": [771, 684],
+  "frame": [853, 766],
+  "pad": 41,
+  "scale": 6.0,
+  "world_h": 114.0,
+  "feet": 0.9464751958224543,
+  "world_h_padded": 127.66666666666667,
+  "edges": [2],
+  "files": {
+    "edge2_white": "prop_bunker_edge2_white.png",
+    "shadow_soft": "prop_bunker_shadow_soft.png"
+  }
+}

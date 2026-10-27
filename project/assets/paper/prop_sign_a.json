@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/canon/prop_sign_a.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [433, 510],
+  "scaled_frame": [245, 288],
+  "frame": [327, 370],
+  "pad": 41,
+  "scale": 6.0,
+  "world_h": 48.0,
+  "feet": 0.8891891891891892,
+  "world_h_padded": 61.666666666666664,
+  "edges": [2],
+  "files": {
+    "edge2_white": "prop_sign_a_edge2_white.png",
+    "shadow_soft": "prop_sign_a_shadow_soft.png"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/canon/prop_ship.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [1305, 871],
+  "scaled_frame": [1305, 871],
+  "frame": [1385, 951],
+  "pad": 40,
+  "scale": 5.806666666666667,
+  "world_h": 150.0,
+  "feet": 0.9579390115667719,
+  "world_h_padded": 163.7772675086108,
+  "edges": [2],
+  "files": {
+    "edge2_white": "prop_ship_edge2_white.png",
+    "shadow_soft": "prop_ship_shadow_soft.png"
+  }
+}
