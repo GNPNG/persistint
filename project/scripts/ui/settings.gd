@@ -1,6 +1,7 @@
 extends Control
 ## The settings screen: a slider per audio level (Master, Music, Voices, Effects), applied as it
-## moves and saved by AudioSettings; Done (or Escape, or the dimmed background) closes it.
+## moves and saved by AudioSettings; Done (or Escape, or the dimmed background) closes it. In play
+## it is the pause menu (GC-03): the title reads Paused, Done reads Resume, and Quit to Menu shows.
 
 const MAIN_MENU := "res://scenes/ui/main_menu.tscn"
 
@@ -10,6 +11,11 @@ var _sliders: Dictionary = {}
 func _ready() -> void:
 	$Dim.gui_input.connect(_on_dim_input)
 	%DoneButton.pressed.connect(_close)
+	var quit := Button.new()
+	quit.name = "QuitToMenuButton"
+	quit.text = "Quit to Menu"
+	quit.pressed.connect(AudioSettings.quit_to_menu)
+	%DoneButton.add_sibling(quit)
 	var rows: VBoxContainer = %Rows
 	for which: String in ["master", "music", "voice", "sfx"]:
 		var row := HBoxContainer.new()
@@ -131,6 +137,11 @@ func refresh() -> void:
 		s.set_value_no_signal(AudioSettings.level(which))
 	if _save_status:
 		_save_status.text = WorldState.persistence_warning_text()
+	# In play this is the pause menu (GC-03): Paused, Resume, Quit to Menu.
+	var playing := AudioSettings.in_play()
+	$Center/Panel/VBox/Title.text = "Paused" if playing else "Settings"
+	%DoneButton.text = "Resume" if playing else "Done"
+	$Center/Panel/VBox/QuitToMenuButton.visible = playing
 
 
 func slider(which: String) -> HSlider:

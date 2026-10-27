@@ -7,8 +7,15 @@ into the new version's heading; the Updates page on the site shows the released 
 
 ## Unreleased
 
+### Added
+
+- A pause menu: Escape or the gear pauses the game, with Resume and Quit to Menu next to the
+  volume sliders.
+- Quit on the main menu of desktop builds.
+
 ### Fixed
 
+- The Fullscreen button is back on the main menu.
 - Lines a character speaks inside a conversation follow the Voices slider.
 - The keys can no longer stop moving the player after a conversation is cut short.
 

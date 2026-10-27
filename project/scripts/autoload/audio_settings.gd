@@ -15,6 +15,7 @@ const LABELS := {"master": "Master", "music": "Music", "voice": "Voices", "sfx":
 const OVERLAY := "res://scenes/ui/settings.tscn"
 ## Scenes with no floating gear: the intro has nothing to set, the main menu has its own button.
 const NO_GEAR := ["res://scenes/ui/studio_intro.tscn", "res://scenes/ui/main_menu.tscn"]
+const MAIN_MENU := "res://scenes/ui/main_menu.tscn"
 const SILENT := 0.00001
 
 ## A var so headless tests can point it at a temp file instead of the player's real settings.
@@ -24,6 +25,7 @@ var _levels := {"master": 1.0, "music": 1.0, "voice": 1.0, "sfx": 1.0}
 var _layer: CanvasLayer
 var _overlay: Control
 var _gear: Control
+var _paused := false
 
 
 func _ready() -> void:
@@ -102,7 +104,12 @@ func _ensure_bus(bus_name: String) -> void:
 
 # --- The screen ---------------------------------------------------------------------------
 
+## In play the settings screen is also the pause menu (GC-03): opening it pauses the game, it
+## offers Resume and Quit to Menu, and closing it resumes. On the main menu it only sets levels.
 func open() -> void:
+	if in_play():
+		get_tree().paused = true
+		_paused = true
 	_overlay.call("refresh")
 	_overlay.visible = true
 	_gear.visible = false
@@ -110,7 +117,27 @@ func open() -> void:
 
 func close() -> void:
 	_overlay.visible = false
+	if _paused:
+		get_tree().paused = false
+		_paused = false
 	_update_gear()
+
+
+## True in a map or mini-game (not the intro or the main menu).
+func in_play() -> bool:
+	var scene := get_tree().current_scene
+	var path := scene.scene_file_path if scene else ""
+	return path != "" and path not in NO_GEAR
+
+
+func is_paused() -> bool:
+	return _paused
+
+
+## Leaves play for the main menu from the pause menu.
+func quit_to_menu() -> void:
+	close()
+	get_tree().call_deferred("change_scene_to_file", MAIN_MENU)
 
 
 func is_open() -> bool:

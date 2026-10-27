@@ -15,6 +15,8 @@ func _ready() -> void:
 	%SettingsButton.pressed.connect(AudioSettings.open)
 	%CreditsButton.pressed.connect($Credits.open)
 	%BeginButton.visible = WorldState.get_flag("_location") is Dictionary
+	_add_fullscreen_button()
+	_add_quit_button()
 	_add_version_label()
 	_add_save_notice()
 	move_child($Credits, -1)  # over the version label too
@@ -27,8 +29,23 @@ func _add_fullscreen_button() -> void:
 	b.name = "FullscreenButton"
 	b.text = "Fullscreen"
 	b.pressed.connect(toggle_fullscreen)
-	$Center/VBox.add_child(b)
-	$Center/VBox.move_child(b, $Center/VBox/SupportButton.get_index() + 1)
+	var box: VBoxContainer = $Center/Panel/VBox
+	box.add_child(b)
+	box.move_child(b, %SettingsButton.get_index() + 1)
+
+
+## Quit at the bottom of the list, on desktop builds only (a browser tab is closed by the player,
+## GC-02).
+func _add_quit_button() -> void:
+	if OS.has_feature("web"):
+		return
+	var b := Button.new()
+	b.name = "QuitButton"
+	b.text = "Quit"
+	b.pressed.connect(func() -> void: get_tree().quit())
+	var box: VBoxContainer = $Center/Panel/VBox
+	box.add_child(b)
+	box.move_child(b, box.get_node("Hint").get_index())
 
 
 static func is_fullscreen() -> bool:
