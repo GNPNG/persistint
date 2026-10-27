@@ -1,0 +1,3 @@
+[submodule "tools/web_render"]
+	path = tools/web_render
+	url = https://gitea.gnomatix.com/gnomatix/web-render.git

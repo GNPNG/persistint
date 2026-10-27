@@ -1,5 +1,0 @@
-# Only these files are pushed to Apps Script by clasp (deploy.mjs).
-**/**
-!appsscript.json
-!tracker_webapp.gs
-!tracker_secret.local.gs

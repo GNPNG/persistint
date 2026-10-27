@@ -33,3 +33,7 @@ project/build.json
 
 # Playwright MCP screenshots and logs
 .playwright-mcp/
+
+# web-render (tools/web_render submodule): run logs, debug dumps (account data), batch state, clasp state; the local secrets file
+.web-render/
+web-render.local.json

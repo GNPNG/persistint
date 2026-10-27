@@ -1,0 +1,12 @@
+{
+  "_notes": "Project side of the renderer (tools/web_render is the gnomatix/web-render engine as a submodule; see tools/web_render/docs/PROJECT_CONFIG.md). Secrets and machine settings go in web-render.local.json (gitignored), never here.",
+  "name": "persistint",
+  "promptsDir": "prompts",
+  "promptPrefix": "@persistint-asset-prompts",
+  "sync": ["python3", "tools/sync_rendered_assets.py"],
+  "settings": {
+    "profileDir": "~/.local/share/persistint-web-render/chrome-profile",
+    "downloadDir": "~/.local/share/persistint-web-render/downloads"
+  },
+  "tracker": { "sheetId": "1WNbk19jM4_gVMklRA4rdA8Im9K_v8rb7VdvDFVc8geA" }
+}
