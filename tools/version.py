@@ -3,7 +3,7 @@
 
 Usage (python3 -I tools/version.py ...):
   show                      print the current version
-  bump major|minor|patch    increment VERSION, stamp it everywhere, add a CHANGELOG.md heading
+  bump major|minor|patch    increment VERSION, stamp it everywhere, turn CHANGELOG.md's Unreleased section into the version heading (or add one)
   set X.Y.Z                 set VERSION to X.Y.Z, stamp it everywhere
   stamp                     write VERSION into every place listed below (idempotent)
   check                     exit 1 if any place disagrees with VERSION (used by tools/deploy_site.sh)
@@ -71,9 +71,17 @@ def changelog(v: str) -> None:
     p = ROOT / "CHANGELOG.md"
     text = p.read_text(encoding="utf-8") if p.exists() else "# Changelog\n\n"
     head = f"## v{v} — {datetime.date.today().isoformat()}"
-    if head.split(" — ")[0] not in text:
-        text = text.replace("# Changelog\n\n", f"# Changelog\n\n{head}\n\n- \n\n", 1)
-        p.write_text(text, encoding="utf-8")
+    if head.split(" — ")[0] in text:
+        return
+    # Keep a Changelog: the Unreleased section becomes the release; without one, a new heading
+    # goes above the newest release with an empty Added list to fill.
+    if re.search(r"^## Unreleased\s*$", text, re.M):
+        text = re.sub(r"^## Unreleased\s*$", head, text, count=1, flags=re.M)
+    else:
+        m = re.search(r"^## v", text, re.M)
+        at = m.start() if m else len(text)
+        text = text[:at] + f"{head}\n\n### Added\n\n- \n\n" + text[at:]
+    p.write_text(text, encoding="utf-8")
 
 
 def main(argv: list) -> None:

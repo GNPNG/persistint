@@ -36,6 +36,9 @@ def md_to_html(text: str) -> str:
         if line.startswith("## "):
             flush()
             out.append(f"<h2>{inline(line[3:].strip())}</h2>")
+        elif line.startswith("### "):
+            flush()
+            out.append(f"<h3>{inline(line[4:].strip())}</h3>")
         elif line.startswith("- ") or line.rstrip() == "-":
             if para:
                 flush()
@@ -52,6 +55,13 @@ def md_to_html(text: str) -> str:
     return "\n".join(out)
 
 
+## The released versions only: CHANGELOG.md from its first "## v" heading on (its preamble and the
+## Unreleased section are for the repository, not the players).
+def released(text: str) -> str:
+    i = text.find("\n## v")
+    return text[i + 1:] if i >= 0 else text
+
+
 def inline(s: str) -> str:
     s = html.escape(s, quote=False)
     s = re.sub(r"`([^`]+)`", r"<code>\1</code>", s)
@@ -60,7 +70,7 @@ def inline(s: str) -> str:
 
 
 def main() -> None:
-    changelog = md_to_html((ROOT / "CHANGELOG.md").read_text(encoding="utf-8"))
+    changelog = md_to_html(released((ROOT / "CHANGELOG.md").read_text(encoding="utf-8")))
     roadmap = md_to_html((ROOT / "docs" / "ROADMAP.md").read_text(encoding="utf-8"))
     page = f"""<!doctype html>
 <html lang="en">
