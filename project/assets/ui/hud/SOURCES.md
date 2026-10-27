@@ -11,3 +11,9 @@ What made each file here (release checklist LP-04, sops/09). Prompt files carry 
 | `gear_pressed.png` | `tools/gen_hud_stickers.py` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `hanger.png` | `tools/gen_hud_stickers.py` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `hanger_pressed.png` | `tools/gen_hud_stickers.py` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
+| `help.png` | `tools/gen_hud_stickers.py` | drawn or cut by the tool (its docstring names inputs) |  |
+| `help_pressed.png` | `tools/gen_hud_stickers.py` | drawn or cut by the tool (its docstring names inputs) |  |
+| `zoom_in.png` | `tools/gen_hud_stickers.py` | drawn or cut by the tool (its docstring names inputs) |  |
+| `zoom_in_pressed.png` | `tools/gen_hud_stickers.py` | drawn or cut by the tool (its docstring names inputs) |  |
+| `zoom_out.png` | `tools/gen_hud_stickers.py` | drawn or cut by the tool (its docstring names inputs) |  |
+| `zoom_out_pressed.png` | `tools/gen_hud_stickers.py` | drawn or cut by the tool (its docstring names inputs) |  |

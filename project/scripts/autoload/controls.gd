@@ -19,6 +19,9 @@ const REMAPPABLE := [
 	["toggle_journal", "Journal"],
 	["dismount", "Get off the pony"],
 	["toggle_fullscreen", "Fullscreen"],
+	["zoom_out", "Zoom out"],
+	["zoom_in", "Zoom in"],
+	["toggle_help", "Help"],
 ]
 
 ## A var so headless tests can point it at a temp file instead of the player's real settings.

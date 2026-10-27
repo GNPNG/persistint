@@ -75,13 +75,15 @@ func _build_hud() -> void:
 	row.add_child(_hud_label)
 	# Tap stickers under the settings gear for the wardrobe and the journal, so a finger or a
 	# mouse alone reaches what P and J open (bd ctw, QA-07).
-	for pair: Array in [["WardrobeSticker", "hanger", 1, toggle_wardrobe], ["JournalSticker", "book", 2, toggle_journal]]:
+	for pair: Array in [["WardrobeSticker", "hanger", 1, toggle_wardrobe], ["JournalSticker", "book", 2, toggle_journal],
+			["ZoomSticker", "zoom", 3, toggle_zoom], ["HelpSticker", "help", 4, toggle_help]]:
 		var s := StickerButton.new()
 		s.name = pair[0]
 		s.kind = pair[1]
 		s.slot = pair[2]
 		s.pressed.connect(pair[3])
 		layer.add_child(s)
+	_hud_layer = layer
 	_update_hud()
 
 
@@ -95,6 +97,87 @@ func _unhandled_input(event: InputEvent) -> void:
 		toggle_wardrobe()
 	elif event.is_action_pressed("toggle_journal"):
 		toggle_journal()
+	elif event.is_action_pressed("zoom_out"):
+		set_zoom_level(1)
+	elif event.is_action_pressed("zoom_in"):
+		set_zoom_level(0)
+	elif event.is_action_pressed("toggle_help"):
+		toggle_help()
+	elif event is InputEventMagnifyGesture:  # a trackpad pinch
+		set_zoom_level(0 if event.factor > 1.0 else 1)
+	elif event is InputEventScreenTouch or event is InputEventScreenDrag:
+		_pinch(event)
+
+
+## --- Zoom (bd ctw: "at least zoom out to one level" to see what is around in crowded places) ---
+## ZOOMS are the camera zooms: 0 the normal view, 1 one level out. The +/- keys, the wheel, the
+## pad's shoulders, a pinch and the magnifier sticker move between them; the sticker shows which
+## way it will go.
+const ZOOMS := [2.0, 1.25]
+const PINCH_STEP := 40.0  # px the fingers must move apart or together
+var zoom_level := 0
+var _touches := {}  # finger index -> position
+var _pinch_start := 0.0
+var _hud_layer: CanvasLayer
+var _help: PanelContainer
+
+
+func set_zoom_level(level: int) -> void:
+	level = clampi(level, 0, ZOOMS.size() - 1)
+	zoom_level = level
+	var player := get_tree().get_first_node_in_group("player")
+	var cam: Camera2D = player.get_node_or_null("Camera2D") if player else null
+	if cam:
+		var z: float = ZOOMS[level]
+		create_tween().tween_property(cam, "zoom", Vector2(z, z), 0.25)
+	var s := _hud_layer.get_node_or_null("ZoomSticker") if _hud_layer else null
+	if s:
+		s.set_icon("zoom_in" if level > 0 else "zoom_out")
+
+
+func toggle_zoom() -> void:
+	set_zoom_level(0 if zoom_level > 0 else 1)
+
+
+func _pinch(event: InputEvent) -> void:
+	if event is InputEventScreenTouch and not event.pressed:
+		_touches.erase(event.index)
+		return
+	_touches[event.index] = event.position
+	if _touches.size() != 2:
+		_pinch_start = 0.0
+		return
+	var pts := _touches.values()
+	var d: float = pts[0].distance_to(pts[1])
+	if _pinch_start == 0.0:
+		_pinch_start = d
+	elif d - _pinch_start > PINCH_STEP:
+		set_zoom_level(0)
+		_pinch_start = d
+	elif _pinch_start - d > PINCH_STEP:
+		set_zoom_level(1)
+		_pinch_start = d
+
+
+## --- Help (bd ctw): the "?" sticker or F1 opens how to play with each kind of input. ---
+func toggle_help() -> void:
+	if _help and _help.visible:
+		_help.shut()
+		return
+	if _help == null:
+		_help = preload("res://scripts/ui/help_panel.gd").new()
+		var center := CenterContainer.new()
+		center.name = "HelpCenter"
+		center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		center.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		center.add_child(_help)
+		_hud_layer.add_child(center)
+	_help.refresh()
+	_help.show()
+
+
+func help_open() -> bool:
+	return _help != null and _help.visible
 
 
 func toggle_journal() -> void:

@@ -5,6 +5,18 @@ All notable changes, newest first. The format follows
 [Semantic Versioning](https://semver.org/). `tools/version.py bump` turns the Unreleased section
 into the new version's heading; the Updates page on the site shows the released versions.
 
+## Unreleased
+
+### Added
+
+- Zoom: - (or the mouse wheel, a pinch, a pad shoulder or the magnifier sticker) zooms out one
+  level to see what is around, + zooms back in.
+- Help: the ? sticker or F1 shows how to play with keys, touch and a pad, with your own keys.
+
+### Changed
+
+- The settings gear and the stickers are drawn as art from a generator, like the rest of the game.
+
 ## v0.3.5 — 2026-10-27
 
 Gamepad play:

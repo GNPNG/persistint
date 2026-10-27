@@ -11,7 +11,7 @@ const MARGIN := 8.0
 const SWAY_DEGREES := 6.0
 const SWAY_SECONDS := 2.4
 
-## "hanger" (wardrobe) or "book" (journal).
+## "hanger" (wardrobe), "book" (journal), "zoom" (zoom out or back in) or "help".
 @export var kind := "hanger"
 ## Which slot under the gear: 1 is the first one below it.
 @export var slot := 1
@@ -20,18 +20,23 @@ var _t := 0.0
 
 
 func _ready() -> void:
-	texture_normal = load("res://assets/ui/hud/%s.png" % kind)
-	texture_pressed = load("res://assets/ui/hud/%s_pressed.png" % kind)
+	set_icon({"zoom": "zoom_out"}.get(kind, kind))
 	ignore_texture_size = true
 	stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 	focus_mode = Control.FOCUS_NONE
 	custom_minimum_size = Vector2(SIZE, SIZE)
 	size = Vector2(SIZE, SIZE)
 	pivot_offset = Vector2(SIZE / 2.0, 2.0)  # it hangs from its top, like a hanger on a rail
-	tooltip_text = {"hanger": "Wardrobe (P)", "book": "Journal (J)"}.get(kind, "")
+	tooltip_text = {"hanger": "Wardrobe (P)", "book": "Journal (J)", "zoom": "Zoom (+ and -)", "help": "Help (F1)"}.get(kind, "")
 	_t = slot * 0.7  # neighbours don't sway in step
 	_place()
 	get_viewport().size_changed.connect(_place)
+
+
+## Shows assets/ui/hud/<icon>.png (and its _pressed twin), e.g. the zoom sticker's + or -.
+func set_icon(icon: String) -> void:
+	texture_normal = load("res://assets/ui/hud/%s.png" % icon)
+	texture_pressed = load("res://assets/ui/hud/%s_pressed.png" % icon)
 
 
 func _place() -> void:
