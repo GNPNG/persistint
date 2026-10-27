@@ -5,6 +5,23 @@ All notable changes, newest first. The format follows
 [Semantic Versioning](https://semver.org/). `tools/version.py bump` turns the Unreleased section
 into the new version's heading; the Updates page on the site shows the released versions.
 
+## v0.3.8 — 2026-10-27
+
+The paper look, and Florida:
+
+### Added
+
+- Paper look: the people, the player, the trees, flowers and props on the island, and the props in
+  Florida and the ruins now have a cut-paper border and a soft shadow.
+- Florida garden: on your first visit the Father explains the garden and the craft bench.
+- Florida beach: two vacationing clinical psychologists lounge under the beach umbrella, with an
+  optional chat.
+- Citations: Benenson (2013) and Stockley & Campbell (2013).
+
+### Changed
+
+- Development: the voice review scene is a character picker; Node versions of the asset tools.
+
 ## v0.3.7 — 2026-10-27
 
 Sound on the web title, and the clone hall:
