@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/ruins/ruins_intercom.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [304, 336],
+  "scaled_frame": [228, 252],
+  "frame": [310, 334],
+  "pad": 41,
+  "scale": 6.0,
+  "world_h": 42.0,
+  "feet": 0.8772455089820359,
+  "world_h_padded": 55.666666666666664,
+  "edges": [2],
+  "files": {
+    "edge2_white": "ruins_intercom_edge2_white.png",
+    "shadow_soft": "ruins_intercom_shadow_soft.png"
+  }
+}

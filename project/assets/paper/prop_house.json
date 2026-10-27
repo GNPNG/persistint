@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/florida/prop_house.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [1104, 560],
+  "scaled_frame": [1104, 560],
+  "frame": [1160, 616],
+  "pad": 28,
+  "scale": 4.0,
+  "world_h": 140.0,
+  "feet": 0.9545454545454546,
+  "world_h_padded": 154.0,
+  "edges": [2],
+  "files": {
+    "edge2_white": "prop_house_edge2_white.png",
+    "shadow_soft": "prop_house_shadow_soft.png"
+  }
+}

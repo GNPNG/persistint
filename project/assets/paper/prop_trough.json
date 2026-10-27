@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/florida/prop_trough.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [160, 72],
+  "scaled_frame": [160, 72],
+  "frame": [216, 128],
+  "pad": 28,
+  "scale": 4.0,
+  "world_h": 18.0,
+  "feet": 0.78125,
+  "world_h_padded": 32.0,
+  "edges": [2],
+  "files": {
+    "edge2_white": "prop_trough_edge2_white.png",
+    "shadow_soft": "prop_trough_shadow_soft.png"
+  }
+}

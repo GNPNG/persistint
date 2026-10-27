@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/ruins/ruins_mop_bucket.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [240, 272],
+  "scaled_frame": [180, 204],
+  "frame": [262, 286],
+  "pad": 41,
+  "scale": 6.0,
+  "world_h": 34.0,
+  "feet": 0.8566433566433567,
+  "world_h_padded": 47.666666666666664,
+  "edges": [2],
+  "files": {
+    "edge2_white": "ruins_mop_bucket_edge2_white.png",
+    "shadow_soft": "ruins_mop_bucket_shadow_soft.png"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/ruins/ruins_binders_a.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [992, 672],
+  "scaled_frame": [744, 504],
+  "frame": [826, 586],
+  "pad": 41,
+  "scale": 6.0,
+  "world_h": 84.0,
+  "feet": 0.9300341296928327,
+  "world_h_padded": 97.66666666666667,
+  "edges": [2],
+  "files": {
+    "edge2_white": "ruins_binders_a_edge2_white.png",
+    "shadow_soft": "ruins_binders_a_shadow_soft.png"
+  }
+}

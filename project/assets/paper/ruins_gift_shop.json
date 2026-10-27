@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/ruins/ruins_gift_shop.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [992, 688],
+  "scaled_frame": [744, 516],
+  "frame": [826, 598],
+  "pad": 41,
+  "scale": 6.0,
+  "world_h": 86.0,
+  "feet": 0.931438127090301,
+  "world_h_padded": 99.66666666666667,
+  "edges": [2],
+  "files": {
+    "edge2_white": "ruins_gift_shop_edge2_white.png",
+    "shadow_soft": "ruins_gift_shop_shadow_soft.png"
+  }
+}

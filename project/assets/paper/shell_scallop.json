@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/florida/shell_scallop.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [102, 90],
+  "scaled_frame": [75, 66],
+  "frame": [157, 148],
+  "pad": 41,
+  "scale": 6.0,
+  "world_h": 11.0,
+  "feet": 0.722972972972973,
+  "world_h_padded": 24.666666666666668,
+  "edges": [2],
+  "files": {
+    "edge2_white": "shell_scallop_edge2_white.png",
+    "shadow_soft": "shell_scallop_shadow_soft.png"
+  }
+}

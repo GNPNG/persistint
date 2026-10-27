@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/ruins/ruins_lifeboat.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [928, 448],
+  "scaled_frame": [696, 336],
+  "frame": [778, 418],
+  "pad": 41,
+  "scale": 6.0,
+  "world_h": 56.0,
+  "feet": 0.9019138755980861,
+  "world_h_padded": 69.66666666666667,
+  "edges": [2],
+  "files": {
+    "edge2_white": "ruins_lifeboat_edge2_white.png",
+    "shadow_soft": "ruins_lifeboat_shadow_soft.png"
+  }
+}

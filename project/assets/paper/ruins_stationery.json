@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/ruins/ruins_stationery.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [448, 368],
+  "scaled_frame": [336, 276],
+  "frame": [418, 358],
+  "pad": 41,
+  "scale": 6.0,
+  "world_h": 46.0,
+  "feet": 0.8854748603351955,
+  "world_h_padded": 59.666666666666664,
+  "edges": [2],
+  "files": {
+    "edge2_white": "ruins_stationery_edge2_white.png",
+    "shadow_soft": "ruins_stationery_shadow_soft.png"
+  }
+}

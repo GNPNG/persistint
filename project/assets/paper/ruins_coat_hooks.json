@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/ruins/ruins_coat_hooks.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [672, 400],
+  "scaled_frame": [504, 300],
+  "frame": [586, 382],
+  "pad": 41,
+  "scale": 6.0,
+  "world_h": 50.0,
+  "feet": 0.8926701570680629,
+  "world_h_padded": 63.666666666666664,
+  "edges": [2],
+  "files": {
+    "edge2_white": "ruins_coat_hooks_edge2_white.png",
+    "shadow_soft": "ruins_coat_hooks_shadow_soft.png"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/florida/plot_growing.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [144, 120],
+  "scaled_frame": [144, 120],
+  "frame": [200, 176],
+  "pad": 28,
+  "scale": 4.0,
+  "world_h": 30.0,
+  "feet": 0.8409090909090909,
+  "world_h_padded": 44.0,
+  "edges": [2],
+  "files": {
+    "edge2_white": "plot_growing_edge2_white.png",
+    "shadow_soft": "plot_growing_shadow_soft.png"
+  }
+}

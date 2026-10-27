@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/florida/prop_sandcastle.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [128, 96],
+  "scaled_frame": [128, 96],
+  "frame": [184, 152],
+  "pad": 28,
+  "scale": 4.0,
+  "world_h": 24.0,
+  "feet": 0.8157894736842105,
+  "world_h_padded": 38.0,
+  "edges": [2],
+  "files": {
+    "edge2_white": "prop_sandcastle_edge2_white.png",
+    "shadow_soft": "prop_sandcastle_shadow_soft.png"
+  }
+}

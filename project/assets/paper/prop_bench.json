@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/florida/prop_bench.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [320, 88],
+  "scaled_frame": [320, 88],
+  "frame": [376, 144],
+  "pad": 28,
+  "scale": 4.0,
+  "world_h": 22.0,
+  "feet": 0.8055555555555556,
+  "world_h_padded": 36.0,
+  "edges": [2],
+  "files": {
+    "edge2_white": "prop_bench_edge2_white.png",
+    "shadow_soft": "prop_bench_shadow_soft.png"
+  }
+}

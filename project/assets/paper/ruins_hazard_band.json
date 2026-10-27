@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/ruins/ruins_hazard_band.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [832, 208],
+  "scaled_frame": [624, 156],
+  "frame": [706, 238],
+  "pad": 41,
+  "scale": 6.0,
+  "world_h": 26.0,
+  "feet": 0.8277310924369747,
+  "world_h_padded": 39.666666666666664,
+  "edges": [2],
+  "files": {
+    "edge2_white": "ruins_hazard_band_edge2_white.png",
+    "shadow_soft": "ruins_hazard_band_shadow_soft.png"
+  }
+}

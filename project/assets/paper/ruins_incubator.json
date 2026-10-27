@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/ruins/ruins_incubator.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [528, 416],
+  "scaled_frame": [396, 312],
+  "frame": [478, 394],
+  "pad": 41,
+  "scale": 6.0,
+  "world_h": 52.0,
+  "feet": 0.8959390862944162,
+  "world_h_padded": 65.66666666666667,
+  "edges": [2],
+  "files": {
+    "edge2_white": "ruins_incubator_edge2_white.png",
+    "shadow_soft": "ruins_incubator_shadow_soft.png"
+  }
+}

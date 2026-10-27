@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/florida/prop_palm_b.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [304, 352],
+  "scaled_frame": [304, 352],
+  "frame": [360, 408],
+  "pad": 28,
+  "scale": 4.0,
+  "world_h": 88.0,
+  "feet": 0.9313725490196079,
+  "world_h_padded": 102.0,
+  "edges": [2],
+  "files": {
+    "edge2_white": "prop_palm_b_edge2_white.png",
+    "shadow_soft": "prop_palm_b_shadow_soft.png"
+  }
+}

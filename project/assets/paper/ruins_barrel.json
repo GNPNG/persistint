@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/ruins/ruins_barrel.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [224, 304],
+  "scaled_frame": [168, 228],
+  "frame": [250, 310],
+  "pad": 41,
+  "scale": 6.0,
+  "world_h": 38.0,
+  "feet": 0.867741935483871,
+  "world_h_padded": 51.666666666666664,
+  "edges": [2],
+  "files": {
+    "edge2_white": "ruins_barrel_edge2_white.png",
+    "shadow_soft": "ruins_barrel_shadow_soft.png"
+  }
+}

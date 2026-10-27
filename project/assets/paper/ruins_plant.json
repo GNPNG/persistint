@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/ruins/ruins_plant.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [240, 352],
+  "scaled_frame": [180, 264],
+  "frame": [262, 346],
+  "pad": 41,
+  "scale": 6.0,
+  "world_h": 44.0,
+  "feet": 0.8815028901734104,
+  "world_h_padded": 57.666666666666664,
+  "edges": [2],
+  "files": {
+    "edge2_white": "ruins_plant_edge2_white.png",
+    "shadow_soft": "ruins_plant_shadow_soft.png"
+  }
+}

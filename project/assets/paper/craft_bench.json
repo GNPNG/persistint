@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/florida/craft_bench.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [208, 120],
+  "scaled_frame": [208, 120],
+  "frame": [264, 176],
+  "pad": 28,
+  "scale": 4.0,
+  "world_h": 30.0,
+  "feet": 0.8409090909090909,
+  "world_h_padded": 44.0,
+  "edges": [2],
+  "files": {
+    "edge2_white": "craft_bench_edge2_white.png",
+    "shadow_soft": "craft_bench_shadow_soft.png"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/florida/prop_garden_arch.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [176, 224],
+  "scaled_frame": [176, 224],
+  "frame": [232, 280],
+  "pad": 28,
+  "scale": 4.0,
+  "world_h": 56.0,
+  "feet": 0.9,
+  "world_h_padded": 70.0,
+  "edges": [2],
+  "files": {
+    "edge2_white": "prop_garden_arch_edge2_white.png",
+    "shadow_soft": "prop_garden_arch_shadow_soft.png"
+  }
+}

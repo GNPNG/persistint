@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/ruins/ruins_candles.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [368, 256],
+  "scaled_frame": [276, 192],
+  "frame": [358, 274],
+  "pad": 41,
+  "scale": 6.0,
+  "world_h": 32.0,
+  "feet": 0.8503649635036497,
+  "world_h_padded": 45.666666666666664,
+  "edges": [2],
+  "files": {
+    "edge2_white": "ruins_candles_edge2_white.png",
+    "shadow_soft": "ruins_candles_shadow_soft.png"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/ruins/ruins_pipes_striped.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [2080, 192],
+  "scaled_frame": [1560, 144],
+  "frame": [1642, 226],
+  "pad": 41,
+  "scale": 6.0,
+  "world_h": 24.0,
+  "feet": 0.8185840707964602,
+  "world_h_padded": 37.666666666666664,
+  "edges": [2],
+  "files": {
+    "edge2_white": "ruins_pipes_striped_edge2_white.png",
+    "shadow_soft": "ruins_pipes_striped_shadow_soft.png"
+  }
+}

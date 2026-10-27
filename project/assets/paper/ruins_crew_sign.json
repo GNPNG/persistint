@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/ruins/ruins_crew_sign.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [576, 176],
+  "scaled_frame": [432, 132],
+  "frame": [514, 214],
+  "pad": 41,
+  "scale": 6.0,
+  "world_h": 22.0,
+  "feet": 0.8084112149532711,
+  "world_h_padded": 35.666666666666664,
+  "edges": [2],
+  "files": {
+    "edge2_white": "ruins_crew_sign_edge2_white.png",
+    "shadow_soft": "ruins_crew_sign_shadow_soft.png"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/florida/prop_birdbath.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [88, 112],
+  "scaled_frame": [88, 112],
+  "frame": [144, 168],
+  "pad": 28,
+  "scale": 4.0,
+  "world_h": 28.0,
+  "feet": 0.8333333333333334,
+  "world_h_padded": 42.0,
+  "edges": [2],
+  "files": {
+    "edge2_white": "prop_birdbath_edge2_white.png",
+    "shadow_soft": "prop_birdbath_shadow_soft.png"
+  }
+}

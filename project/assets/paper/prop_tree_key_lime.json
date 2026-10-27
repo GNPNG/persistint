@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/florida/prop_tree_key_lime.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [192, 232],
+  "scaled_frame": [192, 232],
+  "frame": [248, 288],
+  "pad": 28,
+  "scale": 4.0,
+  "world_h": 58.0,
+  "feet": 0.9027777777777778,
+  "world_h_padded": 72.0,
+  "edges": [2],
+  "files": {
+    "edge2_white": "prop_tree_key_lime_edge2_white.png",
+    "shadow_soft": "prop_tree_key_lime_shadow_soft.png"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/ruins/ruins_vending.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [384, 592],
+  "scaled_frame": [288, 444],
+  "frame": [370, 526],
+  "pad": 41,
+  "scale": 6.0,
+  "world_h": 74.0,
+  "feet": 0.9220532319391636,
+  "world_h_padded": 87.66666666666667,
+  "edges": [2],
+  "files": {
+    "edge2_white": "ruins_vending_edge2_white.png",
+    "shadow_soft": "ruins_vending_shadow_soft.png"
+  }
+}

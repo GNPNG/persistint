@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/florida/shell_spiral.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [86, 75],
+  "scaled_frame": [76, 66],
+  "frame": [158, 148],
+  "pad": 41,
+  "scale": 6.0,
+  "world_h": 11.0,
+  "feet": 0.722972972972973,
+  "world_h_padded": 24.666666666666668,
+  "edges": [2],
+  "files": {
+    "edge2_white": "shell_spiral_edge2_white.png",
+    "shadow_soft": "shell_spiral_shadow_soft.png"
+  }
+}

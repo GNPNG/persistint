@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/ruins/ruins_sign_slots.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [320, 240],
+  "scaled_frame": [240, 180],
+  "frame": [322, 262],
+  "pad": 41,
+  "scale": 6.0,
+  "world_h": 30.0,
+  "feet": 0.8435114503816794,
+  "world_h_padded": 43.666666666666664,
+  "edges": [2],
+  "files": {
+    "edge2_white": "ruins_sign_slots_edge2_white.png",
+    "shadow_soft": "ruins_sign_slots_shadow_soft.png"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/ruins/ruins_prep_bench.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [800, 320],
+  "scaled_frame": [600, 240],
+  "frame": [682, 322],
+  "pad": 41,
+  "scale": 6.0,
+  "world_h": 40.0,
+  "feet": 0.8726708074534162,
+  "world_h_padded": 53.666666666666664,
+  "edges": [2],
+  "files": {
+    "edge2_white": "ruins_prep_bench_edge2_white.png",
+    "shadow_soft": "ruins_prep_bench_shadow_soft.png"
+  }
+}

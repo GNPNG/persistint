@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/ruins/ruins_porthole.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [240, 240],
+  "scaled_frame": [180, 180],
+  "frame": [262, 262],
+  "pad": 41,
+  "scale": 6.0,
+  "world_h": 30.0,
+  "feet": 0.8435114503816794,
+  "world_h_padded": 43.666666666666664,
+  "edges": [2],
+  "files": {
+    "edge2_white": "ruins_porthole_edge2_white.png",
+    "shadow_soft": "ruins_porthole_shadow_soft.png"
+  }
+}

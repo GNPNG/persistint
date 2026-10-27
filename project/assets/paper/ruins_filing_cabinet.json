@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/ruins/ruins_filing_cabinet.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [352, 576],
+  "scaled_frame": [264, 432],
+  "frame": [346, 514],
+  "pad": 41,
+  "scale": 6.0,
+  "world_h": 72.0,
+  "feet": 0.9202334630350194,
+  "world_h_padded": 85.66666666666667,
+  "edges": [2],
+  "files": {
+    "edge2_white": "ruins_filing_cabinet_edge2_white.png",
+    "shadow_soft": "ruins_filing_cabinet_shadow_soft.png"
+  }
+}

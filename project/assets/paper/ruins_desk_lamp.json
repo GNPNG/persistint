@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/ruins/ruins_desk_lamp.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [624, 432],
+  "scaled_frame": [468, 324],
+  "frame": [550, 406],
+  "pad": 41,
+  "scale": 6.0,
+  "world_h": 54.0,
+  "feet": 0.8990147783251231,
+  "world_h_padded": 67.66666666666667,
+  "edges": [2],
+  "files": {
+    "edge2_white": "ruins_desk_lamp_edge2_white.png",
+    "shadow_soft": "ruins_desk_lamp_shadow_soft.png"
+  }
+}

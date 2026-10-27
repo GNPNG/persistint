@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/ruins/ruins_freezer.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [368, 544],
+  "scaled_frame": [276, 408],
+  "frame": [358, 490],
+  "pad": 41,
+  "scale": 6.0,
+  "world_h": 68.0,
+  "feet": 0.9163265306122449,
+  "world_h_padded": 81.66666666666667,
+  "edges": [2],
+  "files": {
+    "edge2_white": "ruins_freezer_edge2_white.png",
+    "shadow_soft": "ruins_freezer_shadow_soft.png"
+  }
+}
