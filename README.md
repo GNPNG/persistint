@@ -218,7 +218,7 @@ godot --path project -s tools/screenshot_scenes.gd -- <out_dir> [prefix]
   to Godot's `.ogv`) and lists what is still missing. See [prompts/README.md](prompts/README.md).
 - **Placeholders.** Until rendered art arrives, `tools/gen_placeholder_art.sh` (ImageMagick) and
   the generator scripts in `tools/` make placeholder tiles and sprites.
-- **Voices.** Spoken lines are pre-rendered with Coqui XTTS v2 (`tools/export_voice_lines.py`, then
+- **Voices.** Spoken lines are pre-rendered with Coqui XTTS v2 (`node tools/export_voice_lines.mjs`, then
   `tools/generate_voice_clips.py`). `project/data/voices.json` gives each speaker either a voice
   cloned from a short public clip of the real person, or one of XTTS's built-in studio voices for
   fictional characters. Speakers with neither use system text-to-speech. The reference clips are

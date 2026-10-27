@@ -630,6 +630,24 @@
     "clip": "res://audio/voice/f45df37ee6125b923228299aeb0f27e8.wav"
   },
   {
+    "speaker": "psychologists",
+    "text": "Still out here. The stars don't need us to publish anything.",
+    "key": "4a080ccbabd23cf004f4aabf345438e9",
+    "clip": "res://audio/voice/4a080ccbabd23cf004f4aabf345438e9.wav"
+  },
+  {
+    "speaker": "psychologists",
+    "text": "Back again? The sun's free. So is the research.",
+    "key": "3691871bbc5483ab6b7f5c677ccd1085",
+    "clip": "res://audio/voice/3691871bbc5483ab6b7f5c677ccd1085.wav"
+  },
+  {
+    "speaker": "psychologists",
+    "text": "Beautiful day. Second margarita. No plans at all.",
+    "key": "c3144996d79c2f99bc8ef7c8f2edbbec",
+    "clip": "res://audio/voice/c3144996d79c2f99bc8ef7c8f2edbbec.wav"
+  },
+  {
     "speaker": "Father",
     "text": "Back again. Good. The tide's kind this afternoon.",
     "key": "729a8a9e68e31b9178180d81bf24e945",
@@ -766,6 +784,294 @@
     "text": "Okay! I'll be here. They'll be there. Nobody's in a hurry.",
     "key": "5eadbe7f6b12cb925af8ad5c05d6ce6e",
     "clip": "res://audio/voice/5eadbe7f6b12cb925af8ad5c05d6ce6e.wav"
+  },
+  {
+    "speaker": "Father",
+    "text": "Back in the garden. Something's always coming up out here.",
+    "key": "1db75965bcd3c383398f638937e6935a",
+    "clip": "res://audio/voice/1db75965bcd3c383398f638937e6935a.wav"
+  },
+  {
+    "speaker": "Father",
+    "text": "You found the garden. Good. Those six beds of soil are yours, if you want them.",
+    "key": "757d863557ea1ec2a2875252f7258c93",
+    "clip": "res://audio/voice/757d863557ea1ec2a2875252f7258c93.wav"
+  },
+  {
+    "speaker": "Father",
+    "text": "Nothing in here keeps score. You can't plant it wrong.",
+    "key": "322b4524aa36dd59e135cccc9dab5c11",
+    "clip": "res://audio/voice/322b4524aa36dd59e135cccc9dab5c11.wav"
+  },
+  {
+    "speaker": "Father",
+    "text": "Ask me anything. I know about half of it.",
+    "key": "2de1bfc58f64282773ba8577e65553dd",
+    "clip": "res://audio/voice/2de1bfc58f64282773ba8577e65553dd.wav"
+  },
+  {
+    "speaker": "Father",
+    "text": "Growing things, and watching them grow. That's most of it.",
+    "key": "60a8739c58b41e4491806575c9ef22c2",
+    "clip": "res://audio/voice/60a8739c58b41e4491806575c9ef22c2.wav"
+  },
+  {
+    "speaker": "Father",
+    "text": "Click the seed bag to pick a seed. Each click hands you the next kind.",
+    "key": "a3195b886ad6f06a4610d180f502a72f",
+    "clip": "res://audio/voice/a3195b886ad6f06a4610d180f502a72f.wav"
+  },
+  {
+    "speaker": "Father",
+    "text": "Click an empty bed to plant it. Click it again to water it, and it's ready a day sooner.",
+    "key": "c65167fae0898f7d755cc6c08019df02",
+    "clip": "res://audio/voice/c65167fae0898f7d755cc6c08019df02.wav"
+  },
+  {
+    "speaker": "Father",
+    "text": "When it's ready, click it and you pick it. Then the bed's free for the next one.",
+    "key": "88a4a0139f1a04b160654dbae23efa35",
+    "clip": "res://audio/voice/88a4a0139f1a04b160654dbae23efa35.wav"
+  },
+  {
+    "speaker": "Father",
+    "text": "Hibiscus, sea grape, key lime, bougainvillea, plumeria, guava, mango and coconut.",
+    "key": "76ccd89b80efd9df10e419bdf31156a6",
+    "clip": "res://audio/voice/76ccd89b80efd9df10e419bdf31156a6.wav"
+  },
+  {
+    "speaker": "Father",
+    "text": "Most of it's ready in two or three days. Mango and coconut take four. I've stopped taking it personally.",
+    "key": "f4cc7f316a7675bc5709b14acc0535d5",
+    "clip": "res://audio/voice/f4cc7f316a7675bc5709b14acc0535d5.wav"
+  },
+  {
+    "speaker": "Father",
+    "text": "The seed bag never runs out, so plant whatever you like.",
+    "key": "ce854b8968a5abdb3d1d3b6591b7a7d9",
+    "clip": "res://audio/voice/ce854b8968a5abdb3d1d3b6591b7a7d9.wav"
+  },
+  {
+    "speaker": "Father",
+    "text": "That's the craft bench. Bring it what you've picked, and shells from the beach, and it makes things.",
+    "key": "45ab2edc16a75a0d244f4f910926b9e2",
+    "clip": "res://audio/voice/45ab2edc16a75a0d244f4f910926b9e2.wav"
+  },
+  {
+    "speaker": "Father",
+    "text": "A flower crown, a plumeria lei, a bougainvillea wreath, a shell garland. Those you can wear straight off the bench.",
+    "key": "99dad366b11923cbc7a65743227cb94a",
+    "clip": "res://audio/voice/99dad366b11923cbc7a65743227cb94a.wav"
+  },
+  {
+    "speaker": "Father",
+    "text": "Key lime pie, sea grape jelly, a guava pastry, a mango smoothie, a shell wind chime. Those you just keep.",
+    "key": "74a323ca618cb8769ddbaf039e57bdba",
+    "clip": "res://audio/voice/74a323ca618cb8769ddbaf039e57bdba.wav"
+  },
+  {
+    "speaker": "Father",
+    "text": "Wear something you made down to the water and see what the dolphins think.",
+    "key": "5a6e24adf9908458dd7cd76109484c46",
+    "clip": "res://audio/voice/5a6e24adf9908458dd7cd76109484c46.wav"
+  },
+  {
+    "speaker": "Father",
+    "text": "The crabs and the gulls have opinions too. All of them good.",
+    "key": "ce1605998b104fd0762c923fbc5d0d0c",
+    "clip": "res://audio/voice/ce1605998b104fd0762c923fbc5d0d0c.wav"
+  },
+  {
+    "speaker": "Father",
+    "text": "No. Nothing out here is a chore. It's just nice to make something.",
+    "key": "b1a333148288d06cf4aaa84b8a036ae1",
+    "clip": "res://audio/voice/b1a333148288d06cf4aaa84b8a036ae1.wav"
+  },
+  {
+    "speaker": "Father",
+    "text": "That's allowed. The garden isn't going anywhere.",
+    "key": "1dd4a09f91f527f970ab2aa531844664",
+    "clip": "res://audio/voice/1dd4a09f91f527f970ab2aa531844664.wav"
+  },
+  {
+    "speaker": "Woman with a Margarita",
+    "text": "You're back. Sit, sit. The sun's free.",
+    "key": "dcce05263557db51c581465b68f22d7e",
+    "clip": "res://audio/voice/dcce05263557db51c581465b68f22d7e.wav"
+  },
+  {
+    "speaker": "Woman with a Margarita",
+    "text": "Hello, dear. Beautiful day, isn't it?",
+    "key": "02ae1149b1565c2251839fb539324d20",
+    "clip": "res://audio/voice/02ae1149b1565c2251839fb539324d20.wav"
+  },
+  {
+    "speaker": "Man with a Margarita",
+    "text": "We're on vacation. It's going very well. This is my second margarita.",
+    "key": "d3ba3cf3d0d923fd608e38604f51499e",
+    "clip": "res://audio/voice/d3ba3cf3d0d923fd608e38604f51499e.wav"
+  },
+  {
+    "speaker": "Woman with a Margarita",
+    "text": "Pull up some sand, if you like.",
+    "key": "dbf69903fae8505c231f5fe34c4e150d",
+    "clip": "res://audio/voice/dbf69903fae8505c231f5fe34c4e150d.wav"
+  },
+  {
+    "speaker": "Woman with a Margarita",
+    "text": "We're clinical psychologists. We study people, and we publish what we find.",
+    "key": "953b7bb2177cc9a616d6b3fbb8d28bda",
+    "clip": "res://audio/voice/953b7bb2177cc9a616d6b3fbb8d28bda.wav"
+  },
+  {
+    "speaker": "Man with a Margarita",
+    "text": "Then it sits in a journal, and mostly nobody reads it. We don't take it personally.",
+    "key": "13a59ff76b46ab3a4584b0200cc5748f",
+    "clip": "res://audio/voice/13a59ff76b46ab3a4584b0200cc5748f.wav"
+  },
+  {
+    "speaker": "Woman with a Margarita",
+    "text": "You could ask us, though. Nobody ever asks.",
+    "key": "7dcc4e2b7be3159ddc9a369f6da4608d",
+    "clip": "res://audio/voice/7dcc4e2b7be3159ddc9a369f6da4608d.wav"
+  },
+  {
+    "speaker": "Man with a Margarita",
+    "text": "We will. We are. Thank you.",
+    "key": "3ae44425c8adffdbc89903290c7eda98",
+    "clip": "res://audio/voice/3ae44425c8adffdbc89903290c7eda98.wav"
+  },
+  {
+    "speaker": "Woman with a Margarita",
+    "text": "Ask us anything. It's all published.",
+    "key": "9a210d014035d19e3f05e989d2f3d1f1",
+    "clip": "res://audio/voice/9a210d014035d19e3f05e989d2f3d1f1.wav"
+  },
+  {
+    "speaker": "Woman with a Margarita",
+    "text": "Indirect aggression includes criticizing a rival's looks, spreading rumors about someone's sex life, and leaving people out.",
+    "key": "8e763cf573a35fb55d364c5e84e510dc",
+    "clip": "res://audio/voice/8e763cf573a35fb55d364c5e84e510dc.wav"
+  },
+  {
+    "speaker": "Woman with a Margarita",
+    "text": "It's in a lovely journal. Nobody on this beach has read it.",
+    "key": "19d134af8e904679e24ca72632e9ef49",
+    "clip": "res://audio/voice/19d134af8e904679e24ca72632e9ef49.wav"
+  },
+  {
+    "speaker": "Woman with a Margarita",
+    "text": "A 2013 review says women and girls are particularly inclined to indirect aggression, and usually aim it at other women, especially attractive ones.",
+    "key": "1598bb45728cb613806320465ace9dc1",
+    "clip": "res://audio/voice/1598bb45728cb613806320465ace9dc1.wav"
+  },
+  {
+    "speaker": "Man with a Margarita",
+    "text": "In a 2011 experiment, women saw the same attractive woman dressed either conservatively or in a sexually provocative way.",
+    "key": "fe6b84039ece39a70cb2116206151638",
+    "clip": "res://audio/voice/fe6b84039ece39a70cb2116206151638.wav"
+  },
+  {
+    "speaker": "Woman with a Margarita",
+    "text": "Dressed conservatively, she was barely noticed. Dressed provocatively, almost all the women were rated as reacting negatively to her.",
+    "key": "7b48c5b325f5daecee8ab3f22aaa3246",
+    "clip": "res://audio/voice/7b48c5b325f5daecee8ab3f22aaa3246.wav"
+  },
+  {
+    "speaker": "Man with a Margarita",
+    "text": "In a second study, women didn't want to introduce her to their boyfriends, leave him alone with her, or be friends with her.",
+    "key": "a9cd01c832b1b5b9f24e6388f8322dc4",
+    "clip": "res://audio/voice/a9cd01c832b1b5b9f24e6388f8322dc4.wav"
+  },
+  {
+    "speaker": "Woman with a Margarita",
+    "text": "Not in Florida, of course. Here the dolphins love every outfit.",
+    "key": "9aca629e749b83c3895ca8be8c3bf71a",
+    "clip": "res://audio/voice/9aca629e749b83c3895ca8be8c3bf71a.wav"
+  },
+  {
+    "speaker": "Woman with a Margarita",
+    "text": "The highest rate of violence is actually between same-sex female couples.",
+    "key": "c5acbcbef043328523644aa9337af09d",
+    "clip": "res://audio/voice/c5acbcbef043328523644aa9337af09d.wav"
+  },
+  {
+    "speaker": "Woman with a Margarita",
+    "text": "Women spend their lives providing for their children and grandchildren, so they have to minimize their risk of physical harm.",
+    "key": "b4021c3eaf7b542d10faa392d221d21d",
+    "clip": "res://audio/voice/b4021c3eaf7b542d10faa392d221d21d.wav"
+  },
+  {
+    "speaker": "Man with a Margarita",
+    "text": "From early childhood, girls compete in ways that minimize the risk of retaliation.",
+    "key": "8001831465db135ad69fa5eaab6fa4fb",
+    "clip": "res://audio/voice/8001831465db135ad69fa5eaab6fa4fb.wav"
+  },
+  {
+    "speaker": "Woman with a Margarita",
+    "text": "Which fits with indirect aggression being a low-cost, effective way for young women to compete.",
+    "key": "d3e893b5d9a029d11dac6ba7fa916ed2",
+    "clip": "res://audio/voice/d3e893b5d9a029d11dac6ba7fa916ed2.wav"
+  },
+  {
+    "speaker": "Man with a Margarita",
+    "text": "So with a man and a woman, she knows he's stronger, and she keeps it indirect.",
+    "key": "56c81598112ad1af1c84564c2868568a",
+    "clip": "res://audio/voice/56c81598112ad1af1c84564c2868568a.wav"
+  },
+  {
+    "speaker": "Woman with a Margarita",
+    "text": "Two men? Each one knows the other could beat the stuffing out of him. That's a good reason to keep your hands to yourself.",
+    "key": "01501bb712f553494befb8a74c0f4b16",
+    "clip": "res://audio/voice/01501bb712f553494befb8a74c0f4b16.wav"
+  },
+  {
+    "speaker": "Man with a Margarita",
+    "text": "Two women? Neither one is the one who could really hurt the other, so that brake isn't there.",
+    "key": "26d7209594ae7940ef80b180fc0d3096",
+    "clip": "res://audio/voice/26d7209594ae7940ef80b180fc0d3096.wav"
+  },
+  {
+    "speaker": "Woman with a Margarita",
+    "text": "We explained all this at a conference once. Everyone left for the bar.",
+    "key": "5d40ea6161f981ac127c3f53ffb767e8",
+    "clip": "res://audio/voice/5d40ea6161f981ac127c3f53ffb767e8.wav"
+  },
+  {
+    "speaker": "Man with a Margarita",
+    "text": "The measures and theories of coercive control mostly look at men coercing women.",
+    "key": "73f3bf0668dc4aaf6c3bc451fdfdbf14",
+    "clip": "res://audio/voice/73f3bf0668dc4aaf6c3bc451fdfdbf14.wav"
+  },
+  {
+    "speaker": "Man with a Margarita",
+    "text": "And there's still no agreed definition of coercive control, or an accepted standard for measuring it.",
+    "key": "3f1a15036738186afcd0602494f8d48b",
+    "clip": "res://audio/voice/3f1a15036738186afcd0602494f8d48b.wav"
+  },
+  {
+    "speaker": "Man with a Margarita",
+    "text": "A 2017 theory: people treat conflict between women at work as more of a problem than conflict between men, and that could exaggerate how badly women seem to get along.",
+    "key": "27a5c470b793b9acce9a1159655a3a45",
+    "clip": "res://audio/voice/27a5c470b793b9acce9a1159655a3a45.wav"
+  },
+  {
+    "speaker": "Woman with a Margarita",
+    "text": "I'd tell you more, but I'm on vacation.",
+    "key": "854bd3f1935ecef495bd40b82846b887",
+    "clip": "res://audio/voice/854bd3f1935ecef495bd40b82846b887.wav"
+  },
+  {
+    "speaker": "Man with a Margarita",
+    "text": "Same. Somebody should do something with all of it.",
+    "key": "1722373e92d6454f2856388b272f6d9c",
+    "clip": "res://audio/voice/1722373e92d6454f2856388b272f6d9c.wav"
+  },
+  {
+    "speaker": "Woman with a Margarita",
+    "text": "Somebody should.",
+    "key": "7d889027225fb45ed8f4a4a87d28dcb1",
+    "clip": "res://audio/voice/7d889027225fb45ed8f4a4a87d28dcb1.wav"
   },
   {
     "speaker": "Daughter",
@@ -1852,5 +2158,689 @@
     "text": "Well, there you go.",
     "key": "8cea1055223c38bff9e56abb8d2e8459",
     "clip": "res://audio/voice/8cea1055223c38bff9e56abb8d2e8459.wav"
+  },
+  {
+    "speaker": "oprah",
+    "text": "So I want all the girls watching here, now, to know that a new day is on the horizon!",
+    "key": "d9590abab9c301bdcccea3e484603031",
+    "clip": "res://audio/voice/d9590abab9c301bdcccea3e484603031.wav"
+  },
+  {
+    "speaker": "oprah",
+    "text": "Each of us in this room are celebrated because of the stories that we tell, and this year we became the story.",
+    "key": "326dbe2b4478e451fa93827adbc26589",
+    "clip": "res://audio/voice/326dbe2b4478e451fa93827adbc26589.wav"
+  },
+  {
+    "speaker": "oprah",
+    "text": "You are your possibilities.",
+    "key": "08cfd4608aba611dcc8c9c552ae8ea7e",
+    "clip": "res://audio/voice/08cfd4608aba611dcc8c9c552ae8ea7e.wav"
+  },
+  {
+    "speaker": "oprah",
+    "text": "Turn your wounds into wisdom.",
+    "key": "be9b56e26a57bbbeea6c874a2a9ef204",
+    "clip": "res://audio/voice/be9b56e26a57bbbeea6c874a2a9ef204.wav"
+  },
+  {
+    "speaker": "oprah",
+    "text": "There is no such thing as failure — failure is just life trying to move us in another direction.",
+    "key": "35fff61526b51d76005672d9deb61a1f",
+    "clip": "res://audio/voice/35fff61526b51d76005672d9deb61a1f.wav"
+  },
+  {
+    "speaker": "oprah",
+    "text": "The key to life is to develop an internal moral, emotional GPS that can tell you which way to go.",
+    "key": "dae963396fca31d1a07001cf6fb1fb00",
+    "clip": "res://audio/voice/dae963396fca31d1a07001cf6fb1fb00.wav"
+  },
+  {
+    "speaker": "oprah",
+    "text": "You wanna max out your humanity by using your energy to lift yourself up, your family, and the people around you.",
+    "key": "25e0b2d81b6474e4784502db29e149e1",
+    "clip": "res://audio/voice/25e0b2d81b6474e4784502db29e149e1.wav"
+  },
+  {
+    "speaker": "oprah",
+    "text": "One of my favorite questions to ask on Super Soul is what is the lesson that took you the longest to learn?",
+    "key": "51c4549a3a5ad0dcfa9aee542d8077a8",
+    "clip": "res://audio/voice/51c4549a3a5ad0dcfa9aee542d8077a8.wav"
+  },
+  {
+    "speaker": "oprah",
+    "text": "Challenges provide opportunities that force us to search for a new center of gravity.",
+    "key": "3c14e850e8d6d9defffe69dd602108cc",
+    "clip": "res://audio/voice/3c14e850e8d6d9defffe69dd602108cc.wav"
+  },
+  {
+    "speaker": "oprah",
+    "text": "Learn from every mistake.",
+    "key": "cb262c536a7783f9ab398f29997888fb",
+    "clip": "res://audio/voice/cb262c536a7783f9ab398f29997888fb.wav"
+  },
+  {
+    "speaker": "oprah",
+    "text": "You have to pay attention to your life, because it is speaking to you all the time.",
+    "key": "2291a9f4b49b547a4a7182d435ccf53a",
+    "clip": "res://audio/voice/2291a9f4b49b547a4a7182d435ccf53a.wav"
+  },
+  {
+    "speaker": "oprah",
+    "text": "Small steps lead to big accomplishments.",
+    "key": "c845f31ba5ab5731423b8bd1462c8d2a",
+    "clip": "res://audio/voice/c845f31ba5ab5731423b8bd1462c8d2a.wav"
+  },
+  {
+    "speaker": "oprah",
+    "text": "Everything is always working out for you.",
+    "key": "22e11175181939f2bc29e5578f5a8fd7",
+    "clip": "res://audio/voice/22e11175181939f2bc29e5578f5a8fd7.wav"
+  },
+  {
+    "speaker": "oprah",
+    "text": "You need to make your bed every day.",
+    "key": "b4d010179cf5796204f49d2894a75f7c",
+    "clip": "res://audio/voice/b4d010179cf5796204f49d2894a75f7c.wav"
+  },
+  {
+    "speaker": "dolphin",
+    "text": "A flower crown! You look like a wave in bloom!",
+    "key": "41163d8229447799f8218c00d1e182da",
+    "clip": "res://audio/voice/41163d8229447799f8218c00d1e182da.wav"
+  },
+  {
+    "speaker": "dolphin",
+    "text": "Hibiscus on your head! Splash splash splash!",
+    "key": "92e7baa5d116faa6d6f5126761b2c529",
+    "clip": "res://audio/voice/92e7baa5d116faa6d6f5126761b2c529.wav"
+  },
+  {
+    "speaker": "dolphin",
+    "text": "I am doing the biggest jump for your crown!",
+    "key": "531a3aa6e76b3d7ab1a74a3b7dbfe43a",
+    "clip": "res://audio/voice/531a3aa6e76b3d7ab1a74a3b7dbfe43a.wav"
+  },
+  {
+    "speaker": "dolphin",
+    "text": "Shells! Click-click-click, I can hear the sea in them!",
+    "key": "cd5597329f1dd805628da541c6a847c0",
+    "clip": "res://audio/voice/cd5597329f1dd805628da541c6a847c0.wav"
+  },
+  {
+    "speaker": "dolphin",
+    "text": "Your garland sings when you move! Again!",
+    "key": "09630364a6149472420a22022fc855f2",
+    "clip": "res://audio/voice/09630364a6149472420a22022fc855f2.wav"
+  },
+  {
+    "speaker": "dolphin",
+    "text": "Plumeria! It smells like the whole afternoon!",
+    "key": "601a9b49304e7991d6460235a58dca25",
+    "clip": "res://audio/voice/601a9b49304e7991d6460235a58dca25.wav"
+  },
+  {
+    "speaker": "dolphin",
+    "text": "A lei! Hello, hello, aloha-ish!",
+    "key": "443d8e175593fd2f255cc36750f41891",
+    "clip": "res://audio/voice/443d8e175593fd2f255cc36750f41891.wav"
+  },
+  {
+    "speaker": "dolphin",
+    "text": "Pink as the sunset! Bougainvillea is my favorite!",
+    "key": "b21bb6efcea7f61e5aa3052049ccd524",
+    "clip": "res://audio/voice/b21bb6efcea7f61e5aa3052049ccd524.wav"
+  },
+  {
+    "speaker": "dolphin",
+    "text": "Your wreath is so bright! Wheee!",
+    "key": "e157cef33fe8ec12ed54539dcdba0da9",
+    "clip": "res://audio/voice/e157cef33fe8ec12ed54539dcdba0da9.wav"
+  },
+  {
+    "speaker": "dolphin",
+    "text": "A bow! You are a present and I love presents!",
+    "key": "5d9ecc02b452fceb02f4ac9483c0fc72",
+    "clip": "res://audio/voice/5d9ecc02b452fceb02f4ac9483c0fc72.wav"
+  },
+  {
+    "speaker": "dolphin",
+    "text": "Pretty bow! Pretty you! Pretty everything!",
+    "key": "da5c6cbb6027ccd96678468943c72b8b",
+    "clip": "res://audio/voice/da5c6cbb6027ccd96678468943c72b8b.wav"
+  },
+  {
+    "speaker": "dolphin",
+    "text": "Teal like the shallows! You match the water!",
+    "key": "8663d4b9a82dc797a707d5a29606df64",
+    "clip": "res://audio/voice/8663d4b9a82dc797a707d5a29606df64.wav"
+  },
+  {
+    "speaker": "dolphin",
+    "text": "That dress is the exact color of my lagoon!",
+    "key": "09bf598ca0c6fe6fb4c1a2495a846e8c",
+    "clip": "res://audio/voice/09bf598ca0c6fe6fb4c1a2495a846e8c.wav"
+  },
+  {
+    "speaker": "dolphin",
+    "text": "Hi, hi, hi! You came to play! I knew it!",
+    "key": "0e21ca42a4689bda198a4e444eb2c0dd",
+    "clip": "res://audio/voice/0e21ca42a4689bda198a4e444eb2c0dd.wav"
+  },
+  {
+    "speaker": "dolphin",
+    "text": "Wheee! Watch this one! Watch! Watch!",
+    "key": "aa626513c6edfbc34fdcb5d0e97c8a6d",
+    "clip": "res://audio/voice/aa626513c6edfbc34fdcb5d0e97c8a6d.wav"
+  },
+  {
+    "speaker": "dolphin",
+    "text": "Ee-ee-ee! You are my favorite person today!",
+    "key": "47d868b545ab9db80c851aa14dda38d5",
+    "clip": "res://audio/voice/47d868b545ab9db80c851aa14dda38d5.wav"
+  },
+  {
+    "speaker": "dolphin",
+    "text": "Splash for you! A big one!",
+    "key": "c62684d8377379e5bb53293f297ee0b0",
+    "clip": "res://audio/voice/c62684d8377379e5bb53293f297ee0b0.wav"
+  },
+  {
+    "speaker": "crab",
+    "text": "Shells! My cousins are in that garland! Hello cousins!",
+    "key": "094f3babe51eaa74e718ef6591f6aff7",
+    "clip": "res://audio/voice/094f3babe51eaa74e718ef6591f6aff7.wav"
+  },
+  {
+    "speaker": "crab",
+    "text": "So sparkly! Click click! I'm proud of you!",
+    "key": "7de3e3816d70753f37d967a7d8d75519",
+    "clip": "res://audio/voice/7de3e3816d70753f37d967a7d8d75519.wav"
+  },
+  {
+    "speaker": "crab",
+    "text": "Flowers! I'm going to wear one too, someday!",
+    "key": "ae2f0b54324b05d8e67bc7a403db31b4",
+    "clip": "res://audio/voice/ae2f0b54324b05d8e67bc7a403db31b4.wav"
+  },
+  {
+    "speaker": "crab",
+    "text": "Is that hibiscus? It is the best hat!",
+    "key": "ca227fc32e29bc7be64d60030cc14e24",
+    "clip": "res://audio/voice/ca227fc32e29bc7be64d60030cc14e24.wav"
+  },
+  {
+    "speaker": "crab",
+    "text": "Yellow flowers! I'm dancing sideways for you!",
+    "key": "7aa6613565e0f70d41e3334b6932246f",
+    "clip": "res://audio/voice/7aa6613565e0f70d41e3334b6932246f.wav"
+  },
+  {
+    "speaker": "crab",
+    "text": "That pink! I'd match it if I wore pink!",
+    "key": "486ca472cbf721c1b00fc8d6ab83a032",
+    "clip": "res://audio/voice/486ca472cbf721c1b00fc8d6ab83a032.wav"
+  },
+  {
+    "speaker": "crab",
+    "text": "Rose dress! Rosy me! Rosy you! Click-click!",
+    "key": "55ca7969bf0be880f1c50c469da06c93",
+    "clip": "res://audio/voice/55ca7969bf0be880f1c50c469da06c93.wav"
+  },
+  {
+    "speaker": "crab",
+    "text": "Hello! I walk sideways so I can see everything!",
+    "key": "5e652146655f550d8122cda01b5746da",
+    "clip": "res://audio/voice/5e652146655f550d8122cda01b5746da.wav"
+  },
+  {
+    "speaker": "crab",
+    "text": "Click-click! You found me! Best day!",
+    "key": "60049505545feb2d2a7836163e8e1b92",
+    "clip": "res://audio/voice/60049505545feb2d2a7836163e8e1b92.wav"
+  },
+  {
+    "speaker": "crab",
+    "text": "Do you want to see my favorite shell? It's mine, but you can look!",
+    "key": "52bddcc14c02ea756d785ba03679f12f",
+    "clip": "res://audio/voice/52bddcc14c02ea756d785ba03679f12f.wav"
+  },
+  {
+    "speaker": "crab",
+    "text": "I'm a little shy, but I like you a lot!",
+    "key": "e70e10ad846ee920a3947afa4ed081b0",
+    "clip": "res://audio/voice/e70e10ad846ee920a3947afa4ed081b0.wav"
+  },
+  {
+    "speaker": "gull",
+    "text": "Flowers on a person! I've never seen that and I love it!",
+    "key": "2346ee58fb8234ad58f1f580a0ab9c80",
+    "clip": "res://audio/voice/2346ee58fb8234ad58f1f580a0ab9c80.wav"
+  },
+  {
+    "speaker": "gull",
+    "text": "Look at your crown! I am dizzy with joy!",
+    "key": "b9c802f636964d446579e182e40d2165",
+    "clip": "res://audio/voice/b9c802f636964d446579e182e40d2165.wav"
+  },
+  {
+    "speaker": "gull",
+    "text": "Shells! Ooh, can I borrow one? No? That's okay!",
+    "key": "f8cc1b52f871707dd584a55b1569e488",
+    "clip": "res://audio/voice/f8cc1b52f871707dd584a55b1569e488.wav"
+  },
+  {
+    "speaker": "gull",
+    "text": "A shiny necklace! You are the fanciest!",
+    "key": "32a3528129763ccd0c2f7cd3d5db4d34",
+    "clip": "res://audio/voice/32a3528129763ccd0c2f7cd3d5db4d34.wav"
+  },
+  {
+    "speaker": "gull",
+    "text": "Plumeria! It smells like the whole Keys!",
+    "key": "ef10fe5745867ad81d2d789fa67247ab",
+    "clip": "res://audio/voice/ef10fe5745867ad81d2d789fa67247ab.wav"
+  },
+  {
+    "speaker": "gull",
+    "text": "Bright pink! I can see you from the pier!",
+    "key": "19f1b1b7bb21a9278badb3110832734e",
+    "clip": "res://audio/voice/19f1b1b7bb21a9278badb3110832734e.wav"
+  },
+  {
+    "speaker": "gull",
+    "text": "Sunshine! Sandwiches! Friends! Today has everything!",
+    "key": "87cb322be73a7fc4e9fbad66003ad931",
+    "clip": "res://audio/voice/87cb322be73a7fc4e9fbad66003ad931.wav"
+  },
+  {
+    "speaker": "gull",
+    "text": "Hi! Hi! I was hoping you would come!",
+    "key": "312a79caefd891379fea10892d689209",
+    "clip": "res://audio/voice/312a79caefd891379fea10892d689209.wav"
+  },
+  {
+    "speaker": "gull",
+    "text": "Squawk! That means hello!",
+    "key": "cbc69b11fbd42e3cd2f043418bb7192b",
+    "clip": "res://audio/voice/cbc69b11fbd42e3cd2f043418bb7192b.wav"
+  },
+  {
+    "speaker": "gull",
+    "text": "Is it a good day? It's a good day. It's always a good day!",
+    "key": "536472f4c9c87c6f860003554da7a174",
+    "clip": "res://audio/voice/536472f4c9c87c6f860003554da7a174.wav"
+  },
+  {
+    "speaker": "mermaid",
+    "text": "A flower crown! Are you a sea princess? You are!",
+    "key": "b0da43a6ca8f1497962e0d4c896e2ad6",
+    "clip": "res://audio/voice/b0da43a6ca8f1497962e0d4c896e2ad6.wav"
+  },
+  {
+    "speaker": "mermaid",
+    "text": "Hibiscus in your hair! May I braid one in mine?",
+    "key": "89eece4e89aac604afd966e4ccaed323",
+    "clip": "res://audio/voice/89eece4e89aac604afd966e4ccaed323.wav"
+  },
+  {
+    "speaker": "mermaid",
+    "text": "Shells from the reef! Oh, they remember the tide!",
+    "key": "ed4376d085f097392777f3d5efdf4110",
+    "clip": "res://audio/voice/ed4376d085f097392777f3d5efdf4110.wav"
+  },
+  {
+    "speaker": "mermaid",
+    "text": "Your garland is lovely! Let's swim some more!",
+    "key": "a81dab56ac009906d278ad0e1614e5f0",
+    "clip": "res://audio/voice/a81dab56ac009906d278ad0e1614e5f0.wav"
+  },
+  {
+    "speaker": "mermaid",
+    "text": "A plumeria lei! Now it's a party!",
+    "key": "c5b06c5a62a75f369ed5f660cd0601a9",
+    "clip": "res://audio/voice/c5b06c5a62a75f369ed5f660cd0601a9.wav"
+  },
+  {
+    "speaker": "mermaid",
+    "text": "Plumeria! The mermaids will hear about this!",
+    "key": "d806b4e02677d639b01305f8834e4548",
+    "clip": "res://audio/voice/d806b4e02677d639b01305f8834e4548.wav"
+  },
+  {
+    "speaker": "mermaid",
+    "text": "Bougainvillea! It looks like a sunset you can wear!",
+    "key": "3310b258c363385be7bd29de8d117c4c",
+    "clip": "res://audio/voice/3310b258c363385be7bd29de8d117c4c.wav"
+  },
+  {
+    "speaker": "mermaid",
+    "text": "Teal! The color of home!",
+    "key": "a8ceac5104510dc7719424c5b13ba5b6",
+    "clip": "res://audio/voice/a8ceac5104510dc7719424c5b13ba5b6.wav"
+  },
+  {
+    "speaker": "mermaid",
+    "text": "Hello, friend! Want to see a bubble trick?",
+    "key": "420fd227b94883ed04224f699b2bd5c5",
+    "clip": "res://audio/voice/420fd227b94883ed04224f699b2bd5c5.wav"
+  },
+  {
+    "speaker": "mermaid",
+    "text": "I love when people visit! The show is better with you!",
+    "key": "e10ac6c2bffcb249ca2a48d78b9481d5",
+    "clip": "res://audio/voice/e10ac6c2bffcb249ca2a48d78b9481d5.wav"
+  },
+  {
+    "speaker": "mermaid",
+    "text": "Every day is a good day in the water! Come on in, wave at the fish!",
+    "key": "1374a94cef32b1bb184c5f1afe90e813",
+    "clip": "res://audio/voice/1374a94cef32b1bb184c5f1afe90e813.wav"
+  },
+  {
+    "speaker": "mermaid",
+    "text": "Did you see the fish? They wave back, I promise!",
+    "key": "4144ede62abc023f9b50d5e27046afe4",
+    "clip": "res://audio/voice/4144ede62abc023f9b50d5e27046afe4.wav"
+  },
+  {
+    "speaker": "pony",
+    "text": "Hi! Hi! Oh, hi!",
+    "key": "cfdcdd13e713df53b93aecb027408761",
+    "clip": "res://audio/voice/cfdcdd13e713df53b93aecb027408761.wav"
+  },
+  {
+    "speaker": "pony",
+    "text": "Did you bring the brush? You brought the brush!",
+    "key": "0e446c9673de7fcfffb5924654efe091",
+    "clip": "res://audio/voice/0e446c9673de7fcfffb5924654efe091.wav"
+  },
+  {
+    "speaker": "pony",
+    "text": "Today smells like hay and sunshine.",
+    "key": "8ee5feb28470886236f59f2acc3dba84",
+    "clip": "res://audio/voice/8ee5feb28470886236f59f2acc3dba84.wav"
+  },
+  {
+    "speaker": "pony",
+    "text": "Ooh, right there. Right there.",
+    "key": "07ee350d85d0bbd3a086bd9989be0169",
+    "clip": "res://audio/voice/07ee350d85d0bbd3a086bd9989be0169.wav"
+  },
+  {
+    "speaker": "pony",
+    "text": "Long strokes, the way the hair goes. Perfect.",
+    "key": "d6db93955101404a42e0840eb60ceab6",
+    "clip": "res://audio/voice/d6db93955101404a42e0840eb60ceab6.wav"
+  },
+  {
+    "speaker": "pony",
+    "text": "I feel so shiny I could sparkle. Oh, I am sparkling!",
+    "key": "ca5a892ee8f35519a3d54693a20d2822",
+    "clip": "res://audio/voice/ca5a892ee8f35519a3d54693a20d2822.wav"
+  },
+  {
+    "speaker": "pony",
+    "text": "Brushing is the best part of the day. Except all the other parts.",
+    "key": "b6628694c825f138221dcb2132c076d0",
+    "clip": "res://audio/voice/b6628694c825f138221dcb2132c076d0.wav"
+  },
+  {
+    "speaker": "pony",
+    "text": "New look! I love it already.",
+    "key": "9edec6820fe020b8138c6820756e4c5b",
+    "clip": "res://audio/voice/9edec6820fe020b8138c6820756e4c5b.wav"
+  },
+  {
+    "speaker": "pony",
+    "text": "Do I look like a wave in bloom? I feel like one.",
+    "key": "d64983856178929c25e5cf64f0d0eeec",
+    "clip": "res://audio/voice/d64983856178929c25e5cf64f0d0eeec.wav"
+  },
+  {
+    "speaker": "pony",
+    "text": "Braids, curls, bows, whatever. I'm wonderful in all of them.",
+    "key": "d20fedd086c697da31da679292004a64",
+    "clip": "res://audio/voice/d20fedd086c697da31da679292004a64.wav"
+  },
+  {
+    "speaker": "pony",
+    "text": "Everybody's going to say hi to me now.",
+    "key": "55e26aa29d5341710e46d709dcb1daf8",
+    "clip": "res://audio/voice/55e26aa29d5341710e46d709dcb1daf8.wav"
+  },
+  {
+    "speaker": "pony",
+    "text": "Hop on! Hold on! Here we go!",
+    "key": "16bf309a2c266ff70417a9b3c432f964",
+    "clip": "res://audio/voice/16bf309a2c266ff70417a9b3c432f964.wav"
+  },
+  {
+    "speaker": "pony",
+    "text": "Clip-clop! Clip-clop! Faster clip-clop!",
+    "key": "8054981116ec4d46978ba4322195c726",
+    "clip": "res://audio/voice/8054981116ec4d46978ba4322195c726.wav"
+  },
+  {
+    "speaker": "pony",
+    "text": "Wheee! The wind is in my mane!",
+    "key": "e083db997822929c7039176a506d372f",
+    "clip": "res://audio/voice/e083db997822929c7039176a506d372f.wav"
+  },
+  {
+    "speaker": "pony",
+    "text": "That was the best ride ever. Again later?",
+    "key": "bb14ddcc5e7d713a5afd3b17c1b51b4d",
+    "clip": "res://audio/voice/bb14ddcc5e7d713a5afd3b17c1b51b4d.wav"
+  },
+  {
+    "speaker": "pony",
+    "text": "Back home. Hay o'clock.",
+    "key": "bb02ea856e1fc09610bf4a45cb5f0884",
+    "clip": "res://audio/voice/bb02ea856e1fc09610bf4a45cb5f0884.wav"
+  },
+  {
+    "speaker": "pony",
+    "text": "A foal! A tiny, wobbly, perfect foal!",
+    "key": "611c53ecae6599a3d7907956cc91a3b9",
+    "clip": "res://audio/voice/611c53ecae6599a3d7907956cc91a3b9.wav"
+  },
+  {
+    "speaker": "pony",
+    "text": "Look! A little of each of us, and something all their own.",
+    "key": "71ff70dbe8867588205bce17b5c60f8d",
+    "clip": "res://audio/voice/71ff70dbe8867588205bce17b5c60f8d.wav"
+  },
+  {
+    "speaker": "pony",
+    "text": "Welcome to the stable, little one. There's hay for everybody.",
+    "key": "ca879d7772ceb0a96348baa17224c394",
+    "clip": "res://audio/voice/ca879d7772ceb0a96348baa17224c394.wav"
+  },
+  {
+    "speaker": "pony",
+    "text": "Every stall is full of happy ponies! Come brush the new ones.",
+    "key": "d9848146a462d3f094ee5f700141c3c0",
+    "clip": "res://audio/voice/d9848146a462d3f094ee5f700141c3c0.wav"
+  },
+  {
+    "speaker": "pony",
+    "text": "I'm too little to ride yet! But I'd love a brushing.",
+    "key": "618bc3373ef7e7a67b2762cee3de9952",
+    "clip": "res://audio/voice/618bc3373ef7e7a67b2762cee3de9952.wav"
+  },
+  {
+    "speaker": "polar_bear_clone",
+    "text": "Mrrf!",
+    "key": "7f37f1ac39ea76f11b92ddc4718bb7f2",
+    "clip": "res://audio/voice/7f37f1ac39ea76f11b92ddc4718bb7f2.wav"
+  },
+  {
+    "speaker": "polar_bear_clone",
+    "text": "Hrrm?",
+    "key": "ad518ed4ceaa652e80117e3b38c3b895",
+    "clip": "res://audio/voice/ad518ed4ceaa652e80117e3b38c3b895.wav"
+  },
+  {
+    "speaker": "polar_bear_clone",
+    "text": "Bwuh.",
+    "key": "28e522a72a7f9dc0890d7191210af2d2",
+    "clip": "res://audio/voice/28e522a72a7f9dc0890d7191210af2d2.wav"
+  },
+  {
+    "speaker": "polar_bear_clone",
+    "text": "*snuffle snuffle*",
+    "key": "a1c8d1986a90c5737920f784b61b3aba",
+    "clip": "res://audio/voice/a1c8d1986a90c5737920f784b61b3aba.wav"
+  },
+  {
+    "speaker": "polar_bear_clone",
+    "text": "Rrrawr. (small)",
+    "key": "82678c97ed480c7d707b92c7cd9a7161",
+    "clip": "res://audio/voice/82678c97ed480c7d707b92c7cd9a7161.wav"
+  },
+  {
+    "speaker": "polar_bear_clone",
+    "text": "Mew-rrr.",
+    "key": "75a68d6b67424ee8ea00ad080bf3667b",
+    "clip": "res://audio/voice/75a68d6b67424ee8ea00ad080bf3667b.wav"
+  },
+  {
+    "speaker": "polar_bear_clone",
+    "text": "*happy wiggle*",
+    "key": "ce3842fdaa544e1ec46a7ab2618c8bc4",
+    "clip": "res://audio/voice/ce3842fdaa544e1ec46a7ab2618c8bc4.wav"
+  },
+  {
+    "speaker": "polar_bear_clone",
+    "text": "Hff hff hff.",
+    "key": "9b5cd9e44bfa099bd885b37c7f9e1910",
+    "clip": "res://audio/voice/9b5cd9e44bfa099bd885b37c7f9e1910.wav"
+  },
+  {
+    "speaker": "polar_bear_clone",
+    "text": "Mrp!",
+    "key": "188e925f48f2e7ef174898a58fc75845",
+    "clip": "res://audio/voice/188e925f48f2e7ef174898a58fc75845.wav"
+  },
+  {
+    "speaker": "polar_bear_clone",
+    "text": "*boop*",
+    "key": "298805f05d03588b3e028b2f8351e40a",
+    "clip": "res://audio/voice/298805f05d03588b3e028b2f8351e40a.wav"
+  },
+  {
+    "speaker": "polar_bear_clone",
+    "text": "Hrrf?",
+    "key": "e682a31632eaee9dec3c616a2498fc69",
+    "clip": "res://audio/voice/e682a31632eaee9dec3c616a2498fc69.wav"
+  },
+  {
+    "speaker": "polar_bear_clone",
+    "text": "nom",
+    "key": "94d7789b8f16523a21c42fd8938e969f",
+    "clip": "res://audio/voice/94d7789b8f16523a21c42fd8938e969f.wav"
+  },
+  {
+    "speaker": "polar_bear_clone",
+    "text": "nom nom nom",
+    "key": "b344a792cd480269e0a733c95c7f3f7f",
+    "clip": "res://audio/voice/b344a792cd480269e0a733c95c7f3f7f.wav"
+  },
+  {
+    "speaker": "polar_bear_clone",
+    "text": "*crunch* nom",
+    "key": "eab4073505313752196fb0dd2eeccf8c",
+    "clip": "res://audio/voice/eab4073505313752196fb0dd2eeccf8c.wav"
+  },
+  {
+    "speaker": "polar_bear_clone",
+    "text": "*burp* mrrf.",
+    "key": "454789eac9ce0fb843ef03e2f86595d6",
+    "clip": "res://audio/voice/454789eac9ce0fb843ef03e2f86595d6.wav"
+  },
+  {
+    "speaker": "polar_bear_clone",
+    "text": "zzz",
+    "key": "7c325efa01d9d353746f4eca077ab1b0",
+    "clip": "res://audio/voice/7c325efa01d9d353746f4eca077ab1b0.wav"
+  },
+  {
+    "speaker": "polar_bear_clone",
+    "text": "*tiny snore*",
+    "key": "b74401ff221e9eb4cdf33700c5358c19",
+    "clip": "res://audio/voice/b74401ff221e9eb4cdf33700c5358c19.wav"
+  },
+  {
+    "speaker": "polar_bear_clone",
+    "text": "mrrr... zzz",
+    "key": "d54cc42f15a7760a0e39cef01921bbe3",
+    "clip": "res://audio/voice/d54cc42f15a7760a0e39cef01921bbe3.wav"
+  },
+  {
+    "speaker": "silverman",
+    "text": "hee hee hee",
+    "key": "c1811b790683fd3d5ae60f3f68397772",
+    "clip": "res://audio/voice/c1811b790683fd3d5ae60f3f68397772.wav"
+  },
+  {
+    "speaker": "silverman",
+    "text": "tee hee hee",
+    "key": "71f68c891abbed420984d1ecdbba3b8c",
+    "clip": "res://audio/voice/71f68c891abbed420984d1ecdbba3b8c.wav"
+  },
+  {
+    "speaker": "silverman",
+    "text": "ooh, stop it",
+    "key": "586afdc9a00d64586c07b9db56737138",
+    "clip": "res://audio/voice/586afdc9a00d64586c07b9db56737138.wav"
+  },
+  {
+    "speaker": "silverman",
+    "text": "come on, enough",
+    "key": "ded950c7863f628de5ecde73ddc35e06",
+    "clip": "res://audio/voice/ded950c7863f628de5ecde73ddc35e06.wav"
+  },
+  {
+    "speaker": "silverman",
+    "text": "ooh, okay, enough, please, enough, bad touch",
+    "key": "88938807c67c29d42a54a8241ec91bd3",
+    "clip": "res://audio/voice/88938807c67c29d42a54a8241ec91bd3.wav"
+  },
+  {
+    "speaker": "silverman",
+    "text": "are you going to sit here and touch me all day, or are you going to play the game?",
+    "key": "c11e7b5b11600a19ee50d1df2a777861",
+    "clip": "res://audio/voice/c11e7b5b11600a19ee50d1df2a777861.wav"
+  },
+  {
+    "speaker": "silverman",
+    "text": "see that button? click on that. Okay. Thank you. Thank you. Thaaank you.",
+    "key": "f5a7f64a089009aa94e5b2c9c4d968e5",
+    "clip": "res://audio/voice/f5a7f64a089009aa94e5b2c9c4d968e5.wav"
+  },
+  {
+    "speaker": "silverman",
+    "text": "thanks. The game, please. Thanks.",
+    "key": "42f0abac1299b8f03b2ed9da1152aab3",
+    "clip": "res://audio/voice/42f0abac1299b8f03b2ed9da1152aab3.wav"
+  },
+  {
+    "speaker": "silverman",
+    "text": "Stop. Okay. Enough. Look, are you going to sit here all day? Please, please, enough, enough.",
+    "key": "0e72f757808fecd044fb204e67ea53c6",
+    "clip": "res://audio/voice/0e72f757808fecd044fb204e67ea53c6.wav"
+  },
+  {
+    "speaker": "warren",
+    "text": "Look, did you hear what she said? Click the button, okay? Okay?",
+    "key": "d1ecf19c6535588d42ac49cca9305912",
+    "clip": "res://audio/voice/d1ecf19c6535588d42ac49cca9305912.wav"
+  },
+  {
+    "speaker": "richter",
+    "text": "Okay, look, you gotta just click on the thing to start the game. We're not going to allow any more of this. Okay? Thank you.",
+    "key": "8078d686821611434c060d7faca3a900",
+    "clip": "res://audio/voice/8078d686821611434c060d7faca3a900.wav"
   }
 ]

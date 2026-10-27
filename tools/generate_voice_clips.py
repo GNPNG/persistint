@@ -1,7 +1,7 @@
 """Generate impersonated voice clips for every spoken line (beads persistint-game-zkk).
 
 Usage:
-  python3 -I tools/export_voice_lines.py          # refresh project/audio/voice/manifest.json
+  node tools/export_voice_lines.mjs               # refresh project/audio/voice/manifest.json
   python3 -I tools/generate_voice_clips.py [--speaker NAME] [--force]
 
 Each speaker's voice is set in project/data/voices.json (keyed by cast id): a reference

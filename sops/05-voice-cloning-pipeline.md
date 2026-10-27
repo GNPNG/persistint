@@ -155,7 +155,7 @@ Layout:
   README.md
   {speaker}.wav              # 30 s, mono, 22050 Hz
 tools/
-  export_voice_lines.py
+  export_voice_lines.mjs
   generate_voice_clips.py
   verify_voice_clips.py
 ```
@@ -239,6 +239,11 @@ Branch `sys-clone-voices` (worktree `../persistint-game-wt-voices`, f84a22a, not
 - `tools/verify_voice_clips.py`: faster-whisper `small.en` on CPU, word-level difflib ratio, flag below 0.8; Resemblyzer cosine vs reference, flag below 0.75; per-speaker table; `--json OUT`.
 - Manifest: 170 lines; 27 clips committed, each with its `.wav.import`. At the time of writing the worktree held 50 `.wav` files but only 27 `.import` sidecars: the newly rendered clips had not been imported by Godot.
 - Planned: no tool runs the Godot headless import after rendering; the exporter does not strip Dialogue Manager markup beyond cast interpolations.
+
+Exporter now (`main`, 2026-10-27):
+- `tools/export_voice_lines.mjs` is the exporter: `node tools/export_voice_lines.mjs [--out PATH] [--check]`. It is a Node port of `tools/export_voice_lines.py` (left in place) and gives the same manifest, byte for byte, for the Python tool's sources (360 lines, a byte-exact prefix of the new manifest). It then adds the lines the Python tool missed, each under the speaker string its script hands `Voice.speak`: `data/interview.json` intro and questions as `oprah` (the host's cast id, not her display name), the `data/florida.json` critters' surprise lines by kind, `data/ponies.json` as `pony`, the `data/ruins.json` polar bear cubs as `polar_bear_clone`, and `data/title_letters.json` as `silverman`, `warren` and `richter`: 474 lines.
+- `project/tests/test_voice_manifest.gd`: every speaker with a spoken line in the game's line sources (`VoiceReview.build_roster`, `scripts/test/voice_review.gd`) is in the manifest with all its lines, under `Voice.line_key`.
+- Known gap: villager barks are keyed by the cast name of their `npc_id`, but `npc.gd` speaks them under the node's `display_name` when a scene sets one. The beach psychologists' barks are keyed `psychologists`, yet spoken as `Vacationers`.
 
 Where the brief and repo differ (the repo wins):
 - The brief describes `voices.json` as speaker to reference wav plus YouTube id and time span. In the repo only the four branch entries carry `source`/`span`; the main-branch refs have none, and island characters use `builtin` studio voices, not cloned references.
