@@ -17,7 +17,9 @@ into the new version's heading; the Updates page on the site shows the released 
 ### Fixed
 
 - Text in the world (door names, speech bubbles, the little words that float up in Florida) is
-  drawn at the screen's full resolution, so light letters no longer come out grey.
+  drawn at the screen's full resolution, and in the ruins above the gloom, so light letters no
+  longer come out grey. The floating words stay solid until they fade at the end, and a speech
+  bubble always shows its last line.
 
 ## v0.3.8 — 2026-10-27
 

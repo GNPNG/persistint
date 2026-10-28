@@ -6,7 +6,10 @@ extends SceneTree
 ## visit, in words that match the data (bd ke5). A thing's floating text (the seed's name, a
 ## shell's +1) stays inside the camera's view and outlives a thing that hides (bd wso.2), and is
 ## drawn at the screen's resolution, its font rasterized at the viewport's oversampling times the
-## camera's zoom (bd wso.4: the seed bag's "Now planting" was drawn at half of it and read grey).
+## camera's zoom, in plum on a white outline (STYLE.md 4.8) at full opacity until it fades at the
+## end of its rise (bd wso.4: the seed bag's "Now planting" was drawn at half the resolution and
+## fading from the start, and read pale grey). The window is 1280x720 as in the game
+## (root.oversampling_override = 2: a headless root is much smaller).
 ## Run: godot --headless --path project -s tests/test_florida.gd
 ## The player's real save (user://save.json) is backed up and restored.
 
@@ -20,6 +23,7 @@ func _initialize() -> void:
 
 
 func _run() -> void:
+	root.oversampling_override = 2.0  # the 1280x720 window's stretch
 	await process_frame
 	var ws: Node = root.get_node("/root/WorldState")
 	var backup := ""
@@ -226,10 +230,18 @@ func _float_in_view(scene: Node, thing_name: String, stand: Vector2, what: Strin
 	var want := root.get_oversampling() * absf(l.get_global_transform_with_canvas().get_scale().y)  # the camera's zoom
 	_check(font != null and absf(font.oversampling - want) <= 0.125,
 		"garden: the %s's text is drawn at the screen's resolution (oversampling %.2f for %.2f)" % [thing_name, font.oversampling if font else 0.0, want])
+	var fill := l.get_theme_color("font_color")
+	var edge := l.get_theme_color("font_outline_color")
+	_check(fill.is_equal_approx(Color("#593859")) and edge == Color.WHITE and l.get_theme_constant("outline_size") >= 2,
+		"garden: the %s's text is plum on a white outline (%s on %s)" % [thing_name, fill.to_html(false), edge.to_html(false)])
 	var start := l.global_position.y
 	var least := INF  # how far inside the view the text came, at the least
 	var rose := 0.0
+	var t0 := Time.get_ticks_msec()
+	var early := 1.0  # its least opacity over the first 0.6 s (it fades from 0.8 s)
 	while is_instance_valid(l):
+		if Time.get_ticks_msec() - t0 < 600:
+			early = minf(early, _modulate(l).a)
 		var half := root.get_visible_rect().size / cam.zoom / 2.0
 		var view := Rect2(cam.get_screen_center_position() - half, half * 2.0)
 		var text := _text_rect(l)
@@ -237,7 +249,19 @@ func _float_in_view(scene: Node, thing_name: String, stand: Vector2, what: Strin
 		rose = maxf(rose, start - l.global_position.y)
 		await process_frame
 	_check(least >= 0.0, "garden: the %s's text, %s, stays inside the view (%.1f px in at the least)" % [thing_name, what, least])
+	_check(early == 1.0, "garden: the %s's text is opaque until it fades at the end of its rise (%.2f at the least)" % [thing_name, early])
 	return rose
+
+
+## The colour a canvas item's own drawing is multiplied by: its self_modulate and the modulate
+## of it and of every canvas item over it.
+func _modulate(c: CanvasItem) -> Color:
+	var m := c.self_modulate
+	var n: Node = c
+	while n is CanvasItem:
+		m *= (n as CanvasItem).modulate
+		n = n.get_parent()
+	return m
 
 
 ## Where a floating label's one line of text is drawn: centred across its rect.

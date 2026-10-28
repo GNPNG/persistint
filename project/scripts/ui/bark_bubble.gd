@@ -39,20 +39,23 @@ func _ready() -> void:
 func say(line: String) -> void:
 	text = line
 	show()
-	WorldText.fit(self)
 	fit()
 
 
 func _process(_delta: float) -> void:
 	if not visible:
 		return
-	WorldText.fit(self)  # drawn at the screen's resolution under the camera's zoom (bd wso.4)
-	if text != _fitted:
+	# The font follows the camera's zoom (bd wso.4); a swap lays the bubble out again.
+	if WorldText.fit(self) or text != _fitted:
 		fit()
 	_keep_on_screen()
 
 
+## Sizes the bubble to its text. The font goes in first, the one the text is drawn in at the
+## screen's resolution under the camera's zoom (WorldText, bd wso.4), so the measuring and the
+## sizing come after any swap of it.
 func fit() -> void:
+	WorldText.fit(self)
 	_fitted = text
 	var font := get_theme_font("font")
 	var fsize := get_theme_font_size("font_size")
@@ -67,8 +70,16 @@ func fit() -> void:
 	var w := ceilf(inner + pad.x)
 	var h := ceilf(text_h + pad.y)
 	custom_minimum_size = Vector2.ZERO
-	position = Vector2(-w / 2.0, bottom - h)
 	size = Vector2(w, h)
+	# A Label draws only the lines its height holds, and spaces them (the theme's line_spacing)
+	# where the font's measure does not: it grows until every line shows.
+	for _more in 16:
+		var lines := get_line_count()  # shapes the text at the bubble's width first
+		if get_visible_line_count() >= lines:
+			break
+		h += 1.0
+		size = Vector2(w, h)
+	position = Vector2(-w / 2.0, bottom - h)
 	_aim_tail()
 
 

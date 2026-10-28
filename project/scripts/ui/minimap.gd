@@ -75,6 +75,7 @@ func _ready() -> void:
 	_view.name = "View"
 	_view.size = Vector2i(mini_size * RENDER_SCALE)
 	_view.world_2d = get_viewport().world_2d
+	_view.canvas_cull_mask &= ~WorldText.SCREEN_ONLY_LAYER  # not the ruins gloom over the main view
 	_view.disable_3d = true
 	_view.gui_disable_input = true
 	_view.render_target_update_mode = SubViewport.UPDATE_WHEN_PARENT_VISIBLE

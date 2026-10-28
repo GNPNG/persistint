@@ -3,8 +3,9 @@ extends Node2D
 ## tiles (assets/ruins/ruins_tiles.png through ruins_tileset.tres, painted over the whole map),
 ## the props as sprites (assets/ruins/<kind>.png from tools/gen_ruins_art.py, or a canon cut
 ## in assets/canon), a title card on entering, ambient lines that cycle slowly, a prop's note
-## when the pointer rests on it, a recovered piece's card (show_found), and the room's doors
-## named in the ruins captions' colours.
+## when the pointer rests on it, a recovered piece's card (show_found), the room's doors
+## named in the ruins captions' colours, and the gloom over the camera's view, under the words in
+## the room.
 ## Props standing on the floor sort by their feet with the player and the clones (the room
 ## root and this node are y-sorted); "wall" props hang on the wall band behind everyone and
 ## "floor" props are painted flat on the floor. Standing and wall props get the paper look when
@@ -14,6 +15,9 @@ extends Node2D
 const ForbiddenKnowledge := preload("res://scripts/ruins/forbidden_knowledge.gd")
 const TILESET := preload("res://assets/ruins/ruins_tileset.tres")
 const VIGNETTE := preload("res://assets/ruins/vignette.png")
+## The gloom (the vignette, drawn for the whole screen) lies in the room at this z: over everyone
+## and everything in it, under the words in it (door names, bubbles, a floating label: z 20).
+const GLOOM_Z := 19
 const AMBIENT_SECONDS := 7.0
 const TITLE_SECONDS := 3.5
 ## Ruins captions (STYLE.md 6.3): soft lilac-white on a dark plum.
@@ -47,11 +51,13 @@ var _title_fade: Tween
 var _found: Label
 var _found_at := Vector2.ZERO  # the world point a recovered piece's card hangs over
 var _found_tw: Tween
+var _gloom: Sprite2D
 
 
 func _ready() -> void:
 	var r := room()
 	y_sort_enabled = true
+	process_priority = 100  # after the camera has moved this frame: the gloom and the card follow it
 	_paint_tiles(r)
 	for prop: Dictionary in r.get("props", []):
 		_add_prop(prop)
@@ -229,18 +235,19 @@ static func sheet_frames(tex: Texture2D, frames: int, fps: float) -> SpriteFrame
 
 
 func _build_screen(r: Dictionary) -> void:
-	# The vignette: its own CanvasLayer, added before the map's HUD so the HUD draws over it.
-	var shade := CanvasLayer.new()
-	shade.name = "Gloom"
-	shade.layer = 0  # over the room, under the HUD and the room text, which sit at 1
-	add_child(shade)
-	var vignette := TextureRect.new()
-	vignette.name = "Vignette"
-	vignette.texture = VIGNETTE
-	vignette.stretch_mode = TextureRect.STRETCH_SCALE
-	vignette.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	vignette.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	shade.add_child(vignette)
+	# The gloom: the screen vignette laid over the camera's view in the room (_place_gloom), under
+	# the HUD and the room text (screen layers) and under the words in the room (z 20). As a
+	# CanvasLayer of its own it drew over the whole room, those words too, and took up to a third
+	# off a door name's lilac-white at the side of the view (bd wso.4). The map card's miniature,
+	# a second camera over the room, leaves it out (WorldText.SCREEN_ONLY_LAYER).
+	_gloom = Sprite2D.new()
+	_gloom.name = "Gloom"
+	_gloom.texture = VIGNETTE
+	_gloom.z_as_relative = false
+	_gloom.z_index = GLOOM_Z
+	_gloom.visibility_layer = WorldText.SCREEN_ONLY_LAYER
+	add_child(_gloom)
+	_place_gloom()
 	var screen := CanvasLayer.new()
 	screen.name = "RoomText"
 	add_child(screen)
@@ -324,8 +331,20 @@ func show_found(text: String, at: Vector2, seconds: float) -> void:
 
 
 func _process(_delta: float) -> void:
+	_place_gloom()
 	if _found and _found.visible:
 		_place_found()
+
+
+## The gloom covers the camera's view exactly, as it covered the screen: the view's middle and
+## size in the room (whatever the zoom), the vignette scaled to it.
+func _place_gloom() -> void:
+	if _gloom == null or not is_inside_tree():
+		return
+	var to_world := get_viewport().get_canvas_transform().affine_inverse()
+	var view := get_viewport().get_visible_rect()
+	_gloom.global_position = to_world * view.get_center()
+	_gloom.global_scale = view.size * to_world.get_scale() / Vector2(VIGNETTE.get_size())
 
 
 ## The card stays over its place in the room while the camera moves, inside the screen.

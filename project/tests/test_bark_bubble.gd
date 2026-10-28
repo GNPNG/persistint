@@ -9,7 +9,9 @@ extends SceneTree
 ## A bubble's text is drawn at the screen's resolution (bd wso.4: under the 2x camera it was drawn
 ## at half of it): its font is rasterized at the viewport's oversampling times the camera's zoom,
 ## at the game's zoom and one level out, and measures what the theme's font does, so the bubble
-## keeps its size; with no zoom over it, it keeps the theme's font.
+## keeps its size (no wider than its max_width, every line showing); with no zoom over it, it keeps
+## the theme's font. The window is 1280x720 as in the game (root.oversampling_override = 2: a
+## headless root is much smaller, and its fonts' scales were not the game's).
 ## Run: godot --headless --path project -s tests/test_bark_bubble.gd
 
 const BUBBLE := "res://scenes/ui/bark_bubble.tscn"
@@ -22,6 +24,7 @@ func _initialize() -> void:
 
 
 func _run() -> void:
+	root.oversampling_override = 2.0  # the 1280x720 window's stretch
 	await process_frame
 	var world := Node2D.new()
 	root.add_child(world)
@@ -89,6 +92,11 @@ func _run() -> void:
 		var fallback := ThemeDB.fallback_font
 		_check(font != null and font.get_string_size(sbub.text, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize).is_equal_approx(fallback.get_string_size(sbub.text, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize))
 			and is_equal_approx(font.get_height(fsize), fallback.get_height(fsize)), "and measures what the theme's font does")
+		var pad := sbub.get_theme_stylebox("normal").get_minimum_size()
+		_check(sbub.size.x <= float(sbub.get("max_width")) + pad.x + 1.0 and sbub.autowrap_mode != TextServer.AUTOWRAP_OFF,
+			"so the bubble still wraps at its max_width (size %s, autowrap %d)" % [sbub.size, sbub.autowrap_mode])
+		_check(sbub.get_visible_line_count() == sbub.get_line_count(),
+			"and shows every line (%d of %d)" % [sbub.get_visible_line_count(), sbub.get_line_count()])
 	cam.zoom = Vector2.ONE
 	await _frames(2)
 	_check(not sbub.has_theme_font_override("font"), "with no zoom over it a bubble keeps the theme's font")

@@ -14,10 +14,17 @@ func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> voi
 			get_viewport().set_input_as_handled()
 
 
-## A floating label starts this far over the thing's origin and rises FLOAT_RISE as it fades.
+## A floating label starts this far over the thing's origin and rises FLOAT_RISE in
+## FLOAT_SECONDS, fading out over the last FLOAT_FADE of them. It used to fade from the start, so
+## for most of its rise it was a see-through plum on a see-through white over the grass, which
+## read pale grey (bd wso.4: in the wso-shots-3 render the seed bag's "Now planting" was at 64%).
 const FLOAT_START := 44.0
 const FLOAT_RISE := 20.0
 const FLOAT_SECONDS := 1.2
+const FLOAT_FADE := 0.4
+## Plum on a white outline, as the HUD text (STYLE.md 4.8).
+const FLOAT_TEXT := Color("#593859")
+const FLOAT_OUTLINE := Color.WHITE
 
 
 ## Small floating label above the thing (item gained, seed picked). It stays inside the camera's
@@ -34,8 +41,8 @@ func float_text(text: String) -> void:
 	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	l.z_index = 20
 	l.add_theme_font_size_override("font_size", 5)
-	l.add_theme_color_override("font_color", Color(0.3, 0.2, 0.3))
-	l.add_theme_color_override("font_outline_color", Color.WHITE)
+	l.add_theme_color_override("font_color", FLOAT_TEXT)
+	l.add_theme_color_override("font_outline_color", FLOAT_OUTLINE)
 	l.add_theme_constant_override("outline_size", 2)
 	l.set_meta("over", name)
 	var host: Node = get_parent() if get_parent() is Node2D else self
@@ -46,7 +53,7 @@ func float_text(text: String) -> void:
 	_place_float(l, base, at, -FLOAT_START)
 	var tw := l.create_tween()
 	tw.tween_method(func(y: float) -> void: _place_float(l, base, at, y), -FLOAT_START, -FLOAT_START - FLOAT_RISE, FLOAT_SECONDS)
-	tw.parallel().tween_property(l, "modulate:a", 0.0, FLOAT_SECONDS)
+	tw.parallel().tween_property(l, "modulate:a", 0.0, FLOAT_FADE).set_delay(FLOAT_SECONDS - FLOAT_FADE)
 	tw.tween_callback(l.queue_free)
 
 

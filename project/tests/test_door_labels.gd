@@ -7,9 +7,13 @@ extends SceneTree
 ## it is not drawn over the player standing there (the aquarium's arrival spawn put "Back to the
 ## Beach" across her skirt). In a ruins room the name is in the ruins captions' colours, lilac-white
 ## on a dark plum outline (STYLE.md 6.3; bd wso.1: plum on a white outline came out plum on grey
-## over the dark walls). The name is drawn at the screen's resolution, its font rasterized at the
-## viewport's oversampling times the camera's zoom, and measures what the theme's font does (bd
-## wso.4: under the 2x camera it was drawn at half the screen's resolution and read grey).
+## over the dark walls), with nothing drawn over it: every modulate over it is opaque white and the
+## room's gloom lies under it (bd wso.4: as a CanvasLayer of its own the gloom drew over the name
+## and greyed it). In the bright maps it is plum on a white outline (STYLE.md 4.8). The name is
+## drawn at the screen's resolution, its font rasterized at the viewport's oversampling times the
+## camera's zoom, and measures what the theme's font does (bd wso.4: under the 2x camera it was
+## drawn at half the screen's resolution and read grey). The window is 1280x720 as in the game
+## (root.oversampling_override = 2: a headless root is much smaller).
 ## Run: godot --headless --path project -s tests/test_door_labels.gd
 
 const DIRS := ["res://scenes/maps", "res://scenes/ruins", "res://scenes/florida"]
@@ -17,6 +21,7 @@ const DOOR_SCRIPT := "res://scripts/door.gd"
 const MAP_SCRIPT := "res://scripts/map.gd"
 const DECOR_SCRIPT := "res://scripts/ruins/ruins_decor.gd"
 const NEAR := 72.0  # door.gd NEAR_DISTANCE: the name shows when the player is this close
+const PLUM := Color("#593859")  # STYLE.md 4.8, plum on a white outline
 ## The paper doll's drawn box from her feet (shot walk: 42 px of hair to hem, about 28 across).
 const BODY := Rect2(-14, -42, 28, 42)
 
@@ -29,6 +34,7 @@ func _initialize() -> void:
 
 
 func _run() -> void:
+	root.oversampling_override = 2.0  # the 1280x720 window's stretch
 	await process_frame
 	for path in _map_scenes():
 		var m := await _open(path, "spawn_default")
@@ -98,6 +104,39 @@ func _check_pair(path: String, spawn: String, door_path: NodePath) -> void:
 		var edge := l.get_theme_color("font_outline_color")
 		_check(fill == caption["CAPTION_TEXT"] and edge == caption["CAPTION_PLUM"],
 			"%s: the name is lilac-white on a dark plum outline (%s on %s)" % [what, fill.to_html(false), edge.to_html(false)])
+		var gloom := m.get_node_or_null("Decor/Gloom") as CanvasItem
+		_check(gloom != null and gloom.get_canvas_layer_node() == l.get_canvas_layer_node() and _drawn_z(gloom) < _drawn_z(l),
+			"%s: the room's gloom lies under the name (z %d under %d)" % [what, _drawn_z(gloom) if gloom else 0, _drawn_z(l)])
+	else:
+		var fill := l.get_theme_color("font_color")
+		var edge := l.get_theme_color("font_outline_color")
+		_check(fill.is_equal_approx(PLUM) and edge == Color.WHITE,
+			"%s: the name is plum on a white outline (%s on %s)" % [what, fill.to_html(false), edge.to_html(false)])
+	_check(_modulate(l) == Color.WHITE, "%s: and nothing tints or fades it (%s)" % [what, _modulate(l)])
+	_check(l.get_theme_constant("outline_size") >= 2, "%s: with its outline (%d)" % [what, l.get_theme_constant("outline_size")])
+
+
+## The colour a canvas item's own drawing is multiplied by: its self_modulate and the modulate
+## of it and of every canvas item over it.
+func _modulate(c: CanvasItem) -> Color:
+	var m := c.self_modulate
+	var n: Node = c
+	while n is CanvasItem:
+		m *= (n as CanvasItem).modulate
+		n = n.get_parent()
+	return m
+
+
+## The z a canvas item is drawn at: its z_index, plus its parents' while it is relative to them.
+func _drawn_z(c: CanvasItem) -> int:
+	var z := 0
+	var n: Node = c
+	while n is CanvasItem:
+		z += (n as CanvasItem).z_index
+		if not (n as CanvasItem).z_as_relative:
+			break
+		n = n.get_parent()
+	return z
 
 
 ## Where a label's one line of text is drawn: centred across, on its bottom edge (door.tscn).

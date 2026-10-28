@@ -2,7 +2,8 @@ extends SceneTree
 ## Headless check of the Ruins of Utopia dungeon crawl: every ruins map loads, doors
 ## connect (wreck <-> corridor <-> core, exit to temple) with existing spawns, pieces are
 ## defined in data/ruins.json, recovery lands in WorldState and survives save/load, and a
-## recovered piece's card shows on the room's screen layer with the title card out of its way.
+## recovered piece's card shows on the room's screen layer with the title card out of its way,
+## and the gloom lies in the room over the camera's view, under the words in it (bd wso.4).
 ## Run: godot --headless --path project -s tests/test_ruins.gd
 
 const FK := preload("res://scripts/ruins/forbidden_knowledge.gd")
@@ -82,6 +83,7 @@ func _run() -> void:
 			left += 1
 	_check(left == 1, "recovered pickup removed from map on reload (left=%d)" % left)
 	await _check_found(wreck)
+	await _check_gloom(wreck)
 	wreck.queue_free()
 
 	await _check_clones(data, packed)
@@ -116,11 +118,34 @@ func _check_found(room: Node) -> void:
 	_check(card.visible and card.text == said and said.begins_with("Recovered: "),
 		"the recovered card says what the piece is (%s)" % said.get_slice("\n", 0))
 	_check(not pickup.get_node("Label").visible, "it is on the room's screen layer, not in the room")
-	_check((room.get_node("Decor/RoomText") as CanvasLayer).layer > (room.get_node("Decor/Gloom") as CanvasLayer).layer,
-		"over the gloom")
+	var gloom := room.get_node("Decor/Gloom") as CanvasItem
+	_check((room.get_node("Decor/RoomText") as CanvasLayer).layer > 0 and gloom != null and gloom.get_canvas_layer_node() == null,
+		"over the gloom (a screen layer over the room, the gloom in the room)")
 	_check(root.get_visible_rect().encloses(card.get_rect()), "inside the screen (%s)" % card.get_rect())
 	await create_timer(0.4).timeout
 	_check(not title.visible, "the title card gives way to it")
+
+
+## The gloom (bd wso.4) lies in the room under the words in it: as a CanvasLayer of its own it
+## drew over the door names and bubbles too and greyed them. It covers the camera's view as the
+## screen vignette did, at a z under the words' 20, on a visibility layer of its own that the map
+## card's miniature leaves out.
+func _check_gloom(room: Node) -> void:
+	var gloom := room.get_node_or_null("Decor/Gloom") as Sprite2D
+	if gloom == null:
+		_check(false, "the room has its gloom in the room")
+		return
+	await process_frame
+	var to_world := root.get_canvas_transform().affine_inverse()
+	var view := root.get_visible_rect()
+	var size := view.size * to_world.get_scale()
+	var want := Rect2(to_world * view.get_center() - size / 2.0, size)
+	var shown := gloom.texture.get_size() * gloom.global_scale
+	var drawn := Rect2(gloom.global_position - shown / 2.0, shown)
+	_check(drawn.position.is_equal_approx(want.position) and drawn.size.is_equal_approx(want.size),
+		"the gloom covers the camera's view (%s, view %s)" % [drawn, want])
+	_check(not gloom.z_as_relative and gloom.z_index < 20, "under the words in the room (z %d)" % gloom.z_index)
+	_check(gloom.visibility_layer == WorldText.SCREEN_ONLY_LAYER, "on a layer the map card's miniature leaves out")
 
 
 ## The failed clone children (zombies) and the polar bear cub batch: placed in the bunker

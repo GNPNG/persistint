@@ -19,6 +19,10 @@ extends RefCounted
 const STEP := 0.25
 ## Set on each font made here: the font it was made from.
 const BASE := &"world_text_base"
+## The visibility layer (bit) of what is drawn in the world for the screen alone: the ruins gloom
+## laid over the camera's view under the words (ruins_decor.gd). The map card's miniature, a
+## second camera over the same world (minimap.gd), leaves it out.
+const SCREEN_ONLY_LAYER := 1 << 9
 
 static var _made := {}  # "<base font id>/<oversampling>" -> FontFile
 
@@ -33,27 +37,36 @@ static func screen_scale(item: CanvasItem) -> float:
 	return vp.get_oversampling() * maxf(absf(s.x), absf(s.y))
 
 
-## Gives `l` the font its text is drawn sharp in where it is now. Called each frame the label
-## shows (door.gd, bark_bubble.gd, clickable.gd, knowledge_pickup.gd); while the scale holds it
-## changes nothing.
-static func fit(l: Control) -> void:
+## Gives `l` the font its text is drawn sharp in where it is now, and returns true when that
+## changed its font. Called each frame the label shows (door.gd, bark_bubble.gd, clickable.gd,
+## knowledge_pickup.gd); while the scale holds it changes nothing. A swap is a theme change, which
+## Godot answers by growing the label to its minimum size at once (for a label not wrapping yet,
+## its whole line), so a label that sizes itself to its text lays itself out again after a swap
+## (BarkBubble.fit). The text measures the same in either font.
+static func fit(l: Control) -> bool:
 	var vp := l.get_viewport()
 	if vp == null:
-		return
-	var want := snappedf(screen_scale(l), STEP)
+		return false
+	var shown := screen_scale(l)
+	if shown <= 0.0:
+		return false
+	var want := maxf(STEP, snappedf(shown, STEP))  # a small view (a headless run) never snaps to 0
 	var font := l.get_theme_font("font")
 	if font == null:
-		return
+		return false
 	var base: Font = font.get_meta(BASE, font)
-	if want <= 0.0 or absf(want - vp.get_oversampling()) < STEP / 2.0:
-		if font != base:  # back to the font it had before
-			l.remove_theme_font_override("font")
-			if l.get_theme_font("font") != base:
-				l.add_theme_font_override("font", base)
-		return
+	if absf(want - vp.get_oversampling()) < STEP / 2.0:
+		if font == base:
+			return false
+		l.remove_theme_font_override("font")  # back to the font it had before
+		if l.get_theme_font("font") != base:
+			l.add_theme_font_override("font", base)
+		return true
 	var f := font_for(base, want)
-	if f != null and f != font:
-		l.add_theme_font_override("font", f)
+	if f == null or f == font:
+		return false
+	l.add_theme_font_override("font", f)
+	return true
 
 
 ## `base` rasterized at `oversampling` (made once, then kept), or null for a font that cannot be:
