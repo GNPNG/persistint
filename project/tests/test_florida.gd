@@ -4,7 +4,9 @@ extends SceneTree
 ## everything survives save/load, and the maps load. Every seed and item shows by its name from
 ## the data, and the Father in the garden explains the garden and the craft bench on the first
 ## visit, in words that match the data (bd ke5). A thing's floating text (the seed's name, a
-## shell's +1) stays inside the camera's view and outlives a thing that hides (bd wso.2).
+## shell's +1) stays inside the camera's view and outlives a thing that hides (bd wso.2), and is
+## drawn at the screen's resolution, its font rasterized at the viewport's oversampling times the
+## camera's zoom (bd wso.4: the seed bag's "Now planting" was drawn at half of it and read grey).
 ## Run: godot --headless --path project -s tests/test_florida.gd
 ## The player's real save (user://save.json) is backed up and restored.
 
@@ -220,6 +222,10 @@ func _float_in_view(scene: Node, thing_name: String, stand: Vector2, what: Strin
 	if l == null:
 		_check(false, "garden: the %s floats a label" % thing_name)
 		return 0.0
+	var font := l.get_theme_font("font") as FontFile
+	var want := root.get_oversampling() * absf(l.get_global_transform_with_canvas().get_scale().y)  # the camera's zoom
+	_check(font != null and absf(font.oversampling - want) <= 0.125,
+		"garden: the %s's text is drawn at the screen's resolution (oversampling %.2f for %.2f)" % [thing_name, font.oversampling if font else 0.0, want])
 	var start := l.global_position.y
 	var least := INF  # how far inside the view the text came, at the least
 	var rose := 0.0

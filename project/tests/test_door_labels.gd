@@ -7,7 +7,9 @@ extends SceneTree
 ## it is not drawn over the player standing there (the aquarium's arrival spawn put "Back to the
 ## Beach" across her skirt). In a ruins room the name is in the ruins captions' colours, lilac-white
 ## on a dark plum outline (STYLE.md 6.3; bd wso.1: plum on a white outline came out plum on grey
-## over the dark walls).
+## over the dark walls). The name is drawn at the screen's resolution, its font rasterized at the
+## viewport's oversampling times the camera's zoom, and measures what the theme's font does (bd
+## wso.4: under the 2x camera it was drawn at half the screen's resolution and read grey).
 ## Run: godot --headless --path project -s tests/test_door_labels.gd
 
 const DIRS := ["res://scenes/maps", "res://scenes/ruins", "res://scenes/florida"]
@@ -83,6 +85,13 @@ func _check_pair(path: String, spawn: String, door_path: NodePath) -> void:
 		"%s: the name is inside the view across (text %.0f..%.0f, view %.0f..%.0f)" % [what, text.position.x, text.end.x, view.position.x, view.end.x])
 	var body := Rect2(player.global_position + BODY.position, BODY.size)
 	_check(not text.intersects(body), "%s: the name is not over the player (text %s, player %s)" % [what, text, body])
+	var font := l.get_theme_font("font") as FontFile
+	var want := root.get_oversampling() * absf(l.get_global_transform_with_canvas().get_scale().y)  # the camera's zoom
+	_check(font != null and absf(font.oversampling - want) <= 0.125,
+		"%s: the name is drawn at the screen's resolution (oversampling %.2f, screen px per label px %.2f)" % [what, font.oversampling if font else 0.0, want])
+	var fsize := l.get_theme_font_size("font_size")
+	_check(font != null and font.get_string_size(l.text, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize).is_equal_approx(ThemeDB.fallback_font.get_string_size(l.text, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize)),
+		"%s: and measures what the theme's font does" % what)
 	if path.begins_with("res://scenes/ruins/"):
 		var caption: Dictionary = (load(DECOR_SCRIPT) as Script).get_script_constant_map()
 		var fill := l.get_theme_color("font_color")

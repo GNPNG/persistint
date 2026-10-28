@@ -39,6 +39,13 @@ func _ready() -> void:
 	input_event.connect(_on_input_event)
 
 
+## The card outside a ruins room is drawn at the screen's resolution under the camera's zoom,
+## one level out too (bd wso.4).
+func _process(_delta: float) -> void:
+	if label.visible:
+		WorldText.fit(label)
+
+
 func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if event.is_action_pressed("click"):
 		var player := get_tree().get_first_node_in_group("player")
@@ -63,6 +70,7 @@ func interact() -> void:
 		decor.show_found(label.text, global_position + Vector2(0, label.offset_bottom), FOUND_SECONDS)
 	else:
 		label.show()
+		WorldText.fit(label)
 	_recovered = true
 	$Glow.hide()
 	icon.hide()

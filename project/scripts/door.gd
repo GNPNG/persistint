@@ -98,6 +98,7 @@ func _process(_delta: float) -> void:
 	_name_label.visible = (_hovered or near) and not label.visible
 	for l: Label in [label, _name_label]:
 		if l.visible:
+			WorldText.fit(l)  # drawn at the screen's resolution under the camera's zoom (bd wso.4)
 			keep_on_screen(l)
 	if _name_label.visible and under_map_card(_name_label):
 		# The card names this door on its pin; the end of a name sticking out from under it read as

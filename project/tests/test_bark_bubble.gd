@@ -6,6 +6,10 @@ extends SceneTree
 ## `bottom`, centred on the speaker. Bubbles of speakers standing close keep clear of each other
 ## (bd wso.3: a clone's bubble covered a polar bear cub's): the one further back goes up over the
 ## one in front, or under it at the top of the view, and comes back once the front one is gone.
+## A bubble's text is drawn at the screen's resolution (bd wso.4: under the 2x camera it was drawn
+## at half of it): its font is rasterized at the viewport's oversampling times the camera's zoom,
+## at the game's zoom and one level out, and measures what the theme's font does, so the bubble
+## keeps its size; with no zoom over it, it keeps the theme's font.
 ## Run: godot --headless --path project -s tests/test_bark_bubble.gd
 
 const BUBBLE := "res://scenes/ui/bark_bubble.tscn"
@@ -67,6 +71,28 @@ func _run() -> void:
 	_check(not _reach(bb).intersects(_reach(fb)), "at the top of the view they do not overlap (%s, %s)" % [_reach(bb), _reach(fb)])
 	_check(_reach(bb).position.y >= fb.get_global_rect().end.y, "the one further back goes under the front one")
 	_check(fb.get_global_rect().position.y >= view_top + 1.0 and _reach(bb).end.y <= view_top + half.y * 2.0 - 1.0, "both inside the view")
+	back.free()
+	front.free()
+
+	# Drawn at the screen's resolution, at the game's zoom and one level out (map.gd ZOOMS).
+	var sp := _speaker(world, Vector2(0, 40))
+	var sbub: Label = sp.get_node("BarkBubble")
+	for z: float in [2.0, 1.25]:
+		cam.zoom = Vector2(z, z)
+		await _frames(2)
+		var font := sbub.get_theme_font("font") as FontFile
+		var want := root.get_oversampling() * z
+		_check(font != null and absf(font.oversampling - want) <= 0.125,
+			"at zoom %.2f a bubble's font is rasterized at the screen's px (oversampling %.2f for %.2f)" % [z, font.oversampling if font else 0.0, want])
+		_check(font != null and font.data.size() > 0, "and has the default font's data")
+		var fsize := sbub.get_theme_font_size("font_size")
+		var fallback := ThemeDB.fallback_font
+		_check(font != null and font.get_string_size(sbub.text, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize).is_equal_approx(fallback.get_string_size(sbub.text, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize))
+			and is_equal_approx(font.get_height(fsize), fallback.get_height(fsize)), "and measures what the theme's font does")
+	cam.zoom = Vector2.ONE
+	await _frames(2)
+	_check(not sbub.has_theme_font_override("font"), "with no zoom over it a bubble keeps the theme's font")
+	sp.free()
 
 	print("RESULT: %s (%d failures)" % ["PASS" if _failures == 0 else "FAIL", _failures])
 	quit(1 if _failures else 0)

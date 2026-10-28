@@ -14,6 +14,11 @@ into the new version's heading; the Updates page on the site shows the released 
 - Zoom: two paper-cutout figures beside the magnifier show the zoom, the big one for the normal
   view and the small one for one level out; tap one to go to it.
 
+### Fixed
+
+- Text in the world (door names, speech bubbles, the little words that float up in Florida) is
+  drawn at the screen's full resolution, so light letters no longer come out grey.
+
 ## v0.3.8 — 2026-10-27
 
 The paper look, and Florida:

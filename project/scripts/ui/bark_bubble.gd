@@ -39,12 +39,14 @@ func _ready() -> void:
 func say(line: String) -> void:
 	text = line
 	show()
+	WorldText.fit(self)
 	fit()
 
 
 func _process(_delta: float) -> void:
 	if not visible:
 		return
+	WorldText.fit(self)  # drawn at the screen's resolution under the camera's zoom (bd wso.4)
 	if text != _fitted:
 		fit()
 	_keep_on_screen()

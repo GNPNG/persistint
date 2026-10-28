@@ -66,3 +66,4 @@ static func _place_float(l: Label, base: Vector2, at: Vector2, y: float) -> void
 		dx = clampf(at.x, lo, hi) - at.x
 		y += maxf(0.0, center.y - half.y + 2.0 - (at.y + y))
 	l.position = base + Vector2(-l.size.x / 2.0 + dx, y)
+	WorldText.fit(l)  # drawn at the screen's resolution under the camera's zoom (bd wso.4)
