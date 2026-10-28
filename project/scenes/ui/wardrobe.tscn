@@ -61,6 +61,23 @@ horizontal_alignment = 1
 layout_mode = 2
 text = ">"
 
+[node name="Hat" type="HBoxContainer" parent="Panel/HBox/VBox"]
+layout_mode = 2
+
+[node name="Prev" type="Button" parent="Panel/HBox/VBox/Hat"]
+layout_mode = 2
+text = "<"
+
+[node name="Value" type="Label" parent="Panel/HBox/VBox/Hat"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Hat"
+horizontal_alignment = 1
+
+[node name="Next" type="Button" parent="Panel/HBox/VBox/Hat"]
+layout_mode = 2
+text = ">"
+
 [node name="Dress" type="HBoxContainer" parent="Panel/HBox/VBox"]
 layout_mode = 2
 
@@ -75,6 +92,57 @@ text = "Dress"
 horizontal_alignment = 1
 
 [node name="Next" type="Button" parent="Panel/HBox/VBox/Dress"]
+layout_mode = 2
+text = ">"
+
+[node name="Top" type="HBoxContainer" parent="Panel/HBox/VBox"]
+layout_mode = 2
+
+[node name="Prev" type="Button" parent="Panel/HBox/VBox/Top"]
+layout_mode = 2
+text = "<"
+
+[node name="Value" type="Label" parent="Panel/HBox/VBox/Top"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Top"
+horizontal_alignment = 1
+
+[node name="Next" type="Button" parent="Panel/HBox/VBox/Top"]
+layout_mode = 2
+text = ">"
+
+[node name="Bottom" type="HBoxContainer" parent="Panel/HBox/VBox"]
+layout_mode = 2
+
+[node name="Prev" type="Button" parent="Panel/HBox/VBox/Bottom"]
+layout_mode = 2
+text = "<"
+
+[node name="Value" type="Label" parent="Panel/HBox/VBox/Bottom"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Bottom"
+horizontal_alignment = 1
+
+[node name="Next" type="Button" parent="Panel/HBox/VBox/Bottom"]
+layout_mode = 2
+text = ">"
+
+[node name="Shoes" type="HBoxContainer" parent="Panel/HBox/VBox"]
+layout_mode = 2
+
+[node name="Prev" type="Button" parent="Panel/HBox/VBox/Shoes"]
+layout_mode = 2
+text = "<"
+
+[node name="Value" type="Label" parent="Panel/HBox/VBox/Shoes"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Shoes"
+horizontal_alignment = 1
+
+[node name="Next" type="Button" parent="Panel/HBox/VBox/Shoes"]
 layout_mode = 2
 text = ">"
 

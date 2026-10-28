@@ -69,6 +69,8 @@ func _ready() -> void:
 	var outfit := {"body": "body_base"}
 	for slot: String in options:
 		outfit[slot] = options[slot][0]
+		if options[slot].size() < 2:
+			continue  # nothing to choose in that slot yet (a new slot with no parts)
 		var b := Button.new()
 		b.text = slot.capitalize()
 		b.pressed.connect(_cycle.bind(slot))

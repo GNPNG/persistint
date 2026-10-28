@@ -1,5 +1,9 @@
 {
 	"hair": ["hair_pigtails", "hair_crown", "hair_braids", "hair_short"],
 	"dress": ["dress_uniform", "dress_robe", "dress_white"],
-	"accessory": ["none", "acc_bow"]
+	"accessory": ["none", "acc_bow"],
+	"top": ["none"],
+	"bottom": ["none"],
+	"shoes": ["none"],
+	"hat": ["none"]
 }

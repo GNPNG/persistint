@@ -55,13 +55,17 @@ from every edge; nothing touches, overlaps or is cropped.
 
 ### Paper-doll frame, stack order and anchors (from the code)
 
-- Slots and stack order: `project/scripts/systems/paper_doll.gd` lists `body, dress, hair,
-  accessory`, drawn in that order. These four are the only slots. Tops, bottoms and shoes need new
-  slots (slot list, `project/scenes/ui/wardrobe.tscn` rows, `project/scripts/ui/wardrobe.gd`, a
-  placement rule in `tools/cut_paperdoll.py`, `tools/gen_player_rig.py`, `tools/bake_paper.sh`).
-- Wardrobe options: `project/data/outfits.json` (`hair`, `dress`, `accessory`).
-- Cut placement: `project/data/paperdoll_parts.json` (crop `WxH+X+Y` on one sheet) read by
-  `tools/cut_paperdoll.py`; the part's prefix before the first `_` picks the rule:
+- Slots and stack order: `project/scripts/systems/paper_doll.gd` LAYERS lists `body, shoes,
+  bottom, top, dress, hair, hat, accessory`, drawn in that order (a hat and a bow are worn
+  together). A part's slot is its prefix (`acc_` is the accessory). The wardrobe shows a row, and the
+  makeover a button, only for a slot with something to choose.
+- Wardrobe options: `project/data/outfits.json`, one list per slot but the body (`"none"` first
+  where the slot can be empty).
+- Cut placement: `project/data/paperdoll_parts.json` read by `tools/cut_paperdoll.py`: a part's
+  crop `WxH+X+Y` is on the canon sheet, or on the wardrobe sheet it names (`"sheet": id`, the sheet
+  under `"sheets"` with its `"path"` and, for tops, bottoms and shoes, the `"doll"` crop of its
+  reference doll); `--sheet ID` cuts one sheet. The canon parts set the frame; the rest are placed
+  on it and clipped to it. The part's prefix before the first `_` picks the rule:
   - `body_*` as drawn; it fixes the frame. `project/assets/canon/body_base.png` is 721×760: head top
     y 61, head widest at about y 220 (x 200 to 535), ears about y 280 to 345, chin about y 400, neck
     narrowest about y 410 (x 319 to 410), hands about y 540 to 575 (x 163 to 564), legs x 273 to 455,
@@ -71,8 +75,11 @@ from every edge; nothing touches, overlaps or is cropped.
   - `hair_*`: the largest enclosed background region is the face opening; the wig is scaled so the
     opening matches the body's face width (`face_fill` 0.86) and its bottom sits on the chin. Every
     wig needs a fully enclosed, empty face opening.
-  - `acc_*`: placed by `anchor` (px from head centre x and head top) and `scale` (acc_bow:
-    `[-120, 40]`, 0.6). Hats are `acc_hat_*` until a hat slot exists.
+  - `acc_*` and `hat_*`: placed by `anchor` (px from head centre x and head top) and `scale`
+    (acc_bow: `[-120, 40]`, 0.6).
+  - `top_*`, `bottom_*`, `shoes_*`: at the sheet's reference doll's scale (the body's height over
+    hers) and at the height on the frame where the item stands beside her, centred on the body.
+  - Any part: `"offset"` `[dx, dy]` (frame px) nudges it after placing.
 - Every wardrobe sheet carries the bald reference doll at the far left, front view, arms angled
   down about thirty degrees, feet on one baseline; items are drawn at its scale, front view only
   (the side and back views are derived by `tools/gen_player_rig.py`).
@@ -120,9 +127,9 @@ Run from the repo root. Commit with `mise x --env claude-cli -- git ...`, stagin
    `magick in.jpg out.png`, which keeps the JPEG's edge noise, so key with fuzz).
 2. **Sync**: `python3 tools/sync_rendered_assets.py` copies every drop to its `game:` path and lists
    what is still missing. Sheets land in `project/assets/sheets/...` (staging); single props and
-   backdrops land on the live file. `project/assets/sheets/` needs a `.gdignore` or an export exclude
-   (`project/export_presets.cfg` ships all resources) before the first sheet is committed: raise it
-   with the lead, it is a config change.
+   backdrops land on the live file. `project/assets/sheets/` has a `.gdignore` and the Web preset's
+   `exclude_filter` leaves it out, so staged sheets are neither imported nor shipped (and the asset
+   gate wants no SOURCES.md row for them).
 3. **Chroma key** (props and anything shown with transparency), in place at the `game:` path:
 
    ```bash
@@ -136,14 +143,18 @@ Run from the repo root. Commit with `mise x --env claude-cli -- git ...`, stagin
    -extent 112x144 OUT.png`. Sync leaves a game copy newer than its drop alone.
    For wardrobe sheets the cutter keys white, not green, so key the sheet to white instead:
    `magick SHEET.png -fuzz 12% -fill white -opaque '#00FF00' -channel G -fx 'min(u.g,max(u.r,u.b))' +channel SHEET_white.png`.
-4. **Cut** (wardrobe and character sheets): add each part's crop to a parts file and run
-   `python3 -I tools/cut_paperdoll.py SHEET_white.png` (it reads `project/data/paperdoll_parts.json`
-   and takes one sheet per run; a second sheet needs its own parts file or a cutter change). Add the
-   parts to `project/data/outfits.json`, then `python3 -I tools/gen_player_rig.py`.
+4. **Cut** (wardrobe and character sheets): in `project/data/paperdoll_parts.json`, list the sheet
+   under `"sheets"` (`"path"`: the `SHEET_white.png` copy beside its `game:` path; `"doll"`: the
+   crop of the reference doll, needed for tops, bottoms and shoes) and add each part with its
+   `"sheet"` and `"crop"`, then run `python3 -I tools/cut_paperdoll.py --sheet ID` (that sheet's
+   parts only, on the canon frame from `project/assets/canon/body_base.png`; with no `--sheet` it
+   cuts every sheet, the canon one included). Add the parts to `project/data/outfits.json` under
+   their slot, then `python3 -I tools/gen_player_rig.py`.
    Animated temple files (candles, twinkle) and the temple tiles are built from their stills by
    the generator (`tools/gen_temple_props.py`, `tools/gen_island_tiles.py`), a tool change.
-5. **Paper bake**: add new parts or props to the lists in `tools/bake_paper.sh`, then
-   `tools/bake_paper.sh characters|props|all` (needs ImageMagick 7 and node).
+5. **Paper bake**: add new props to the lists in `tools/bake_paper.sh` (the characters group bakes
+   every player rig on its own), then `tools/bake_paper.sh characters|props|all` (needs
+   ImageMagick 7 and node).
 6. **Import**: `godot --headless --path project --import`, then `node tools/set_texture_imports.mjs`
    and `node tools/gen_sources.mjs`; for greenery and props rebuild the maps
    (`tools/build_island_maps.gd`). Update the row in `project/assets/ASSETS.md`.

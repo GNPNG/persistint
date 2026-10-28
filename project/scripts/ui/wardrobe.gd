@@ -3,8 +3,13 @@ extends CanvasLayer
 ## data/outfits.json and writes choices to WorldState (outfit_* flags).
 ## The island framing is KIND: play, expression, identity. (The cruise
 ## makeover mini-game will reuse this system in the judged framing.)
+## One row per PaperDoll slot but the body (the row named after it), shown when the slot has
+## something to choose (more than one option); each slot is worn on its own, so a hat and a bow
+## go together. The panel grows to fit the rows it shows.
 
 const OUTFITS_PATH := "res://data/outfits.json"
+## The panel is never shorter than this (px): its size with the hair, dress and accessory rows.
+const MIN_PANEL_HEIGHT := 224.0
 
 var options: Dictionary = {}  # slot -> Array[String]
 
@@ -17,12 +22,35 @@ func _ready() -> void:
 		var parsed: Variant = JSON.parse_string(f.get_as_text())
 		if parsed is Dictionary:
 			options = parsed
-	for slot: String in ["hair", "dress", "accessory"]:
+	for slot: String in slots():
 		var row: HBoxContainer = $Panel/HBox/VBox.get_node(slot.capitalize())
 		row.get_node("Prev").pressed.connect(_cycle.bind(slot, -1))
 		row.get_node("Next").pressed.connect(_cycle.bind(slot, 1))
 	$Panel/HBox/VBox/CloseButton.pressed.connect(queue_free)
+	show_rows()
 	_refresh()
+
+
+## The slots with a row: every PaperDoll slot but the body.
+static func slots() -> Array[String]:
+	var out: Array[String] = []
+	for slot: String in PaperDoll.LAYERS:
+		if slot != "body":
+			out.append(slot)
+	return out
+
+
+## Shows the rows of the slots that have a choice and sizes the panel to them (call again after
+## changing `options`).
+func show_rows() -> void:
+	for slot: String in slots():
+		var row: Control = $Panel/HBox/VBox.get_node(slot.capitalize())
+		row.visible = options.get(slot, []).size() > 1
+	var panel: Control = $Panel
+	var box: Control = $Panel/HBox  # 10 px in from the panel's edges
+	var h := maxf(MIN_PANEL_HEIGHT, box.get_combined_minimum_size().y + 20.0)
+	panel.offset_top = -h / 2.0
+	panel.offset_bottom = h / 2.0
 
 
 func _cycle(slot: String, dir: int) -> void:

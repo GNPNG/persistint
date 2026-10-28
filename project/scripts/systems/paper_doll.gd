@@ -1,17 +1,22 @@
 class_name PaperDoll
 extends Control
 ## PaperDoll — layered sprite doll (DESIGN.md: paper-doll reused by wardrobe (kind) and
-## makeover (judged)). Give it an outfit {slot: part_id}; layers stack in LAYERS order.
+## makeover (judged)). Give it an outfit {slot: part_id}; layers stack in LAYERS order: the body,
+## then shoes, a bottom and a top, a dress over them (a dress is a whole outfit, legwear and shoes
+## included), the hair, a hat over it and the accessory last, so a hat and a bow can be worn
+## together (bd lg5w.1). A part's slot is its name's prefix (slot_of; acc_* are accessories, as in
+## tools/cut_paperdoll.py SLOTS).
 ## Part art comes from the canon set when it has every worn part, else assets/placeholder.
 ## The canon set is the canon cuts (assets/canon) plus area parts drawn on the canon doll frame
 ## (assets/florida: the crafted Florida wearables, tools/gen_florida_wearables.py).
 
-const LAYERS: Array[String] = ["body", "dress", "hair", "accessory"]
+const LAYERS: Array[String] = ["body", "shoes", "bottom", "top", "dress", "hair", "hat", "accessory"]
 const ART_DIRS: Array[String] = ["res://assets/canon/%s.png", "res://assets/placeholder/%s.png"]
 ## Extra folders searched for a part, after the set's own folder, keyed by the set's pattern.
 const ART_EXTRA := {"res://assets/canon/%s.png": ["res://assets/florida/%s.png"]}
 ## What the player wears before any outfit_* flag is set (player and wardrobe agree on it).
-const DEFAULT_OUTFIT := {"body": "body_base", "dress": "dress_white", "hair": "hair_braids", "accessory": "none"}
+const DEFAULT_OUTFIT := {"body": "body_base", "shoes": "none", "bottom": "none", "top": "none",
+	"dress": "dress_white", "hair": "hair_braids", "hat": "none", "accessory": "none"}
 
 ## Shown this tall (px) when set: the doll sizes itself (custom_minimum_size) to the art's
 ## frame at that height through SpriteFit, aspect kept. 0 leaves the size to the layout.
@@ -53,6 +58,13 @@ func _fit() -> void:
 		return
 	var body: Texture2D = load(part_path(art_dir_for([DEFAULT_OUTFIT["body"]]), DEFAULT_OUTFIT["body"]))
 	custom_minimum_size = SpriteFit.size_for(body, display_height)
+
+
+## The slot a part is worn in, from its name's prefix ("acc" is the accessory); "" for none.
+static func slot_of(part_id: String) -> String:
+	var prefix := part_id.get_slice("_", 0)
+	var slot := "accessory" if prefix == "acc" else prefix
+	return slot if slot in LAYERS and part_id.contains("_") else ""
 
 
 ## The first art set that has every worn part, so canon and placeholder layers never mix.

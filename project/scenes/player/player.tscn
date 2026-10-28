@@ -15,9 +15,17 @@ script = ExtResource("2")
 
 [node name="Body" type="AnimatedSprite2D" parent="."]
 
+[node name="Shoes" type="AnimatedSprite2D" parent="."]
+
+[node name="Bottom" type="AnimatedSprite2D" parent="."]
+
+[node name="Top" type="AnimatedSprite2D" parent="."]
+
 [node name="Dress" type="AnimatedSprite2D" parent="."]
 
 [node name="Hair" type="AnimatedSprite2D" parent="."]
+
+[node name="Hat" type="AnimatedSprite2D" parent="."]
 
 [node name="Accessory" type="AnimatedSprite2D" parent="."]
 

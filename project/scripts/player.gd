@@ -2,7 +2,8 @@ extends CharacterBody2D
 ## Player — click-to-walk via NavigationAgent2D, click-on-things to approach & interact;
 ## arrow keys (and WASD) walk directly and cancel a click-walk. Keys do nothing while a
 ## dialogue is open, so the arrows stay free for choosing responses.
-## Paper-doll: layered rigs (Body/Dress/Hair/Accessory) driven by WorldState outfit flags. Each
+## Paper-doll: layered rigs, one per PaperDoll slot in its stack order (Body, Shoes, Bottom, Top,
+## Dress, Hair, Hat, Accessory: PaperDoll.LAYERS), driven by WorldState outfit flags. Each
 ## worn part is a directional sheet (assets/characters/player/<part>_rig.png, tools/gen_player_rig.py:
 ## idle and walk facing down, left and up, all parts on one frame grid); every layer plays the same
 ## animation frame, chosen from her velocity, so click-walk and arrow keys both animate her.
@@ -51,8 +52,12 @@ func _ready() -> void:
 	refresh_mount()
 
 
+## The art layers, one per PaperDoll slot (the node named after it), in stack order.
 func _layers() -> Array[AnimatedSprite2D]:
-	return [$Body, $Dress, $Hair, $Accessory]
+	var out: Array[AnimatedSprite2D] = []
+	for slot: String in PaperDoll.LAYERS:
+		out.append(get_node(slot.capitalize()) as AnimatedSprite2D)
+	return out
 
 
 ## The ring and shadow nodes: the shadow first (under the pony too), the rings right under the art.
@@ -254,12 +259,9 @@ func _on_flag_changed(key: String, _value: Variant) -> void:
 
 
 func refresh_outfit() -> void:
-	var outfit := {
-		$Body: WorldState.get_flag("outfit_body", PaperDoll.DEFAULT_OUTFIT["body"]),
-		$Dress: WorldState.get_flag("outfit_dress", PaperDoll.DEFAULT_OUTFIT["dress"]),
-		$Hair: WorldState.get_flag("outfit_hair", PaperDoll.DEFAULT_OUTFIT["hair"]),
-		$Accessory: WorldState.get_flag("outfit_accessory", PaperDoll.DEFAULT_OUTFIT["accessory"]),
-	}
+	var outfit := {}
+	for slot: String in PaperDoll.LAYERS:
+		outfit[get_node(slot.capitalize())] = WorldState.get_flag("outfit_%s" % slot, PaperDoll.DEFAULT_OUTFIT[slot])
 	# Same art set for every layer (canon when it has all worn parts, as the wardrobe does).
 	var pattern := PaperDoll.art_dir_for(outfit.values())
 	for layer: AnimatedSprite2D in outfit:
