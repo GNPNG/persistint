@@ -253,6 +253,8 @@ sprite_texture = "npc_father"
 dialogue_path = "res://dialogue/florida_beach.dialogue"
 dialogue_title = "father"
 voice_pitch = 0.8
+hide_if_flag = "fl_father_to_garden"
+leave_to = "res://scenes/florida/garden.tscn"
 
 [node name="Daughter" parent="." instance=ExtResource("18")]
 position = Vector2(566, 386)
@@ -263,6 +265,7 @@ dialogue_path = "res://dialogue/florida_beach.dialogue"
 dialogue_title = "daughter"
 voice_pitch = 1.25
 hide_if_flag = "fl_invited_to_horses"
+leave_to = "res://scenes/florida/stable.tscn"
 
 [node name="Psychologists" parent="." instance=ExtResource("18")]
 position = Vector2(392, 458)

@@ -3,9 +3,10 @@ extends SceneTree
 ## riding makes click-to-move faster with the pony drawn under the doll, foals inherit one
 ## allele per gene from each parent (seeded, deterministic, Mendelian), the herd and the ride
 ## survive save/load, the panel's buttons (Foal, Hop down) and the H key work, the Daughter moves
-## from the beach to the stable once she invites you, Hannah brushes a pony, every branch of the
-## stable dialogue plays, and the beach <-> stable doors sit on the walkable area, land on real
-## spawn markers and go through SceneRouter.
+## from the beach to the stable once she invites you (walking off to the stable door, bd b4z3;
+## test_florida.gd checks the walk and that the Father leaves for the garden the same way), Hannah
+## brushes a pony, every branch of the stable dialogue plays, and the beach <-> stable doors sit on
+## the walkable area, land on real spawn markers and go through SceneRouter.
 ## Run: godot --headless --path project -s tests/test_pony_stable.gd
 ## WorldState saves to a temp file for the run; the player's real save is never touched.
 
@@ -208,6 +209,13 @@ func _run() -> void:
 	ws.set_flag("fl_invited_to_horses", true)
 	await process_frame
 	await process_frame
+	_check(beach_daughter.visible and beach_daughter.is_leaving() and not beach_daughter.input_pickable,
+		"after the invitation she sets off for the stable on foot, not on the spot (bd b4z3)")
+	Engine.time_scale = 8.0  # her walk to the StableDoor (test_florida.gd times it), eight times as fast
+	var t0 := Time.get_ticks_msec()
+	while beach_daughter.visible and Time.get_ticks_msec() - t0 < 5000:
+		await process_frame
+	Engine.time_scale = 1.0
 	_check(not beach_daughter.visible and not beach_daughter.input_pickable and not beach_daughter.get_node("Proximity").monitoring,
 		"after the invitation she leaves the beach")
 	beach_map.queue_free()

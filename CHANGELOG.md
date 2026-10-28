@@ -14,6 +14,12 @@ into the new version's heading; the Updates page on the site shows the released 
 - Zoom: two paper-cutout figures beside the magnifier show the zoom, the big one for the normal
   view and the small one for one level out; tap one to go to it.
 
+### Changed
+
+- Florida: at the end of his talk on the beach the Father says he's headed to the house to look at
+  the garden, and goes there, the way the Daughter goes to the ponies. Both of them walk off to the
+  way out to where they are going instead of vanishing on the spot.
+
 ### Fixed
 
 - Text in the world (door names, speech bubbles, the little words that float up in Florida) is

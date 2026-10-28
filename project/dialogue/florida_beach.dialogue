@@ -17,6 +17,8 @@ Father: You can try the stones if you like. Flat ones skip best.
 - I'd rather just sit for a while.
 	Father: That's allowed. The beach isn't going anywhere.
 	Father: There's lemonade up at the house when you want it. Key lime, from our own tree.
+Father: Well, I'm headed to the house to look at the garden. You know where to find me.
+do WorldState.set_flag("fl_father_to_garden", true)
 => END
 
 ~ daughter

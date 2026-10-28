@@ -245,3 +245,4 @@ sprite_texture = "npc_father"
 dialogue_path = "res://dialogue/florida_garden.dialogue"
 dialogue_title = "father"
 voice_pitch = 0.8
+show_if_flag = "fl_father_to_garden"
