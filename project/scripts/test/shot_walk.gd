@@ -120,6 +120,10 @@ func _run() -> void:
 			print("SHOT FAIL %s: %s" % [shot_name, why])
 			failed.append(shot_name)
 		await _teardown()
+	# Voice silent to the end: a line deferred to the last frame would start a clip at the quit.
+	var voice := root.get_node_or_null("Voice")
+	if voice != null:
+		await voice.shutdown()
 	print("SHOT_WALK: %d saved, %d failed%s" % [saved, failed.size(),
 		"" if failed.is_empty() else " (%s)" % ", ".join(PackedStringArray(failed))])
 	quit(1 if not failed.is_empty() else 0)
@@ -230,8 +234,9 @@ func _shoot(spec: Dictionary, s: Dictionary, out_dir: String) -> String:
 
 ## Between shots in one process, and before the run quits: closes the settings screen (it pauses
 ## play), frees the layers left on the root (dialogue balloons), sparing the autoloads, and stops
-## every audio player still going (a line of Voice's or a node's VoiceAt still playing at quit
-## left its AudioStreamWAV and playback in use at exit).
+## every audio player still going and waits for the audio server to let go of it (a line of
+## Voice's or a node's VoiceAt still playing at quit left its AudioStreamWAV and playback in use
+## at exit).
 func _teardown() -> void:
 	var settings := root.get_node_or_null("AudioSettings")
 	if settings != null and bool(settings.call("is_open")):
@@ -244,15 +249,19 @@ func _teardown() -> void:
 	for c in root.get_children():
 		if c is CanvasLayer and not autoloads.has(String(c.name)):
 			c.queue_free()
-	# Voice's queues first, as test_audio_settings.gd's _quiet() does: its players' `finished`
-	# starts the next part of a line, so a part ending as the players stop would start one more
-	# clip after them and leave its stream in use at exit.
+	# Voice.stop_all ends its lines (queues emptied, players stopped, streams dropped, nothing new
+	# starts meanwhile), stops the other players with them, and waits until the audio server has
+	# freed their playbacks. stop() only marks a playback for removal; the audio thread drops it at
+	# its next mix, and under --fixed-fps the two frames this used to wait could pass before that,
+	# so the quit left the playback and its stream in use at exit (bd y37).
+	var others: Array = []
+	for kind: String in ["AudioStreamPlayer", "AudioStreamPlayer2D"]:
+		others.append_array(root.find_children("*", kind, true, false))
 	var voice := root.get_node_or_null("Voice")
 	if voice != null:
-		(voice.get("_queue") as Array).clear()
-		(voice.get("_at") as Dictionary).clear()
-	for kind: String in ["AudioStreamPlayer", "AudioStreamPlayer2D"]:
-		for p: Node in root.find_children("*", kind, true, false):
+		await voice.stop_all(others)
+	else:
+		for p: Node in others:
 			p.call("stop")
 	root.get_node("SceneRouter").set("next_spawn", "spawn_default")
 	await _wait(2)

@@ -26,6 +26,8 @@ extends Node
 ##   node's own AudioStreamPlayer2D (VOICE_AT, made on first use): lines from different nodes
 ##   overlap and fade with distance, never cut each other or the cast's line off, and never duck
 ##   the music. A node mid-line doesn't start another; a caller can cap how many play at once.
+## stop_all() ends every line and waits until the audio server has let go of them (the shot walk
+## between shots and before it quits); shutdown() does that and keeps Voice silent until the end.
 
 ## Every line handed to speak() or speak_at(), clip or not (tests listen to it): the text as a
 ## bubble shows it, brackets removed.
@@ -33,6 +35,9 @@ signal spoke(speaker: String, text: String)
 
 ## The name of the positional player speak_at() gives a node.
 const VOICE_AT := "VoiceAt"
+
+## The most real time (ms) release() waits for the audio server to free the stopped playbacks.
+const RELEASE_MS := 2000
 
 const CLIP_DIR := "res://audio/voice"
 const SFX_DIR := "res://audio/sfx"
@@ -47,6 +52,13 @@ var _queue: Array = []  # what is left to play of the current line: {"sfx": path
 var _speaker := ""
 ## Positional players mid-line (speak_at): player -> {"queue": parts left, "speaker": String}.
 var _at := {}
+var _stopping := 0  # stop_all() calls under way
+var _shut := false  # shutdown() has run
+## While true, speak() and speak_at() play nothing (`spoke` still fires): a stop_all() is under
+## way, or shutdown() has run.
+var _hushed: bool:
+	get:
+		return _shut or _stopping > 0
 
 
 func _ready() -> void:
@@ -152,6 +164,8 @@ func speak(text: String, pitch := 1.0, speaker := "", bus := "Voice") -> void:
 	if shown.is_empty():
 		return
 	spoke.emit(speaker, shown)
+	if _hushed:
+		return
 	_speaker = speaker
 	_player.bus = bus if AudioServer.get_bus_index(bus) >= 0 else "Voice"
 	_player.stop()
@@ -170,6 +184,8 @@ func speak_at(source: Node2D, text: String, speaker := "", bus := "Clones", max_
 	if shown.is_empty() or source == null or not source.is_inside_tree():
 		return false
 	spoke.emit(speaker, shown)
+	if _hushed:
+		return false
 	var p := player_at(source, bus)
 	if speaking_at(source) or (max_voices > 0 and voices_at() >= max_voices):
 		return false
@@ -211,7 +227,7 @@ func voices_at() -> int:
 
 
 func _next_at(p: AudioStreamPlayer2D) -> void:
-	if not _at.has(p):
+	if _hushed or not _at.has(p):
 		return
 	if not is_instance_valid(p) or not _start_next(p, _at[p]["queue"], _at[p]["speaker"]):
 		_at.erase(p)
@@ -229,6 +245,8 @@ func pending() -> Array:
 
 
 func _play_next() -> void:
+	if _hushed:
+		return
 	_duck(_start_next(_player, _queue, _speaker))
 
 
@@ -245,3 +263,68 @@ func _start_next(player: Node, queue: Array, speaker: String) -> bool:
 			player.play()
 			return true
 	return false
+
+
+## Ends every line now and lets go of its audio; await it. Empties the cast's queue and every
+## node's (_at), stops the cast's player and every VoiceAt in the tree, waits until the audio
+## server has freed their playbacks (release()), then drops their streams. Meanwhile speak() and
+## speak_at() play nothing, so a line that arrives during the wait (Dialogue Manager emits
+## got_dialogue deferred) starts no clip. `others`: more players to stop and wait for; their
+## streams stay (their owners set them). Voice speaks again afterwards, unless shutdown() ran.
+func stop_all(others: Array = []) -> void:
+	_stopping += 1
+	_queue.clear()
+	_speaker = ""
+	var own: Array = [_player]
+	for p: Variant in _at.keys():
+		if is_instance_valid(p) and not own.has(p):
+			own.append(p)
+	_at.clear()
+	if is_inside_tree():
+		for p: Node in get_tree().root.find_children(VOICE_AT, "AudioStreamPlayer2D", true, false):
+			if not own.has(p):
+				own.append(p)
+	await release(own + others)
+	for p: Variant in own:
+		if is_instance_valid(p):
+			p.stream = null
+	_duck(false)
+	_stopping -= 1
+
+
+## stop_all(), and Voice stays silent from then on: for quitting, where a line that came in after
+## it (a got_dialogue deferred to the end of the last frame) would start a playback at the quit.
+func shutdown(others: Array = []) -> void:
+	_shut = true
+	await stop_all(others)
+
+
+## Stops `players` (AudioStreamPlayer, 2D or 3D) and waits, at least a frame and at most
+## RELEASE_MS of real time, until the audio server has freed the playbacks they had. stop() only
+## marks a playback for removal: the audio thread drops it at its next mix and the main thread
+## frees it the frame after, and a quit before that leaves the playback and its AudioStreamWAV in
+## use at exit (bd y37). The wait is in real time, not frames: under --fixed-fps (the shot walk)
+## frames can pass faster than the dummy audio driver mixes.
+func release(players: Array) -> void:
+	var ids: Array[int] = []
+	for p: Variant in players:
+		if not is_instance_valid(p) or not (p as Object).has_method("has_stream_playback"):
+			continue
+		if p.has_stream_playback():
+			ids.append(_playback_id(p))
+		p.stop()
+	var until := Time.get_ticks_msec() + RELEASE_MS
+	var held := ids.size()
+	while true:
+		await get_tree().process_frame
+		held = ids.filter(func(id: int) -> bool: return is_instance_id_valid(id)).size()
+		if held == 0 or Time.get_ticks_msec() >= until:
+			break
+	if held > 0:
+		print("Voice: %d stopped playback(s) still held after %d ms" % [held, RELEASE_MS])
+
+
+## The instance id of `player`'s latest playback, in a function of its own so that no reference to
+## the playback outlives the call (a coroutine keeps its locals across an await).
+static func _playback_id(player: Object) -> int:
+	return (player.call("get_stream_playback") as Object).get_instance_id()
