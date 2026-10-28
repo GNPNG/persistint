@@ -135,12 +135,17 @@ if [[ $GROUP == florida_cast || $GROUP == all ]]; then
   # Who lives on the Florida maps (tools/gen_florida_art.py, gen_florida_cast.py,
   # gen_florida_critters.py, gen_pony_sprites.py; drawn at 4 texture px per world px), one frame
   # at its own height / 4, on the sheet's grid (the .tres SpriteFrames cut it the same way):
-  # the Father, the Daughter and the stable friend (4 x 3: idle front, side, back; feet on the
-  # bottom edge), the critters (4 x 2: idle, walk; feet, or a swimmer's belly line, on the bottom
-  # edge), the aquarium fish (4 x 3: swim and wave per colour; centred). The stable ponies'
-  # PonyDoll parts (4 x 2, 52 world px, hooves on the bottom edge): the border alone for every
-  # part, the shadow once, from the body, as for the player's doll.
-  for n in npc_father npc_daughter npc_stable_friend; do
+  # the Father, the Daughter, the stable friend and the two psychologists on the beach (4 x 3:
+  # idle front, side, back; feet on the bottom edge; a sheet not drawn yet is left out, and the
+  # scene shows its fallback art meanwhile), the critters (4 x 2: idle, walk; feet, or a swimmer's
+  # belly line, on the bottom edge), the aquarium fish (4 x 3: swim and wave per colour; centred).
+  # The stable ponies' PonyDoll parts (4 x 2, 52 world px, hooves on the bottom edge): the border
+  # alone for every part, the shadow once, from the body, as for the player's doll.
+  for n in npc_father npc_daughter npc_stable_friend npc_psychologist_woman npc_psychologist_man; do
+    if [[ ! -f $A/florida/$n.png ]]; then
+      echo "bake_paper: $A/florida/$n.png not drawn yet; not baked" >&2
+      continue
+    fi
     bake "$A/florida/$n.png" "$n" "$(px_h "$A/florida/$n.png" 4 3)" --cols 4 --rows 3 --outputs edge shadow_soft
   done
   for c in crab dolphin gull mermaid; do

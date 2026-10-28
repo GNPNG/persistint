@@ -265,9 +265,22 @@ voice_pitch = 1.25
 hide_if_flag = "fl_invited_to_horses"
 
 [node name="Psychologists" parent="." instance=ExtResource("18")]
-position = Vector2(378, 458)
+position = Vector2(392, 458)
 npc_id = "psychologists"
 display_name = "Vacationers"
+sprite_texture = "npc_psychologist_woman"
+fallback_texture = "npc_stable_friend"
 dialogue_path = "res://dialogue/florida_psychologists.dialogue"
 dialogue_title = "start"
 voice_pitch = 0.9
+
+[node name="PsychologistMan" parent="." instance=ExtResource("18")]
+position = Vector2(362, 458)
+npc_id = "psychologists"
+display_name = "Vacationers"
+sprite_texture = "npc_psychologist_man"
+fallback_texture = "npc_father"
+dialogue_path = "res://dialogue/florida_psychologists.dialogue"
+dialogue_title = "start"
+voice_pitch = 0.9
+walk_by_bark = false

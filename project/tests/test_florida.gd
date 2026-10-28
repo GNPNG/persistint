@@ -9,7 +9,9 @@ extends SceneTree
 ## camera's zoom, in plum on a white outline (STYLE.md 4.8) at full opacity until it fades at the
 ## end of its rise (bd wso.4: the seed bag's "Now planting" was drawn at half the resolution and
 ## fading from the start, and read pale grey). The window is 1280x720 as in the game
-## (root.oversampling_override = 2: a headless root is much smaller).
+## (root.oversampling_override = 2: a headless root is much smaller). Every NPC on every map that
+## has them shows a figure: frames or a texture, visible, not faded out, a size on screen (the
+## beach psychologists had no art at all; until their own sheets are drawn they show fallback art).
 ## Run: godot --headless --path project -s tests/test_florida.gd
 ## The player's real save (user://save.json) is backed up and restored.
 
@@ -142,6 +144,10 @@ func _run() -> void:
 		scene.queue_free()
 		await process_frame
 
+	# Every NPC shows a figure, on the beach and on every other map with NPCs.
+	ws.reset()
+	await _npcs_visible()
+
 	if had_save:
 		var f := FileAccess.open(ws.SAVE_PATH, FileAccess.WRITE)
 		f.store_string(backup)
@@ -251,6 +257,75 @@ func _float_in_view(scene: Node, thing_name: String, stand: Vector2, what: Strin
 	_check(least >= 0.0, "garden: the %s's text, %s, stays inside the view (%.1f px in at the least)" % [thing_name, what, least])
 	_check(early == 1.0, "garden: the %s's text is opaque until it fades at the end of its rise (%.2f at the least)" % [thing_name, early])
 	return rose
+
+
+## Each map scene with NPCs (scenes/npc/npc.tscn) under scenes/florida and scenes/maps, loaded in
+## turn: every NPC there (scripts/npc.gd) that is present shows a figure (_figure_problem).
+func _npcs_visible() -> void:
+	var maps: Array[String] = []
+	for dir: String in ["res://scenes/florida", "res://scenes/maps"]:
+		for f: String in DirAccess.get_files_at(dir):
+			if f.ends_with(".tscn") and FileAccess.get_file_as_string(dir.path_join(f)).contains("res://scenes/npc/npc.tscn"):
+				maps.append(dir.path_join(f))
+	_check(maps.has("res://scenes/florida/beach.tscn"), "the maps with NPCs include the beach (%s)" % ", ".join(PackedStringArray(maps)))
+	for path: String in maps:
+		var scene: Node = load(path).instantiate()
+		root.add_child(scene)
+		await process_frame
+		await process_frame
+		var npcs: Array = []
+		for n: Node in scene.find_children("*", "Area2D", true, false):
+			if n.get_script() != null and (n.get_script() as Script).resource_path == "res://scripts/npc.gd":
+				npcs.append(n)
+		var bad: Array[String] = []
+		var present := 0
+		for npc: Node in npcs:
+			if not npc.is_present():
+				continue
+			present += 1
+			var why := _figure_problem(npc as Node2D)
+			if why != "":
+				bad.append("%s: %s" % [npc.name, why])
+		_check(bad.is_empty(), "%s: every NPC shows a figure (%d of %d present; %s)"
+			% [path.get_file(), present, npcs.size(), "; ".join(PackedStringArray(bad)) if not bad.is_empty() else "all visible"])
+		if path.ends_with("/beach.tscn"):
+			var pair: Array[String] = []
+			for who: String in ["Psychologists", "PsychologistMan"]:
+				var one: Node = scene.get_node_or_null(who)
+				if one != null and one.is_present() and _figure_problem(one as Node2D) == "":
+					pair.append(who)
+			_check(pair.size() == 2, "beach: both psychologists show under the umbrella (%s)" % ", ".join(PackedStringArray(pair)))
+		scene.queue_free()
+		await process_frame
+
+
+## Why an NPC shows no figure, or "": its art (the rig, else its Sprite2D) has frames or a texture,
+## is visible, is not faded out and has a size on screen.
+func _figure_problem(npc: Node2D) -> String:
+	var art: Node2D = npc.get_node_or_null("Sprite2D") as Node2D
+	if npc.get("rig") is AnimatedSprite2D:
+		art = npc.get("rig")
+	if art == null:
+		return "no sprite node"
+	var tex: Texture2D = null
+	var frames := Vector2.ONE
+	if art is AnimatedSprite2D:
+		var a := art as AnimatedSprite2D
+		if a.sprite_frames != null and a.sprite_frames.has_animation(a.animation) and a.sprite_frames.get_frame_count(a.animation) > 0:
+			tex = a.sprite_frames.get_frame_texture(a.animation, a.frame)
+	elif art is Sprite2D:
+		tex = (art as Sprite2D).texture
+		frames = Vector2((art as Sprite2D).hframes, (art as Sprite2D).vframes)
+	if tex == null:
+		return "no texture or frames"
+	if not art.is_visible_in_tree():
+		return "hidden"
+	if _modulate(art).a <= 0.01:
+		return "faded out (alpha %.2f)" % _modulate(art).a
+	var size := tex.get_size() / frames * art.global_scale.abs()
+	if size.x < 4.0 or size.y < 8.0:
+		return "%.1f x %.1f px on screen" % [size.x, size.y]
+	return ""
 
 
 ## The colour a canvas item's own drawing is multiplied by: its self_modulate and the modulate

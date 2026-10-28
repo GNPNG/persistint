@@ -26,6 +26,9 @@ static var _barks: Dictionary = {}
 @export var display_name := ""
 @export var caste := "initiate"  # mother | priestess | initiate | drone | barren
 @export var sprite_texture := ""  # art name: a rigged <name>.tres sheet or a <name>.png, see _load_art
+## Art shown while sprite_texture has none in the tree yet (a cast sheet still to be drawn), looked
+## up the same way: the NPC's own sheet replaces it as soon as that sheet is there.
+@export var fallback_texture := ""
 @export var dialogue_path := ""  # e.g. res://dialogue/offering.dialogue
 @export var dialogue_title := "start"
 @export var voice_pitch := 1.0
@@ -33,6 +36,9 @@ static var _barks: Dictionary = {}
 ## (e.g. the Daughter leaves the beach for the stable after inviting you to the horses).
 @export var show_if_flag := ""
 @export var hide_if_flag := ""
+## Off for the second of a pair who share one npc_id and its barks (the beach psychologists): walking
+## past, only the first one barks; talking to either opens their conversation.
+@export var walk_by_bark := true
 
 @onready var bubble: Label = $BarkBubble  # scenes/ui/bark_bubble.tscn
 
@@ -54,8 +60,8 @@ func _ready() -> void:
 			if parsed is Dictionary:
 				_barks = parsed
 	_last_position = global_position
-	if sprite_texture != "":
-		_load_art()
+	if sprite_texture != "" and not _load_art(sprite_texture) and fallback_texture != "":
+		_load_art(fallback_texture)
 	var art: Node2D = rig if rig else $Sprite2D
 	if _baked:
 		bubble.bottom = -RIG_HEIGHT - 2.0  # over the head (the baked frame is padded)
@@ -75,12 +81,13 @@ func _ready() -> void:
 ## Art lookup, first match wins: a caste rig sheet (assets/characters/<name>_rig.png), then in
 ## canon, florida and placeholder a SpriteFrames <name>.tres (a rigged sheet) before a still
 ## <name>.png. Canon art (cut from the canon sheets) wins over area art and placeholders.
-func _load_art() -> void:
-	if ResourceLoader.exists(RIG_PATH % sprite_texture):
-		_build_rig()
-		return
+## False when `art` has none of them.
+func _load_art(art: String) -> bool:
+	if ResourceLoader.exists(RIG_PATH % art):
+		_build_rig(art)
+		return true
 	for dir in ["canon", "florida", "placeholder"]:
-		var frames_path := "res://assets/%s/%s.tres" % [dir, sprite_texture]
+		var frames_path := "res://assets/%s/%s.tres" % [dir, art]
 		if ResourceLoader.exists(frames_path):
 			rig = AnimatedSprite2D.new()
 			rig.name = "Rig"
@@ -92,21 +99,22 @@ func _load_art() -> void:
 			rig.frame = randi() % rig.sprite_frames.get_frame_count("idle_front")
 			# The sheet states its resolution (display_scale, tools/florida_draw.py).
 			SpriteFit.fit_sheet(rig)
-			return
-		var path := "res://assets/%s/%s.png" % [dir, sprite_texture]
+			return true
+		var path := "res://assets/%s/%s.png" % [dir, art]
 		if ResourceLoader.exists(path):
 			$Sprite2D.texture = load(path)
 			SpriteFit.fit($Sprite2D, STILL_HEIGHT)
-			return
+			return true
+	return false
 
 
-func _build_rig() -> void:
+func _build_rig(art: String) -> void:
 	## The rig replaces the single still sprite; its feet stand on the origin. With a paper bake
 	## (PaperBake, assets/paper/) it is the bordered sheet, drawn over its baked soft shadow.
 	$Sprite2D.hide()
 	rig = AnimatedSprite2D.new()
 	rig.name = "Rig"
-	var src := RIG_PATH % sprite_texture
+	var src := RIG_PATH % art
 	var bake := PaperBake.name_of(src)
 	var edge := PaperBake.sheet(bake, PaperBake.EDGE)
 	_baked = edge != ""
@@ -220,7 +228,7 @@ func interact() -> void:
 
 ## Walking up barks, except while a conversation is up (its balloon says the lines then).
 func _on_proximity_entered(body: Node2D) -> void:
-	if body.is_in_group("player") and get_tree().get_first_node_in_group("dialogue_balloon") == null:
+	if walk_by_bark and body.is_in_group("player") and get_tree().get_first_node_in_group("dialogue_balloon") == null:
 		_show_bubble(current_bark())
 
 
