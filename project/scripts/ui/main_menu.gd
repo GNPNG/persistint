@@ -3,9 +3,15 @@ extends Control
 ## Help & Support opens the support page on the site in the system browser. Settings opens the
 ## volume sliders (AudioSettings). At the bottom, the copyright lines and Credits & Licences, which
 ## opens the credits screen (scenes/ui/credits.tscn, data/credits.json) over the menu.
+## Quit (desktop builds) quits once Voice has shut down (quit_game).
 
 const FIRST_MAP := "res://scenes/maps/village.tscn"
 const SUPPORT_URL := "https://persistint.dataglut.org/support.html"
+
+## What quit_game() calls last: the tree's quit. A var so a headless test can stand in for it and
+## keep running.
+var quit_tree := func() -> void: get_tree().quit()
+var _quitting := false
 
 
 func _ready() -> void:
@@ -44,10 +50,25 @@ func _add_quit_button() -> void:
 	var b := Button.new()
 	b.name = "QuitButton"
 	b.text = "Quit"
-	b.pressed.connect(func() -> void: get_tree().quit())
+	b.pressed.connect(quit_game)
 	var box: VBoxContainer = $Center/Panel/VBox
 	box.add_child(b)
 	box.move_child(b, box.get_node("Hint").get_index())
+
+
+## Quit: Voice ends every line and stays silent, stops every other player in the tree (the music)
+## with them, and waits until the audio server has let go of their playbacks (Voice.shutdown,
+## bd y37), then the tree quits; a playback still held at the quit would leave its stream in use
+## at exit. As the shot walk ends. A second press during that wait does nothing.
+func quit_game() -> void:
+	if _quitting:
+		return
+	_quitting = true
+	var others: Array = []
+	for kind: String in ["AudioStreamPlayer", "AudioStreamPlayer2D"]:
+		others.append_array(get_tree().root.find_children("*", kind, true, false))
+	await Voice.shutdown(others)
+	quit_tree.call()
 
 
 static func is_fullscreen() -> bool:
