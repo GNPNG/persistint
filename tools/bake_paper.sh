@@ -21,14 +21,15 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 A=project/assets
-OUT=project/assets/paper
+OUT="${PAPER_OUT:-project/assets/paper}"   # PAPER_OUT bakes a tier elsewhere (bd 5d8)
+MAX_SCALE="${PAPER_MAX_SCALE:-6}"          # texture px per world px cap; the tier knob (bd 5d8)
 GROUP="${1:-all}"
 MAGICK="${MAGICK:-magick}"
 
 bake() {  # bake SHEET NAME WORLD_H [more gen_paper_edges options]
   local sheet="$1" name="$2" h="$3"
   shift 3
-  node tools/gen_paper_edges.mjs "$sheet" --world-h "$h" --edges 2 --papers white --max-scale 6 \
+  node tools/gen_paper_edges.mjs "$sheet" --world-h "$h" --edges 2 --papers white --max-scale "$MAX_SCALE" \
     --out "$OUT" --name "$name" "$@" < /dev/null
 }
 
