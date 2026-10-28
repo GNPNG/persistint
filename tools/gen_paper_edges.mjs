@@ -7,7 +7,7 @@
  * The overhead Paper Mario look is a light paper border around every cut-out and a soft shadow
  * on the ground under it. Baked once, offline, into sibling sheets, each costs one draw:
  *
- *   <name>_edge<E>_<paper>.png   the art with an E world-px paper border baked in
+ *   <name>_edge<E>_<paper>.png   the art with a paper border baked in, E world px nominal (MARGIN of it)
  *   <name>_ring<E>_<paper>.png   the border alone (paper over the grown silhouette, no art): the
  *                                paper-doll player draws one per worn part under the art stack
  *   <name>_shadow_soft.png       the silhouette (border included) as a blurred black shadow; the
@@ -25,8 +25,15 @@
  * to be more smooth"): ROUGHNESS scales the wobble (the inner radius is (1 - 0.4 ROUGHNESS) of the
  * border, so 1 is the first bakes' 0.6 and 0 one even border), KERNEL the shape the alpha grows by
  * (Disk: round; Square: the first bakes' blocky corners) and SMOOTH (world px) rounds the grown
- * outline (a blur and a 50% threshold) before its 0.6 px soften. --roughness, --kernel and --smooth
- * set them for one bake; --roughness 1 --kernel Square --smooth 0 bakes as before.
+ * outline (a blur and a 50% threshold) before its soften. How wide and how real (the author,
+ * 2026-10-28: "reduce the margins of the paper effect a little bit", "could be a tiny bit more
+ * subtle", "slightly unreal"): MARGIN is the border's width as a share of its nominal --edges width
+ * (edge2 at 0.7 is a 1.4 world-px border; the sheets keep the nominal name and the padding comes
+ * from it, so a narrower border bakes the same frame grid, sidecar and file names, and nothing
+ * else changes), WHITE the white paper's tone (a warm off-white) and SOFTEN (texture px, an
+ * anti-alias) the blur of its outer edge. --roughness, --kernel, --smooth, --margin, --white and
+ * --soften set them for one bake; --roughness 1 --kernel Square --smooth 0 --margin 1 --white fffdf7
+ * --soften 0.6 bakes as before. The shadow's offset and strength are the engine's (PaperBake).
  * The sidecar's feet = (pad + scaled frame h * --feet) / padded frame h and world_h_padded =
  * world_h * padded h / scaled h; SpriteFit.fit(node, world_h_padded, feet) shows a baked frame at
  * the source's size with its feet where they were.
@@ -34,26 +41,34 @@
  *   node tools/gen_paper_edges.mjs SHEET [--layers MORE...] --cols 8 --rows 3 --world-h 52 \
  *       --feet 0.9615 --max-scale 4 --edges 2 --papers white --outputs edge shadow_soft \
  *       --out DIR --name NAME [--roughness R] [--kernel Disk|Square] [--smooth WORLD_PX]
+ *       [--margin SHARE] [--white RRGGBB] [--soften PX]
  */
 import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 
-const PAPERS = { white: [255, 253, 247], cream: [255, 240, 210] };
+/** The white paper, #fbf6ea, a warm off-white (the first bakes': #fffdf7). */
+const WHITE = [251, 246, 234];
+const PAPERS = { white: WHITE, cream: [255, 240, 210] };
 /** The cut-paper edge's roughness, 0 (even) to 1 (the first bakes'), its grow shape and how much
  *  its outline is rounded (world px); see the header. */
-const ROUGHNESS = 0.3;
+const ROUGHNESS = 0.2;
 const KERNEL = "Disk";
 const SMOOTH = 0.5;
+/** The border's width as a share of its nominal --edges width (the first bakes': 1) and the blur
+ *  of its outer edge, texture px (the first bakes': 0.6). */
+const MARGIN = 0.7;
+const SOFTEN = 1.0;
 const MAGICK = process.env.MAGICK || "magick";
 
 function parse(argv) {
   const a = { layers: [], cols: 1, rows: 1, worldH: 0, feet: 1.0, scale: 0, maxScale: 0, edges: [1, 2, 3],
     papers: [], outputs: ["edge", "shadow_soft", "shadow_hard"], shadowBlur: 1.5, seed: 7, out: "", name: "", sheet: "",
-    roughness: ROUGHNESS, kernel: KERNEL, smooth: SMOOTH };
+    roughness: ROUGHNESS, kernel: KERNEL, smooth: SMOOTH, margin: MARGIN, white: WHITE, soften: SOFTEN };
   const lists = { "--layers": "layers", "--edges": "edges", "--papers": "papers", "--outputs": "outputs" };
   const nums = { "--cols": "cols", "--rows": "rows", "--world-h": "worldH", "--feet": "feet", "--scale": "scale",
-    "--max-scale": "maxScale", "--shadow-blur": "shadowBlur", "--seed": "seed", "--roughness": "roughness", "--smooth": "smooth" };
+    "--max-scale": "maxScale", "--shadow-blur": "shadowBlur", "--seed": "seed", "--roughness": "roughness", "--smooth": "smooth",
+    "--margin": "margin", "--soften": "soften" };
   for (let i = 0; i < argv.length; i++) {
     const k = argv[i];
     if (lists[k]) {
@@ -64,6 +79,11 @@ function parse(argv) {
     else if (k === "--out") a.out = argv[++i];
     else if (k === "--name") a.name = argv[++i];
     else if (k === "--kernel") a.kernel = argv[++i];
+    else if (k === "--white") {
+      const h = String(argv[++i]).replace(/^#/, "");
+      if (!/^[0-9a-fA-F]{6}$/.test(h)) throw new Error(`--white ${h}: RRGGBB`);
+      a.white = [0, 2, 4].map((j) => parseInt(h.slice(j, j + 2), 16));
+    }
     else if (k === "-h" || k === "--help") { console.log(fs.readFileSync(new URL(import.meta.url)).toString().split("*/")[0]); process.exit(0); }
     else if (k.startsWith("--")) throw new Error(`unknown option ${k}`);
     else a.sheet = k;
@@ -72,6 +92,8 @@ function parse(argv) {
   if (!(a.roughness >= 0 && a.roughness <= 1)) throw new Error(`--roughness ${a.roughness}: 0 to 1`);
   if (!(a.smooth >= 0)) throw new Error(`--smooth ${a.smooth}: 0 or more world px`);
   if (!["Disk", "Square"].includes(a.kernel)) throw new Error(`--kernel ${a.kernel}: Disk or Square`);
+  if (!(a.margin > 0)) throw new Error(`--margin ${a.margin}: a share of the nominal width, more than 0`);
+  if (!(a.soften >= 0)) throw new Error(`--soften ${a.soften}: 0 or more texture px`);
   return a;
 }
 
@@ -99,7 +121,8 @@ function bake(a) {
     if (a.maxScale) scale = Math.min(scale, a.maxScale);
     const k = scale / srcScale;
     const fw = Math.max(1, Math.round(srcFw * k)), fh = Math.max(1, Math.round(srcFh * k));
-    const maxEdge = Math.max(...a.edges) * scale;
+    // The padding from the nominal width (a narrower border keeps the frame grid).
+    const maxEdge = Math.max(...a.edges) * Math.max(1, a.margin) * scale;
     const blurSoft = a.shadowBlur * scale;
     const pad = Math.ceil(maxEdge + blurSoft * 3) + 2;
     const pw = fw + 2 * pad, ph = fh + 2 * pad;
@@ -108,14 +131,15 @@ function bake(a) {
     for (const l of a.layers) stack.push(l, "-compose", "Over", "-composite");
     magick([...stack, "-crop", `${srcFw}x${srcFh}`, "+repage", path.join(tmp, "f_%03d.png")]);
     const n = a.cols * a.rows;
-    const papers = Object.keys(PAPERS).filter((p) => !a.papers.length || a.papers.includes(p));
+    const tones = { ...PAPERS, white: a.white };
+    const papers = Object.keys(tones).filter((p) => !a.papers.length || a.papers.includes(p));
     const widest = Math.max(...a.edges);
     const cells = {}; // key -> [cell paths]
     const push = (key, p) => (cells[key] ||= []).push(p);
     for (let i = 0; i < n; i++) {
       const f = path.join(tmp, `f_${String(i).padStart(3, "0")}.png`);
       for (const e of a.edges) {
-        const r = e * scale, rs = Math.max(1, r * (1 - 0.4 * a.roughness));
+        const r = e * a.margin * scale, rs = Math.max(1, r * (1 - 0.4 * a.roughness));
         // Square takes whole px (the first bakes'); Disk a radius.
         const grow = (radius) => `${a.kernel}:${a.kernel === "Square" ? Math.max(1, Math.ceil(radius)) : +Math.max(1, radius).toFixed(3)}`;
         const smooth = a.smooth > 0 ? ["-blur", `0x${+(a.smooth * scale).toFixed(3)}`, "-threshold", "50%"] : [];
@@ -123,14 +147,14 @@ function bake(a) {
         const args = [f, "-filter", "Lanczos", "-resize", `${fw}x${fh}!`, "-background", "none", "-gravity", "center",
           "-extent", `${pw}x${ph}`, "+repage", "-write", "mpr:art", "+delete",
           // The ring: the alpha grown by r or by rs, picked by a coarse noise field; its outline
-          // rounded (SMOOTH), then slightly softened.
+          // rounded (SMOOTH), then softened (SOFTEN).
           "mpr:art", "-alpha", "extract", "-morphology", "Dilate", grow(rs),
           "(", "mpr:art", "-alpha", "extract", "-morphology", "Dilate", grow(r), ")",
           "(", "-size", `${cw}x${ch}`, "xc:gray", "-seed", String(a.seed * 100003 + e * 1009 + i), "+noise", "Random",
           "-colorspace", "gray", "-filter", "Catrom", "-resize", `${pw}x${ph}!`, "-threshold", "46.3%", ")",
-          "-compose", "Over", "-composite", ...smooth, "-blur", "0x0.6", "-write", "mpr:ring", "+delete"];
+          "-compose", "Over", "-composite", ...smooth, "-blur", `0x${+a.soften.toFixed(3)}`, "-write", "mpr:ring", "+delete"];
         for (const p of papers) {
-          const paper = ["(", "-size", `${pw}x${ph}`, `xc:${rgb(PAPERS[p])}`, "mpr:ring", "-alpha", "off", "-compose", "CopyOpacity", "-composite", ")"];
+          const paper = ["(", "-size", `${pw}x${ph}`, `xc:${rgb(tones[p])}`, "mpr:ring", "-alpha", "off", "-compose", "CopyOpacity", "-composite", ")"];
           if (a.outputs.includes("ring")) {
             const out = cell("ring", p);
             args.push(...paper, "-depth", "8", "-write", out, "+delete");
@@ -184,7 +208,8 @@ function bake(a) {
     ];
     fs.writeFileSync(path.join(a.out, `${a.name}.json`), `{\n${side.join(",\n")}\n}\n`);
     console.log(`${a.name}: ${a.cols}x${a.rows} frames ${srcFw}x${srcFh} -> ${pw}x${ph} (pad ${pad}, ${+scale.toFixed(4)} px/world px; `
-      + `edge roughness ${a.roughness}, ${a.kernel}, smooth ${a.smooth}); ${Object.keys(written).length} sheets`);
+      + `edge roughness ${a.roughness}, ${a.kernel}, smooth ${a.smooth}, margin ${a.margin}, soften ${a.soften}, white ${rgb(a.white)}); `
+      + `${Object.keys(written).length} sheets`);
   } finally {
     fs.rmSync(tmp, { recursive: true, force: true });
   }

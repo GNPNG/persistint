@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Bake the paper look (bd gsd, 1dx) for every world sprite of the main maps into
-# project/assets/paper/: per subject, the art with a 2 world-px white cut-paper border
-# (<name>_edge2_white.png), or for the paper-doll player's parts the border alone
+# project/assets/paper/: per subject, the art with a white cut-paper border, 2 world px nominal
+# (<name>_edge2_white.png; gen_paper_edges.mjs MARGIN sets the width, 0.7 of it, 1.4 world px, and
+# the frame grid stays the nominal one's), or for the paper-doll player's parts the border alone
 # (<name>_ring2_white.png, drawn under the art stack), a soft drop shadow
 # (<name>_shadow_soft.png) and the sidecar <name>.json (frame grid, padding, feet line).
 # The work is done by tools/gen_paper_edges.mjs (ImageMagick 7); the game reads the sheets

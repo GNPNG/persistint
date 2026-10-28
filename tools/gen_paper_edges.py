@@ -6,7 +6,7 @@ the ground under it. Doing that per frame on the client costs draw calls or shad
 sprite, so this generator bakes it once, offline, into sibling sheets that cost exactly one draw
 each in the game:
 
-  <name>_edge<E>_<paper>.png   the art with an E world-px paper border baked in
+  <name>_edge<E>_<paper>.png   the art with a paper border baked in, E world px nominal (MARGIN of it)
   <name>_shadow_soft.png       the silhouette (border included) as a blurred black shadow, alpha 1;
   <name>_shadow_hard.png       the engine draws it under the sprite with its own offset and modulate
   <name>.json                  the new frame grid: frames are padded so the border and the shadow
@@ -18,10 +18,15 @@ SpriteFit needs to keep the character the same height. The border is slightly ir
 noise field picks between two dilation radii) so it reads as cut paper rather than a vector stroke.
 How rough (the author, 2026-10-28: "a little too rough ... more smooth"), as in
 tools/gen_paper_edges.mjs: ROUGHNESS scales the wobble (inner radius (1 - 0.4 ROUGHNESS) of the
-border; 1 is the first bakes' 0.6), KERNEL the grow shape (Disk, here an octagon of 3x3 square and
-plus steps; Square the first bakes' MaxFilter) and SMOOTH (world px) rounds the outline with a blur
-and a 50% threshold; --roughness, --kernel and --smooth set them, and --roughness 1 --kernel Square
---smooth 0 bakes as before.
+border; 1 is the first bakes' 0.6), KERNEL the grow shape (Disk: ImageMagick's Disk kernel, a
+fractional radius; Square the first bakes' MaxFilter) and SMOOTH (world px) rounds the outline with
+a blur and a 50% threshold. How wide and how real (the author, 2026-10-28: "reduce the margins of
+the paper effect a little bit", "could be a tiny bit more subtle", "slightly unreal"): MARGIN is
+the border's width as a share of its nominal --edges width (the sheets keep the nominal name, and
+the padding comes from it, so edge2 at 0.7 is a 1.4 world-px border on the same frame grid), WHITE
+the white paper's tone and SOFTEN (texture px) the blur of its outer edge. --roughness, --kernel,
+--smooth, --margin, --white and --soften set them; --roughness 1 --kernel Square --smooth 0
+--margin 1 --white fffdf7 --soften 0.6 bakes as before.
 
 Several source layers (the player's body, dress, hair) can be composited first (--layers) when one
 baked sheet for the whole figure is wanted; for the paper-doll player in the game the plan is a
@@ -44,10 +49,20 @@ from pathlib import Path
 
 from PIL import Image, ImageChops, ImageFilter
 
-PAPERS = {"white": (255, 253, 247), "cream": (255, 240, 210)}
-ROUGHNESS = 0.3  # the cut edge's wobble, 0 (even) to 1 (the first bakes')
+WHITE = (251, 246, 234)  # the white paper, #fbf6ea, a warm off-white (the first bakes': #fffdf7)
+PAPERS = {"white": WHITE, "cream": (255, 240, 210)}
+ROUGHNESS = 0.2  # the cut edge's wobble, 0 (even) to 1 (the first bakes')
 KERNEL = "Disk"  # the grow shape: Disk (round) or Square (the first bakes')
 SMOOTH = 0.5  # world px: how much the grown outline is rounded
+MARGIN = 0.7  # the border's width as a share of its nominal --edges width (the first bakes': 1)
+SOFTEN = 1.0  # texture px: the blur of the border's outer edge (the first bakes': 0.6)
+
+
+def hex_rgb(v: str) -> tuple[int, int, int]:
+    h = v.lstrip("#")
+    if len(h) != 6:
+        raise argparse.ArgumentTypeError(f"{v}: RRGGBB")
+    return (int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16))
 
 
 def composite(paths: list[Path]) -> Image.Image:
@@ -71,20 +86,22 @@ def dilate(alpha: Image.Image, radius: float, kernel: str = "Square") -> Image.I
     if kernel == "Square":
         size = 2 * max(1, math.ceil(radius)) + 1
         return alpha.filter(ImageFilter.MaxFilter(size))
-    out = alpha  # Disk: plus and 3x3 square steps by turns, an octagon about the circle's size
-    for step in range(max(1, round(radius))):
-        if step % 2:
-            out = out.filter(ImageFilter.MaxFilter(3))
-        else:
-            out = ImageChops.lighter(ImageChops.lighter(out, ImageChops.offset(out, 1, 0)), ImageChops.lighter(
-                ImageChops.offset(out, -1, 0), ImageChops.lighter(ImageChops.offset(out, 0, 1), ImageChops.offset(out, 0, -1))))
+    # Disk: ImageMagick's Disk:radius kernel, every (u, v) with |u|, |v| <= floor(radius) and
+    # u^2 + v^2 <= floor(radius^2); the frame's padding is wider, so offset's wrap brings in nothing.
+    radius = max(1.0, radius)
+    reach, limit = math.floor(radius), math.floor(radius * radius)
+    out = alpha
+    for v in range(-reach, reach + 1):
+        for u in range(-reach, reach + 1):
+            if (u or v) and u * u + v * v <= limit:
+                out = ImageChops.lighter(out, ImageChops.offset(alpha, u, v))
     return out
 
 
 def cut_edge(alpha: Image.Image, radius: float, rng: random.Random, roughness: float = ROUGHNESS,
-             kernel: str = KERNEL, smooth_px: float = 0.0) -> Image.Image:
+             kernel: str = KERNEL, smooth_px: float = 0.0, soften: float = SOFTEN) -> Image.Image:
     """The silhouette grown by about `radius` px, with a slow wobble so the border looks cut, its
-    outline rounded by a blur of smooth_px and a 50% threshold."""
+    outline rounded by a blur of smooth_px and a 50% threshold, then softened by `soften` px."""
     full = dilate(alpha, radius, kernel)
     small = dilate(alpha, max(1.0, radius * (1 - 0.4 * roughness)), kernel)
     w, h = alpha.size
@@ -94,7 +111,7 @@ def cut_edge(alpha: Image.Image, radius: float, rng: random.Random, roughness: f
     ring = Image.composite(full, small, noise)
     if smooth_px > 0:
         ring = ring.filter(ImageFilter.GaussianBlur(smooth_px)).point(lambda v: 255 if v >= 128 else 0)
-    return ring.filter(ImageFilter.GaussianBlur(0.6))
+    return ring.filter(ImageFilter.GaussianBlur(soften))
 
 
 def bake(args: argparse.Namespace) -> None:
@@ -108,10 +125,11 @@ def bake(args: argparse.Namespace) -> None:
     k = scale / src_scale
     fw, fh = max(1, round(src_fw * k)), max(1, round(src_fh * k))
     frames = [f.resize((fw, fh), Image.LANCZOS) if (fw, fh) != f.size else f for f in frames_of(sheet, cols, rows)]
-    max_edge = max(args.edges) * scale
+    max_edge = max(args.edges) * max(1.0, args.margin) * scale  # a narrower border keeps the frame grid
     blur_soft = args.shadow_blur * scale
     pad = math.ceil(max_edge + blur_soft * 3) + 2
     pw, ph = fw + 2 * pad, fh + 2 * pad
+    papers = {**PAPERS, "white": args.white}
     rng = random.Random(args.seed)
     rings: dict[int, list[Image.Image]] = {}
     for e in args.edges:
@@ -119,10 +137,11 @@ def bake(args: argparse.Namespace) -> None:
         for f in frames:
             padded = Image.new("L", (pw, ph), 0)
             padded.paste(f.getchannel("A"), (pad, pad))
-            rings[e].append(cut_edge(padded, e * scale, rng, args.roughness, args.kernel, args.smooth * scale))
+            rings[e].append(cut_edge(padded, e * args.margin * scale, rng, args.roughness, args.kernel,
+                                     args.smooth * scale, args.soften))
     written: dict[str, str] = {}
     for e in args.edges:
-        for paper_name, rgb in PAPERS.items():
+        for paper_name, rgb in papers.items():
             if args.papers and paper_name not in args.papers:
                 continue
             canvas = Image.new("RGBA", (pw * cols, ph * rows), (0, 0, 0, 0))
@@ -174,6 +193,9 @@ def main() -> None:
     ap.add_argument("--roughness", type=float, default=ROUGHNESS, help="edge wobble, 0 (even) to 1 (the first bakes')")
     ap.add_argument("--kernel", choices=["Disk", "Square"], default=KERNEL, help="grow shape")
     ap.add_argument("--smooth", type=float, default=SMOOTH, help="outline rounding, world px (0: none)")
+    ap.add_argument("--margin", type=float, default=MARGIN, help="border width, share of the nominal --edges (1: as named)")
+    ap.add_argument("--white", type=hex_rgb, default=WHITE, help="the white paper's tone, RRGGBB")
+    ap.add_argument("--soften", type=float, default=SOFTEN, help="outer edge blur, texture px")
     ap.add_argument("--out", required=True)
     ap.add_argument("--name", required=True)
     bake(ap.parse_args())
