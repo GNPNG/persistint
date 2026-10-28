@@ -20,8 +20,11 @@ extends Control
 ##   the clones' verified quotes (data/quotes via ZombieChild.quote_pool),
 ##   data/title_letters.json (the title letters and their chime-ins),
 ##   and anything else in audio/voice/manifest.json (Margaret Atwood's lines).
-## Opens from the normal export with ?scene=voice_review (DevScene); nothing runs per frame here.
+## It ships in the player build (scenes/playtest/, scripts/playtest/; bd dhn2): Settings opens it
+## in playtest mode (Settings > Playtest > Voice review), and ?scene=voice_review opens it on the
+## site (DevScene). Back goes to the main menu. Nothing runs per frame here.
 
+const MAIN_MENU := "res://scenes/ui/main_menu.tscn"
 const SheetRig := preload("res://scripts/ruins/sheet_rig.gd")
 const ZombieChild := preload("res://scripts/ruins/zombie_child.gd")
 const TextDownload := preload("res://scripts/util/text_download.gd")
@@ -361,7 +364,7 @@ func _build_ui() -> void:
 	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(bg)
 
-	# Top: title, counts, Export review.
+	# Top: title, counts, Back, Export review.
 	var title := Label.new()
 	title.theme_type_variation = &"HeaderLabel"
 	var build := BuildInfo.id()
@@ -372,8 +375,13 @@ func _build_ui() -> void:
 	_counts.name = "Counts"
 	_counts.theme_type_variation = &"HintLabel"
 	_counts.position = Vector2(8, 18)
-	_counts.size = Vector2(520, 12)
+	_counts.size = Vector2(466, 12)
 	add_child(_counts)
+	var back := _button("Back", go_back)
+	back.name = "Back"
+	back.position = Vector2(478, 4)
+	back.size = Vector2(54, 26)
+	add_child(back)
 	var export := _button("Export review", export_review)
 	export.name = "Export"
 	export.position = Vector2(536, 4)
@@ -708,7 +716,7 @@ func _unhandled_input(event: InputEvent) -> void:
 ## A tap on the middle says the next line; a sideways swipe moves along the row. Touch arrives as
 ## emulated mouse events (input_devices/pointing/emulate_mouse_from_touch, on by default).
 func _on_stage_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+	if event is InputEventMouseButton and event.is_action("click"):  # the click action, press and release
 		if event.pressed:
 			_pressing = true
 			_press_at = event.position
@@ -869,6 +877,11 @@ func export_review() -> String:
 	else:
 		_status.text = ("Downloaded %s." % file_name) if where == "download" else "Saved %s." % where
 	return where
+
+
+## Back: to the main menu (the review opens from Settings, or straight from ?scene=voice_review).
+func go_back() -> void:
+	get_tree().call_deferred("change_scene_to_file", MAIN_MENU)
 
 
 static func _json(path: String) -> Dictionary:

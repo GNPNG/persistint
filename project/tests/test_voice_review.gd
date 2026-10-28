@@ -5,7 +5,7 @@ extends SceneTree
 ## voice verdicts and line thumbs persist across a reload; Export review is valid JSON.
 ## Run: godot --headless --path project -s tests/test_voice_review.gd
 
-const SCENE := "res://scenes/test/voice_review.tscn"
+const SCENE := "res://scenes/playtest/voice_review.tscn"
 const MANIFEST := "res://audio/voice/manifest.json"
 const TEST_SAVE := "user://test_voice_review.json"
 const VoiceScript := preload("res://scripts/autoload/voice.gd")

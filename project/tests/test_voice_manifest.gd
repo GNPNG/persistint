@@ -36,7 +36,7 @@ func _check(ok: bool, what: String) -> void:
 
 
 func _run() -> void:
-	VoiceReview = load("res://scripts/test/voice_review.gd")
+	VoiceReview = load("res://scripts/playtest/voice_review.gd")
 	VoiceScript = load("res://scripts/autoload/voice.gd")
 	await process_frame
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(MANIFEST))

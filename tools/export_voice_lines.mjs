@@ -25,7 +25,7 @@
  *   lines (pony.gd speaks as "pony"), data/ruins.json clone_children.cubs barks, bump_barks, nom
  *   and nap (polar_cub.gd speaks as cubs.cast), data/title_letters.json tiers' lines and chime-ins
  *   (title_letters.gd speaks as speakers[role]). The same list as VoiceReview.build_roster
- *   (scripts/test/voice_review.gd).
+ *   (scripts/playtest/voice_review.gd).
  * "usable" quote: verified is true, excluded_from_game is not true, no fragment.
  */
 import crypto from "node:crypto";

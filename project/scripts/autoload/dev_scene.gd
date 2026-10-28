@@ -1,19 +1,22 @@
 extends Node
 ## Review builds share the normal export: a test scene under res://scenes/test/ opens when the web
 ## page is loaded with ?scene=<name> (or the desktop binary runs with `-- --scene=<name>`), instead of
-## the studio intro. Only lower-case names resolve, only under scenes/test/, so a stray query string
-## cannot open anything else.
+## the studio intro. The Web preset leaves scenes/test/ out of the player build; the playtest scenes
+## under res://scenes/playtest/ (the voice review, bd dhn2) ship in it, so ?scene=voice_review works
+## on the live site too. Only lower-case names resolve, only under those two folders, so a stray
+## query string cannot open anything else.
 
 const TEST_DIR := "res://scenes/test/"
+const PLAYTEST_DIR := "res://scenes/playtest/"
 
 
 func _ready() -> void:
 	var name := requested_scene()
 	if name.is_empty():
 		return
-	var path := TEST_DIR + name + ".tscn"
-	if not ResourceLoader.exists(path):
-		push_warning("DevScene: no test scene at %s" % path)
+	var path := path_for(name)
+	if path.is_empty():
+		push_warning("DevScene: no test or playtest scene named %s" % name)
 		return
 	get_tree().change_scene_to_file.call_deferred(path)
 
@@ -29,6 +32,17 @@ func requested_scene() -> String:
 			if a.begins_with("--scene="):
 				raw = a.trim_prefix("--scene=")
 	return sanitize(raw)
+
+
+## The scene a sanitized name opens: scenes/test/<name>.tscn, else scenes/playtest/<name>.tscn,
+## else "" (none there, or no name).
+static func path_for(name: String) -> String:
+	if name.is_empty():
+		return ""
+	for dir: String in [TEST_DIR, PLAYTEST_DIR]:
+		if ResourceLoader.exists(dir + name + ".tscn"):
+			return dir + name + ".tscn"
+	return ""
 
 
 static func sanitize(raw: String) -> String:
