@@ -21,7 +21,7 @@ func _ready() -> void:
 	%Nickname.max_length = WorldState.NICKNAME_MAX
 	%FullName.text_changed.connect(func(_t: String) -> void: _refresh())
 	%Nickname.text_changed.connect(func(_t: String) -> void: _refresh())
-	%FullName.text_submitted.connect(func(_t: String) -> void: %Nickname.grab_focus())
+	%FullName.text_submitted.connect(func(_t: String) -> void: _type_in(%Nickname))
 	%Nickname.text_submitted.connect(func(_t: String) -> void: start())
 	%StartButton.pressed.connect(start)
 	%BackButton.pressed.connect(close)
@@ -54,9 +54,15 @@ func open() -> void:
 	if _pad:
 		%StartButton.grab_focus()
 		return
-	%FullName.grab_focus()
-	if %FullName.has_method("edit"):
-		%FullName.edit()  # typing goes straight in (and a phone shows its keyboard)
+	_type_in(%FullName)
+
+
+## The focus and the typing in `field`: a LineEdit that only has the focus (from code or Tab) does
+## not take letters until it is editing, and a phone shows its keyboard then.
+func _type_in(field: LineEdit) -> void:
+	field.grab_focus()
+	if field.has_method("edit"):
+		field.edit()
 
 
 func close() -> void:
