@@ -1,0 +1,18 @@
+---
+id: undersea_icons_shells
+tool: Gemini image
+drop: prompts/image/levels/florida/assets/undersea_icons_shells.png
+game: project/assets/sheets/florida/undersea_icons_shells.png
+---
+
+# undersea_icons_shells
+
+Icon sheet: new shells, pearls and reef sand (pickups and inventory).
+
+## Prompt
+
+Kawaii pixel-art game art in a clean sticker-illustration style: even warm-brown outlines (never black), flat pastel fills with one soft highlight, round pink cheek blush, dot eyes and small smiles, cute faces (two dot eyes, pink blush, a small smile) on buildings, trees, props, the ship and the bunker, big round readable shapes for a 640×360 game, hearts and four-point sparkles as motifs, soft antialiased edges with no harsh pixel stair-steps. Pure carefree joy, nothing wrong anywhere. 16:9 asset sheet. No photorealism, no 3D, no text. World for colour and style only (the image shows just the props described next, not this scene): Sunny tropical Florida Keys: turquoise shallows, white foam, sand and shells, hibiscus, bougainvillea, key lime and mango trees, leaping dolphins, sideways crabs, hopping gulls, friendly mermaids; warm saturated colours, pure joy. Pickup icon sheet: each item a single small object seen slightly from above, drawn alone and centred in its place, all items about the same size, in two rows, no faces on these small things. Six items: (1) an empty open oyster shell holding one white pearl; (2) a pearl with a soft rainbow shimmer, glowing gently inside its outline; (3) one loose white pearl; (4) an empty white sand-dollar shell with a five-petal pattern on top; (5) a glossy cowrie shell, honey-brown with pale cream spots; (6) a small cream scoop shell holding a pinch of fine white sand. Background: one perfectly flat, solid, pure chroma-key green (hex 00FF00: red 0, green 255, blue 0) filling the whole image edge to edge, with no shadows, no gradient, no texture, no vignette, no floor or ground line, no glow and no green tint spilling onto anything. Nothing in any item is green, lime or mint; wherever a leaf or plant would be green, use soft lavender, pink or butter yellow instead. Every item keeps its complete warm-brown outline all the way round, so it separates cleanly from the green. Generous empty space: the plain green shows between all items, with a gap of at least half an item's width between neighbours and from every edge of the image; no item touches, overlaps or is cut off by another item or the edge. Negative prompt: no text, no letters, no watermark, no logo, no photorealism, no 3D render, no black outlines, no harsh pixel stair-stepping, no dithering, no grime, no realistic blood, no wounds, no weapons, no fighting, no scary faces, no nudity, no anatomy, no real-person likeness, no dark horror lighting, no muddy colours, no scenery or backdrop, no cast shadows, no drop shadows, no gradient, textured or patterned background, no green, lime or mint in any item, no item touching another item or the image edge, no cropped items.
+
+## Notes
+
+Render 16:9 (2752×1536). The game: path is a staging sheet (project/assets/sheets/ has a .gdignore). Key: green (hex 00FF00). Each prop is keyed, trimmed and resized to its world size, its bottom edge where it stands (the scenes y-sort props with the swimmers), then added to tools/bake_paper.sh for the paper ring. Items: pearl (found in the oyster), pearl_glow, pearl (inventory icon), shell_sand_dollar, shell_cowrie, reef_sand (mission M7). The scallop, spiral and conch keep their canon cuts (project/assets/florida/shell_<look>.png). Design: dev/MERMAID-SECRET.md (git-crypt), epic bd persistint-game-pi4m.
