@@ -44,9 +44,17 @@ extends SceneTree
 ##                                       and/or offers responses (at most max lines, default 40)
 ##   dialogue_choose {index or contains} pick a response (index counts the allowed ones)
 ##   press {action}                      an InputEventAction press and release
+##   hold {action}                       press an input action and keep it down (she walks on)
+##                                       until a release step or the end of the shot
+##   release {action}                    let a held action go
+##   snap {as}                           save the frame being drawn now as <name>@<as>.png (as in
+##                                       a-z, 0-9 and _) and go on: a multi-frame shot, e.g. a
+##                                       hold, then snaps a few waits apart. Under --fixed-fps a
+##                                       wait of n frames is n/60 s of game time, however long a
+##                                       snap takes to save; a snap prints "SNAP <name>@<as> ..."
 ## A step that can't be done (no such node or method, the dialogue never gets there) fails the
 ## shot: no PNG, a "SHOT FAIL <name>: <why>" line, and the run exits 1. A saved shot prints
-## "SHOT OK <name> <file> <size>".
+## "SHOT OK <name> <file> <size>"; its own PNG is the frame after its settle, as for any shot.
 
 const SAVE_FILE := "user://shot_walk_save.json"
 const SETTINGS_FILE := "user://shot_walk_settings.cfg"
@@ -56,12 +64,20 @@ const DEFAULT_SETTLE := 60
 ## Frames to wait for a dialogue line to show or to move on.
 const LINE_WAIT := 120
 const NAME_PATTERN := "^[a-z0-9_]+(-[a-z0-9_]+){2,}$"
+const SNAP_PATTERN := "^[a-z0-9_]+$"
 const STEP_KINDS := ["wait", "flags", "call", "interact", "set", "set_static", "player_to", "camera",
-	"dialogue", "dialogue_text", "dialogue_next", "dialogue_until", "dialogue_choose", "press"]
+	"dialogue", "dialogue_text", "dialogue_next", "dialogue_until", "dialogue_choose", "press",
+	"hold", "release", "snap"]
 
 ## Why the current shot failed; "" while it is going fine.
 var _why := ""
 var _name_re := RegEx.create_from_string(NAME_PATTERN)
+var _snap_re := RegEx.create_from_string(SNAP_PATTERN)
+## The shot being taken (snap steps name their PNGs after it) and where it saves.
+var _shot_name := ""
+var _out_dir := ""
+## Input actions a hold step keeps down; released at the end of the shot.
+var _held: Array[String] = []
 
 
 func _initialize() -> void:
@@ -167,6 +183,8 @@ func _problem(s: Variant) -> String:
 				return "no dialogue %s" % step.get("file", "")
 			if step["do"] == "set_static" and not ResourceLoader.exists(String(step.get("script", ""))):
 				return "no script %s" % step.get("script", "")
+			if step["do"] == "snap" and (key != "steps" or _snap_re.search(String(step.get("as", ""))) == null):
+				return "a snap is a step after the scene opens, its as in a-z, 0-9 and _ (%s)" % [step]
 	return ""
 
 
@@ -188,6 +206,8 @@ func _quiet() -> void:
 ## Sets up and takes one shot; returns why it failed, or "".
 func _shoot(spec: Dictionary, s: Dictionary, out_dir: String) -> String:
 	_why = ""
+	_shot_name = String(s["name"])
+	_out_dir = out_dir
 	var seed_flags: Variant = spec.get("seed", {})
 	var shot_flags: Variant = s.get("flags", {})
 	var flags: Dictionary = seed_flags.duplicate(true) if seed_flags is Dictionary else {}
@@ -238,6 +258,9 @@ func _shoot(spec: Dictionary, s: Dictionary, out_dir: String) -> String:
 ## Voice's or a node's VoiceAt still playing at quit left its AudioStreamWAV and playback in use
 ## at exit).
 func _teardown() -> void:
+	for action: String in _held:
+		Input.action_release(action)
+	_held.clear()
 	var settings := root.get_node_or_null("AudioSettings")
 	if settings != null and bool(settings.call("is_open")):
 		settings.call("close")
@@ -348,8 +371,34 @@ func _step(step: Dictionary) -> void:
 				ev.pressed = pressed
 				Input.parse_input_event(ev)
 				await process_frame
+		"hold", "release":
+			var action := String(step.get("action", ""))
+			if not InputMap.has_action(action):
+				_why = "no input action %s" % action
+				return
+			if kind == "hold":
+				Input.action_press(action)
+				if not _held.has(action):
+					_held.append(action)
+			else:
+				Input.action_release(action)
+				_held.erase(action)
+		"snap":
+			await _snap(String(step.get("as", "")))
 		_:
 			_why = "unknown step %s" % kind
+
+
+## Saves the frame being drawn now as <shot>@<as>.png beside the shot's own PNG.
+func _snap(label: String) -> void:
+	await RenderingServer.frame_post_draw
+	var img := root.get_texture().get_image()
+	var file := _out_dir.path_join("%s@%s.png" % [_shot_name, label])
+	var err := img.save_png(file)
+	if err != OK:
+		_why = "could not save %s (%s)" % [file, error_string(err)]
+		return
+	print("SNAP %s@%s %s %s" % [_shot_name, label, file, img.get_size()])
 
 
 func _wait(frames: int) -> void:
