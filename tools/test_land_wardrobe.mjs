@@ -4,29 +4,35 @@
  * green background, warm fills and outlines, the bald reference doll at the left, as the Gemini
  * sheets are) so no big binary is committed.
  *
- *   node tools/test_land_wardrobe.mjs           the checks, in a temp copy of what the driver reads
- *                                               and writes; prints "ok"/"FAIL" per check and
- *                                               "RESULT: PASS|FAIL (n failures)", exits 0 or 1
+ *   node tools/test_land_wardrobe.mjs           the checks, in a temp tree of the test's own; prints
+ *                                               "ok"/"FAIL" per check and "RESULT: PASS|FAIL (n
+ *                                               failures)", exits 0 or 1
  *   node tools/test_land_wardrobe.mjs --stage   put the two synthetic sheets at their drop paths
  *                                               and their parts files beside the prompts, in this
  *                                               clone (a scratch clone: commit none of it), for a
  *                                               run of the driver with every step
  *
- * The temp copy: the driver, lib_paths.mjs and cut_paperdoll.py under tools/, paperdoll_parts.json,
- * outfits.json and the canon SOURCES.md as they are, the wardrobe_tops, _hats and _shoes prompts,
- * and a drawn body_base.png (the frame: 200x300, head top y 25, soles y 275). The sheets are the
- * tops and the hats (720x300; the doll at half the body's size, head top y 20, soles y 145), their
- * green drops and, since this laptop runs no ImageMagick, their keys to white drawn alongside (the
- * driver runs with --skip key,rig,bake,import,sources here; cc-srv runs every step).
- * Checked: a dry run changes no file; a run lands both sheets (the sheets and parts registered with
- * the prompt's ids, each part once under its slot in outfits.json after "none", a row each in the
- * canon SOURCES.md, the drops synced to their game: paths); the cut parts are on the frame, the tops
- * at the doll's scale, centred on the body where they stand beside her and the hats at their
- * anchors; a second run changes nothing; a sheet with no parts file, a part the prompt does not
- * list, a hat with no anchor and a part already cut from another sheet fail and write nothing; an
- * unknown sheet or step is a usage error. Also: the driver writes paperdoll_parts.json and
- * outfits.json as the repository has them (byte for byte), its slots are cut_paperdoll.py's, and
- * every wardrobe prompt's Notes name parts of its slot.
+ * The temp tree is all the driver reads and writes, made here, so the checks pass whatever the
+ * repository holds (sheets landed or not): three wardrobe prompts (tops, hats, shoes: front matter
+ * and Notes), a canon paperdoll_parts.json, outfits.json and SOURCES.md with no wardrobe part in
+ * them, and a drawn body_base.png (the frame: 200x300, head top y 25, soles y 275). The sheets are
+ * the tops and the hats (720x300; the doll at half the body's size, head top y 20, soles y 145),
+ * their parts files, their green drops and, since this laptop runs no ImageMagick, their keys to
+ * white drawn alongside. The repository's driver runs on it with --root (and --skip
+ * key,rig,bake,import,sources; cc-srv runs every step), its cut with the repository's
+ * cut_paperdoll.py into the tree's canon folder.
+ * Checked: a dry run plans both sheets, lists every sheet (WOULD LAND, MISSING SHEET) and changes no
+ * file; a run lands both sheets (the sheets and parts registered with the prompt's ids and paths
+ * relative to the tree, each part once under its slot in outfits.json after "none", a row each in
+ * the canon SOURCES.md, the drops synced to their game: paths); the cut parts are on the frame, the
+ * tops at the doll's scale, centred on the body where they stand beside her and the hats at their
+ * anchors; a dry run then finds both UNCHANGED, and a second run changes nothing; a sheet with no
+ * parts file, a part the prompt does not list, a hat with no anchor and a part already cut from
+ * another sheet are an ERROR with the reason, in a dry run too, and write nothing; an unknown sheet
+ * or step and a --root with no tree are usage errors; the repository's wardrobe prompts, data, canon
+ * folder and staged sheets are as they were. Also, on the repository's files: the driver writes
+ * paperdoll_parts.json and outfits.json as the repository has them (byte for byte), its slots are
+ * cut_paperdoll.py's, and every wardrobe prompt's Notes name parts of its slot.
  * The cut needs the art Python (lib_paths.mjs artPython, as test_paperdoll_tools.gd looks): without
  * it the checks FAIL, unless PERSISTINT_SKIP_ART_TESTS=1, which skips the cut checks only.
  */
@@ -37,12 +43,13 @@ import os from "node:os";
 import path from "node:path";
 import zlib from "node:zlib";
 import { ROOT, artPython, readText } from "./lib_paths.mjs";
-import { SLOTS, formatParts, formatOutfits, notesOf } from "./land_wardrobe.mjs";
+import { SLOTS, SPRITES_HEADER, formatParts, formatOutfits, notesOf } from "./land_wardrobe.mjs";
 
 const FILL = [240, 196, 200], INK = [138, 90, 90], GREEN = [0, 255, 0], WHITE = [255, 255, 255];
 let failures = 0;
-const check = (ok, what) => {
-  console.log(`${ok ? "ok   " : "FAIL "}${what}`);
+/** One check: "ok" or "FAIL" and what it checks; `detail` (the run's summary) is shown on a FAIL. */
+const check = (ok, what, detail = "") => {
+  console.log(`${ok ? "ok   " : "FAIL "}${what}${!ok && detail ? ` (${detail})` : ""}`);
   if (!ok) failures++;
 };
 
@@ -193,21 +200,60 @@ function writeSheet(root, id, withWhite) {
   return { drop, game };
 }
 
-// --- The temp copy and the runs.
+// --- The temp tree: what the driver reads, made here, so no run depends on the repository's state.
+
+/** The test's wardrobe prompts: the front matter and the Notes, as prompts/image/wardrobe/ has
+ *  them (the driver reads no more of a prompt). */
+const PROMPTS = {
+  wardrobe_hats: { slot: "hat", ids: ["hat_straw", "hat_beret_rose", "hat_sailor"] },
+  wardrobe_shoes: { slot: "shoes", ids: ["shoes_maryjane_pink", "shoes_sneakers_white", "shoes_rainboots_butter"] },
+  wardrobe_tops: { slot: "top", ids: ["top_tee_heart", "top_cardigan_butter", "top_hoodie_lilac"] },
+};
+const promptText = (id, { slot, ids }) => `---\nid: ${id}\ntool: Gemini image\ndrop: prompts/image/wardrobe/assets/${id}.png\n`
+  + `game: project/assets/sheets/wardrobe/${id}.png\n---\n\n# ${id}\n\nThe test's ${slot} sheet.\n\n## Prompt\n\n(Not read by the driver.)\n\n`
+  + `## Notes\n\nParts on this sheet, left to right after the doll: ${ids.join(", ")}. Slot: ${slot}.\n`;
+/** The canon the sheets land beside: paperdoll_parts.json with no "sheets" yet, outfits.json with
+ *  every slot, and the canon SOURCES.md with its Sprites table (sorted) and no Wardrobe sheets. */
+const CANON_PARTS = {
+  _note: "The test's canon parts (tools/test_land_wardrobe.mjs).",
+  parts: {
+    body_base: { crop: "402x698+97+300" }, hair_pigtails: { crop: "379x419+595+89" },
+    dress_uniform: { crop: "352x420+1156+605" }, acc_bow: { crop: "209x141+664+594", anchor: [-120, 40], scale: 0.6 },
+  },
+};
+const CANON_OUTFITS = { hair: ["hair_pigtails"], dress: ["dress_uniform"], accessory: ["none", "acc_bow"], top: ["none"], bottom: ["none"], shoes: ["none"], hat: ["none"] };
+const canonSources = () => "# Sources: project/assets/canon (the test's)\n\n## Sprites\n\n" + `${SPRITES_HEADER}\n|---|---|---|---|\n`
+  + Object.entries(CANON_PARTS.parts).sort(([a], [b]) => (a < b ? -1 : 1))
+    .map(([id, p]) => `| \`${id}.png\` | \`tools/cut_paperdoll.py\` | \`Gemini_Generated_Image_ktfw\` | ${p.crop} |\n`).join("");
 
 function tempRoot() {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "land_wardrobe-test-"));
-  const copy = (rel) => {
+  const write = (rel, data) => {
     fs.mkdirSync(path.dirname(path.join(root, rel)), { recursive: true });
-    fs.copyFileSync(path.join(ROOT, rel), path.join(root, rel));
+    fs.writeFileSync(path.join(root, rel), data);
   };
-  for (const rel of ["tools/land_wardrobe.mjs", "tools/lib_paths.mjs", "tools/cut_paperdoll.py", "project/data/paperdoll_parts.json",
-    "project/data/outfits.json", "project/assets/canon/SOURCES.md", "prompts/image/wardrobe/wardrobe_tops.md",
-    "prompts/image/wardrobe/wardrobe_hats.md", "prompts/image/wardrobe/wardrobe_shoes.md"]) copy(rel);
+  for (const [id, p] of Object.entries(PROMPTS)) write(`prompts/image/wardrobe/${id}.md`, promptText(id, p));
+  write("project/data/paperdoll_parts.json", formatParts(CANON_PARTS));
+  write("project/data/outfits.json", formatOutfits(CANON_OUTFITS));
+  write("project/assets/canon/SOURCES.md", canonSources());
   const body = canvas(BODY.w, BODY.h, [0, 0, 0, 0]);
   doll(body, BODY.ox, BODY.top, 1.0);
-  fs.writeFileSync(path.join(root, "project/assets/canon/body_base.png"), encodePng(body));
+  write("project/assets/canon/body_base.png", encodePng(body));
   return root;
+}
+
+/** Size and mtime of each file in the repository a run could touch, were --root to leak. */
+function repoStamps() {
+  const out = {};
+  const walk = (p) => {
+    let st;
+    try { st = fs.statSync(p); } catch { return; }
+    if (st.isDirectory()) for (const e of fs.readdirSync(p)) walk(path.join(p, e));
+    else out[path.relative(ROOT, p)] = `${st.size} ${st.mtimeMs}`;
+  };
+  for (const p of ["prompts/image/wardrobe", "project/data/paperdoll_parts.json", "project/data/outfits.json",
+    "project/assets/canon", "project/assets/sheets/wardrobe"]) walk(path.join(ROOT, p));
+  return out;
 }
 
 function snapshot(root) {
@@ -242,7 +288,7 @@ function main() {
   if (skipArt) console.log(`SKIP: the cut checks (no art Python: ${py.tried.join(", ")}; PERSISTINT_SKIP_ART_TESTS=1)`);
   const doCut = Boolean(py.python);
 
-  // What does not need a run: the formats, the slots, the prompts' Notes.
+  // What does not need a run, on the repository's own files: the formats, the slots, the prompts' Notes.
   for (const f of ["project/data/paperdoll_parts.json", "project/data/outfits.json"]) {
     const text = readText(path.join(ROOT, f));
     const again = f.endsWith("outfits.json") ? formatOutfits(JSON.parse(text)) : formatParts(JSON.parse(text));
@@ -260,14 +306,22 @@ function main() {
   }
   check(!offSlot.length, `every wardrobe prompt's Notes list parts of its slot (${offSlot.join("; ")})`);
 
+  // The runs: the repository's driver on the temp tree (--root), never on the repository.
+  const repo0 = repoStamps();
   const root = tempRoot();
   const env = { ...process.env, ...(doCut ? { ART_PYTHON: py.python } : {}) };
   const skip = `key,rig,bake,import,sources${doCut ? "" : ",cut"}`;
+  const driver = path.join(ROOT, "tools/land_wardrobe.mjs");
   const land = (...args) => {
-    const r = spawnSync(process.execPath, [path.join(root, "tools/land_wardrobe.mjs"), ...args], { cwd: root, env, encoding: "utf8" });
+    const r = spawnSync(process.execPath, [driver, "--root", root, ...args], { cwd: root, env, encoding: "utf8" });
     return { code: r.status, out: (r.stdout || "") + (r.stderr || "") };
   };
-  const tail = (r) => r.out.trim().split("\n").slice(-6).join(" | ");
+  /** The run's summary (from its count line), or its last lines. */
+  const tail = (r) => {
+    const lines = r.out.trim().split("\n"), at = lines.findIndex((l) => /^land_wardrobe( \(dry run\))?: \d+ sheet\(s\)/.test(l));
+    return (at < 0 ? lines.slice(-6) : lines.slice(at, at + 14)).join(" | ");
+  };
+  const quiet = (files) => files.filter((f) => !f.startsWith("project/assets/canon/") || f.endsWith(".md"));  // the cut rewrites its parts
   try {
     const sheets = Object.fromEntries(Object.keys(SHEETS).map((id) => [id, writeSheet(root, id, true)]));
     const regPath = path.join(root, "project/data/paperdoll_parts.json"), outPath = path.join(root, "project/data/outfits.json");
@@ -277,18 +331,23 @@ function main() {
     // A dry run.
     let before = snapshot(root);
     let r = land("--dry-run", "--skip", skip);
-    check(r.code === 0 && r.out.includes("2 sheet(s) would land") && r.out.includes("would add top_tee_heart, top_cardigan_butter, top_hoodie_lilac to top"),
-      `a dry run plans both sheets (exit ${r.code}: ${tail(r)})`);
+    check(r.code === 0 && r.out.includes("2 sheet(s) would land") && r.out.includes("would add top_tee_heart, top_cardigan_butter, top_hoodie_lilac to top")
+      && r.out.includes("would add hat_straw, hat_beret_rose, hat_sailor to hat"), `a dry run plans both sheets (exit ${r.code})`, tail(r));
+    check(r.out.includes("\n  wardrobe_hats: WOULD LAND\n") && r.out.includes("\n  wardrobe_tops: WOULD LAND\n")
+      && r.out.includes("\n  wardrobe_shoes: MISSING SHEET (no render at prompts/image/wardrobe/assets/wardrobe_shoes.png or project/assets/sheets/wardrobe/wardrobe_shoes.png)\n"),
+      "and lists every sheet: WOULD LAND, MISSING SHEET", tail(r));
     let changed = changedFiles(before, snapshot(root));
     check(!changed.length, `and changes no file (${changed.join(", ")})`);
 
     // Landing.
     r = land("--skip", skip);
-    check(r.code === 0 && r.out.includes("2 sheet(s) landed, 0 failed"), `a run lands both sheets (exit ${r.code}: ${tail(r)})`);
-    const reg = JSON.parse(readText(regPath)), outfits = JSON.parse(readText(outPath)), sources = readText(srcPath);
+    check(r.code === 0 && r.out.includes("2 sheet(s) landed, 0 unchanged, 0 failed, 1 missing")
+      && r.out.includes("\n  wardrobe_hats: LANDED\n") && r.out.includes("\n  wardrobe_tops: LANDED\n"), `a run lands both sheets (exit ${r.code})`, tail(r));
+    const regText = readText(regPath), reg = JSON.parse(regText), outfits = JSON.parse(readText(outPath)), sources = readText(srcPath);
     check(Object.keys(reg).indexOf("sheets") === Object.keys(reg).indexOf("parts") - 1
-      && JSON.stringify(reg.sheets.wardrobe_tops) === JSON.stringify({ path: "project/assets/sheets/wardrobe/wardrobe_tops_white.png", doll: "70x140+10+10" }),
-      `the sheet is registered before the parts, with its keyed copy and its doll (${JSON.stringify(reg.sheets)})`);
+      && JSON.stringify(reg.sheets.wardrobe_tops) === JSON.stringify({ path: "project/assets/sheets/wardrobe/wardrobe_tops_white.png", doll: "70x140+10+10" })
+      && !regText.includes(root) && !sources.includes(root),
+      `the sheet is registered before the parts, with its keyed copy (relative to the tree) and its doll (${JSON.stringify(reg.sheets)})`);
     const want = { ...Object.fromEntries(Object.entries(SHEETS.wardrobe_tops.parts.parts).map(([k, v]) => [k, { sheet: "wardrobe_tops", ...v }])),
       ...Object.fromEntries(Object.entries(SHEETS.wardrobe_hats.parts.parts).map(([k, v]) => [k, { sheet: "wardrobe_hats", ...v }])) };
     check(Object.entries(want).every(([k, v]) => JSON.stringify(reg.parts[k]) === JSON.stringify(v)), "each part is registered with its sheet, crop, anchor and scale");
@@ -300,8 +359,8 @@ function main() {
     check(Object.keys(outfits0).every((k) => k === "top" || k === "hat" || JSON.stringify(outfits[k]) === JSON.stringify(outfits0[k])), "the other slots are as they were");
     const rows = Object.keys(want).map((k) => `| \`${k}.png\` | \`tools/cut_paperdoll.py\` | \`${reg.parts[k].sheet}\` | ${reg.parts[k].crop} |`);
     const table = sources.split("\n").filter((l) => /^\| `[a-z_]+\.png` \| /.test(l));
-    check(rows.every((row) => table.includes(row)) && JSON.stringify(table) === JSON.stringify([...table].sort()),
-      "the canon SOURCES.md has a row per part, the table still sorted");
+    check(rows.every((row) => table.includes(row)) && table.length === rows.length + Object.keys(reg0.parts).length
+      && JSON.stringify(table) === JSON.stringify([...table].sort()), "the canon SOURCES.md has a row per part, the table still sorted");
     check(sources.includes("| `wardrobe_tops` | Gemini image | `prompts/image/wardrobe/wardrobe_tops.md` | `project/assets/sheets/wardrobe/wardrobe_tops_white.png` |"),
       "and a row per sheet");
     check(Object.values(sheets).every(({ drop, game }) => fs.readFileSync(path.join(root, drop)).equals(fs.readFileSync(path.join(root, game)))),
@@ -325,41 +384,55 @@ function main() {
       }
     }
 
-    // Again: nothing changes.
+    // Landed: a dry run finds nothing to do, and a run changes nothing.
     before = snapshot(root);
+    r = land("--dry-run", "--skip", skip);
+    changed = changedFiles(before, snapshot(root));
+    check(r.code === 0 && r.out.includes("0 sheet(s) would land, 2 unchanged, 0 failed, 1 missing")
+      && r.out.includes("\n  wardrobe_hats: UNCHANGED\n") && r.out.includes("\n  wardrobe_tops: UNCHANGED\n") && !changed.length,
+      `a dry run then finds both sheets UNCHANGED and changes no file (exit ${r.code}; changed ${changed.join(", ")})`, tail(r));
     r = land("--skip", skip);
-    changed = changedFiles(before, snapshot(root)).filter((f) => !f.startsWith("project/assets/canon/") || f.endsWith(".md"));
-    check(r.code === 0 && !changed.length && (r.out.match(/outfits\.json: unchanged/g) || []).length === 2,
-      `a second run changes nothing and lists nothing twice (exit ${r.code}; changed ${changed.join(", ")})`);
+    changed = quiet(changedFiles(before, snapshot(root)));
+    check(r.code === 0 && !changed.length && r.out.includes("0 sheet(s) landed, 2 unchanged") && (r.out.match(/outfits\.json: unchanged/g) || []).length === 2,
+      `a second run changes nothing and lists nothing twice (exit ${r.code}; changed ${changed.join(", ")})`, tail(r));
 
-    // Failures write nothing.
-    const fails = (what, setup, undo, expect, args = []) => {
+    // Errors: reported with the reason, in a dry run too, and nothing written.
+    const fails = (what, id, setup, undo, expect) => {
       setup();
       const b = snapshot(root);
-      const x = land("--skip", skip, ...args);
-      const ch = changedFiles(b, snapshot(root)).filter((f) => !f.startsWith("project/assets/canon/") || f.endsWith(".md"));
-      check(x.code === 1 && x.out.includes(expect) && !ch.length, `${what} fails and writes nothing (exit ${x.code}; changed ${ch.join(", ")}; ${tail(x)})`);
+      const d = land("--dry-run", "--skip", skip, id);
+      const x = land("--skip", skip, id);
+      const ch = quiet(changedFiles(b, snapshot(root)));
+      const line = `\n  ${id}: ERROR: `;
+      check(d.code === 1 && d.out.includes(line) && d.out.includes(expect), `a dry run reports ${what} as an ERROR, with the reason (exit ${d.code})`, tail(d));
+      check(x.code === 1 && x.out.includes(line) && x.out.includes(expect) && !ch.length, `${what} fails and writes nothing (exit ${x.code}; changed ${ch.join(", ")})`, tail(x));
       undo();
     };
     const shoesDrop = path.join(root, "prompts/image/wardrobe/assets/wardrobe_shoes.png");
-    fails("a sheet with no parts file", () => fs.writeFileSync(shoesDrop, encodePng(SHEETS.wardrobe_tops.draw(GREEN))),
-      () => fs.rmSync(shoesDrop), "no parts file prompts/image/wardrobe/wardrobe_shoes.parts.json", ["wardrobe_shoes"]);
+    fails("a sheet with no parts file", "wardrobe_shoes", () => fs.writeFileSync(shoesDrop, encodePng(SHEETS.wardrobe_tops.draw(GREEN))),
+      () => fs.rmSync(shoesDrop), "no parts file prompts/image/wardrobe/wardrobe_shoes.parts.json");
     const topsParts = path.join(root, "prompts/image/wardrobe/wardrobe_tops.parts.json"), hatsParts = path.join(root, "prompts/image/wardrobe/wardrobe_hats.parts.json");
     const keep = { tops: readText(topsParts), hats: readText(hatsParts), reg: readText(regPath) };
     const edit = (file, fn) => () => { const j = JSON.parse(readText(file)); fn(j); fs.writeFileSync(file, JSON.stringify(j, null, 2) + "\n"); };
-    fails("a part the prompt does not list", edit(topsParts, (j) => { j.parts.top_mystery = { crop: "10x10+1+1" }; }),
-      () => fs.writeFileSync(topsParts, keep.tops), "top_mystery: not one of the prompt's parts", ["wardrobe_tops"]);
-    fails("a hat with no anchor", edit(hatsParts, (j) => { delete j.parts.hat_straw.anchor; }),
-      () => fs.writeFileSync(hatsParts, keep.hats), "hat_straw: a hat_ part needs \"anchor\"", ["wardrobe_hats"]);
-    fails("a part already cut from another sheet", edit(regPath, (j) => { j.parts.top_tee_heart.sheet = "wardrobe_hats"; }),
-      () => fs.writeFileSync(regPath, keep.reg), "top_tee_heart: already cut from the wardrobe_hats sheet", ["wardrobe_tops"]);
+    fails("a part the prompt does not list", "wardrobe_tops", edit(topsParts, (j) => { j.parts.top_mystery = { crop: "10x10+1+1" }; }),
+      () => fs.writeFileSync(topsParts, keep.tops), "top_mystery: not one of the prompt's parts");
+    fails("a hat with no anchor", "wardrobe_hats", edit(hatsParts, (j) => { delete j.parts.hat_straw.anchor; }),
+      () => fs.writeFileSync(hatsParts, keep.hats), "hat_straw: a hat_ part needs \"anchor\"");
+    fails("a part already cut from another sheet", "wardrobe_tops", edit(regPath, (j) => { j.parts.top_tee_heart.sheet = "wardrobe_hats"; }),
+      () => fs.writeFileSync(regPath, keep.reg), "top_tee_heart: already cut from the wardrobe_hats sheet");
     r = land("wardrobe_nosuch");
     check(r.code === 2 && r.out.includes("no wardrobe prompt wardrobe_nosuch"), `an unknown sheet is a usage error (exit ${r.code})`);
     r = land("--skip", "bakery");
     check(r.code === 2 && r.out.includes("unknown step"), `an unknown step is a usage error (exit ${r.code})`);
+    const bare = path.join(root, "bare");
+    fs.mkdirSync(bare);
+    const x = spawnSync(process.execPath, [driver, "--root", bare, "--dry-run"], { cwd: root, env, encoding: "utf8" });
+    check(x.status === 2 && (x.stderr || "").includes("has no prompts/image/wardrobe"), `a --root with no tree in it is a usage error (exit ${x.status}: ${(x.stderr || "").trim()})`);
   } finally {
     fs.rmSync(root, { recursive: true, force: true });
   }
+  const repoChanged = changedFiles(repo0, repoStamps());
+  check(!repoChanged.length, `the repository's wardrobe prompts, data, canon folder and staged sheets are as they were (${repoChanged.join(", ")})`);
   console.log(`RESULT: ${failures === 0 ? "PASS" : "FAIL"} (${failures} failures)`);
   return failures === 0 ? 0 : 1;
 }

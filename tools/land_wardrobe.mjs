@@ -4,7 +4,14 @@
  * wardrobe prompt's drop: path to parts the game can wear. These are the post-steps of
  * .claude/skills/gemini-assets/SKILL.md (section 3, sync to import) for wardrobe sheets.
  *
- *   node tools/land_wardrobe.mjs [ID ...] [--dry-run] [--skip STEP[,STEP...]]
+ *   node tools/land_wardrobe.mjs [ID ...] [--dry-run] [--skip STEP[,STEP...]] [--root DIR]
+ *
+ * --root DIR: the tree to read and write in place of the repository: DIR/prompts/image/wardrobe/
+ * (the prompts, the parts files, the drops), DIR/project/assets/sheets/wardrobe/,
+ * DIR/project/data/paperdoll_parts.json and outfits.json, DIR/project/assets/canon/ (body_base.png,
+ * the frame the parts are cut on; the cut parts; SOURCES.md). Paths are registered relative to DIR.
+ * The tools still come from the repository; rig, bake, import and sources work on the repository
+ * only, so with --root they are skipped. tools/test_land_wardrobe.mjs lands in a temp tree this way.
  *
  * Sheets: every prompts/image/wardrobe/<id>.md (or each ID given) whose render is at its drop:
  * path, or already at its game: path (project/assets/sheets/wardrobe/<id>.png, staging). Each one
@@ -42,22 +49,32 @@
  * on PATH (lib_paths.mjs artPython, the order the tests use).
  *
  * --dry-run checks every sheet and its parts file and prints what each step would change or run;
- * it writes nothing and runs no step. A summary ends every run. Exit 0 when every sheet found
- * landed, 1 when one could not (no parts file, a bad part, a step failed), 2 on a usage error.
- * The test: node tools/test_land_wardrobe.mjs (synthetic sheets; --stage puts them at the drop
- * paths of a scratch clone for a run with every step).
+ * it writes nothing and runs no step. A summary ends every run: "N sheet(s) landed" ("would land"
+ * in a dry run), then each wardrobe prompt's sheet: LANDED (WOULD LAND), UNCHANGED (nothing to
+ * sync, key, cut or register: in a dry run, every part already cut), MISSING SHEET (not rendered
+ * yet), or ERROR and the reason. Exit 0 when no sheet has an error, 1 when one has (no parts file,
+ * a bad part, a step failed, or a sheet named on the command line not rendered), 2 on a usage error.
+ * The test: node tools/test_land_wardrobe.mjs (synthetic sheets in a temp tree, with --root;
+ * --stage puts them at the drop paths of a scratch clone for a run with every step).
  */
 import { spawnSync } from "node:child_process";
+import crypto from "node:crypto";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { ROOT, rel, isFile, readText, writeText, artPython, isLfsPointer } from "./lib_paths.mjs";
+import { ROOT as REPO, rel as relTo, isFile, readText, writeText, artPython, isLfsPointer } from "./lib_paths.mjs";
 
-const WARDROBE = path.join(ROOT, "prompts/image/wardrobe");
-const PARTS_JSON = path.join(ROOT, "project/data/paperdoll_parts.json");
-const OUTFITS_JSON = path.join(ROOT, "project/data/outfits.json");
-const CANON = path.join(ROOT, "project/assets/canon");
-const CANON_SOURCES = path.join(CANON, "SOURCES.md");
+/** What the driver reads and writes, under `root`: the repository, or --root DIR. */
+function layout(root) {
+  const canon = path.join(root, "project/assets/canon");
+  return {
+    root, wardrobe: path.join(root, "prompts/image/wardrobe"), canon, canonSources: path.join(canon, "SOURCES.md"),
+    partsJson: path.join(root, "project/data/paperdoll_parts.json"), outfitsJson: path.join(root, "project/data/outfits.json"),
+  };
+}
+let P = layout(REPO);
+/** A path under the tree being landed in, as it is registered and shown. */
+const rel = (p) => relTo(p, P.root);
 /** Part prefix -> the PaperDoll slot it is worn in: tools/cut_paperdoll.py SLOTS
  *  (tools/test_land_wardrobe.mjs checks that they agree). */
 export const SLOTS = { body: "body", shoes: "shoes", bottom: "bottom", top: "top", dress: "dress", hair: "hair", hat: "hat", acc: "accessory" };
@@ -92,14 +109,14 @@ export function notesOf(text) {
 }
 
 function wardrobePrompts() {
-  return fs.readdirSync(WARDROBE).filter((f) => f.endsWith(".md")).sort().map((f) => {
-    const md = path.join(WARDROBE, f), text = readText(md), fm = frontMatter(text);
+  return fs.readdirSync(P.wardrobe).filter((f) => f.endsWith(".md")).sort().map((f) => {
+    const md = path.join(P.wardrobe, f), text = readText(md), fm = frontMatter(text);
     const id = fm.id || path.basename(f, ".md");
-    const game = fm.game ? path.join(ROOT, fm.game) : null;
+    const game = fm.game ? path.join(P.root, fm.game) : null;
     return {
-      id, md, tool: fm.tool || "", drop: fm.drop ? path.join(ROOT, fm.drop) : null, game,
+      id, md, tool: fm.tool || "", drop: fm.drop ? path.join(P.root, fm.drop) : null, game,
       white: game && game.endsWith(".png") ? game.slice(0, -4) + "_white.png" : null,
-      partsFile: path.join(WARDROBE, `${id}.parts.json`), ...notesOf(text),
+      partsFile: path.join(P.wardrobe, `${id}.parts.json`), ...notesOf(text),
     };
   });
 }
@@ -262,23 +279,29 @@ function registerSheet(reg0, outfits0, sources0, sheet) {
 
 const shown = (cmd, args) => [cmd, ...args].map((a) => (/^[\w@%+=:,./-]+$/.test(a) ? a : `'${a.replace(/'/g, "'\\''")}'`)).join(" ");
 
-function run(cmd, args, capture) {
+/** Run a tool; the repository's tools run from the repository (cwd), the key from the tree. */
+function run(cmd, args, capture, cwd = REPO) {
   console.log(`$ ${shown(cmd, args)}`);
-  const r = spawnSync(cmd, args, { cwd: ROOT, encoding: "utf8", maxBuffer: 1 << 26, stdio: capture ? ["ignore", "pipe", "pipe"] : ["ignore", "inherit", "inherit"] });
+  const r = spawnSync(cmd, args, { cwd, encoding: "utf8", maxBuffer: 1 << 26, stdio: capture ? ["ignore", "pipe", "pipe"] : ["ignore", "inherit", "inherit"] });
   const why = r.error ? (r.error.code === "ENOENT" ? `${cmd} not found` : r.error.message) : `exit ${r.status}`;
   return { ok: !r.error && r.status === 0, why, out: r.stdout || "", err: r.stderr || "" };
 }
 
 const mtime = (p) => fs.statSync(p).mtimeMs;
 const sameBytes = (a, b) => fs.readFileSync(a).equals(fs.readFileSync(b));
+const digest = (p) => (isFile(p) ? crypto.createHash("sha1").update(fs.readFileSync(p)).digest("hex") : null);
 
 function parseArgs(argv) {
-  const o = { ids: [], dry: false, skip: new Set(), help: false, error: null };
+  const o = { ids: [], dry: false, skip: new Set(), help: false, error: null, root: REPO };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === "--dry-run" || a === "-n") o.dry = true;
     else if (a === "-h" || a === "--help") o.help = true;
-    else if (a === "--skip" || a.startsWith("--skip=")) {
+    else if (a === "--root" || a.startsWith("--root=")) {
+      const v = a === "--root" ? argv[++i] : a.slice(7);
+      if (!v) o.error = "--root needs a directory";
+      else o.root = path.resolve(v);
+    } else if (a === "--skip" || a.startsWith("--skip=")) {
       const v = a === "--skip" ? argv[++i] : a.slice(7);
       for (const s of String(v ?? "").split(",").filter(Boolean)) {
         if (!STEPS.includes(s)) o.error = `unknown step "${s}" (steps: ${STEPS.join(", ")})`;
@@ -290,34 +313,43 @@ function parseArgs(argv) {
   return o;
 }
 
+const isDir = (p) => { try { return fs.statSync(p).isDirectory(); } catch { return false; } };
+const real = (p) => { try { return fs.realpathSync(p); } catch { return p; } };
+
 export function main(argv = process.argv.slice(2)) {
   const o = parseArgs(argv);
   if (o.help) {
-    console.log("Usage: node tools/land_wardrobe.mjs [ID ...] [--dry-run] [--skip STEP[,STEP...]]\n"
-      + `Steps: ${STEPS.join(", ")}. The parts file, the steps and the environment are in the header of tools/land_wardrobe.mjs.`);
+    console.log("Usage: node tools/land_wardrobe.mjs [ID ...] [--dry-run] [--skip STEP[,STEP...]] [--root DIR]\n"
+      + `Steps: ${STEPS.join(", ")}. The parts file, the steps, --root and the environment are in the header of tools/land_wardrobe.mjs.`);
     return 0;
   }
-  const prompts = wardrobePrompts();
+  P = layout(o.root);
+  const inRepo = real(P.root) === real(REPO);
+  if (!o.error) {
+    const lacking = [P.wardrobe, P.partsJson, P.outfitsJson, P.canonSources].filter((p, i) => !(i ? isFile(p) : isDir(p)));
+    if (lacking.length) o.error = `${inRepo ? "the repository" : `--root ${P.root}`} has no ${lacking.map(rel).join(", ")}`;
+  }
+  const prompts = o.error ? [] : wardrobePrompts();
   const unknown = o.ids.filter((id) => !prompts.some((p) => p.id === id));
   if (o.error || unknown.length) {
-    console.error(`land_wardrobe: ${o.error || `no wardrobe prompt ${unknown.join(", ")} in ${rel(WARDROBE)}`}`);
+    console.error(`land_wardrobe: ${o.error || `no wardrobe prompt ${unknown.join(", ")} in ${rel(P.wardrobe)}`}`);
     return 2;
   }
   const dry = o.dry, skip = o.skip;
   const verb = (now, done) => (dry ? `would ${now}` : done);
-  const reg0 = JSON.parse(readText(PARTS_JSON)), outfits0 = JSON.parse(readText(OUTFITS_JSON)), sources0 = readText(CANON_SOURCES);
+  const reg0 = JSON.parse(readText(P.partsJson)), outfits0 = JSON.parse(readText(P.outfitsJson)), sources0 = readText(P.canonSources);
   let reg = reg0, outfits = outfits0, sources = sources0;
   const results = [], ready = [], claimed = new Map();
 
   for (const s of o.ids.length ? prompts.filter((p) => o.ids.includes(p.id)) : prompts) {
-    const r = { id: s.id, status: "", notes: [], errors: [] };
+    const r = { id: s.id, status: "", notes: [], errors: [], missing: "" };
     results.push(r);
     s.r = r;
     if (!s.game || !s.white) { r.status = "failed"; r.errors.push(`${rel(s.md)}: its game: path is not a .png`); continue; }
     s.source = [s.drop, s.game].find((p) => p && isFile(p));
     if (!s.source) {
-      r.status = o.ids.length ? "failed" : "not rendered";
-      if (o.ids.length) r.errors.push(`no render at ${s.drop ? rel(s.drop) : "its drop: path"} or ${rel(s.game)}`);
+      const where = `no render at ${s.drop ? rel(s.drop) : "its drop: path"} or ${rel(s.game)}`;
+      if (o.ids.length) { r.status = "failed"; r.errors.push(where); } else { r.status = "missing"; r.missing = where; }
       continue;
     }
     if (isLfsPointer(s.source)) { r.status = "failed"; r.errors.push(`${rel(s.source)} is a Git LFS pointer: git lfs pull it first`); continue; }
@@ -329,9 +361,9 @@ export function main(argv = process.argv.slice(2)) {
   }
 
   // What the steps need.
-  const needPython = ready.length && (!skip.has("cut") || !skip.has("rig"));
+  const needPython = ready.length && (!skip.has("cut") || (!skip.has("rig") && inRepo));
   const py = needPython ? artPython() : { python: null, tried: [] };
-  const body = path.join(CANON, "body_base.png");
+  const body = path.join(P.canon, "body_base.png");
   const blocker = needPython && !py.python
     ? `no art Python (numpy, scipy and Pillow; tried ${py.tried.join(", ")}): set ART_PYTHON or make the repo's .venv (tools/requirements-art.txt)`
     : ready.length && !skip.has("cut") && (!isFile(body) || isLfsPointer(body))
@@ -345,6 +377,7 @@ export function main(argv = process.argv.slice(2)) {
       const r = s.r;
       console.log(`== ${s.id} (${rel(s.source)})`);
       const fail = (msg) => { r.status = "failed"; r.errors.push(msg); };
+      let changed = false;  // anything synced, keyed, cut or registered differently: else UNCHANGED
       // sync
       let synced = false;
       if (!skip.has("sync") && s.source === s.drop) {
@@ -356,47 +389,62 @@ export function main(argv = process.argv.slice(2)) {
             const st = fs.statSync(s.drop);
             fs.utimesSync(s.game, st.atime, st.mtime);
           }
-          synced = true;
+          synced = changed = true;
         } else if (!sameBytes(s.drop, s.game)) r.notes.push(`${rel(s.game)} is newer than the drop and differs: kept`);
       }
       const sheetFile = isFile(s.game) ? s.game : s.source;
-      // key
+      // key (run in the tree, on paths relative to it)
+      let keyed = false;
       if (!skip.has("key")) {
         if (synced || !isFile(s.white) || mtime(s.white) < mtime(sheetFile)) {
-          const args = [sheetFile, "-fuzz", "12%", "-fill", "white", "-opaque", "#00FF00", "-channel", "G", "-fx", "min(u.g,max(u.r,u.b))", "+channel", s.white];
-          if (dry) r.notes.push(`would key: ${shown(MAGICK, args.map((a) => (path.isAbsolute(a) ? rel(a) : a)))}`);
+          keyed = changed = true;
+          const args = [sheetFile, "-fuzz", "12%", "-fill", "white", "-opaque", "#00FF00", "-channel", "G", "-fx", "min(u.g,max(u.r,u.b))", "+channel", s.white]
+            .map((a) => (path.isAbsolute(a) ? rel(a) : a));
+          if (dry) r.notes.push(`would key: ${shown(MAGICK, args)}`);
           else {
             fs.mkdirSync(path.dirname(s.white), { recursive: true });
-            const k = run(MAGICK, args.map((a) => (path.isAbsolute(a) ? rel(a) : a)), true);
+            const k = run(MAGICK, args, true, P.root);
             if (!k.ok) { fail(`key: ${k.why} ${k.err.trim().split("\n").slice(-3).join(" ")}`.trim()); continue; }
             r.notes.push(`keyed ${rel(s.white)}`);
           }
         } else r.notes.push(`${rel(s.white)} is current`);
       }
-      if (!dry && !isFile(s.white)) { fail(`no keyed copy ${rel(s.white)}${skip.has("key") ? " (key skipped)" : ""}`); continue; }
+      if (!isFile(s.white) && !(dry && keyed)) { fail(`no keyed copy ${rel(s.white)}${skip.has("key") ? " (key skipped)" : ""}`); continue; }
       const next = registerSheet(reg, outfits, sources, s);
-      const ids = Object.keys(s.spec.parts);
+      const ids = Object.keys(s.spec.parts), pngs = ids.map((id) => path.join(P.canon, `${id}.png`));
       // cut
       if (!skip.has("cut")) {
-        if (dry) r.notes.push(`would cut ${ids.length} parts into ${rel(CANON)}: ${ids.join(", ")}`);
-        else {
+        if (dry) {
+          const absent = ids.filter((_, i) => !isFile(pngs[i]) || isLfsPointer(pngs[i]));
+          if (absent.length) changed = true;
+          r.notes.push(absent.length ? `would cut ${ids.length} parts into ${rel(P.canon)}: ${ids.join(", ")}`
+            : `would cut ${ids.length} parts again (each is in ${rel(P.canon)}): ${ids.join(", ")}`);
+        } else {
+          // The cutter opens a sheet at its root / its path, so the sheets go to it as absolute paths
+          // under the tree, and its --out is the tree's canon folder.
+          const cfg = structuredClone(next.reg);
+          for (const spec of Object.values(cfg.sheets || {})) spec.path = path.resolve(P.root, spec.path);
           const parts = path.join(tmp, `${s.id}.json`);
-          fs.writeFileSync(parts, formatParts(next.reg));
-          const c = run(py.python, ["-I", "-B", "tools/cut_paperdoll.py", "--sheet", s.id, "--parts", parts], true);
+          fs.writeFileSync(parts, formatParts(cfg));
+          const was = pngs.map(digest);
+          const c = run(py.python, ["-I", "-B", "tools/cut_paperdoll.py", "--sheet", s.id, "--parts", parts, ...(inRepo ? [] : ["--out", P.canon])], true);
           for (const line of c.out.trim().split("\n").filter(Boolean)) console.log(`  ${line}`);
           const warn = c.err.split("\n").filter((l) => l.startsWith("cut_paperdoll:"));
           r.notes.push(...warn.map((l) => `warning: ${l}`));
-          const lost = ids.filter((id) => !isFile(path.join(CANON, `${id}.png`)));
+          const lost = ids.filter((_, i) => !isFile(pngs[i]));
           if (!c.ok || lost.length) {
             fail(`cut: ${c.ok ? `no ${lost.join(", ")}` : c.why} ${c.err.trim().split("\n").filter((l) => !warn.includes(l)).slice(-3).join(" ")}`.trim());
             continue;
           }
-          r.notes.push(`cut ${ids.length} parts: ${ids.join(", ")}`);
+          const recut = pngs.filter((p, i) => digest(p) !== was[i]).length;
+          if (recut) changed = true;
+          r.notes.push(`cut ${ids.length} parts${recut ? "" : " (each as it was)"}: ${ids.join(", ")}`);
         }
       }
       // register
       if (!skip.has("register")) {
         const ch = next.changes;
+        if (!same(next.reg, reg) || !same(next.outfits, outfits) || next.sources !== sources) changed = true;
         const what = [ch.sheet ? `the sheet ${s.id}` : "", ch.parts.added.length ? `the parts ${ch.parts.added.join(", ")}` : "",
           ch.parts.changed.length ? `new settings for ${ch.parts.changed.join(", ")}` : ""].filter(Boolean);
         r.notes.push(`paperdoll_parts.json: ${what.length ? `${verb("register", "registered")} ${what.join("; ")}` : "unchanged"}`);
@@ -406,7 +454,7 @@ export function main(argv = process.argv.slice(2)) {
         r.notes.push(`canon SOURCES.md: ${ch.rows ? `${verb("write", "wrote")} ${ch.rows} rows` : "unchanged"}`);
         ({ reg, outfits, sources } = next);
       }
-      r.status = "landed";
+      r.status = changed ? "landed" : "unchanged";
     }
   } finally {
     if (tmp) fs.rmSync(tmp, { recursive: true, force: true });
@@ -414,16 +462,17 @@ export function main(argv = process.argv.slice(2)) {
 
   // Write what changed.
   const writes = [];
-  if (!same(reg, reg0)) writes.push([PARTS_JSON, formatParts(reg)]);
-  if (!same(outfits, outfits0)) writes.push([OUTFITS_JSON, formatOutfits(outfits)]);
-  if (sources !== sources0) writes.push([CANON_SOURCES, sources]);
+  if (!same(reg, reg0)) writes.push([P.partsJson, formatParts(reg)]);
+  if (!same(outfits, outfits0)) writes.push([P.outfitsJson, formatOutfits(outfits)]);
+  if (sources !== sources0) writes.push([P.canonSources, sources]);
   for (const [p, text] of writes) {
     if (!dry) writeText(p, text);
     console.log(`land_wardrobe: ${verb("write", "wrote")} ${rel(p)}`);
   }
 
-  // The steps after the cut, once.
-  const landed = results.filter((r) => r.status === "landed");
+  // The steps after the cut, once, when a sheet landed or is in place (they work on the
+  // repository, so not with --root).
+  const done = results.filter((r) => r.status === "landed" || r.status === "unchanged");
   const after = [];
   let stepFailed = false;
   const step = (name, cmd, args, capture = false) => {
@@ -436,10 +485,11 @@ export function main(argv = process.argv.slice(2)) {
     }
     return r;
   };
-  if (landed.length) {
+  if (done.length) {
     for (const name of ["rig", "bake", "import", "sources"]) {
       if (stepFailed) break;
       if (skip.has(name)) { after.push(`${name} skipped`); continue; }
+      if (!inRepo) { after.push(`${name} skipped (--root: it works on the repository)`); continue; }
       if (name === "rig") step(name, py.python, ["-I", "-B", "tools/gen_player_rig.py"]);
       if (name === "bake") step(name, "bash", ["tools/bake_paper.sh", "characters"]);
       if (name === "import") {
@@ -453,12 +503,16 @@ export function main(argv = process.argv.slice(2)) {
     }
   }
 
-  // Summary.
+  // Summary: the count, then every sheet's status (and why, for an error or a missing sheet).
   const count = (st) => results.filter((r) => r.status === st).length;
-  console.log(`\nland_wardrobe${dry ? " (dry run)" : ""}: ${count("landed")} sheet(s) ${dry ? "would land" : "landed"}, ${count("failed")} failed, ${count("not rendered")} not rendered yet`);
-  for (const r of results.filter((x) => x.status !== "not rendered")) {
-    console.log(`  ${r.id}: ${r.status.toUpperCase()}`);
-    for (const e of r.errors) console.log(`    error: ${e}`);
+  const label = { landed: dry ? "WOULD LAND" : "LANDED", unchanged: "UNCHANGED", missing: "MISSING SHEET", failed: "ERROR" };
+  console.log(`\nland_wardrobe${dry ? " (dry run)" : ""}: ${count("landed")} sheet(s) ${dry ? "would land" : "landed"}, `
+    + `${count("unchanged")} unchanged, ${count("failed")} failed, ${count("missing")} missing (not rendered yet)`);
+  for (const r of results) {
+    const [first, ...rest] = r.errors;
+    const why = r.status === "failed" ? `: ${first ?? "a step failed"}` : r.status === "missing" ? ` (${r.missing})` : "";
+    console.log(`  ${r.id}: ${label[r.status] ?? r.status.toUpperCase()}${why}`);
+    for (const e of rest) console.log(`    error: ${e}`);
     for (const n of r.notes) console.log(`    ${n}`);
   }
   if (after.length) console.log(`  then: ${after.join("; ")}`);
