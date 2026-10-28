@@ -11,6 +11,9 @@ extends Control
 ## (assets/florida: the crafted Florida wearables, tools/gen_florida_wearables.py).
 
 const LAYERS: Array[String] = ["body", "shoes", "bottom", "top", "dress", "hair", "hat", "accessory"]
+## The order the pickers list the slots, every slot but the body: head to toe, the accessory last
+## (the wardrobe's rows, scenes/ui/wardrobe.tscn, and the makeover's buttons).
+const PICK_ORDER: Array[String] = ["hair", "hat", "dress", "top", "bottom", "shoes", "accessory"]
 const ART_DIRS: Array[String] = ["res://assets/canon/%s.png", "res://assets/placeholder/%s.png"]
 ## Extra folders searched for a part, after the set's own folder, keyed by the set's pattern.
 const ART_EXTRA := {"res://assets/canon/%s.png": ["res://assets/florida/%s.png"]}

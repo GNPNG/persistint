@@ -2,7 +2,10 @@ extends Control
 ## Hottest of the HOT — Tyra Banks's top-model judging show (DESIGN.md §2). Chelsea Clinton
 ## introduces it, the passenger is dressed on the same paper doll as the island wardrobe,
 ## then judged with negative framing and passive-aggressive language. A Name It beat follows.
-## Data: data/hottest_of_the_hot.json (verdicts), data/emcee.json (Chelsea's intro lines).
+## Data: data/hottest_of_the_hot.json (verdicts), data/emcee.json (Chelsea's intro lines),
+## data/outfits.json (the options; set `options` before the scene enters the tree to use others).
+## The pickers: a button per slot with something to choose (more than one option, as the wardrobe
+## shows a row), in the wardrobe's order (PaperDoll.PICK_ORDER), then Walk.
 ## Result goes to WorldState: hottest_done, hottest_outfit.
 
 const DATA_PATH := "res://data/hottest_of_the_hot.json"
@@ -24,7 +27,7 @@ const Flashbacks := preload("res://scripts/chapters/flashbacks.gd")
 
 var data: Dictionary = {}
 var emcee: Dictionary = {}
-var options: Dictionary = {}
+var options: Dictionary = {}  # slot -> Array[String]
 var doll: Control
 
 var _box: VBoxContainer
@@ -34,7 +37,8 @@ var _say: Label
 func _ready() -> void:
 	data = _load(DATA_PATH)
 	emcee = _load(EMCEE_PATH)
-	options = _load(OUTFITS_PATH)
+	if options.is_empty():
+		options = _load(OUTFITS_PATH)
 	# Runway backdrop (scene), the show title on a ribbon, the doll on the runway, the outfit
 	# pickers in a panel on the right, and what is said in a dialogue box at the bottom.
 	var title := Label.new()
@@ -69,7 +73,8 @@ func _ready() -> void:
 	var outfit := {"body": "body_base"}
 	for slot: String in options:
 		outfit[slot] = options[slot][0]
-		if options[slot].size() < 2:
+	for slot: String in PAPER_DOLL.PICK_ORDER:
+		if options.get(slot, []).size() < 2:
 			continue  # nothing to choose in that slot yet (a new slot with no parts)
 		var b := Button.new()
 		b.text = slot.capitalize()
