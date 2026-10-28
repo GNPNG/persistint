@@ -1,7 +1,7 @@
 extends Node2D
 ## Map — common behavior for every map area: place the player at the requested
 ## spawn marker, build the HUD (clock + calendar); P (or the hanger sticker) toggles the
-## wardrobe, J (or the book sticker) the journal.
+## wardrobe, J (or the book sticker) the journal, M (or the map sticker) the map card.
 
 const WARDROBE_SCENE := "res://scenes/ui/wardrobe.tscn"
 
@@ -85,7 +85,7 @@ func _build_hud() -> void:
 	# Tap stickers under the settings gear for the wardrobe and the journal, so a finger or a
 	# mouse alone reaches what P and J open (bd ctw, QA-07).
 	for pair: Array in [["WardrobeSticker", "hanger", 1, toggle_wardrobe], ["JournalSticker", "book", 2, toggle_journal],
-			["ZoomSticker", "zoom", 3, toggle_zoom], ["HelpSticker", "help", 4, toggle_help]]:
+			["ZoomSticker", "zoom", 3, toggle_zoom], ["HelpSticker", "help", 4, toggle_help], ["MapSticker", "map", 5, toggle_minimap]]:
 		var s := StickerButton.new()
 		s.name = pair[0]
 		s.kind = pair[1]
@@ -93,6 +93,7 @@ func _build_hud() -> void:
 		s.pressed.connect(pair[3])
 		layer.add_child(s)
 	_hud_layer = layer
+	_build_zoom_figures()
 	_update_hud()
 
 
@@ -112,6 +113,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		set_zoom_level(0)
 	elif event.is_action_pressed("toggle_help"):
 		toggle_help()
+	elif event.is_action_pressed("toggle_map"):
+		toggle_minimap()
 	elif event is InputEventMagnifyGesture:  # a trackpad pinch
 		set_zoom_level(0 if event.factor > 1.0 else 1)
 	elif event is InputEventScreenTouch or event is InputEventScreenDrag:
@@ -142,10 +145,56 @@ func set_zoom_level(level: int) -> void:
 	var s := _hud_layer.get_node_or_null("ZoomSticker") if _hud_layer else null
 	if s:
 		s.set_icon("zoom_in" if level > 0 else "zoom_out")
+	_show_zoom_figures()
 
 
 func toggle_zoom() -> void:
 	set_zoom_level(0 if zoom_level > 0 else 1)
+
+
+## Two paper-cutout shadow girls beside the magnifier show the zoom (author 2026-10-24, bd ctw:
+## "indicated by little shadow characters, like little cutout paper shadow ... smaller or
+## bigger"): the big one is the normal view, the small one the view one level out. The one in use
+## is solid and the other faint; tapping one goes to its zoom. Art: tools/gen_hud_stickers.py.
+const FIGURE_SIZE := Vector2(16, 24)
+
+
+func _build_zoom_figures() -> void:
+	var figs := HBoxContainer.new()
+	figs.name = "ZoomFigures"
+	figs.add_theme_constant_override("separation", 0)
+	figs.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# Left of the magnifier (slot 3 under the gear), its feet on the sticker's lower half.
+	var right := -(StickerButton.SIZE + StickerButton.MARGIN + 4.0)
+	var top := StickerButton.MARGIN + 3 * (StickerButton.SIZE + StickerButton.MARGIN) + 4.0
+	figs.anchor_left = 1.0
+	figs.anchor_right = 1.0
+	figs.offset_left = right - 2.0 * FIGURE_SIZE.x
+	figs.offset_right = right
+	figs.offset_top = top
+	figs.offset_bottom = top + FIGURE_SIZE.y
+	for pair: Array in [["Far", "figure_far", 1, "Zoom out (-)"], ["Near", "figure_near", 0, "Zoom in (+)"]]:
+		var b := TextureButton.new()
+		b.name = pair[0]
+		b.texture_normal = load("res://assets/ui/hud/%s.png" % pair[1])
+		b.ignore_texture_size = true
+		b.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+		b.custom_minimum_size = FIGURE_SIZE
+		b.focus_mode = Control.FOCUS_NONE
+		b.tooltip_text = pair[3]
+		b.pressed.connect(set_zoom_level.bind(pair[2]))
+		figs.add_child(b)
+	_hud_layer.add_child(figs)
+	_show_zoom_figures()
+
+
+func _show_zoom_figures() -> void:
+	var figs := _hud_layer.get_node_or_null("ZoomFigures") if _hud_layer else null
+	if figs == null:
+		return
+	for pair: Array in [["Near", 0], ["Far", 1]]:
+		var b := figs.get_node(pair[0]) as CanvasItem
+		b.modulate = Color(1, 1, 1, 1.0 if zoom_level == pair[1] else 0.35)
 
 
 func _pinch(event: InputEvent) -> void:
@@ -187,6 +236,29 @@ func toggle_help() -> void:
 
 func help_open() -> bool:
 	return _help != null and _help.visible
+
+
+## --- Map (bd ctw): the map sticker or M opens the overhead map card (scripts/ui/minimap.gd). ---
+var _minimap: Control
+
+
+func toggle_minimap() -> void:
+	if minimap_open():
+		_minimap.queue_free()
+		_minimap = null
+		return
+	_minimap = preload("res://scripts/ui/minimap.gd").new()
+	_minimap.set("map", self)
+	_hud_layer.add_child(_minimap)
+
+
+func minimap_open() -> bool:
+	return _minimap != null and is_instance_valid(_minimap)
+
+
+## The open map card, or null.
+func minimap() -> Control:
+	return _minimap if minimap_open() else null
 
 
 func toggle_journal() -> void:

@@ -11,7 +11,7 @@ const MARGIN := 8.0
 const SWAY_DEGREES := 6.0
 const SWAY_SECONDS := 2.4
 
-## "hanger" (wardrobe), "book" (journal), "zoom" (zoom out or back in) or "help".
+## "hanger" (wardrobe), "book" (journal), "zoom" (zoom out or back in), "help" or "map".
 @export var kind := "hanger"
 ## Which slot under the gear: 1 is the first one below it.
 @export var slot := 1
@@ -27,7 +27,7 @@ func _ready() -> void:
 	custom_minimum_size = Vector2(SIZE, SIZE)
 	size = Vector2(SIZE, SIZE)
 	pivot_offset = Vector2(SIZE / 2.0, 2.0)  # it hangs from its top, like a hanger on a rail
-	tooltip_text = {"hanger": "Wardrobe (P)", "book": "Journal (J)", "zoom": "Zoom (+ and -)", "help": "Help (F1)"}.get(kind, "")
+	tooltip_text = {"hanger": "Wardrobe (P)", "book": "Journal (J)", "zoom": "Zoom (+ and -)", "help": "Help (F1)", "map": "Map (M)"}.get(kind, "")
 	_t = slot * 0.7  # neighbours don't sway in step
 	_place()
 	get_viewport().size_changed.connect(_place)

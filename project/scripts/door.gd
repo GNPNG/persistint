@@ -37,6 +37,7 @@ var _marker: AnimatedSprite2D
 
 
 func _ready() -> void:
+	add_to_group("doors")  # the map card's waypoints (scripts/ui/minimap.gd)
 	label.hide()
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)

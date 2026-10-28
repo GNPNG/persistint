@@ -7,12 +7,16 @@ What made each file here (release checklist LP-04, sops/09). Prompt files carry 
 |---|---|---|---|
 | `book.png` | `tools/gen_hud_stickers.py` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `book_pressed.png` | `tools/gen_hud_stickers.py` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
+| `figure_far.png` | `tools/gen_hud_stickers.py` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
+| `figure_near.png` | `tools/gen_hud_stickers.py` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `gear.png` | `tools/gen_hud_stickers.py` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `gear_pressed.png` | `tools/gen_hud_stickers.py` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `hanger.png` | `tools/gen_hud_stickers.py` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `hanger_pressed.png` | `tools/gen_hud_stickers.py` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `help.png` | `tools/gen_hud_stickers.py` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `help_pressed.png` | `tools/gen_hud_stickers.py` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
+| `map.png` | `tools/gen_hud_stickers.py` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
+| `map_pressed.png` | `tools/gen_hud_stickers.py` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `zoom_in.png` | `tools/gen_hud_stickers.py` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `zoom_in_pressed.png` | `tools/gen_hud_stickers.py` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `zoom_out.png` | `tools/gen_hud_stickers.py` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |

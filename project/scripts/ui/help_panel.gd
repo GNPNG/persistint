@@ -10,6 +10,7 @@ const ROWS := [
 	["Wardrobe", ["toggle_wardrobe"], "the hanger sticker", "Y"],
 	["Journal", ["toggle_journal"], "the book sticker", "X"],
 	["Zoom", ["zoom_out", "zoom_in"], "the magnifier sticker, pinch or the wheel", "LB / RB"],
+	["Map", ["toggle_map"], "the map sticker, then a heart on it to walk to that way out", "R3"],
 	["Pause and settings", [], "the gear", "Start"],
 ]
 

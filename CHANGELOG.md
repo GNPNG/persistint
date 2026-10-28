@@ -5,6 +5,15 @@ All notable changes, newest first. The format follows
 [Semantic Versioning](https://semver.org/). `tools/version.py bump` turns the Unreleased section
 into the new version's heading; the Updates page on the site shows the released versions.
 
+## Unreleased
+
+### Added
+
+- Map: the map sticker or M opens a little overhead map of the area you are in, with a heart for
+  every way out and its name; tap a heart to walk there.
+- Zoom: two paper-cutout figures beside the magnifier show the zoom, the big one for the normal
+  view and the small one for one level out; tap one to go to it.
+
 ## v0.3.8 — 2026-10-27
 
 The paper look, and Florida:
