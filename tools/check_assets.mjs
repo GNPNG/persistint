@@ -34,7 +34,8 @@ function shippedMedia() {
   const out = [];
   for (const base of ["assets", "audio"]) {
     for (const p of rglob(path.join(PROJECT, base))) {
-      if (isFile(p) && MEDIA.has(ext(p)) && !rel(p, PROJECT).split("/").includes("test")) out.push(p);
+      const parts = rel(p, PROJECT).split("/");  // not shipped: test assets, staging sheets (a .gdignore)
+      if (isFile(p) && MEDIA.has(ext(p)) && !parts.includes("test") && !parts.includes("sheets")) out.push(p);
     }
   }
   return out;

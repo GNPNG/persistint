@@ -37,7 +37,8 @@ def fail(check: str, msg: str) -> None:
 def shipped_media():
     for base in ("assets", "audio"):
         for p in sorted((PROJECT / base).rglob("*")):
-            if p.is_file() and p.suffix.lower() in MEDIA and "test" not in p.relative_to(PROJECT).parts:
+            parts = p.relative_to(PROJECT).parts  # not shipped: test assets, staging sheets (a .gdignore)
+            if p.is_file() and p.suffix.lower() in MEDIA and "test" not in parts and "sheets" not in parts:
                 yield p
 
 
