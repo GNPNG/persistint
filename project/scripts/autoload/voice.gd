@@ -305,10 +305,23 @@ func shutdown(others: Array = []) -> void:
 ## frees it the frame after, and a quit before that leaves the playback and its AudioStreamWAV in
 ## use at exit (bd y37). The wait is in real time, not frames: under --fixed-fps (the shot walk)
 ## frames can pass faster than the dummy audio driver mixes.
+## A 2D or 3D player hands a new playback to the audio server only at its next physics tick, and
+## stop() before that leaves the playback pending on the player (audio_stream_player_2d.cpp), so
+## when one of them has a playback, a physics tick passes first and every playback is the
+## server's to drop.
 func release(players: Array) -> void:
-	var ids: Array[int] = []
+	var live: Array = []
+	var positional := false  # a 2D or 3D player has a playback
 	for p: Variant in players:
-		if not is_instance_valid(p) or not (p as Object).has_method("has_stream_playback"):
+		if is_instance_valid(p) and (p as Object).has_method("has_stream_playback"):
+			live.append(p)
+			positional = positional or (not (p is AudioStreamPlayer) and bool(p.has_stream_playback()))
+	if positional:
+		await get_tree().physics_frame
+		await get_tree().process_frame  # the tick's internal physics runs after physics_frame
+	var ids: Array[int] = []
+	for p: Variant in live:
+		if not is_instance_valid(p):
 			continue
 		if p.has_stream_playback():
 			ids.append(_playback_id(p))

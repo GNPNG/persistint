@@ -76,6 +76,7 @@ func _run() -> void:
 	root.add_child(b)
 	_check(voice.speak_at(a, GROAN, "clone_a", "Clones"), "node A starts its line")
 	_check(voice.speak_at(b, GROAN, "clone_b", "Clones"), "node B starts its line")
+	await physics_frame  # a 2D player hands its playback to the audio server at its physics tick
 	await process_frame
 	var pa: AudioStreamPlayer2D = a.get_node(voice.VOICE_AT)
 	var pb: AudioStreamPlayer2D = b.get_node(voice.VOICE_AT)
@@ -115,12 +116,18 @@ func _run() -> void:
 	var again: Array[int] = []
 	if voice._player.call("has_stream_playback"):
 		again.append(_playback_id(voice._player))
+	# A node's line started in the same frame as shutdown(): its playback is still pending on the
+	# player (no physics tick yet), and it is freed all the same.
+	_check(voice.speak_at(a, GROAN, "clone_a", "Clones"), "a node's line after stop_all starts")
+	if pa.has_stream_playback():
+		again.append(_playback_id(pa))
 
-	# --- shutdown(): the line freed, and Voice silent from then on (the quit).
+	# --- shutdown(): the lines freed, and Voice silent from then on (the quit).
 	await voice.shutdown()
 	for i in 3:
 		await process_frame
-	_check(again.size() == 1 and not is_instance_id_valid(again[0]), "shutdown frees the line's playback")
+	var kept := again.filter(func(id: int) -> bool: return is_instance_id_valid(id)).size()
+	_check(again.size() == 2 and kept == 0, "shutdown frees the cast's and the node's playbacks (%d of %d held)" % [kept, again.size()])
 	_check(voice.speak_at(a, GROAN, "clone_a", "Clones") == false, "after shutdown a node's line starts nothing")
 	voice.speak(text, 1.0, speaker)
 	await process_frame
