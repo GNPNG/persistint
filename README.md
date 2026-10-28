@@ -176,6 +176,18 @@ tools/run_tests.sh test_save       # just some; --no-import skips the import
 The tests use their own save and settings files, so they never touch your own progress or volume
 levels.
 
+`tests/test_paperdoll_tools.gd` runs the art tools' own checks (`tools/test_paperdoll_tools.py`),
+which need a Python with numpy, scipy and Pillow (`tools/requirements-art.txt`). It uses
+`ART_PYTHON` when that is set (the art venv's `python`), else the repo's `.venv` if there is one,
+else `python3` on the path, and the log names the one that ran. If none of them has the packages,
+the test fails. Set `PERSISTINT_SKIP_ART_TESTS=1` to skip it instead:
+
+```bash
+python3 -m venv .venv && .venv/bin/pip install -r tools/requirements-art.txt   # once
+ART_PYTHON=/path/to/art-venv/bin/python tools/run_tests.sh                     # or point at another venv
+PERSISTINT_SKIP_ART_TESTS=1 tools/run_tests.sh                                 # no art Python: skip those checks
+```
+
 Each script prints `RESULT: PASS` or lists its failures. Most tests back up your real
 `user://save.json` and restore it afterwards; `test_landing_crew.gd` does not yet, so back up your
 save before running it. There is no single runner script or CI yet.

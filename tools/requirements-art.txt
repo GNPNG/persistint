@@ -5,7 +5,8 @@
 # build). The cutters' background removal (scipy.ndimage label / binary morphology /
 # gaussian_filter) and Pillow's LANCZOS and PNG writer are the version-sensitive parts: other
 # versions can move edge alpha by a level or two. scipy 1.14.1 needs numpy < 2.3.
-#   python3 -m pip install -r tools/requirements-art.txt
+#   python3 -m venv .venv && .venv/bin/pip install -r tools/requirements-art.txt
+# The tests find that .venv, or the interpreter named by ART_PYTHON (README, Running the tests).
 numpy==2.2.6
 scipy==1.14.1
 Pillow==10.4.0

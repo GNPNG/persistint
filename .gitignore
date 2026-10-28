@@ -40,3 +40,6 @@ web-render.local.json
 
 # tools/run_tests.sh logs
 .cache/
+
+# The art tools' venv (tools/requirements-art.txt; README, Running the tests)
+.venv/
