@@ -40,6 +40,7 @@ Cast="*res://scripts/autoload/cast.gd"
 NameIt="*res://scripts/autoload/name_it.gd"
 DialogueManager="*res://addons/dialogue_manager/dialogue_manager.gd"
 DevScene="*res://scripts/autoload/dev_scene.gd"
+Playtest="*res://scripts/autoload/playtest.gd"
 
 [dialogue_manager]
 

@@ -1,7 +1,8 @@
 extends RefCounted
 ## Hands a text file to the player: in the browser a download (a Blob and a temporary link), on a
-## desktop a file in the user data folder. Shared by Settings' Export save and the voice review's
-## Export review. Preload it by path (no class_name: headless tests run without the class cache).
+## desktop a file in the user data folder. Shared by Settings' Export save and Export playtest and
+## the voice review's Export review. Preload it by path (no class_name: headless tests run without
+## the class cache).
 
 
 ## Saves `text` as `file_name`. Returns where it went: "download" in the browser, the absolute

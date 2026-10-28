@@ -16,6 +16,8 @@ into the new version's heading; the Updates page on the site shows the released 
   every way out and its name; tap a heart to walk there.
 - Zoom: two paper-cutout figures beside the magnifier show the zoom, the big one for the normal
   view and the small one for one level out; tap one to go to it.
+- Development: a playtest mode for reviewing the game: the voice review ships with the game, with
+  a way back to the menu, and its notes export as one file.
 
 ### Changed
 
