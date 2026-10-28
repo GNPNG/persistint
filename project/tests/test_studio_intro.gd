@@ -106,7 +106,7 @@ func _run() -> void:
 	change_scene_to_file(INTRO)
 	await _frames(3)
 	var intro: Node = current_scene
-	_check(intro.max_seconds > 7.0 and intro.max_seconds < 10.0, "it ends on its own about a second after the 7 s clip (max_seconds %.1f)" % intro.max_seconds)
+	_check(intro.max_seconds > 7.0 and intro.max_seconds < 10.0, "it ends on its own about a second after the 6.7 s clip (max_seconds %.1f)" % intro.max_seconds)
 	intro.get_node("Video").finished.disconnect(intro._finish)
 	intro.max_seconds = 0.3
 	await create_timer(0.8).timeout

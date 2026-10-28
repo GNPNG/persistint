@@ -16,6 +16,8 @@ into the new version's heading; the Updates page on the site shows the released 
 
 ### Fixed
 
+- The studio intro no longer shows two ping-pong balls for a moment after the mint paddle's hit:
+  the glitch frames are cut out and the sound is cut to match, in time with the music (6.7 s).
 - Text in the world (door names, speech bubbles, the little words that float up in Florida) is
   drawn at the screen's full resolution, and in the ruins above the gloom, so light letters no
   longer come out grey. The floating words stay solid until they fade at the end, and a speech

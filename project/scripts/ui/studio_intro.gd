@@ -17,8 +17,8 @@ extends Control
 
 const MAIN_MENU := "res://scenes/ui/main_menu.tscn"
 const VIDEO := "res://assets/video/studio_intro.ogv"
-## The clip is 7.0 s (7.02 s of sound); used when the stream does not report a length.
-const CLIP_SECONDS := 7.1
+## The clip is 6.67 s (6.69 s of sound); used when the stream does not report a length.
+const CLIP_SECONDS := 6.8
 const END_MARGIN := 1.0
 ## Input in the first moments of the sting doesn't skip it: on touch screens one tap arrives as a
 ## touch and an emulated click, and the second must not skip the sting the first one started.
