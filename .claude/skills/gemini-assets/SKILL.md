@@ -123,6 +123,15 @@ from every edge; nothing touches, overlaps or is cropped.
 
 Run from the repo root. Commit with `mise x --env claude-cli -- git ...`, staging by path.
 
+**Wardrobe sheets in one command** (bd lg5w.2): save the passing render at its `drop:` path,
+measure it into `prompts/image/wardrobe/<id>.parts.json` (`{"doll": "WxH+X+Y", "parts": {"<id>":
+{"crop": "WxH+X+Y"}}}`, `anchor` and `scale` for hats and accessories, the ids from the prompt's
+Notes), then `node tools/land_wardrobe.mjs --dry-run` and `node tools/land_wardrobe.mjs [ID ...]`.
+It does steps 2 to 6 below for every wardrobe sheet it finds (sync, key to white, cut, register in
+`paperdoll_parts.json`, `outfits.json` and the canon `SOURCES.md`, rig, bake `characters`, import,
+`gen_sources`); a second run changes nothing. `--skip STEP,...` leaves steps out (the header of
+the script has them). Then step 7.
+
 1. **Drop**: the passing render at the prompt's `drop:` path (PNG; convert a JPEG download with
    `magick in.jpg out.png`, which keeps the JPEG's edge noise, so key with fuzz).
 2. **Sync**: `python3 tools/sync_rendered_assets.py` copies every drop to its `game:` path and lists
