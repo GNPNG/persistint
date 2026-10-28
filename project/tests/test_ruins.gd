@@ -3,7 +3,8 @@ extends SceneTree
 ## connect (wreck <-> corridor <-> core, exit to temple) with existing spawns, pieces are
 ## defined in data/ruins.json, recovery lands in WorldState and survives save/load, and a
 ## recovered piece's card shows on the room's screen layer with the title card out of its way,
-## and the gloom lies in the room over the camera's view, under the words in it (bd wso.4).
+## the pickup leaves nothing waiting past its room (bd 1cd0), and the gloom lies in the room over
+## the camera's view, under the words in it (bd wso.4).
 ## Run: godot --headless --path project -s tests/test_ruins.gd
 
 const FK := preload("res://scripts/ruins/forbidden_knowledge.gd")
@@ -82,9 +83,14 @@ func _run() -> void:
 		if not p.is_queued_for_deletion():
 			left += 1
 	_check(left == 1, "recovered pickup removed from map on reload (left=%d)" % left)
-	await _check_found(wreck)
+	var leaving: Tween = await _check_found(wreck)
 	await _check_gloom(wreck)
 	wreck.queue_free()
+	await process_frame
+	await process_frame
+	_check(leaving != null and not leaving.is_valid() and not get_processed_tweens().has(leaving),
+		"the pickup's countdown goes with the room, freed before the card's seconds are up")
+	leaving = null
 
 	await _check_clones(data, packed)
 
@@ -102,17 +108,27 @@ func _run() -> void:
 ## notes, over the gloom and drawn at the screen's resolution (5 px in the room under the 2x
 ## camera its words came out grey), inside the screen, saying what the pickup says; the room's
 ## title card gives way to it (a piece picked up in the first seconds had the title over it).
-func _check_found(room: Node) -> void:
+## The pickup leaves nothing waiting past its room (bd 1cd0): interact() runs to its end, not
+## suspended on a timer, and the card's seconds are a Tween of the pickup's own, so the room freed
+## in those seconds takes it too (the caller checks). interact() awaited a SceneTreeTimer, which
+## the shot walk's quit, a second after the pickup, left at exit. GDScript cannot list the tree's
+## SceneTreeTimers; the shot walk under --verbose reports a leaked one. Returns that Tween.
+func _check_found(room: Node) -> Tween:
 	var pickup: Node = null
 	for p in _find_all(room, "KnowledgePickup"):
 		if not p.is_queued_for_deletion():
 			pickup = p
 	if pickup == null:
 		_check(false, "a piece is left to recover in the wreck")
-		return
+		return null
 	var title: Label = room.get_node("Decor/RoomText/Title")
 	_check(title.visible, "the room's title card is up on entering")
-	pickup.interact()
+	var waiting: Variant = pickup.interact()
+	_check(waiting == null,
+		"recovering a piece leaves no function waiting on a timer (interact() returned %s)" % [waiting])
+	var leaving: Tween = pickup.get("leaving")
+	_check(leaving != null and leaving.is_valid() and leaving.is_running(),
+		"the pickup counts the card's seconds on a Tween of its own")
 	var card: Label = room.get_node("Decor/RoomText/Found")
 	var said: String = pickup.get_node("Label").text
 	_check(card.visible and card.text == said and said.begins_with("Recovered: "),
@@ -124,6 +140,7 @@ func _check_found(room: Node) -> void:
 	_check(root.get_visible_rect().encloses(card.get_rect()), "inside the screen (%s)" % card.get_rect())
 	await create_timer(0.4).timeout
 	_check(not title.visible, "the title card gives way to it")
+	return leaving
 
 
 ## The gloom (bd wso.4) lies in the room under the words in it: as a CanvasLayer of its own it
