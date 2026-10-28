@@ -99,6 +99,10 @@ func _process(_delta: float) -> void:
 	for l: Label in [label, _name_label]:
 		if l.visible:
 			keep_on_screen(l)
+	if _name_label.visible and under_map_card(_name_label):
+		# The card names this door on its pin; the end of a name sticking out from under it read as
+		# the card's own text spilling past its edge (the Service Spine's "...e Deck", cc-srv's review).
+		_name_label.hide()
 
 
 ## Slides a label sideways so its text stays inside the camera's view: a door on the map's edge
@@ -109,12 +113,31 @@ func keep_on_screen(l: Label) -> void:
 		return
 	var half := get_viewport().get_visible_rect().size / cam.zoom / 2.0
 	var center := cam.get_screen_center_position()
-	var font := l.get_theme_font("font")
-	var w := font.get_string_size(l.text, HORIZONTAL_ALIGNMENT_LEFT, -1, l.get_theme_font_size("font_size")).x
-	w = minf(w + 2.0 * l.get_theme_constant("outline_size"), l.size.x)
+	var w := text_box(l).size.x
 	var lo := center.x - half.x + w / 2.0 + 2.0
 	var hi := maxf(lo, center.x + half.x - w / 2.0 - 2.0)
 	l.position.x = -l.size.x / 2.0 + clampf(global_position.x, lo, hi) - global_position.x
+
+
+## Where a label's one line of text is drawn, its outline included, in the label's own px: centred
+## across, on its bottom edge (door.tscn).
+func text_box(l: Label) -> Rect2:
+	var font := l.get_theme_font("font")
+	var fsize := l.get_theme_font_size("font_size")
+	var w := font.get_string_size(l.text, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize).x
+	w = minf(w + 2.0 * l.get_theme_constant("outline_size"), l.size.x)
+	var h := font.get_height(fsize)
+	return Rect2((l.size.x - w) / 2.0, l.size.y - h, w, h)
+
+
+## True when the label's text lies wholly or partly under the open map card (scripts/ui/minimap.gd,
+## group "minimap") on screen.
+func under_map_card(l: Label) -> bool:
+	var card := get_tree().get_first_node_in_group("minimap") as Control
+	if card == null or card.is_queued_for_deletion() or not card.is_visible_in_tree():
+		return false
+	var text := l.get_global_transform_with_canvas() * text_box(l)
+	return text.intersects(card.get_global_transform_with_canvas() * Rect2(Vector2.ZERO, card.size))
 
 
 func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:

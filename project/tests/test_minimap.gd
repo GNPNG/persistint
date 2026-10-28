@@ -5,10 +5,17 @@ extends SceneTree
 ## zooms out; tapping a pin walks the player to that door; M or the sticker closes it. Beside the
 ## magnifier two paper-cutout figures show the zoom: the big one solid at the normal view, the
 ## small one solid one level out, and tapping one goes to its zoom.
+## The names on the pins (cc-srv's review of the first renders): in every map of scenes/maps,
+## scenes/ruins and scenes/florida, at Normal and at Larger text, every pin's name shows, says where
+## the door leads (or its short name), lies inside the card and its miniature and is clear of every
+## other name; no door's own name shows from under the card (the Service Spine's "...e Deck" stuck
+## out past its edge), and it comes back when the card closes.
 ## Run: godot --headless --path project -s tests/test_minimap.gd
 
 const VILLAGE := "res://scenes/maps/village.tscn"
 const CORRIDOR := "res://scenes/ruins/ruins_corridor.tscn"
+const DIRS := ["res://scenes/maps", "res://scenes/ruins", "res://scenes/florida"]
+const MAP_SCRIPT := "res://scripts/map.gd"
 
 var _failures := 0
 
@@ -116,10 +123,13 @@ func _run() -> void:
 	await create_timer(0.4).timeout
 	_check(map.zoom_level == 0, "tapping the big one zooms in")
 
-	# --- A ruins room: its doors are pins too. ---
+	# --- A ruins room: its doors are pins too, and a door's own name never shows from under the card. ---
+	root.get_node("/root/SceneRouter").next_spawn = "spawn_default"  # beside the Promenade Deck door
 	change_scene_to_file(CORRIDOR)
 	await _frames(4)
 	map = current_scene
+	var wreck: Label = map.get_node("WreckDoor/NameLabel")
+	_check(wreck.visible, "in the corridor the Promenade Deck door names itself beside the player")
 	map.toggle_minimap()
 	await _frames(3)
 	card = map.minimap()
@@ -131,8 +141,103 @@ func _run() -> void:
 		"in the corridor too, one pin per door (%d)" % room_doors)
 	if card:
 		_check(card.waypoint_names().has("To the Reliquary Core"), "named with where they lead (%s)" % ", ".join(card.waypoint_names()))
+		_check(not wreck.visible, "with the card open over it, the door's own name is hidden (its end showed past the card's edge)")
+		map.toggle_minimap()
+		await _frames(3)
+		_check(wreck.visible, "and it shows again once the card is closed")
+
+	# --- Every map, at Normal and at Larger text: the names on the pins. ---
+	var ts: Node = root.get_node("/root/TextSize")
+	var maps := _map_scenes()
+	_check(maps.size() >= 12, "every map is checked (%d)" % maps.size())
+	for step: int in [0, 2]:
+		ts.set_step(step)
+		for path: String in maps:
+			await _check_names(path, ts.step_name())
+	ts.set_step(0)
+	if current_scene:
+		current_scene.queue_free()
+	await process_frame
 
 	_finish()
+
+
+## Opens the map with its card and checks every pin's name: it shows, says where its door leads
+## (or the short name), lies inside the card and the miniature and is clear of every other name;
+## and no door's own name shows from under the card.
+func _check_names(path: String, text_size: String) -> void:
+	if current_scene:
+		current_scene.free()
+	var m: Node = load(path).instantiate()
+	root.add_child(m)
+	current_scene = m
+	await _frames(3)
+	m.toggle_minimap()
+	await _frames(3)
+	var what := "%s at %s text" % [path.get_file().get_basename(), text_size]
+	var card: Control = m.minimap()
+	if card == null:
+		_check(false, "%s: the map card opens" % what)
+		return
+	var box := card.get_global_rect().grow(0.05)
+	var mini: Rect2 = (card.get_node("Miniature") as Control).get_global_rect().grow(0.05)
+	var labels: Array[Label] = card.waypoint_labels()
+	var names: PackedStringArray = card.waypoint_names()
+	var bad := PackedStringArray()
+	for i in labels.size():
+		var l := labels[i]
+		var r := l.get_global_rect()
+		if not l.visible:
+			bad.append("\"%s\" is hidden" % names[i])
+			continue
+		if l.text != names[i] and l.text != card.short_name(names[i]):
+			bad.append("\"%s\" says \"%s\"" % [names[i], l.text])
+		if not (box.encloses(r) and mini.encloses(r)):
+			bad.append("\"%s\" %s is outside the miniature %s" % [l.text, r, mini])
+		for j in range(i + 1, labels.size()):
+			var o := labels[j]
+			if o.visible and r.intersects(o.get_global_rect()):
+				bad.append("\"%s\" is over \"%s\"" % [l.text, o.text])
+	_check(labels.size() == card.waypoints().size() and labels.size() == names.size() and bad.is_empty(),
+		"%s: all %d names show inside the card, none over another%s" % [what, labels.size(), "" if bad.is_empty() else " (" + "; ".join(bad) + ")"])
+	var on_screen: Rect2 = card.get_global_transform_with_canvas() * Rect2(Vector2.ZERO, card.size)
+	for n in get_nodes_in_group("doors"):
+		var l := (n as Node).get_node_or_null("NameLabel") as Label
+		if m.is_ancestor_of(n) and l != null and l.visible:
+			_check(not _text_on_screen(l).intersects(on_screen), "%s: %s's own name is clear of the card" % [what, n.name])
+
+
+## Where a door name's one line of text is drawn on screen: centred across, on its bottom edge
+## (door.tscn; as test_door_labels).
+func _text_on_screen(l: Label) -> Rect2:
+	var font := l.get_theme_font("font")
+	var fsize := l.get_theme_font_size("font_size")
+	var w := font.get_string_size(l.text, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize).x
+	var h := font.get_height(fsize)
+	return l.get_global_transform_with_canvas() * Rect2((l.size.x - w) / 2.0, l.size.y - h, w, h)
+
+
+## True when the script is map.gd or extends it (as test_door_labels).
+func _runs_map(script: Script) -> bool:
+	while script != null:
+		if script.resource_path == MAP_SCRIPT:
+			return true
+		script = script.get_base_script()
+	return false
+
+
+func _map_scenes() -> Array:
+	var out := []
+	for dir: String in DIRS:
+		for f in DirAccess.get_files_at(dir):
+			if not f.ends_with(".tscn"):
+				continue
+			var path: String = dir + "/" + f
+			var inst: Node = load(path).instantiate()
+			if _runs_map(inst.get_script()):
+				out.append(path)
+			inst.free()
+	return out
 
 
 func _finish() -> void:
