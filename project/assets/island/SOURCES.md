@@ -6,4 +6,4 @@ What made each file here (release checklist LP-04, sops/09). Prompt files carry 
 | File | Made by | From | Added |
 |---|---|---|---|
 | `mirror.png` | `tools/gen_placeholder_art.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-23 |
-| `temple_pavilion.png` | `tools/gen_brand_art.py`, `tools/gen_ui_art.py` | drawn or cut by the tool (its docstring names inputs) | 2026-10-23 |
+| `temple_pavilion.png` | `tools/gen_brand_art.py`, `tools/gen_ui_art.py` | drawn or cut by the tool (its docstring names inputs); a Gemini image render is planned (`prompts/image/levels/temple/temple_pavilion.md`), not landed yet | 2026-10-23 |

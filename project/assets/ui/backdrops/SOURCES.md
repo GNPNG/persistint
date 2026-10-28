@@ -12,4 +12,4 @@ What made each file here (release checklist LP-04, sops/09). Prompt files carry 
 | `ship_cabin.png` | `tools/gen_ui_art.py` | drawn or cut by the tool (its docstring names inputs) | 2026-10-23 |
 | `ship_cutaway.png` | `tools/gen_ui_art.py` | drawn or cut by the tool (its docstring names inputs) | 2026-10-23 |
 | `talk_show_set.png` | `tools/gen_ui_art.py` | drawn or cut by the tool (its docstring names inputs) | 2026-10-23 |
-| `temple_altar.png` | `tools/gen_ui_art.py` | drawn or cut by the tool (its docstring names inputs) | 2026-10-23 |
+| `temple_altar.png` | `tools/gen_ui_art.py` | drawn or cut by the tool (its docstring names inputs); a Gemini image render is planned (`prompts/image/levels/temple/temple_altar.md`), not landed yet | 2026-10-23 |
