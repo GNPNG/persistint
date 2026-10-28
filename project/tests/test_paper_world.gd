@@ -21,10 +21,12 @@ const MAPS := [
 const PAPER := "res://assets/paper/"
 ## Source art that is deliberately not baked: a shadow, two 14 px effects, the animated temple
 ## candles and twinkle, the door markers (an interface cue over a door, not a cut-out), the Florida
-## backgrounds (ground art) and the animated sea foam, the ruins pickups' glow and the gore effects.
+## backgrounds (ground art) and the animated sea foam, the ruins pickups' glow and the gore effects,
+## and the ruins' gloom (the screen vignette laid over the camera's view in the room since bd wso.4:
+## lighting over the room, not a cut-out in it).
 const EXEMPT := ["temple_shadow", "deco_heart", "deco_sparkle", "temple_candles", "temple_twinkle", "door_marker",
 	"bg_florida_beach", "bg_florida_garden", "bg_florida_stable", "bg_florida_aquarium", "sea_foam",
-	"glow", "gore_bone", "gore_chunk", "gore_drop", "gore_puddle", "gore_puff"]
+	"glow", "gore_bone", "gore_chunk", "gore_drop", "gore_puddle", "gore_puff", "vignette"]
 ## Source art whose bake lands in a later commit of the rollout: the Florida NPCs' sheets.
 const PENDING := ["npc_daughter", "npc_father", "npc_stable_friend"]
 ## Things drawn by these scripts are rolled out later too: the Florida critters, the aquarium fish

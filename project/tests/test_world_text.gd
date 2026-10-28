@@ -109,9 +109,11 @@ func _check_bubble(b: Label, ref: Label, line: String, zoom: float) -> void:
 	_check(b.size.x <= max_w + pad.x + 1.0, "%s: no wider than its max_width (%s)" % [what, info])
 	_check(b.size.is_equal_approx(ref.size), "%s: the size the theme's font makes it (%s)" % [what, info])
 	var fsize := b.get_theme_font_size("font_size")
+	var own := ref.get_theme_font("font")  # the bubble's own font, the theme's, as the one on the screen layer has it
+	_check(own == WorldText.base_of(font), "%s: the font it is drawn in is made from its own (%s, from %s)" % [what, font, WorldText.base_of(font)])
 	var widest := 0.0
 	for one in line.split("\n"):
-		widest = maxf(widest, ThemeDB.fallback_font.get_string_size(one, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize).x)
+		widest = maxf(widest, own.get_string_size(one, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize).x)
 	_check((b.autowrap_mode != TextServer.AUTOWRAP_OFF) == (widest > max_w), "%s: wraps when the text is wider (%s)" % [what, info])
 	_check(b.get_visible_line_count() == b.get_line_count(), "%s: every line shows (%s)" % [what, info])
 

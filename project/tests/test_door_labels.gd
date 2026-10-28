@@ -96,8 +96,8 @@ func _check_pair(path: String, spawn: String, door_path: NodePath) -> void:
 	_check(font != null and absf(font.oversampling - want) <= 0.125,
 		"%s: the name is drawn at the screen's resolution (oversampling %.2f, screen px per label px %.2f)" % [what, font.oversampling if font else 0.0, want])
 	var fsize := l.get_theme_font_size("font_size")
-	_check(font != null and font.get_string_size(l.text, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize).is_equal_approx(ThemeDB.fallback_font.get_string_size(l.text, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize)),
-		"%s: and measures what the theme's font does" % what)
+	_check(font != null and font.get_string_size(l.text, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize).is_equal_approx(WorldText.base_of(font).get_string_size(l.text, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize)),
+		"%s: and measures what its own font does" % what)
 	if path.begins_with("res://scenes/ruins/"):
 		var caption: Dictionary = (load(DECOR_SCRIPT) as Script).get_script_constant_map()
 		var fill := l.get_theme_color("font_color")

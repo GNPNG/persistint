@@ -89,8 +89,8 @@ func _run() -> void:
 			"at zoom %.2f a bubble's font is rasterized at the screen's px (oversampling %.2f for %.2f)" % [z, font.oversampling if font else 0.0, want])
 		_check(font != null and font.data.size() > 0, "and has the default font's data")
 		var fsize := sbub.get_theme_font_size("font_size")
-		var fallback := ThemeDB.fallback_font
-		_check(font != null and font.get_string_size(sbub.text, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize).is_equal_approx(fallback.get_string_size(sbub.text, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize))
+		var fallback := WorldText.base_of(font)  # the bubble's own font, the theme's
+		_check(font != null and font != fallback and font.get_string_size(sbub.text, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize).is_equal_approx(fallback.get_string_size(sbub.text, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize))
 			and is_equal_approx(font.get_height(fsize), fallback.get_height(fsize)), "and measures what the theme's font does")
 		var pad := sbub.get_theme_stylebox("normal").get_minimum_size()
 		_check(sbub.size.x <= float(sbub.get("max_width")) + pad.x + 1.0 and sbub.autowrap_mode != TextServer.AUTOWRAP_OFF,

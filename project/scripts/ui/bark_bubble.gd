@@ -66,6 +66,11 @@ func fit() -> void:
 		widest = maxf(widest, font.get_string_size(one, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize).x)
 	var inner := minf(ceilf(widest) + 1.0, max_width)
 	autowrap_mode = TextServer.AUTOWRAP_OFF if widest <= max_width else TextServer.AUTOWRAP_WORD_SMART
+	# A Label keeps the minimum size it worked out before its wrap changed (Label.set_autowrap_mode
+	# does not drop it), and a size under the minimum does not take. Unwrapped, that minimum is the
+	# whole longest line: showing the text (and a font swap, WorldText) works it out before the wrap
+	# is set, and the bubble stayed that wide (bd wso.4: 244 px for 104 in the clone hall).
+	update_minimum_size()
 	var text_h := font.get_multiline_string_size(text, HORIZONTAL_ALIGNMENT_CENTER, inner, fsize).y
 	var w := ceilf(inner + pad.x)
 	var h := ceilf(text_h + pad.y)
@@ -79,7 +84,9 @@ func fit() -> void:
 			break
 		h += 1.0
 		size = Vector2(w, h)
-	position = Vector2(-w / 2.0, bottom - h)
+	update_minimum_size()
+	size = Vector2(w, h)
+	position = Vector2(-w / 2.0, bottom - size.y)  # its bottom on `bottom`, at the height it took
 	_aim_tail()
 
 
