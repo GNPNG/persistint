@@ -3,11 +3,14 @@ extends SceneTree
 ## (assets/paper/, tools/bake_paper.sh, PaperBake) and has its baked soft shadow. Village and
 ## temple: the caste NPCs' rigs, the player's paper-doll parts (a baked ring under each part's art),
 ## the trees, the flowers and the props. Florida (beach, garden, stable, aquarium): the props, the
-## craft bench, the seed bag, the garden plots and the shells (PaperBake.dress at load). The ruins
-## rooms: every prop that stands or hangs on the wall (RuinsDecor). Nothing on the maps uses a
+## craft bench, the seed bag, the garden plots and the shells (PaperBake.dress at load); the Father,
+## the Daughter and the stable friend, the critters and the aquarium fish (PaperBake.dress_frames),
+## and the stable ponies (a baked ring under each part's art, PonyDoll paper). The ruins rooms:
+## every prop that stands or hangs on the wall (RuinsDecor), the clone children and the polar bear
+## cubs (dress_frames) and the knowledge pickups' icons (dress). Nothing on the maps uses a
 ## ShaderMaterial for it. Exempt by design: EXEMPT below, the pony a rider sits on (Mount) and the
 ## ruins' "floor" props (painted flat). Not yet rolled out: PENDING and PENDING_SCRIPTS (emptied as
-## each group lands).
+## each group lands; empty since bd f60i).
 ## Run: godot --headless --path project -s tests/test_paper_world.gd
 
 const MAPS := [
@@ -27,12 +30,10 @@ const PAPER := "res://assets/paper/"
 const EXEMPT := ["temple_shadow", "deco_heart", "deco_sparkle", "temple_candles", "temple_twinkle", "door_marker",
 	"bg_florida_beach", "bg_florida_garden", "bg_florida_stable", "bg_florida_aquarium", "sea_foam",
 	"glow", "gore_bone", "gore_chunk", "gore_drop", "gore_puddle", "gore_puff", "vignette"]
-## Source art whose bake lands in a later commit of the rollout: the Florida NPCs' sheets.
-const PENDING := ["npc_daughter", "npc_father", "npc_stable_friend"]
-## Things drawn by these scripts are rolled out later too: the Florida critters, the aquarium fish
-## and the ponies, the clone children and the polar bear cubs, the ruins' knowledge pickups.
-const PENDING_SCRIPTS := ["critter.gd", "fish.gd", "pony.gd", "pony_doll.gd", "zombie_child.gd", "polar_cub.gd",
-	"knowledge_pickup.gd"]
+## Source art whose bake lands in a later commit of the rollout (none now).
+const PENDING := []
+## Scripts whose drawing is rolled out later (none now).
+const PENDING_SCRIPTS := []
 
 var _ok := true
 

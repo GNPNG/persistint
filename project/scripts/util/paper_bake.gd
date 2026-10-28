@@ -124,3 +124,119 @@ static func _drop(s: Node, shadow: Node) -> void:
 	if shadow:
 		s.remove_child(shadow)
 		shadow.queue_free()
+
+
+## The baked subject for the source art at `src` (a res:// path), "" when it has none: no
+## sidecar, or the bake of another file with the same name.
+static func bake_of(src: String) -> String:
+	if src == "":
+		return ""
+	var bake := name_of(src)
+	var s := side(bake)
+	if s.is_empty():
+		return ""
+	var from: Array = s.get("source", [])
+	if not from.is_empty() and String(from[0]) != "project/" + src.trim_prefix("res://"):
+		return ""
+	return bake
+
+
+## dress() for an AnimatedSprite2D already playing its source art: frames that are cells of one
+## sheet (AtlasTextures on a grid: a Florida .tres sheet, a SheetRig rig), offset and scale set.
+## When that sheet has a bake, every animation shows the same cells of the bordered sheet (its
+## grid is the source's, each cell padded evenly) at the same size and place (offset x k,
+## scale / k), names, speeds, loops and durations kept, and the animation, frame and playing
+## state kept; under it a soft shadow child drawn behind it (PaperShadow, show_behind_parent)
+## that never plays on its own: it takes the sprite's animation, frame and flip whenever the
+## sprite's frame or animation changes. Art with no bake, a bake of another file, or frames off
+## the bake's grid are left as they are. Call it once, after the sprite is fitted. Returns true
+## when the sprite shows a baked sheet.
+static func dress_frames(a: AnimatedSprite2D) -> bool:
+	var atlas := _atlas_of(a.sprite_frames)
+	var src := atlas.resource_path if atlas else ""
+	if src.begins_with(DIR):
+		return true  # already dressed
+	var bake := bake_of(src)
+	var edge := sheet(bake, EDGE) if bake != "" else ""
+	if edge == "":
+		return false
+	var frames := _regrid(a.sprite_frames, bake, load(edge) as Texture2D)
+	if frames == null:
+		return false
+	var anim := a.animation
+	var at := a.frame
+	var progress := a.frame_progress
+	var playing := a.is_playing()
+	a.sprite_frames = frames  # stops it and goes back to frame 0
+	a.animation = anim
+	if playing:
+		a.play(anim)
+	a.set_frame_and_progress(at, progress)
+	var k := resample(bake)
+	a.offset *= k
+	a.scale /= k
+	var shadow_path := sheet(bake, SHADOW)
+	var shadow_frames: SpriteFrames = _regrid(frames, bake, load(shadow_path) as Texture2D, true) if shadow_path != "" else null
+	if shadow_frames == null:
+		return true
+	var sh := AnimatedSprite2D.new()
+	sh.name = "PaperShadow"
+	sh.sprite_frames = shadow_frames
+	sh.centered = a.centered
+	sh.offset = a.offset
+	sh.show_behind_parent = true
+	style_shadow(sh, a.scale)
+	a.add_child(sh)
+	var follow := func() -> void:
+		sh.flip_h = a.flip_h
+		sh.flip_v = a.flip_v
+		if sh.animation != a.animation:
+			sh.animation = a.animation
+		sh.frame = a.frame
+	follow.call()
+	a.frame_changed.connect(follow)
+	a.animation_changed.connect(follow)
+	return true
+
+
+## The one sheet every frame of `sf` is a cell of, null when a frame is not an AtlasTexture or the
+## frames come from more than one sheet.
+static func _atlas_of(sf: SpriteFrames) -> Texture2D:
+	if sf == null:
+		return null
+	var atlas: Texture2D = null
+	for anim: String in sf.get_animation_names():
+		for i in sf.get_frame_count(anim):
+			var t := sf.get_frame_texture(anim, i) as AtlasTexture
+			if t == null or t.atlas == null or (atlas != null and t.atlas.resource_path != atlas.resource_path):
+				return null
+			atlas = t.atlas
+	return atlas
+
+
+## `sf`'s animations over `tex`, a sheet of `bake` (the edge or shadow sheet): each frame the same
+## cell of the bake's padded grid, the animations' names, speeds, loops and frame durations kept.
+## `baked`: `sf` already shows a sheet of the bake (its cells are padded), else the source.
+## Null when a frame's region is not a whole cell of the grid.
+static func _regrid(sf: SpriteFrames, bake: String, tex: Texture2D, baked := false) -> SpriteFrames:
+	var s := side(bake)
+	var padded := Vector2(float(s["frame"][0]), float(s["frame"][1]))
+	var cell := padded if baked else Vector2(float(s["src_frame"][0]), float(s["src_frame"][1]))
+	if tex == null or cell.x <= 0.0 or cell.y <= 0.0:
+		return null
+	var out := SpriteFrames.new()
+	out.remove_animation(&"default")
+	for anim: String in sf.get_animation_names():
+		out.add_animation(anim)
+		out.set_animation_speed(anim, sf.get_animation_speed(anim))
+		out.set_animation_loop(anim, sf.get_animation_loop(anim))
+		for i in sf.get_frame_count(anim):
+			var r := (sf.get_frame_texture(anim, i) as AtlasTexture).region
+			var grid := Vector2(roundf(r.position.x / cell.x), roundf(r.position.y / cell.y))
+			if not r.size.is_equal_approx(cell) or not r.position.is_equal_approx(grid * cell):
+				return null
+			var t := AtlasTexture.new()
+			t.atlas = tex
+			t.region = Rect2(grid * padded, padded)
+			out.add_frame(anim, t, sf.get_frame_duration(anim, i))
+	return out

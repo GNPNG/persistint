@@ -32,6 +32,7 @@ func _ready() -> void:
 	set_frame("")
 	sprite.frame = randi() % 2
 	SheetRig.fit(sprite, SheetRig.CUB)
+	PaperBake.dress_frames(sprite)  # the paper look (tools/bake_paper.sh ruins_cast)
 	bubble.hide()
 	area_entered.connect(_on_bumped)
 	body_entered.connect(_on_bumped)
