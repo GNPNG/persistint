@@ -163,11 +163,16 @@ func _live() -> void:
 	for i in 3:
 		await physics_frame
 	var start := p.global_position
+	# This runs inside the physics_frame signal, which the tree emits before it calls the nodes'
+	# _physics_process, so the key is down for this very physics frame and she moves in it. The
+	# process_frame signal comes next, before the nodes' _process, so the check below reads her
+	# moved and the peel not yet stepped. One more physics_frame here would read a frame late,
+	# after her _process has started the peel (on the first frame she moves, as it should).
 	Input.action_press("move_right")
-	await physics_frame
 	await process_frame
 	_check(p.velocity.x > 0.0 and p.global_position.x > start.x and peel.state == StickerPeel.State.IDLE,
-		"she moves on the first physics frame the key is down, before the peel starts")
+		"she moves on the first physics frame the key is down, before the peel starts (velocity %s, %.2f px, %s)"
+		% [p.velocity, p.global_position.x - start.x, StickerPeel.State.keys()[peel.state]])
 	await process_frame
 	_check(peel.state == StickerPeel.State.PEEL, "the peel starts as she walks")
 	var ticks := 0
