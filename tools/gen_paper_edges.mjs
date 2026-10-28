@@ -21,27 +21,39 @@
  * Every frame is resized to the bake scale (texture px per world px: --scale, capped by
  * --max-scale, else the source's own), padded by `pad` px on every side, and its alpha grown by
  * the border width with a slow noise wobble between two dilation radii, so it reads as cut paper.
+ * How rough that edge is (the author, 2026-10-28: "the edges look a little too rough ... they need
+ * to be more smooth"): ROUGHNESS scales the wobble (the inner radius is (1 - 0.4 ROUGHNESS) of the
+ * border, so 1 is the first bakes' 0.6 and 0 one even border), KERNEL the shape the alpha grows by
+ * (Disk: round; Square: the first bakes' blocky corners) and SMOOTH (world px) rounds the grown
+ * outline (a blur and a 50% threshold) before its 0.6 px soften. --roughness, --kernel and --smooth
+ * set them for one bake; --roughness 1 --kernel Square --smooth 0 bakes as before.
  * The sidecar's feet = (pad + scaled frame h * --feet) / padded frame h and world_h_padded =
  * world_h * padded h / scaled h; SpriteFit.fit(node, world_h_padded, feet) shows a baked frame at
  * the source's size with its feet where they were.
  *
  *   node tools/gen_paper_edges.mjs SHEET [--layers MORE...] --cols 8 --rows 3 --world-h 52 \
  *       --feet 0.9615 --max-scale 4 --edges 2 --papers white --outputs edge shadow_soft \
- *       --out DIR --name NAME
+ *       --out DIR --name NAME [--roughness R] [--kernel Disk|Square] [--smooth WORLD_PX]
  */
 import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 
 const PAPERS = { white: [255, 253, 247], cream: [255, 240, 210] };
+/** The cut-paper edge's roughness, 0 (even) to 1 (the first bakes'), its grow shape and how much
+ *  its outline is rounded (world px); see the header. */
+const ROUGHNESS = 0.3;
+const KERNEL = "Disk";
+const SMOOTH = 0.5;
 const MAGICK = process.env.MAGICK || "magick";
 
 function parse(argv) {
   const a = { layers: [], cols: 1, rows: 1, worldH: 0, feet: 1.0, scale: 0, maxScale: 0, edges: [1, 2, 3],
-    papers: [], outputs: ["edge", "shadow_soft", "shadow_hard"], shadowBlur: 1.5, seed: 7, out: "", name: "", sheet: "" };
+    papers: [], outputs: ["edge", "shadow_soft", "shadow_hard"], shadowBlur: 1.5, seed: 7, out: "", name: "", sheet: "",
+    roughness: ROUGHNESS, kernel: KERNEL, smooth: SMOOTH };
   const lists = { "--layers": "layers", "--edges": "edges", "--papers": "papers", "--outputs": "outputs" };
   const nums = { "--cols": "cols", "--rows": "rows", "--world-h": "worldH", "--feet": "feet", "--scale": "scale",
-    "--max-scale": "maxScale", "--shadow-blur": "shadowBlur", "--seed": "seed" };
+    "--max-scale": "maxScale", "--shadow-blur": "shadowBlur", "--seed": "seed", "--roughness": "roughness", "--smooth": "smooth" };
   for (let i = 0; i < argv.length; i++) {
     const k = argv[i];
     if (lists[k]) {
@@ -51,11 +63,15 @@ function parse(argv) {
     } else if (nums[k]) a[nums[k]] = Number(argv[++i]);
     else if (k === "--out") a.out = argv[++i];
     else if (k === "--name") a.name = argv[++i];
+    else if (k === "--kernel") a.kernel = argv[++i];
     else if (k === "-h" || k === "--help") { console.log(fs.readFileSync(new URL(import.meta.url)).toString().split("*/")[0]); process.exit(0); }
     else if (k.startsWith("--")) throw new Error(`unknown option ${k}`);
     else a.sheet = k;
   }
   if (!a.sheet || !a.worldH || !a.out || !a.name) throw new Error("need SHEET, --world-h, --out and --name");
+  if (!(a.roughness >= 0 && a.roughness <= 1)) throw new Error(`--roughness ${a.roughness}: 0 to 1`);
+  if (!(a.smooth >= 0)) throw new Error(`--smooth ${a.smooth}: 0 or more world px`);
+  if (!["Disk", "Square"].includes(a.kernel)) throw new Error(`--kernel ${a.kernel}: Disk or Square`);
   return a;
 }
 
@@ -99,16 +115,20 @@ function bake(a) {
     for (let i = 0; i < n; i++) {
       const f = path.join(tmp, `f_${String(i).padStart(3, "0")}.png`);
       for (const e of a.edges) {
-        const r = e * scale, rs = Math.max(1, r * 0.6);
+        const r = e * scale, rs = Math.max(1, r * (1 - 0.4 * a.roughness));
+        // Square takes whole px (the first bakes'); Disk a radius.
+        const grow = (radius) => `${a.kernel}:${a.kernel === "Square" ? Math.max(1, Math.ceil(radius)) : +Math.max(1, radius).toFixed(3)}`;
+        const smooth = a.smooth > 0 ? ["-blur", `0x${+(a.smooth * scale).toFixed(3)}`, "-threshold", "50%"] : [];
         const cell = (kind, p) => path.join(tmp, `${kind}_e${e}_${p}_${String(i).padStart(3, "0")}.png`);
         const args = [f, "-filter", "Lanczos", "-resize", `${fw}x${fh}!`, "-background", "none", "-gravity", "center",
           "-extent", `${pw}x${ph}`, "+repage", "-write", "mpr:art", "+delete",
-          // The ring: the alpha grown by r or by 0.6 r, picked by a coarse noise field; slightly softened.
-          "mpr:art", "-alpha", "extract", "-morphology", "Dilate", `Square:${Math.max(1, Math.ceil(rs))}`,
-          "(", "mpr:art", "-alpha", "extract", "-morphology", "Dilate", `Square:${Math.max(1, Math.ceil(r))}`, ")",
+          // The ring: the alpha grown by r or by rs, picked by a coarse noise field; its outline
+          // rounded (SMOOTH), then slightly softened.
+          "mpr:art", "-alpha", "extract", "-morphology", "Dilate", grow(rs),
+          "(", "mpr:art", "-alpha", "extract", "-morphology", "Dilate", grow(r), ")",
           "(", "-size", `${cw}x${ch}`, "xc:gray", "-seed", String(a.seed * 100003 + e * 1009 + i), "+noise", "Random",
           "-colorspace", "gray", "-filter", "Catrom", "-resize", `${pw}x${ph}!`, "-threshold", "46.3%", ")",
-          "-compose", "Over", "-composite", "-blur", "0x0.6", "-write", "mpr:ring", "+delete"];
+          "-compose", "Over", "-composite", ...smooth, "-blur", "0x0.6", "-write", "mpr:ring", "+delete"];
         for (const p of papers) {
           const paper = ["(", "-size", `${pw}x${ph}`, `xc:${rgb(PAPERS[p])}`, "mpr:ring", "-alpha", "off", "-compose", "CopyOpacity", "-composite", ")"];
           if (a.outputs.includes("ring")) {
@@ -163,7 +183,8 @@ function bake(a) {
       `  "files": {\n${Object.entries(written).map(([k2, v]) => `    "${k2}": "${v}"`).join(",\n")}\n  }`,
     ];
     fs.writeFileSync(path.join(a.out, `${a.name}.json`), `{\n${side.join(",\n")}\n}\n`);
-    console.log(`${a.name}: ${a.cols}x${a.rows} frames ${srcFw}x${srcFh} -> ${pw}x${ph} (pad ${pad}, ${+scale.toFixed(4)} px/world px); ${Object.keys(written).length} sheets`);
+    console.log(`${a.name}: ${a.cols}x${a.rows} frames ${srcFw}x${srcFh} -> ${pw}x${ph} (pad ${pad}, ${+scale.toFixed(4)} px/world px; `
+      + `edge roughness ${a.roughness}, ${a.kernel}, smooth ${a.smooth}); ${Object.keys(written).length} sheets`);
   } finally {
     fs.rmSync(tmp, { recursive: true, force: true });
   }

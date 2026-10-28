@@ -16,6 +16,12 @@ The grid stays uniform (cols x rows of equal frames), so RigSheet.frames() reads
 unchanged; the sidecar says how much each frame grew (pad) and where the feet line moved to, which
 SpriteFit needs to keep the character the same height. The border is slightly irregular (a smooth
 noise field picks between two dilation radii) so it reads as cut paper rather than a vector stroke.
+How rough (the author, 2026-10-28: "a little too rough ... more smooth"), as in
+tools/gen_paper_edges.mjs: ROUGHNESS scales the wobble (inner radius (1 - 0.4 ROUGHNESS) of the
+border; 1 is the first bakes' 0.6), KERNEL the grow shape (Disk, here an octagon of 3x3 square and
+plus steps; Square the first bakes' MaxFilter) and SMOOTH (world px) rounds the outline with a blur
+and a 50% threshold; --roughness, --kernel and --smooth set them, and --roughness 1 --kernel Square
+--smooth 0 bakes as before.
 
 Several source layers (the player's body, dress, hair) can be composited first (--layers) when one
 baked sheet for the whole figure is wanted; for the paper-doll player in the game the plan is a
@@ -36,9 +42,12 @@ import math
 import random
 from pathlib import Path
 
-from PIL import Image, ImageFilter
+from PIL import Image, ImageChops, ImageFilter
 
 PAPERS = {"white": (255, 253, 247), "cream": (255, 240, 210)}
+ROUGHNESS = 0.3  # the cut edge's wobble, 0 (even) to 1 (the first bakes')
+KERNEL = "Disk"  # the grow shape: Disk (round) or Square (the first bakes')
+SMOOTH = 0.5  # world px: how much the grown outline is rounded
 
 
 def composite(paths: list[Path]) -> Image.Image:
@@ -58,20 +67,33 @@ def frames_of(sheet: Image.Image, cols: int, rows: int) -> list[Image.Image]:
     return [sheet.crop((c * fw, r * fh, (c + 1) * fw, (r + 1) * fh)) for r in range(rows) for c in range(cols)]
 
 
-def dilate(alpha: Image.Image, radius: float) -> Image.Image:
-    size = 2 * max(1, math.ceil(radius)) + 1
-    return alpha.filter(ImageFilter.MaxFilter(size))
+def dilate(alpha: Image.Image, radius: float, kernel: str = "Square") -> Image.Image:
+    if kernel == "Square":
+        size = 2 * max(1, math.ceil(radius)) + 1
+        return alpha.filter(ImageFilter.MaxFilter(size))
+    out = alpha  # Disk: plus and 3x3 square steps by turns, an octagon about the circle's size
+    for step in range(max(1, round(radius))):
+        if step % 2:
+            out = out.filter(ImageFilter.MaxFilter(3))
+        else:
+            out = ImageChops.lighter(ImageChops.lighter(out, ImageChops.offset(out, 1, 0)), ImageChops.lighter(
+                ImageChops.offset(out, -1, 0), ImageChops.lighter(ImageChops.offset(out, 0, 1), ImageChops.offset(out, 0, -1))))
+    return out
 
 
-def cut_edge(alpha: Image.Image, radius: float, rng: random.Random) -> Image.Image:
-    """The silhouette grown by about `radius` px, with a slow wobble so the border looks cut."""
-    full = dilate(alpha, radius)
-    small = dilate(alpha, max(1.0, radius * 0.6))
+def cut_edge(alpha: Image.Image, radius: float, rng: random.Random, roughness: float = ROUGHNESS,
+             kernel: str = KERNEL, smooth_px: float = 0.0) -> Image.Image:
+    """The silhouette grown by about `radius` px, with a slow wobble so the border looks cut, its
+    outline rounded by a blur of smooth_px and a 50% threshold."""
+    full = dilate(alpha, radius, kernel)
+    small = dilate(alpha, max(1.0, radius * (1 - 0.4 * roughness)), kernel)
     w, h = alpha.size
     cells = (max(2, w // 6), max(2, h // 6))
     noise = Image.frombytes("L", cells, bytes(rng.randrange(256) for _ in range(cells[0] * cells[1])))
     noise = noise.resize((w, h), Image.BICUBIC).point(lambda v: 255 if v > 118 else 0)
     ring = Image.composite(full, small, noise)
+    if smooth_px > 0:
+        ring = ring.filter(ImageFilter.GaussianBlur(smooth_px)).point(lambda v: 255 if v >= 128 else 0)
     return ring.filter(ImageFilter.GaussianBlur(0.6))
 
 
@@ -97,7 +119,7 @@ def bake(args: argparse.Namespace) -> None:
         for f in frames:
             padded = Image.new("L", (pw, ph), 0)
             padded.paste(f.getchannel("A"), (pad, pad))
-            rings[e].append(cut_edge(padded, e * scale, rng))
+            rings[e].append(cut_edge(padded, e * scale, rng, args.roughness, args.kernel, args.smooth * scale))
     written: dict[str, str] = {}
     for e in args.edges:
         for paper_name, rgb in PAPERS.items():
@@ -149,6 +171,9 @@ def main() -> None:
     ap.add_argument("--papers", nargs="*", default=[], help="paper colours to bake (default: all of %s)" % ", ".join(PAPERS))
     ap.add_argument("--shadow-blur", type=float, default=1.5, help="soft shadow blur, world px")
     ap.add_argument("--seed", type=int, default=7)
+    ap.add_argument("--roughness", type=float, default=ROUGHNESS, help="edge wobble, 0 (even) to 1 (the first bakes')")
+    ap.add_argument("--kernel", choices=["Disk", "Square"], default=KERNEL, help="grow shape")
+    ap.add_argument("--smooth", type=float, default=SMOOTH, help="outline rounding, world px (0: none)")
     ap.add_argument("--out", required=True)
     ap.add_argument("--name", required=True)
     bake(ap.parse_args())
