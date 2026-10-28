@@ -46,6 +46,7 @@ func _ready() -> void:
 		sprite.play("idle_down")
 		sprite.frame = randi() % 2
 		SheetRig.fit(sprite, SheetRig.CLONE)
+		PaperBake.dress_frames(sprite)  # the paper look (tools/bake_paper.sh ruins_cast)
 	bubble.hide()
 	var v := voices()
 	var p: AudioStreamPlayer2D = Voice.player_at(self, bus())

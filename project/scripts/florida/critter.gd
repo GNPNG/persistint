@@ -24,6 +24,7 @@ func _ready() -> void:
 		sprite.frame = randi() % sprite.sprite_frames.get_frame_count("idle")
 		SpriteFit.fit_sheet(sprite)  # feet (or a swimmer's belly line) on the origin
 		bubble.bottom = -SpriteFit.frame_size(sprite).y * sprite.scale.y - 4.0
+		PaperBake.dress_frames(sprite)  # the paper look (tools/bake_paper.sh florida_cast)
 	bubble.hide()
 	if DisplayServer.get_name() != "headless":
 		_drift()

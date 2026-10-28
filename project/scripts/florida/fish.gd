@@ -14,6 +14,7 @@ func _ready() -> void:
 	play("swim_%s" % colour)
 	SpriteFit.fit_sheet(self, 0.5)  # a swimmer: centred on its spot
 	frame = randi() % 3
+	PaperBake.dress_frames(self)  # the paper look (tools/bake_paper.sh florida_cast)
 	if DisplayServer.get_name() != "headless":
 		_swim()
 

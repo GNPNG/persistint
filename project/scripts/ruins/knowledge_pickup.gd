@@ -33,6 +33,7 @@ func _ready() -> void:
 	if tex:
 		icon.texture = tex
 		SpriteFit.fit(icon, minf(ICON_HEIGHT, RuinsDecor.world_height(tex)), 0.5)
+		PaperBake.dress(icon)  # the paper look (tools/bake_paper.sh ruins_cast)
 	if ForbiddenKnowledge.has(piece_id):
 		queue_free()
 		return

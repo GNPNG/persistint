@@ -11,11 +11,14 @@
 # biggest size a subject is shown; the window shows 4 to 6 screen px per world px), so the
 # baked art is never coarser than the screen.
 #
-# Usage: tools/bake_paper.sh [characters|greenery|props|florida|ruins|all]   (default all)
+# Usage: tools/bake_paper.sh [characters|greenery|props|florida|ruins|florida_cast|ruins_cast|all]
+#        (default all)
 # Then: godot --headless --path project --import; node tools/set_texture_imports.mjs;
 # node tools/gen_sources.mjs; for greenery and props, rebuild the maps (tools/build_island_maps.gd).
 # Florida and ruins need no rebuild: their maps dress the art when they load (PaperBake.dress:
-# map.gd paper_props, the Florida pickups, scripts/ruins/ruins_decor.gd).
+# map.gd paper_props, the Florida pickups, scripts/ruins/ruins_decor.gd); so do their casts
+# (PaperBake.dress_frames: npc.gd, critter.gd, fish.gd, zombie_child.gd, polar_cub.gd; PonyDoll
+# paper; KnowledgePickup).
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -33,8 +36,9 @@ bake() {  # bake SHEET NAME WORLD_H [more gen_paper_edges options]
     --out "$OUT" --name "$name" "$@" < /dev/null
 }
 
-px_h() {  # px_h SHEET TEXELS: the sheet's height in world px, drawn at TEXELS texture px per world px
-  awk -v h="$("$MAGICK" identify -format '%h' "$1")" -v t="$2" 'BEGIN { printf "%g", h / t }'
+px_h() {  # px_h SHEET TEXELS [ROWS]: the height in world px of the sheet (or of one of its ROWS
+          # rows of frames), drawn at TEXELS texture px per world px
+  awk -v h="$("$MAGICK" identify -format '%h' "$1")" -v t="$2" -v r="${3:-1}" 'BEGIN { printf "%g", h / t / r }'
 }
 
 if [[ $GROUP == characters || $GROUP == all ]]; then
@@ -123,5 +127,62 @@ if [[ $GROUP == ruins || $GROUP == all ]]; then
     cols=1
     [[ $kind == ruins_tank || $kind == ruins_tank_duck ]] && cols=4
     bake "$src" "$kind" "$(px_h "$src" 8)" --cols "$cols" --rows 1 --outputs edge shadow_soft
+  done
+fi
+
+if [[ $GROUP == florida_cast || $GROUP == all ]]; then
+  # Who lives on the Florida maps (tools/gen_florida_art.py, gen_florida_cast.py,
+  # gen_florida_critters.py, gen_pony_sprites.py; drawn at 4 texture px per world px), one frame
+  # at its own height / 4, on the sheet's grid (the .tres SpriteFrames cut it the same way):
+  # the Father, the Daughter and the stable friend (4 x 3: idle front, side, back; feet on the
+  # bottom edge), the critters (4 x 2: idle, walk; feet, or a swimmer's belly line, on the bottom
+  # edge), the aquarium fish (4 x 3: swim and wave per colour; centred). The stable ponies'
+  # PonyDoll parts (4 x 2, 52 world px, hooves on the bottom edge): the border alone for every
+  # part, the shadow once, from the body, as for the player's doll.
+  for n in npc_father npc_daughter npc_stable_friend; do
+    bake "$A/florida/$n.png" "$n" "$(px_h "$A/florida/$n.png" 4 3)" --cols 4 --rows 3 --outputs edge shadow_soft
+  done
+  for c in crab dolphin gull mermaid; do
+    bake "$A/florida/$c.png" "$c" "$(px_h "$A/florida/$c.png" 4 2)" --cols 4 --rows 2 --outputs edge shadow_soft
+  done
+  bake "$A/florida/fish.png" fish "$(px_h "$A/florida/fish.png" 4 3)" --cols 4 --rows 3 --feet 0.5 \
+    --outputs edge shadow_soft
+  for src in "$A"/florida/pony_*.png; do
+    part="$(basename "$src" .png)"
+    outs=(ring)
+    [[ $part == pony_body_* ]] && outs+=(shadow_soft)
+    bake "$src" "$part" 52 --cols 4 --rows 2 --outputs "${outs[@]}"
+  done
+fi
+
+if [[ $GROUP == ruins_cast || $GROUP == all ]]; then
+  # Who lives in the ruins rooms (tools/gen_clone_children.py; 8 texture px per world px, sheets of
+  # 6 x 5 frames, SheetRig): the clone children (one sheet per original, 34 world px, feet on the
+  # bottom edge) and the polar bear cubs (22 world px, feet at 174/176). Then the knowledge
+  # pickups' icons (data/ruins.json "knowledge" -> "icon"; KnowledgePickup shows one at most
+  # ICON_HEIGHT, 20 world px, tall): a generated icon (assets/ruins) at its own height / 8, at most
+  # 20; a canon cut at RuinsDecor.CANON_HEIGHT, at most 20, unless the props group bakes that file
+  # already (bigger on the village map; one bake per file name), which the pickup then shows.
+  for src in "$A"/ruins/clone_*.png; do
+    kind="$(basename "$src" .png)"
+    [[ $kind == clone_polar_bear ]] && continue
+    bake "$src" "$kind" "$(px_h "$src" 8 5)" --cols 6 --rows 5 --outputs edge shadow_soft
+  done
+  bake "$A/ruins/clone_polar_bear.png" clone_polar_bear "$(px_h "$A/ruins/clone_polar_bear.png" 8 5)" \
+    --cols 6 --rows 5 --feet 0.9886363636363636 --outputs edge shadow_soft
+  jq -r '[.knowledge[] | .icon // "icon_paper"] | unique | .[]' project/data/ruins.json |
+  while read -r icon; do
+    if [[ -f $A/ruins/$icon.png ]]; then
+      h="$(awk -v h="$(px_h "$A/ruins/$icon.png" 8)" 'BEGIN { printf "%g", (h < 20 ? h : 20) }')"
+      bake "$A/ruins/$icon.png" "$icon" "$h" --outputs edge shadow_soft
+    elif [[ -f $A/canon/$icon.png ]]; then
+      case $icon in
+        prop_calendar|prop_tag_x) ;;  # baked by the props group
+        prop_scroll) bake "$A/canon/$icon.png" "$icon" 18 --outputs edge shadow_soft ;;
+        *) echo "bake_paper: icon $icon (canon) has no CANON_HEIGHT here; not baked" >&2 ;;
+      esac
+    else
+      echo "bake_paper: icon $icon has no art; not baked" >&2
+    fi
   done
 fi

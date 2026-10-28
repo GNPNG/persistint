@@ -12,6 +12,7 @@ script = ExtResource("1")
 
 [node name="Doll" type="Node2D" parent="."]
 script = ExtResource("2")
+paper = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -26)

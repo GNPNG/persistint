@@ -61,6 +61,8 @@ func _ready() -> void:
 		bubble.bottom = -RIG_HEIGHT - 2.0  # over the head (the baked frame is padded)
 	elif SpriteFit.frame_size(art).y > 0.0:
 		bubble.bottom = -SpriteFit.frame_size(art).y * art.scale.y - 2.0  # over the head
+	if rig and not _baked:  # a Florida sheet: its paper look, the bubble over the unpadded art
+		PaperBake.dress_frames(rig)  # (tools/bake_paper.sh florida_cast)
 	bubble.hide()
 	input_event.connect(_on_input_event)
 	$Proximity.body_entered.connect(_on_proximity_entered)
