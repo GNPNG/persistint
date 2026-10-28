@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/main_menu.gd" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/ui/main_menu_backdrop.tscn" id="2_backdrop"]
 [ext_resource type="Script" path="res://scripts/ui/imprint_mark.gd" id="3_imprint"]
 [ext_resource type="Script" path="res://scripts/ui/title_letters.gd" id="4_letters"]
 [ext_resource type="PackedScene" path="res://scenes/ui/credits.tscn" id="5_credits"]
+[ext_resource type="PackedScene" path="res://scenes/ui/name_entry.tscn" id="6_name_entry"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -133,3 +134,5 @@ text = "Based on characters and themes from the book ‘Persistint’"
 horizontal_alignment = 1
 
 [node name="Credits" parent="." instance=ExtResource("5_credits")]
+
+[node name="NameEntry" parent="." instance=ExtResource("6_name_entry")]

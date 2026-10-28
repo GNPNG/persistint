@@ -1,5 +1,6 @@
 ~ father
 if WorldState.has_flag("fl_met_father")
+	Father: There you are, {{WorldState.player_call_name()}}.
 	Father: Back again. Good. The tide's kind this afternoon.
 else
 	do WorldState.set_flag("fl_met_father", true)

@@ -1,5 +1,6 @@
 ~ daughter
 if WorldState.has_flag("fl_met_ponies")
+	Daughter: Hi, {{WorldState.player_call_name()}}!
 	Daughter: You're back! They remember you. Look at the ears, that means hello.
 else
 	do WorldState.set_flag("fl_met_ponies", true)

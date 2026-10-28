@@ -9,6 +9,9 @@ into the new version's heading; the Updates page on the site shows the released 
 
 ### Added
 
+- Your name: New Game asks for your full name and, if you like, a nickname. In Florida the
+  Father on the beach and the Daughter at the stable call you by it when you come back: your
+  nickname, or else your first name.
 - Map: the map sticker or M opens a little overhead map of the area you are in, with a heart for
   every way out and its name; tap a heart to walk there.
 - Zoom: two paper-cutout figures beside the magnifier show the zoom, the big one for the normal
