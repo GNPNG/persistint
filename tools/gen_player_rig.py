@@ -1,11 +1,14 @@
 """Rig the paper-doll player: one directional idle/walk sheet per paper-doll part, every sheet on
-the same frame grid, so the game stacks body, dress, hair and accessory and steps them together.
+the same frame grid, so the game stacks the parts (body, shoes, bottom, top, dress, hair, hat and
+accessory: PaperDoll.LAYERS) and steps them together.
 
 Usage: python3 -I tools/gen_player_rig.py
        (after tools/cut_paperdoll.py and tools/gen_florida_wearables.py)
 Inputs:
-  project/assets/canon/{body,dress,hair,acc}_*.png   the canon paper-doll parts on their shared
-                                                     721x760 frame (tools/cut_paperdoll.py)
+  project/assets/canon/<part>.png                    every part in project/data/paperdoll_parts.json
+                                                     (body, shoes, bottom, top, dress, hair, hat and
+                                                     acc parts) on their shared 721x760 frame
+                                                     (tools/cut_paperdoll.py)
   project/assets/florida/acc_*.png                   the crafted Florida wearables on that frame
   the canon body turnaround (front / side / back, sheet ekiw), cut at full resolution through
   tools/cut_island_props.py (project/data/florida_canon.json "bases")
@@ -24,9 +27,11 @@ How each view is made (canon art first; what canon lacks is derived from it, nev
           own colour (the back of the head); side: that back hair narrowed to the side view's
           head width, with the face side (an ellipse over the left of the head, from the brow
           to the chin) opened again and edged in the canon outline colour
-  dress   front and back: the canon part; side: narrowed to the side body's torso width and
+  dress, top, bottom, shoes
+          front and back: the part as drawn; side: narrowed to the side body's torso width and
           centred on it
-  acc     front and back: the part as drawn; side: narrowed like the hair
+  acc, hat
+          front and back: the part as drawn; side: narrowed like the hair
 The motion comes from the body's geometry, not from each layer, so the layers stay aligned.
 Deterministic: no randomness.
 """
@@ -131,6 +136,16 @@ def open_face(hair, box, ink_w):
     return Image.fromarray(a, "RGBA")
 
 
+def view_rule(kind):
+    """How a part's side and back views are made, by its prefix (see the docstring): "body",
+    "hair", "torso" (dress, top, bottom, shoes) or "head" (acc, hat and anything else)."""
+    if kind in ("body", "hair"):
+        return kind
+    if kind in ("dress", "top", "bottom", "shoes"):
+        return "torso"
+    return "head"
+
+
 def parts():
     names = json.loads((ROOT / "project/data/paperdoll_parts.json").read_text())["parts"].keys()
     out = [(n, CANON / f"{n}.png") for n in names]
@@ -158,10 +173,10 @@ def main():
     OUT.mkdir(parents=True, exist_ok=True)
     for name, path in parts():
         im = Image.open(path).convert("RGBA")
-        kind = name.split("_")[0]
-        if kind == "body":
+        rule = view_rule(name.split("_")[0])
+        if rule == "body":
             views = {"front": im, "side": side_body, "back": back_body}
-        elif kind == "hair":
+        elif rule == "hair":
             back, hole = fill_face(im)
             side = narrow(back, head_cx, head_ratio, side_cx)
             if hole:
@@ -172,7 +187,7 @@ def main():
                 box = (round(side_cx - hw * 1.05), round(hy0 + hh * 0.30), round(side_cx + hw * 0.18), round(hy1 + hh * 0.25))
                 side = open_face(side, box, max(2, round(size[1] / 160)))
             views = {"front": im, "side": side, "back": back}
-        elif kind == "dress":
+        elif rule == "torso":
             views = {"front": im, "side": narrow(im, front_torso_cx, torso_ratio, side_torso_cx), "back": im}
         else:
             views = {"front": im, "side": narrow(im, head_cx, head_ratio, side_cx), "back": im}

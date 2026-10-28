@@ -47,13 +47,14 @@ if [[ $GROUP == characters || $GROUP == all ]]; then
     bake "$A/characters/npc_${c}_rig.png" "npc_${c}_rig" 52 --cols 8 --rows 3 --feet 0.9615384615384616 \
       --outputs edge shadow_soft
   done
-  # Player paper-doll parts (tools/gen_player_rig.py): 8 x 3 frames, 48 world px, feet on the
+  # Player paper-doll parts (tools/gen_player_rig.py): every part's rig, whatever its slot (body,
+  # shoes, bottom, top, dress, hair, hat, accessory), 8 x 3 frames, 48 world px, feet on the
   # bottom edge. The border alone for every part; the shadow once, from the body.
-  for part in body_base dress_white dress_robe dress_uniform hair_braids hair_crown hair_pigtails hair_short \
-      acc_bow acc_bougainvillea_wreath acc_flower_crown acc_plumeria_lei acc_shell_garland; do
+  for rig in "$A"/characters/player/*_rig.png; do
+    part="$(basename "$rig" _rig.png)"
     outs=(ring)
     [[ $part == body_base ]] && outs+=(shadow_soft)
-    bake "$A/characters/player/${part}_rig.png" "${part}_rig" 48 --cols 8 --rows 3 --outputs "${outs[@]}"
+    bake "$rig" "${part}_rig" 48 --cols 8 --rows 3 --outputs "${outs[@]}"
   done
 fi
 
