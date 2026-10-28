@@ -34,6 +34,8 @@ var _name_label: Label
 var _hovered := false
 var _gone := false
 var _marker: AnimatedSprite2D
+## text_box's last measure for each label: label -> [text, font, font size, text width].
+var _measured := {}
 
 
 func _ready() -> void:
@@ -96,14 +98,21 @@ func _process(_delta: float) -> void:
 	var player := get_tree().get_first_node_in_group("player") as Node2D
 	var near := player != null and player.global_position.distance_to(global_position) <= NEAR_DISTANCE
 	_name_label.visible = (_hovered or near) and not label.visible
-	for l: Label in [label, _name_label]:
-		if l.visible:
-			WorldText.fit(l)  # drawn at the screen's resolution under the camera's zoom (bd wso.4)
-			keep_on_screen(l)
+	_follow(label)
+	_follow(_name_label)
 	if _name_label.visible and under_map_card(_name_label):
 		# The card names this door on its pin; the end of a name sticking out from under it read as
 		# the card's own text spilling past its edge (the Service Spine's "...e Deck", cc-srv's review).
 		_name_label.hide()
+
+
+## A label that shows is drawn at the screen's resolution under the camera's zoom (bd wso.4) and
+## kept inside the view. Called for each of the door's two labels every frame, with no list made
+## for them (bd nmz).
+func _follow(l: Label) -> void:
+	if l.visible:
+		WorldText.fit(l)
+		keep_on_screen(l)
 
 
 ## Slides a label sideways so its text stays inside the camera's view: a door on the map's edge
@@ -121,11 +130,19 @@ func keep_on_screen(l: Label) -> void:
 
 
 ## Where a label's one line of text is drawn, its outline included, in the label's own px: centred
-## across, on its bottom edge (door.tscn).
+## across, on its bottom edge (door.tscn). The text's width is measured again only when the text,
+## the font or its size changed since the last call for that label (bd nmz: this runs every frame a
+## name shows, and the text does not change while the player walks).
 func text_box(l: Label) -> Rect2:
 	var font := l.get_theme_font("font")
 	var fsize := l.get_theme_font_size("font_size")
-	var w := font.get_string_size(l.text, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize).x
+	var m: Variant = _measured.get(l)
+	var w: float
+	if m is Array and m[0] == l.text and m[1] == font and m[2] == fsize:
+		w = m[3]
+	else:
+		w = font.get_string_size(l.text, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize).x
+		_measured[l] = [l.text, font, fsize, w]
 	w = minf(w + 2.0 * l.get_theme_constant("outline_size"), l.size.x)
 	var h := font.get_height(fsize)
 	return Rect2((l.size.x - w) / 2.0, l.size.y - h, w, h)

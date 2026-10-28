@@ -123,13 +123,19 @@ func _keep_on_screen() -> void:
 ## How far this bubble moves down (up when negative) to keep clear of the bubbles of speakers in
 ## front of it, staying between `view_top` and `view_bottom` (global y).
 func _clear_of_front(view_top: float, view_bottom: float) -> float:
+	# The bubbles up in front of this one, found once rather than on every pass (bd nmz: this runs
+	# every frame a bubble shows); with none, the bubble stays where it is.
+	var front: Array[Node] = []
+	for other in get_tree().get_nodes_in_group(GROUP):
+		if other != self and other.is_visible_in_tree() and _in_front(other):
+			front.append(other)
+	if front.is_empty():
+		return 0.0
 	var me := _reach()
 	var was := me.position.y
 	for _pass in 4:  # enough for a stack of a few
 		var moved := false
-		for other in get_tree().get_nodes_in_group(GROUP):
-			if other == self or not other.is_visible_in_tree() or not _in_front(other):
-				continue
+		for other in front:
 			var r: Rect2 = other._reach()
 			if not me.intersects(r):
 				continue

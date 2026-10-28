@@ -27,6 +27,14 @@ const BASE := &"world_text_base"
 ## second camera over the same world (minimap.gd), leaves it out.
 const SCREEN_ONLY_LAYER := 1 << 9
 
+## The metadata key of each oversampling (in hundredths) font_for has been asked for: names only,
+## made once each instead of on every call (bd nmz: fit runs every frame a label shows). No font
+## is kept here.
+static var _keys: Dictionary = {}
+## Counts for the walking perf check (tests/test_perf_walk.gd): fit() calls, and fonts made.
+static var fit_calls := 0
+static var fonts_made := 0
+
 
 ## Screen px per px of the item's own: the viewport's oversampling (the window's stretch) times
 ## the scale of the canvas transform (the camera's zoom) and of the nodes above the item.
@@ -52,6 +60,7 @@ static func base_of(font: Font) -> Font:
 ## either font, but a swap is a theme change, after which a Label works its minimum size out
 ## again: a label that sizes itself to its text lays itself out after a swap (BarkBubble.fit).
 static func fit(l: Control) -> bool:
+	fit_calls += 1
 	var vp := l.get_viewport()
 	if vp == null:
 		return false
@@ -85,7 +94,11 @@ static func fit(l: Control) -> bool:
 static func font_for(base: Font, oversampling: float) -> Font:
 	if base == null:
 		return null
-	var key := StringName("world_text_%d" % roundi(oversampling * 100.0))
+	var hundredths := roundi(oversampling * 100.0)
+	var key: StringName = _keys.get(hundredths, &"")
+	if key == &"":
+		key = StringName("world_text_%d" % hundredths)
+		_keys[hundredths] = key
 	if base.has_meta(key):
 		return base.get_meta(key) as Font
 	var made: Font = null
@@ -120,4 +133,5 @@ static func font_for(base: Font, oversampling: float) -> Font:
 		return null
 	made.set_meta(BASE, base.get_instance_id())
 	base.set_meta(key, made)
+	fonts_made += 1
 	return made
