@@ -1,0 +1,85 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/name_entry.gd" id="1"]
+
+[node name="NameEntry" type="Control"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1")
+
+[node name="Dim" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.231, 0.149, 0.25, 0.45)
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="Panel" type="PanelContainer" parent="Center"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="Center/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Title" type="Label" parent="Center/Panel/VBox"]
+layout_mode = 2
+text = "Your name"
+horizontal_alignment = 1
+
+[node name="FullLabel" type="Label" parent="Center/Panel/VBox"]
+layout_mode = 2
+theme_type_variation = &"SubtleLabel"
+text = "Full name"
+
+[node name="FullName" type="LineEdit" parent="Center/Panel/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 18)
+layout_mode = 2
+placeholder_text = "Your full name"
+caret_blink = true
+
+[node name="NickLabel" type="Label" parent="Center/Panel/VBox"]
+layout_mode = 2
+theme_type_variation = &"SubtleLabel"
+text = "Nickname (optional)"
+
+[node name="Nickname" type="LineEdit" parent="Center/Panel/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 18)
+layout_mode = 2
+placeholder_text = "What your friends call you"
+caret_blink = true
+
+[node name="Preview" type="Label" parent="Center/Panel/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "They'll call you friend."
+horizontal_alignment = 1
+
+[node name="Buttons" type="HBoxContainer" parent="Center/Panel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="BackButton" type="Button" parent="Center/Panel/VBox/Buttons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 18)
+layout_mode = 2
+text = "Back"
+
+[node name="StartButton" type="Button" parent="Center/Panel/VBox/Buttons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 18)
+layout_mode = 2
+text = "Start"

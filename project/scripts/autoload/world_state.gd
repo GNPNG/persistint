@@ -8,6 +8,8 @@ extends Node
 ## schema) is moved aside to <save>.corrupt or <save>.newer, never overwritten, and the game loads
 ## the backup instead, or starts fresh when that fails too; load_report says which, and the main
 ## menu tells the player. A bare flags dictionary (saves before the schema) loads as schema 0.
+## The player's name is two optional flags (player_name, player_nickname; see "The player's name"
+## below), so a save from before it loads as it is and an older build still reads a newer save.
 
 signal flag_changed(key: String, value: Variant)
 ## Emitted after each successful write; the "Saved" indicator listens.
@@ -82,6 +84,119 @@ func matches(conditions: Dictionary) -> bool:
 func reset() -> void:
 	flags = {}
 	save()
+
+
+## --- The player's name (bd 1ce) ---
+## New Game asks for the player's full name and an optional nickname (scenes/ui/name_entry.tscn),
+## and characters call her by player_call_name(): the nickname, else the first name, else
+## PLAYER_NAME_DEFAULT. Both are player flags (data/chapters.json "player_flags", prefix player_):
+## each chapter has its own player character, so the chapter jump and a flashback archive and clear
+## them like the outfit, and the default is used there.
+## A name is cleaned when it is stored, when a save is read, and again when a line asks for it
+## (clean_name), since a save file can be imported or edited: only letters, marks, digits, spaces
+## and ' ’ - . that the game's font can draw, so a name never carries BBCode, a Dialogue Manager
+## tag ([if], [do], [[a|b]]) or a {{...}} into a line, and never shows as empty boxes.
+
+const NAME_KEY := "player_name"
+const NICKNAME_KEY := "player_nickname"
+## The longest full name and nickname, in characters (the entry fields stop there too).
+const NAME_MAX := 40
+const NICKNAME_MAX := 20
+## What characters call a player who gave no name (the author's to choose, bd 2hrq): a word of
+## address, not a name (STYLE 1.1: no invented names). Lowercase, so a line puts it mid-sentence.
+const PLAYER_NAME_DEFAULT := "friend"
+
+## A bracketed tag ("[b]", "[do x()]", "[[a|b]]" in part) or a {{...}}: removed whole.
+static var _name_tag := RegEx.create_from_string("\\[[^\\]]*\\]|\\{\\{.*?\\}\\}")
+static var _name_space := RegEx.create_from_string("[\\s\\p{Z}]+")
+## Anything but a letter, a mark, a digit, a space or ' ’ . -
+static var _name_bad := RegEx.create_from_string("[^\\p{L}\\p{M}\\p{N} '’.-]")
+static var _name_letter := RegEx.create_from_string("\\p{L}")
+
+
+## `value` as a name safe to show: tags and {{...}} removed, then every character but a letter,
+## mark, digit, space or ' ’ . - and every one the game's font has no glyph for; runs of space
+## made one, the ends trimmed, cut to max_length characters. "" when no letter is left, or when
+## `value` is not text.
+static func clean_name(value: Variant, max_length := NAME_MAX) -> String:
+	if not value is String:
+		return ""
+	var s: String = value
+	s = _name_tag.sub(s, " ", true)
+	s = _name_space.sub(s, " ", true)
+	s = _name_bad.sub(s, "", true)
+	s = _drawable(s)
+	s = _name_space.sub(s, " ", true).strip_edges()
+	s = s.left(max_length).strip_edges()
+	return s if _name_letter.search(s) != null else ""
+
+
+## The characters of `text` the game's font can draw (the project theme's font, else Godot's
+## default); a browser has no system fonts to fall back on. Unchanged when there is no font to ask.
+static func _drawable(text: String) -> String:
+	var theme := ThemeDB.get_project_theme()
+	var font: Font = theme.default_font if theme != null and theme.default_font != null else ThemeDB.fallback_font
+	if font == null or not font.has_char("a".unicode_at(0)):
+		return text
+	var out := ""
+	for c: String in text:
+		if c == " " or font.has_char(c.unicode_at(0)):
+			out += c
+	return out
+
+
+## The first word of a full name with a letter in it ("" for none).
+static func first_name(full: String) -> String:
+	for part: String in full.split(" ", false):
+		if _name_letter.search(part) != null:
+			return part
+	return ""
+
+
+## What characters call a player with this full name and nickname (both cleaned first): the
+## nickname, else the first name, else PLAYER_NAME_DEFAULT.
+static func call_name_of(full: Variant, nickname: Variant) -> String:
+	var nick := clean_name(nickname, NICKNAME_MAX)
+	if nick != "":
+		return nick
+	var first := first_name(clean_name(full, NAME_MAX))
+	return first if first != "" else PLAYER_NAME_DEFAULT
+
+
+## Stores the full name and nickname, cleaned ("" when left empty), with one save.
+func set_player_name(full: String, nickname := "") -> void:
+	flags[NAME_KEY] = clean_name(full, NAME_MAX)
+	flags[NICKNAME_KEY] = clean_name(nickname, NICKNAME_MAX)
+	flag_changed.emit(NAME_KEY, flags[NAME_KEY])
+	flag_changed.emit(NICKNAME_KEY, flags[NICKNAME_KEY])
+	save()
+
+
+func player_full_name() -> String:
+	return clean_name(get_flag(NAME_KEY, ""), NAME_MAX)
+
+
+func player_nickname() -> String:
+	return clean_name(get_flag(NICKNAME_KEY, ""), NICKNAME_MAX)
+
+
+## What characters call the player; dialogue uses {{WorldState.player_call_name()}}.
+func player_call_name() -> String:
+	return call_name_of(get_flag(NAME_KEY, ""), get_flag(NICKNAME_KEY, ""))
+
+
+## Loading a save: one from before New Game asked for a name has none and keeps none (characters
+## use the default until one is set); a name a save does carry is cleaned, and one that is not
+## text is dropped, so the next write stores it clean.
+static func _migrate(f: Dictionary) -> Dictionary:
+	for key: String in [NAME_KEY, NICKNAME_KEY]:
+		if not f.has(key):
+			continue
+		if f[key] is String:
+			f[key] = clean_name(f[key], NAME_MAX if key == NAME_KEY else NICKNAME_MAX)
+		else:
+			f.erase(key)
+	return f
 
 
 ## Writes the flags: temp file, read back, copy the current save to the backup, rename over.
@@ -210,13 +325,13 @@ func _parse(text: String) -> Dictionary:
 	if not parsed is Dictionary:
 		return {"state": "bad", "flags": {}}
 	if not parsed.has("schema"):
-		return {"state": "ok", "flags": parsed}  # schema 0: the bare flags dictionary
+		return {"state": "ok", "flags": _migrate(parsed)}  # schema 0: the bare flags dictionary
 	var schema: Variant = parsed["schema"]
 	if not (schema is float or schema is int) or not parsed.get("flags") is Dictionary:
 		return {"state": "bad", "flags": {}}
 	if int(schema) > SCHEMA:
 		return {"state": "newer", "flags": {}}
-	return {"state": "ok", "flags": parsed["flags"]}
+	return {"state": "ok", "flags": _migrate(parsed["flags"])}
 
 
 func _abs(path: String) -> String:

@@ -1,7 +1,8 @@
 extends SceneTree
 ## Gamepad (QA-13, sops/09): every action has a pad binding; a pad alone gets through the menus by
 ## focus. On the main menu the first d-pad press lands the focus on the first button, Down moves it
-## and A presses it; in play the left stick walks; Start opens the pause menu, the focus lands in
+## and A presses it (New Game opens the name screen with the focus on Start, since a pad cannot
+## type, and A there starts the game); in play the left stick walks; Start opens the pause menu, the focus lands in
 ## it, B closes it (and B alone does not open it, since it gets off the pony); Y and X open the
 ## wardrobe and the journal and the focus lands in them; the credits and the Controls panel take
 ## the focus when they are on top.
@@ -55,11 +56,17 @@ func _run() -> void:
 	settings.close()
 	await _frames(2)
 
-	# --- A on New Game starts the game. ---
+	# --- A on New Game opens the name screen on Start; A there starts the game. ---
 	current_scene.get_node("Center/Panel/VBox/NewButton").grab_focus()
 	_button(JOY_BUTTON_A)
+	await _frames(3)
+	var entry: Node = current_scene.get_node("NameEntry")
+	var on := root.gui_get_focus_owner()
+	_check(entry.is_open() and on != null and on.name == "StartButton",
+		"A on New Game opens the name screen, the focus on Start (%s)" % (on.name if on else "none"))
+	_button(JOY_BUTTON_A)
 	await _frames(6)
-	_check(current_scene.scene_file_path == VILLAGE, "A on New Game opens the village")
+	_check(current_scene.scene_file_path == VILLAGE, "A on Start opens the village")
 
 	# --- The stick walks. ---
 	var player := get_first_node_in_group("player") as Node2D

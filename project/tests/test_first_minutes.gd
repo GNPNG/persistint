@@ -1,8 +1,9 @@
 extends SceneTree
 ## First minutes, headless (QA-16 groundwork, sops/09): the parts of the first-ten-minutes smoke
 ## test a script can play. A fresh start: the studio intro shows and a click skips it; the main
-## menu shows with no save notice and no Continue; New Game opens the village with the player, a
-## camera and visible art, and the village music playing; the player walks by keys and by a click;
+## menu shows with no save notice and no Continue; New Game asks for the player's name (bd 1ce) and
+## Start opens the village with the player, a camera and visible art, and the village music
+## playing, the name saved; the player walks by keys and by a click;
 ## an NPC talks; the journal, the wardrobe and Settings open and close by key; after each of these
 ## the keys still move the player; a door takes the player to the temple; then a "reload" (the save
 ## read back from disk, the main menu built again) shows Continue, which returns to the temple.
@@ -49,10 +50,16 @@ func _run() -> void:
 	_check(current_scene.get_node("Center").visible and current_scene.get_node_or_null("SaveNotice") == null, "the main menu shows, with no save notice")
 	_check(not current_scene.get_node("%BeginButton").visible, "no Continue on a fresh start")
 
-	# --- New Game: the village, the player, the music. ---
+	# --- New Game: the name screen, then the village, the player, the music. ---
 	current_scene.get_node("%NewButton").pressed.emit()
+	await _frames(2)
+	var entry: Node = current_scene.get_node("NameEntry")
+	_check(entry.is_open() and _scene() == MENU, "New Game asks for the player's name first")
+	entry.set_names("Mary Ann Smith", "Kit")
+	entry.get_node("%StartButton").pressed.emit()
 	await _frames(6)
-	_check(_scene() == VILLAGE, "New Game opens the village")
+	_check(_scene() == VILLAGE, "Start on the name screen opens the village")
+	_check(ws.player_full_name() == "Mary Ann Smith" and ws.player_call_name() == "Kit", "the name is kept")
 	var player := get_first_node_in_group("player") as Node2D
 	_check(player != null and player.is_visible_in_tree(), "the player is there and visible")
 	_check(root.get_camera_2d() != null, "a camera follows")

@@ -1,5 +1,8 @@
 extends Control
-## Main menu — New Game (fresh flags); Continue only when there is a save to continue.
+## Main menu — New Game asks for the player's name and an optional nickname first (the name
+## screen, scenes/ui/name_entry.tscn, over the menu; bd 1ce), then starts with fresh flags and the
+## name stored; Back on that screen returns to the menu with the save untouched. Continue only
+## when there is a save to continue.
 ## Help & Support opens the support page on the site in the system browser. Settings opens the
 ## volume sliders (AudioSettings). At the bottom, the copyright lines and Credits & Licences, which
 ## opens the credits screen (scenes/ui/credits.tscn, data/credits.json) over the menu.
@@ -16,7 +19,7 @@ var _quitting := false
 
 func _ready() -> void:
 	%BeginButton.pressed.connect(_on_begin)
-	%NewButton.pressed.connect(_on_new_game)
+	%NewButton.pressed.connect(open_name_entry)
 	%SupportButton.pressed.connect(_on_support)
 	%SettingsButton.pressed.connect(AudioSettings.open)
 	%CreditsButton.pressed.connect($Credits.open)
@@ -27,7 +30,10 @@ func _ready() -> void:
 	_add_quit_button()
 	_add_version_label()
 	_add_save_notice()
-	move_child($Credits, -1)  # over the version label too
+	$NameEntry.confirmed.connect(_start_new_game)
+	$NameEntry.cancelled.connect(_on_name_cancelled)
+	move_child($NameEntry, -1)  # over the version label too
+	move_child($Credits, -1)  # and the credits over everything
 
 
 ## A Fullscreen button under the others (touch-first: no key needed); F toggles it too. On the
@@ -80,6 +86,8 @@ static func toggle_fullscreen() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if $NameEntry.is_open():
+		return  # F is a letter of a name there
 	if event.is_action_pressed("toggle_fullscreen"):
 		toggle_fullscreen()
 
@@ -136,10 +144,23 @@ func _on_begin() -> void:
 		SceneRouter.goto_map(FIRST_MAP, "spawn_default")
 
 
-func _on_new_game() -> void:
+## New Game: the name screen, the menu hidden under it (the shot walk opens it here too).
+func open_name_entry() -> void:
+	$Center.visible = false
+	$NameEntry.open()
+
+
+## The name screen's Start: a fresh game with the player's name, in the first map.
+func _start_new_game(full_name: String, nickname: String) -> void:
 	WorldState.reset()
+	WorldState.set_player_name(full_name, nickname)
 	GameClock.restore()
 	SceneRouter.goto_map(FIRST_MAP, "spawn_default")
+
+
+func _on_name_cancelled() -> void:
+	$Center.visible = true
+	%NewButton.grab_focus()
 
 
 func _on_support() -> void:
