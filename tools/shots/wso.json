@@ -85,6 +85,11 @@
     {"name": "florida-aquarium-tank", "scene": "res://scenes/florida/aquarium.tscn",
      "note": "The default spawn at the glass: the mermaids and the fish."},
 
+    {"name": "village-village-bark", "scene": "res://scenes/maps/village.tscn",
+     "note": "The landing page's village-bark picture (bd 8ey, 'NPC barks react to world state'): the Initiate beside the player near the default spawn, turned to her, her bubble up with the bark the state picks (questioned_ritual: I asked 'why' out loud today. The sky did not fall.), at the game's zoom.",
+     "flags": {"questioned_ritual": true},
+     "steps": [{"do": "player_to", "node": "Initiate", "offset": [-38, 0]}, {"do": "camera", "zoom": 2, "center": [646, 410]}]},
+
     {"name": "temple-temple-overview", "scene": "res://scenes/maps/temple.tscn",
      "note": "The whole temple: icons, the Seal, pillars, cushions, candles, the Priestess, the ritual table, both doors.",
      "steps": [{"do": "camera", "zoom": "fit"}]},
