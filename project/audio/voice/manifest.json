@@ -714,6 +714,12 @@
     "clip": "res://audio/voice/6bb751af4c3898b645fd2dc4e7641358.wav"
   },
   {
+    "speaker": "Father",
+    "text": "Well, I'm headed to the house to look at the garden. You know where to find me.",
+    "key": "d3418189af3f68158f4f58631bd99c55",
+    "clip": "res://audio/voice/d3418189af3f68158f4f58631bd99c55.wav"
+  },
+  {
     "speaker": "Daughter",
     "text": "Come on! They haven't had their brushing yet.",
     "key": "3e7584f46f7d70bb5462b18d8a7aba80",

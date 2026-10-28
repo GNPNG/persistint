@@ -118,7 +118,9 @@ func _unhandled_input(event: InputEvent) -> void:
 
 ## The interact key (E): the nearest thing within INTERACT_RANGE that has interact() (a person,
 ## the mirror, a door, a pickup, a Florida critter) is walked to and used, as a click on it would
-## be, so the game plays from the keyboard alone (QA-07). Returns it, or null when nothing is near.
+## be, so the game plays from the keyboard alone (QA-07). What a click can't pick (input_pickable
+## off: an NPC walking off the map, npc.gd leave_via) the key passes over too. Returns it, or null
+## when nothing is near.
 func interact_nearest() -> Node2D:
 	var best: Node2D = null
 	var best_d := INTERACT_RANGE
@@ -126,7 +128,7 @@ func interact_nearest() -> Node2D:
 	if scene == null:
 		return null
 	for n in scene.find_children("*", "Area2D", true, false):
-		if n == self or not n.has_method("interact") or not n.is_visible_in_tree():
+		if n == self or not n.has_method("interact") or not n.is_visible_in_tree() or not (n as Area2D).input_pickable:
 			continue
 		var d := global_position.distance_to(n.global_position)
 		if d < best_d:
