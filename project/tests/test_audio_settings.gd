@@ -84,6 +84,11 @@ func _run() -> void:
 	var music_slider: HSlider = overlay.slider("music")
 	_check(music_slider.get_theme_stylebox("slider") is StyleBoxTexture and music_slider.get_theme_stylebox("grabber_area") is StyleBoxTexture,
 		"the sliders wear the theme's bar chrome")
+	# A slider draws its track and fill as tall as the style's minimum size, so a style with zero
+	# content margins draws nothing but the knob (bd 3k2n).
+	var track_h := music_slider.get_theme_stylebox("slider").get_minimum_size().y
+	var fill_h := music_slider.get_theme_stylebox("grabber_area").get_minimum_size().y
+	_check(track_h >= 4.0 and fill_h >= 4.0, "the slider track and fill have height (%.0f / %.0f px)" % [track_h, fill_h])
 	overlay.slider("sfx").value = 0.8
 	_check(is_equal_approx(settings.level("sfx"), 0.8), "moving a slider sets the level")
 	settings.close()

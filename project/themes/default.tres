@@ -164,6 +164,28 @@ texture_margin_top = 4.0
 texture_margin_right = 4.0
 texture_margin_bottom = 4.0
 
+[sub_resource type="StyleBoxTexture" id="slider_track"]
+content_margin_left = 0.0
+content_margin_top = 4.0
+content_margin_right = 0.0
+content_margin_bottom = 4.0
+texture = ExtResource("bar_bg")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxTexture" id="slider_fill"]
+content_margin_left = 0.0
+content_margin_top = 4.0
+content_margin_right = 0.0
+content_margin_bottom = 4.0
+texture = ExtResource("bar_fill")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+
 [sub_resource type="StyleBoxTexture" id="scroll_bg"]
 content_margin_left = 3.0
 content_margin_top = 0.0
@@ -262,9 +284,9 @@ HFlowContainer/constants/h_separation = 3
 HFlowContainer/constants/v_separation = 3
 HSeparator/constants/separation = 5
 HSeparator/styles/separator = SubResource("hsep")
-HSlider/styles/grabber_area = SubResource("bar_fill")
-HSlider/styles/grabber_area_highlight = SubResource("bar_fill")
-HSlider/styles/slider = SubResource("bar_bg")
+HSlider/styles/grabber_area = SubResource("slider_fill")
+HSlider/styles/grabber_area_highlight = SubResource("slider_fill")
+HSlider/styles/slider = SubResource("slider_track")
 HeaderLabel/base_type = &"Label"
 HeaderLabel/colors/font_color = Color(1, 1, 1, 1)
 HeaderLabel/colors/font_outline_color = Color(0.541176, 0.352941, 0.352941, 1)
