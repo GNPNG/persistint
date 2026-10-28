@@ -11,6 +11,11 @@ Each saved file is {"build", "date", "ratings": [{speaker, clip, text, rating, n
 "character_overall": {speaker: rating}}. Every rating becomes one JSONL record keyed on
 (date, build, speaker, clip, kind); a later file with the same key replaces the record, so a
 corrected save wins. dev/ is git-crypt encrypted: the ratings never leave the private side.
+
+tools/ingest_voice_ratings.mjs is its successor (bd dhn2): it reads these files and the voice review
+as it is now (a good / sucks verdict per character, a thumb per line: the review's own file, its
+Export review, and Settings' Export playtest), into the same JSONL. Records with no 1-10 rating
+(the verdicts and thumbs it adds) are left out of this tool's summary.
 """
 from __future__ import annotations
 
@@ -60,6 +65,7 @@ def texts() -> dict[str, str]:
 
 
 def summary(records: list[dict], threshold: float) -> str:
+    records = [r for r in records if isinstance(r.get("rating"), int)]  # not the .mjs's verdicts and thumbs
     by_text = texts()
     lines = defaultdict(list)
     overall = {}
