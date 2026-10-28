@@ -1,0 +1,17 @@
+{
+  "source": ["project/assets/florida/pony_mane_curly_sunshine.png"],
+  "cols": 4,
+  "rows": 2,
+  "src_frame": [256, 208],
+  "scaled_frame": [256, 208],
+  "frame": [312, 264],
+  "pad": 28,
+  "scale": 4.0,
+  "world_h": 52.0,
+  "feet": 0.8939393939393939,
+  "world_h_padded": 66.0,
+  "edges": [2],
+  "files": {
+    "ring2_white": "pony_mane_curly_sunshine_ring2_white.png"
+  }
+}

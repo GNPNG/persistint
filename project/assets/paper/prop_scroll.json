@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/canon/prop_scroll.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [792, 651],
+  "scaled_frame": [131, 108],
+  "frame": [213, 190],
+  "pad": 41,
+  "scale": 6.0,
+  "world_h": 18.0,
+  "feet": 0.7842105263157895,
+  "world_h_padded": 31.666666666666668,
+  "edges": [2],
+  "files": {
+    "edge2_white": "prop_scroll_edge2_white.png",
+    "shadow_soft": "prop_scroll_shadow_soft.png"
+  }
+}

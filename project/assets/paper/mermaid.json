@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/florida/mermaid.png"],
+  "cols": 4,
+  "rows": 2,
+  "src_frame": [144, 200],
+  "scaled_frame": [144, 200],
+  "frame": [200, 256],
+  "pad": 28,
+  "scale": 4.0,
+  "world_h": 50.0,
+  "feet": 0.890625,
+  "world_h_padded": 64.0,
+  "edges": [2],
+  "files": {
+    "edge2_white": "mermaid_edge2_white.png",
+    "shadow_soft": "mermaid_shadow_soft.png"
+  }
+}

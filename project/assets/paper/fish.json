@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/florida/fish.png"],
+  "cols": 4,
+  "rows": 3,
+  "src_frame": [64, 48],
+  "scaled_frame": [64, 48],
+  "frame": [120, 104],
+  "pad": 28,
+  "scale": 4.0,
+  "world_h": 12.0,
+  "feet": 0.5,
+  "world_h_padded": 26.0,
+  "edges": [2],
+  "files": {
+    "edge2_white": "fish_edge2_white.png",
+    "shadow_soft": "fish_shadow_soft.png"
+  }
+}

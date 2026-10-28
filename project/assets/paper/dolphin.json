@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/florida/dolphin.png"],
+  "cols": 4,
+  "rows": 2,
+  "src_frame": [192, 128],
+  "scaled_frame": [192, 128],
+  "frame": [248, 184],
+  "pad": 28,
+  "scale": 4.0,
+  "world_h": 32.0,
+  "feet": 0.8478260869565217,
+  "world_h_padded": 46.0,
+  "edges": [2],
+  "files": {
+    "edge2_white": "dolphin_edge2_white.png",
+    "shadow_soft": "dolphin_shadow_soft.png"
+  }
+}
