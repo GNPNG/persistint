@@ -10,7 +10,8 @@ extends SceneTree
 ## test's own, so nothing waits). Export playtest is one JSON file, persistint-playtest-<date>-
 ## <time>.json: kind, exported_at, version and the voice review's verdicts ({} before any). The
 ## voice review it opens ships in the player build. With the Playtest row showing, the pause menu
-## fits on screen and the hearts stay clear of Quit to Menu.
+## fits on screen and the hearts stay clear of Quit to Menu (each heart's rect as laid out, not
+## scaled mid-pulse). Before the quit the pulses end and Voice lets go of every playback.
 ## Run: godot --headless --path project -s tests/test_settings_hearts.gd
 ## The player's real settings and the author's voice review are not touched.
 
@@ -44,6 +45,38 @@ func _taps(screen: Node, code: String, gap_ms := 1000) -> void:
 	for c in code:
 		_clock_ms += gap_ms
 		screen.heart(c).pressed.emit()
+
+
+## A heart's touch target as laid out, in the same space as the panel's global rect: without the
+## pulse a tap gives it (up a third about its centre and back, 0.22 s), which the last taps leave
+## running into the pause-menu checks (cc-srv: S 30.69 there, against 28 in the main menu).
+func _rest_rect(h: Control) -> Rect2:
+	return h.get_parent_control().get_global_transform() * Rect2(h.position, h.size)
+
+
+## Before the quit: the hearts' pulses ended and their scale put back (the last taps' run on into
+## the pause menu), then Voice.shutdown with every other player in the tree, which waits until the
+## audio server has freed their playbacks (bd y37, as the shot walk and test_perf_walk do), and the
+## village freed. A quit with a playback still in the server's list leaves it and its stream in use
+## at exit.
+func _teardown(screen: Node) -> void:
+	var pulses: Dictionary = screen._pulses
+	for h: Variant in pulses:
+		var tw: Variant = pulses[h]
+		if tw is Tween and tw.is_valid():
+			tw.kill()
+		if is_instance_valid(h) and h is Control:
+			h.scale = Vector2.ONE
+	pulses.clear()
+	var others: Array = []
+	for kind: String in ["AudioStreamPlayer", "AudioStreamPlayer2D"]:
+		others.append_array(root.find_children("*", kind, true, false))
+	var voice := root.get_node_or_null("/root/Voice")
+	if voice and voice.has_method("shutdown"):
+		await voice.shutdown(others)
+	if current_scene:
+		current_scene.queue_free()
+	await process_frame
 
 
 func _saved_on() -> Variant:
@@ -82,7 +115,7 @@ func _run() -> void:
 	var done: Control = screen.get_node("%DoneButton")
 	for c: String in ["r", "g", "b"]:
 		var h: Button = screen.heart(c)
-		var r := h.get_global_rect()
+		var r := _rest_rect(h)
 		_check(h.is_visible_in_tree() and h.text == "" and h.tooltip_text == "" and h.flat and h.focus_mode == Control.FOCUS_NONE,
 			"heart %s: no text, no hint, no pad focus" % c)
 		_check(r.size.x >= screen.HEART_TOUCH and r.size.y >= screen.HEART_TOUCH, "heart %s: a touch target of %s (%d px a side wanted)" % [c, r.size, screen.HEART_TOUCH])
@@ -201,7 +234,7 @@ func _run() -> void:
 	_check(settings.is_paused() and quit_button.visible and screen.playtest_row().visible, "in play: the pause menu, with Quit to Menu and the Playtest row")
 	_check(root.get_visible_rect().encloses(panel.get_global_rect()), "the pause menu with the Playtest row fits on screen (%s)" % panel.get_global_rect())
 	for c: String in ["r", "g", "b"]:
-		var r: Rect2 = screen.heart(c).get_global_rect()
+		var r: Rect2 = _rest_rect(screen.heart(c))
 		_check(panel.get_global_rect().encloses(r) and not r.intersects(quit_button.get_global_rect()), "heart %s sits inside the panel, clear of Quit to Menu (%s)" % [c, r])
 	settings.close()
 
@@ -212,5 +245,6 @@ func _run() -> void:
 	pt.REVIEW_PATH = real_review
 	pt.load_settings()
 	screen.refresh()
+	await _teardown(screen)
 	print("RESULT: %s (%d failures)" % ["PASS" if _failures == 0 else "FAIL", _failures])
 	quit(0 if _failures == 0 else 1)
