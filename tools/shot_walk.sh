@@ -16,7 +16,8 @@
 # game time on any machine. user:// is a scratch directory (.cache/shot_walk/xdg, emptied at the
 # start), so the walk never reads or writes the player's save or settings. Logs go to
 # .cache/shot_walk/logs/<name>.log (gitignored). <out_dir>/SUMMARY.txt lists every shot as ok or
-# FAIL (with why) and the first engine errors its log has. Exits non-zero if any shot failed.
+# FAIL (with why), the frames a multi-frame shot snapped (<name>@<as>.png, its snap steps) and the
+# first engine errors its log has. Exits non-zero if any shot failed.
 # GODOT names the Godot binary (default: godot on PATH).
 set -uo pipefail
 
@@ -113,7 +114,7 @@ failed=()
 start=$(date +%s)
 for name in "${NAMES[@]}"; do
   log="$LOGS/$name.log"
-  rm -f "$OUT/$name.png"
+  rm -f "$OUT/$name.png" "$OUT/$name"@*.png
   t0=$(date +%s)
   timeout "$TIMEOUT" "$GODOT" --rendering-driver opengl3 --audio-driver Dummy --fixed-fps "$FPS" \
     --path "$ROOT/project" -s "$WALK" -- "$LIST" "$OUT" --only="$name" > "$log" 2>&1
@@ -127,6 +128,7 @@ for name in "${NAMES[@]}"; do
   if [[ $code -eq 0 ]] && grep -q "^SHOT OK $name " <<<"$clean" && [[ -f "$OUT/$name.png" ]]; then
     printf 'ok       %-44s %4ss%s\n' "$name" "$secs" "$note"
     echo "ok    $name.png$note" >> "$SUMMARY"
+    sed -n "s/^SNAP \($name@[a-z0-9_]*\) .*/        \1.png/p" <<<"$clean" >> "$SUMMARY"
   else
     why="$(grep -m1 "^SHOT FAIL $name: " <<<"$clean" | sed "s/^SHOT FAIL $name: //")"
     [[ -z "$why" ]] && why="exit $code, no SHOT line"

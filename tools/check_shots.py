@@ -12,7 +12,8 @@ Checks every shot:
     node whose script can't be told from the .tscn, of some script in the project)
   - dialogue files and their ~ titles, and the dialogue of an NPC a step interacts with
   - a speaker or text a dialogue step waits for appears in a .dialogue file or data/*.json
-  - set_static: the script has that static var; press: the input action is in project.godot
+  - set_static: the script has that static var; press, hold, release: the input action is in
+    project.godot; snap: a step after the scene opens, its `as` in a-z, 0-9 and _, once a shot
 Exits non-zero on any failure. No packages needed (python3 -I).
 
 Usage: python3 tools/check_shots.py <shots.json> [...]
@@ -26,6 +27,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 PROJECT = ROOT / "project"
 NAME_RE = re.compile(r"^[a-z0-9_]+(-[a-z0-9_]+){2,}$")
+SNAP_RE = re.compile(r"^[a-z0-9_]+$")
 SHOT_KEYS = {"name", "scene", "note", "flags", "spawn", "before", "steps", "settle", "typing"}
 STEP_KEYS = {
     "wait": {"frames"},
@@ -42,6 +44,9 @@ STEP_KEYS = {
     "dialogue_until": {"speaker", "contains", "responses", "max"},
     "dialogue_choose": {"index", "contains"},
     "press": {"action"},
+    "hold": {"action"},
+    "release": {"action"},
+    "snap": {"as"},
 }
 NODE_KEYS = {"call", "interact", "set", "player_to"}
 
@@ -256,6 +261,7 @@ def check(list_path: Path) -> tuple:
             elif not anywhere(pat, (".gd",)):
                 fail(f"no script in the project has func {method} (for {node})")
 
+        snaps: set = set()
         for key in ("before", "steps"):
             steps = shot.get(key, [])
             if not isinstance(steps, list):
@@ -306,8 +312,18 @@ def check(list_path: Path) -> tuple:
                     s = str(step.get("script", ""))
                     if not re.search(rf"^static\s+var\s+{re.escape(str(step.get('prop')))}\b", text(res(s)), re.M):
                         fail(f"{where}: {s} has no static var {step.get('prop')}")
-                if kind == "press" and step.get("action") not in actions:
+                if kind in ("press", "hold", "release") and step.get("action") not in actions:
                     fail(f"{where}: no input action {step.get('action')} in project.godot")
+                if kind == "snap":
+                    label = step.get("as")
+                    if not in_scene:
+                        fail(f"{where}: a snap is a step after the scene opens (steps, not before)")
+                    elif not isinstance(label, str) or not SNAP_RE.match(label):
+                        fail(f"{where}: snap as {label!r} is not a-z, 0-9 and _")
+                    elif label in snaps:
+                        fail(f"{where}: snap as {label!r} is used twice in the shot")
+                    else:
+                        snaps.add(label)
                 if kind in ("dialogue_until", "dialogue_choose"):
                     for k in ("speaker", "contains"):
                         if k not in step:

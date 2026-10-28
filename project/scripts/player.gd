@@ -35,6 +35,9 @@ var _facing := Vector2.DOWN
 ## They are built once and take the body's frame with the layers; no shader, no extra work.
 var _rings: Dictionary = {}  # art layer -> its ring AnimatedSprite2D
 var _shadow: AnimatedSprite2D
+## The sticker peel on the shadow (bd ulsb, StickerPeel): the shadow lifts from a corner as she
+## starts to walk and presses down flat when she stops. Null while it is off (the default).
+var _peel: StickerPeel
 ## How near (world px) the interact key reaches.
 const INTERACT_RANGE := 56.0
 ## The doll's nodes (_doll_nodes), listed once when the rings and shadow are built: the frame loop
@@ -77,6 +80,9 @@ func _build_paper() -> void:
 	add_child(_shadow)
 	move_child(_shadow, 0)
 	PaperBake.style_shadow(_shadow)
+	var peel := StickerPeel.strength()
+	if peel != "":
+		_peel = StickerPeel.new(_shadow, peel)
 	for layer in _layers():
 		var ring := AnimatedSprite2D.new()
 		ring.name = String(layer.name) + "Ring"
@@ -95,8 +101,9 @@ func _doll_nodes() -> Array[AnimatedSprite2D]:
 	return out
 
 
-## Idle or walk, facing the way she moves (or last moved); every layer on the same frame.
-func _process(_delta: float) -> void:
+## Idle or walk, facing the way she moves (or last moved); every layer on the same frame. The
+## sticker peel follows (it only reads whether she walks; the walk never waits for it).
+func _process(delta: float) -> void:
 	var speed := velocity.length()
 	var moving := speed > WALK_SPEED_MIN and not is_mounted()
 	if speed > WALK_SPEED_MIN:
@@ -124,6 +131,8 @@ func _process(_delta: float) -> void:
 			layer.play(_anim)
 		if synced:
 			layer.set_frame_and_progress(frame, progress)
+	if _peel:
+		_peel.step(delta, moving, velocity)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -322,3 +331,5 @@ func refresh_outfit() -> void:
 			node.play(layer.animation)
 			SpriteFit.fit(node, PaperBake.padded_height(bake, DOLL_HEIGHT), PaperBake.padded_feet(bake, 1.0))
 			node.position = lift + p[2]
+	if _peel:
+		_peel.fit()  # the shadow's frames may be new
