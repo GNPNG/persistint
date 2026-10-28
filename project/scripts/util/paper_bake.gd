@@ -20,6 +20,9 @@ const SHADOW_OFFSET := Vector2(3.0, 1.8)
 const SHADOW_COLOR := Color(0, 0, 0, 0.3)
 
 static var _sides: Dictionary = {}  # name -> sidecar Dictionary ({} when not baked)
+## dress() and dress_frames() calls, counted for the walking perf check (tests/test_perf_walk.gd):
+## a map dresses its props once when it loads, and nothing should while the player walks.
+static var dress_calls := 0
 
 
 ## The sidecar of the baked subject `name`, {} when it has none.
@@ -90,6 +93,7 @@ static func style_shadow(shadow: Node2D, parent_scale := Vector2.ONE) -> void:
 ## after giving the sprite new source art (a garden plot that grew): the shadow is reused, or
 ## removed when the new art has none. Returns true when the sprite shows a baked sheet.
 static func dress(s: Sprite2D) -> bool:
+	dress_calls += 1
 	var src := s.texture.resource_path if s.texture else ""
 	if src.begins_with(DIR):
 		return true  # already dressed
@@ -152,6 +156,7 @@ static func bake_of(src: String) -> String:
 ## the bake's grid are left as they are. Call it once, after the sprite is fitted. Returns true
 ## when the sprite shows a baked sheet.
 static func dress_frames(a: AnimatedSprite2D) -> bool:
+	dress_calls += 1
 	var atlas := _atlas_of(a.sprite_frames)
 	var src := atlas.resource_path if atlas else ""
 	if src.begins_with(DIR):

@@ -294,13 +294,27 @@ func _draw_pins() -> void:
 		_pins.draw_circle(p, r, PLUM)
 
 
+## A heart's outline round its point, and the same closed for its border: worked out once (bd nmz:
+## the pins are drawn every frame the card is open), each pin drawn from it moved to its point.
+static var _heart_fill := PackedVector2Array()
+static var _heart_edge := PackedVector2Array()
+
+
+static func heart_points() -> PackedVector2Array:
+	if _heart_fill.is_empty():
+		for i in 24:
+			var t := TAU * float(i) / 24.0
+			var x := 16.0 * pow(sin(t), 3.0)
+			var y := -(13.0 * cos(t) - 5.0 * cos(2.0 * t) - 2.0 * cos(3.0 * t) - cos(4.0 * t))
+			_heart_fill.append(Vector2(x, y + 2.0) * (HEART / 16.0))
+		_heart_edge = _heart_fill.duplicate()
+		_heart_edge.append(_heart_fill[0])
+	return _heart_fill
+
+
 func _draw_heart(at: Vector2, fill: Color) -> void:
-	var pts := PackedVector2Array()
-	for i in 24:
-		var t := TAU * float(i) / 24.0
-		var x := 16.0 * pow(sin(t), 3.0)
-		var y := -(13.0 * cos(t) - 5.0 * cos(2.0 * t) - 2.0 * cos(3.0 * t) - cos(4.0 * t))
-		pts.append(at + Vector2(x, y + 2.0) * (HEART / 16.0))
-	_pins.draw_colored_polygon(pts, fill)
-	pts.append(pts[0])
-	_pins.draw_polyline(pts, PLUM, 1.0, true)
+	heart_points()
+	_pins.draw_set_transform(at)
+	_pins.draw_colored_polygon(_heart_fill, fill)
+	_pins.draw_polyline(_heart_edge, PLUM, 1.0, true)
+	_pins.draw_set_transform(Vector2.ZERO)

@@ -10,6 +10,9 @@ const IDLE_FPS := 3.0
 const WALK_FPS := 8.0
 
 static var _cache: Dictionary = {}  # path -> SpriteFrames
+## Sheets cut into SpriteFrames (each once), counted for the walking perf check
+## (tests/test_perf_walk.gd): none should be cut while the player walks.
+static var sheets_built := 0
 
 
 ## Frame size of a rig sheet.
@@ -36,6 +39,7 @@ static func frames(path: String) -> SpriteFrames:
 				at.region = Rect2(((0 if state == "idle" else 4) + i) * fr.x, row * fr.y, fr.x, fr.y)
 				sf.add_frame(anim, at)
 	_cache[path] = sf
+	sheets_built += 1
 	return sf
 
 
@@ -52,6 +56,7 @@ static func still(path: String) -> SpriteFrames:
 			sf.add_animation("%s_%s" % [state, dir])
 			sf.add_frame("%s_%s" % [state, dir], tex)
 	_cache[path] = sf
+	sheets_built += 1
 	return sf
 
 

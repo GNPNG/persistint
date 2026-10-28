@@ -37,6 +37,15 @@ var _rings: Dictionary = {}  # art layer -> its ring AnimatedSprite2D
 var _shadow: AnimatedSprite2D
 ## How near (world px) the interact key reaches.
 const INTERACT_RANGE := 56.0
+## The doll's nodes (_doll_nodes), listed once when the rings and shadow are built: the frame loop
+## in _process walks this list instead of looking the layers up by name every frame (bd nmz).
+var _doll: Array[AnimatedSprite2D] = []
+## The animation and flip _process last worked out, and what it worked them out from; RigSheet.facing
+## runs again only when her facing or her walking changes.
+var _anim := &""
+var _flip := false
+var _anim_from := Vector2.INF
+var _anim_moving := false
 
 
 func _ready() -> void:
@@ -48,6 +57,7 @@ func _ready() -> void:
 	get_tree().scene_changed.connect(_on_dialogue_ended.bind(null))
 	WorldState.flag_changed.connect(_on_flag_changed)
 	_build_paper()
+	_doll = _doll_nodes()
 	refresh_outfit()
 	refresh_mount()
 
@@ -87,20 +97,33 @@ func _doll_nodes() -> Array[AnimatedSprite2D]:
 
 ## Idle or walk, facing the way she moves (or last moved); every layer on the same frame.
 func _process(_delta: float) -> void:
-	var moving := velocity.length() > WALK_SPEED_MIN and not is_mounted()
-	if velocity.length() > WALK_SPEED_MIN:
+	var speed := velocity.length()
+	var moving := speed > WALK_SPEED_MIN and not is_mounted()
+	if speed > WALK_SPEED_MIN:
 		_facing = velocity
-	var f := RigSheet.facing(_facing, "walk" if moving else "idle")
+	if _facing != _anim_from or moving != _anim_moving:
+		var f := RigSheet.facing(_facing, "walk" if moving else "idle")
+		_anim = StringName(f[0])
+		_flip = f[1]
+		_anim_from = _facing
+		_anim_moving = moving
+	# The body first (it is the first layer), then every other node takes the body's frame.
 	var body: AnimatedSprite2D = $Body
-	for layer in _doll_nodes():
-		if layer.sprite_frames == null:
+	var synced := body.sprite_frames != null
+	if synced:
+		body.flip_h = _flip
+		if body.animation != _anim:
+			body.play(_anim)
+	var frame := body.frame
+	var progress := body.frame_progress
+	for layer in _doll:
+		if layer == body or layer.sprite_frames == null:
 			continue
-		layer.flip_h = f[1]
-		if layer.animation != f[0]:
-			layer.play(f[0])
-		if layer != body and body.sprite_frames != null:
-			layer.frame = body.frame
-			layer.frame_progress = body.frame_progress
+		layer.flip_h = _flip
+		if layer.animation != _anim:
+			layer.play(_anim)
+		if synced:
+			layer.set_frame_and_progress(frame, progress)
 
 
 func _unhandled_input(event: InputEvent) -> void:

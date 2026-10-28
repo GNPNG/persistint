@@ -48,6 +48,9 @@ var rig: AnimatedSprite2D
 var _shadow: AnimatedSprite2D
 var _baked := false
 var _last_position := Vector2.ZERO
+## The rig's sheet when _process last checked it, and whether it is a directional rig (idle_down).
+var _frames_seen: SpriteFrames
+var _directional := false
 
 
 func _ready() -> void:
@@ -167,16 +170,19 @@ func _process(delta: float) -> void:
 		var player := get_tree().get_first_node_in_group("player") as Node2D
 		if player and player.global_position.distance_to(global_position) <= LOOK_DISTANCE:
 			d = player.global_position - global_position
+	if rig.sprite_frames != _frames_seen:  # which kind of sheet it is, looked up once per sheet (bd nmz)
+		_frames_seen = rig.sprite_frames
+		_directional = _frames_seen.has_animation("idle_down")
 	var side := absf(d.x) > absf(d.y) * 1.2
 	var anim: String
-	if rig.sprite_frames.has_animation("idle_down"):
+	if _directional:
 		var f := RigSheet.facing(d, state)
 		anim = f[0]
 		rig.flip_h = f[1]
 	else:
 		anim = "idle_side" if side else ("idle_back" if d.y < 0.0 else "idle_front")
 		rig.flip_h = side and d.x < 0.0
-	if rig.sprite_frames.has_animation(anim) and rig.animation != anim:
+	if rig.animation != anim and rig.sprite_frames.has_animation(anim):
 		rig.play(anim)
 
 
