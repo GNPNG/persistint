@@ -24,6 +24,10 @@ const FOUND_SECONDS := 4.0
 @onready var icon: Sprite2D = $Icon
 
 var _recovered := false
+## Once recovered: the card's seconds, then the pickup goes, on a Tween of its own that goes with
+## it. An awaited SceneTreeTimer outlived a quit in those seconds and was left at exit (the shot
+## walk's ruins-wreck-recovered, bd 1cd0).
+var leaving: Tween
 
 
 func _ready() -> void:
@@ -76,8 +80,9 @@ func interact() -> void:
 	$Glow.hide()
 	icon.hide()
 	$CollisionShape2D.set_deferred("disabled", true)
-	await get_tree().create_timer(FOUND_SECONDS).timeout
-	queue_free()
+	leaving = create_tween()
+	leaving.tween_interval(FOUND_SECONDS)
+	leaving.tween_callback(queue_free)
 
 
 ## The room's RuinsDecor (the map's "Decor"), or null for a pickup outside a ruins room.
