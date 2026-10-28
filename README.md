@@ -177,14 +177,21 @@ The tests use their own save and settings files, so they never touch your own pr
 levels.
 
 `tests/test_paperdoll_tools.gd` runs the art tools' own checks (`tools/test_paperdoll_tools.py`),
-which need a Python with numpy, scipy and Pillow (`tools/requirements-art.txt`). It uses
-`ART_PYTHON` when that is set (the art venv's `python`), else the repo's `.venv` if there is one,
-else `python3` on the path, and the log names the one that ran. If none of them has the packages,
-the test fails. Set `PERSISTINT_SKIP_ART_TESTS=1` to skip it instead:
+which need a Python with numpy, scipy and Pillow (`tools/requirements-art.txt`). It looks for one
+in this order and uses the first that has them; the log names the one that ran:
+
+1. `ART_PYTHON`, when it is set (then only that one);
+2. the art venv, `~/.local/share/persistint/art-venv`;
+3. the repo's own `.venv`;
+4. `python3` on the path.
+
+If none of them has the packages, the test fails. Set `PERSISTINT_SKIP_ART_TESTS=1` to skip it
+instead:
 
 ```bash
-python3 -m venv .venv && .venv/bin/pip install -r tools/requirements-art.txt   # once
-ART_PYTHON=/path/to/art-venv/bin/python tools/run_tests.sh                     # or point at another venv
+python3 -m venv ~/.local/share/persistint/art-venv                             # once: the art venv
+~/.local/share/persistint/art-venv/bin/pip install -r tools/requirements-art.txt
+ART_PYTHON=/path/to/python tools/run_tests.sh                                  # or name a python
 PERSISTINT_SKIP_ART_TESTS=1 tools/run_tests.sh                                 # no art Python: skip those checks
 ```
 
