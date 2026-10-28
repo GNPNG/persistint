@@ -11,6 +11,8 @@ extends SceneTree
 ## Run: godot --headless --path project -s tests/test_sticker_peel.gd
 
 const DT := 1.0 / 60.0
+## Where she starts walking right in the village: land with nothing in the way for 150 px.
+const WALK_FROM := Vector2(944, 890)
 const UNIFORMS := ["frame_rect", "px_per_world", "flip", "corner", "lift_dir", "lift", "reach", "soft",
 	"ripple", "ripple_waves", "ripple_phase"]
 
@@ -155,6 +157,11 @@ func _live() -> void:
 		"the peel took the shadow's frame and scale (%s)" % [rect])
 	_check(peel.state == StickerPeel.State.IDLE, "standing she is flat")
 
+	# The open ground the peel shots walk (tools/shots/wso.json village-village-peel_*).
+	p.global_position = WALK_FROM
+	p.velocity = Vector2.ZERO
+	for i in 3:
+		await physics_frame
 	var start := p.global_position
 	Input.action_press("move_right")
 	await physics_frame
