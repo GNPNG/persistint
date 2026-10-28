@@ -12,18 +12,18 @@ What made each file here (release checklist LP-04, sops/09). Prompt files carry 
 | `acc_shell_garland_rig_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `body_base_rig_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `body_base_rig_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
-| `clone_bill_clinton_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `clone_bill_clinton_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `clone_bill_gates_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `clone_bill_gates_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `clone_epstein_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `clone_epstein_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `clone_hillary_clinton_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `clone_hillary_clinton_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `clone_polar_bear_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `clone_polar_bear_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `crab_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `crab_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
+| `clone_bill_clinton_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `clone_bill_clinton_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `clone_bill_gates_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `clone_bill_gates_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `clone_epstein_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `clone_epstein_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `clone_hillary_clinton_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `clone_hillary_clinton_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `clone_polar_bear_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `clone_polar_bear_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `crab_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `crab_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
 | `craft_bench_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `craft_bench_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `deco_flowers_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
@@ -34,55 +34,55 @@ What made each file here (release checklist LP-04, sops/09). Prompt files carry 
 | `deco_tree_b_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `deco_tree_c_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `deco_tree_c_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
-| `dolphin_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `dolphin_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
+| `dolphin_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `dolphin_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
 | `dress_robe_rig_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `dress_uniform_rig_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `dress_white_rig_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
-| `fish_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `fish_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `gull_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `gull_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
+| `fish_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `fish_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `gull_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `gull_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
 | `hair_braids_rig_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `hair_crown_rig_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `hair_pigtails_rig_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `hair_short_rig_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
-| `icon_appendix_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `icon_appendix_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `icon_board_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `icon_board_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `icon_book_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `icon_book_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `icon_chart_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `icon_chart_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `icon_ledger_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `icon_ledger_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `icon_paper_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `icon_paper_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `icon_proposal_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `icon_proposal_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `icon_thermometer_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `icon_thermometer_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `mermaid_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `mermaid_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
+| `icon_appendix_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `icon_appendix_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `icon_board_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `icon_board_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `icon_book_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `icon_book_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `icon_chart_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `icon_chart_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `icon_ledger_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `icon_ledger_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `icon_paper_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `icon_paper_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `icon_proposal_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `icon_proposal_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `icon_thermometer_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `icon_thermometer_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `mermaid_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `mermaid_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
 | `mirror_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `mirror_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `npc_barren_rig_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `npc_barren_rig_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
-| `npc_daughter_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `npc_daughter_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
+| `npc_daughter_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `npc_daughter_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
 | `npc_drone_rig_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `npc_drone_rig_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
-| `npc_father_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `npc_father_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
+| `npc_father_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `npc_father_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
 | `npc_initiate_rig_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `npc_initiate_rig_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `npc_mother_rig_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `npc_mother_rig_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `npc_priestess_rig_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `npc_priestess_rig_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
-| `npc_stable_friend_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `npc_stable_friend_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
+| `npc_stable_friend_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `npc_stable_friend_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
 | `plot_empty_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `plot_empty_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `plot_growing_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
@@ -103,34 +103,34 @@ What made each file here (release checklist LP-04, sops/09). Prompt files carry 
 | `plot_ready_plumeria_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `plot_ready_sea_grape_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `plot_ready_sea_grape_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
-| `pony_acc_blanket_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `pony_acc_bow_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `pony_acc_flower_crown_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `pony_acc_hibiscus_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `pony_body_cloud_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `pony_body_cloud_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `pony_body_honey_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `pony_body_honey_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `pony_body_lilac_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `pony_body_lilac_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `pony_body_mint_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `pony_body_mint_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `pony_body_peach_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `pony_body_peach_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `pony_mane_braids_lavender_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `pony_mane_braids_rose_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `pony_mane_braids_sky_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `pony_mane_braids_sunshine_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `pony_mane_curly_lavender_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `pony_mane_curly_rose_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `pony_mane_curly_sky_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `pony_mane_curly_sunshine_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `pony_mane_flowing_lavender_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `pony_mane_flowing_rose_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `pony_mane_flowing_sky_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `pony_mane_flowing_sunshine_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `pony_sparkle_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `pony_spots_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
+| `pony_acc_blanket_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `pony_acc_bow_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `pony_acc_flower_crown_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `pony_acc_hibiscus_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `pony_body_cloud_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `pony_body_cloud_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `pony_body_honey_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `pony_body_honey_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `pony_body_lilac_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `pony_body_lilac_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `pony_body_mint_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `pony_body_mint_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `pony_body_peach_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `pony_body_peach_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `pony_mane_braids_lavender_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `pony_mane_braids_rose_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `pony_mane_braids_sky_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `pony_mane_braids_sunshine_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `pony_mane_curly_lavender_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `pony_mane_curly_rose_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `pony_mane_curly_sky_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `pony_mane_curly_sunshine_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `pony_mane_flowing_lavender_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `pony_mane_flowing_rose_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `pony_mane_flowing_sky_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `pony_mane_flowing_sunshine_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `pony_sparkle_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `pony_spots_ring2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
 | `prop_aquarium_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `prop_aquarium_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `prop_barn_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
@@ -177,8 +177,8 @@ What made each file here (release checklist LP-04, sops/09). Prompt files carry 
 | `prop_rowboat_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `prop_sandcastle_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `prop_sandcastle_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
-| `prop_scroll_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
-| `prop_scroll_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) |  |
+| `prop_scroll_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
+| `prop_scroll_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-28 |
 | `prop_seal_o_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `prop_seal_o_shadow_soft.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
 | `prop_ship_edge2_white.png` | `tools/bake_paper.sh` | drawn or cut by the tool (its docstring names inputs) | 2026-10-27 |
