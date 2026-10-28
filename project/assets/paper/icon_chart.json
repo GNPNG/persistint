@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/ruins/icon_chart.png"],
+  "cols": 1,
+  "rows": 1,
+  "src_frame": [160, 160],
+  "scaled_frame": [120, 120],
+  "frame": [202, 202],
+  "pad": 41,
+  "scale": 6.0,
+  "world_h": 20.0,
+  "feet": 0.7970297029702971,
+  "world_h_padded": 33.666666666666664,
+  "edges": [2],
+  "files": {
+    "edge2_white": "icon_chart_edge2_white.png",
+    "shadow_soft": "icon_chart_shadow_soft.png"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/ruins/clone_hillary_clinton.png"],
+  "cols": 6,
+  "rows": 5,
+  "src_frame": [192, 272],
+  "scaled_frame": [144, 204],
+  "frame": [226, 286],
+  "pad": 41,
+  "scale": 6.0,
+  "world_h": 34.0,
+  "feet": 0.8566433566433567,
+  "world_h_padded": 47.666666666666664,
+  "edges": [2],
+  "files": {
+    "edge2_white": "clone_hillary_clinton_edge2_white.png",
+    "shadow_soft": "clone_hillary_clinton_shadow_soft.png"
+  }
+}

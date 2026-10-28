@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/ruins/clone_polar_bear.png"],
+  "cols": 6,
+  "rows": 5,
+  "src_frame": [192, 176],
+  "scaled_frame": [144, 132],
+  "frame": [226, 214],
+  "pad": 41,
+  "scale": 6.0,
+  "world_h": 22.0,
+  "feet": 0.8014018691588785,
+  "world_h_padded": 35.666666666666664,
+  "edges": [2],
+  "files": {
+    "edge2_white": "clone_polar_bear_edge2_white.png",
+    "shadow_soft": "clone_polar_bear_shadow_soft.png"
+  }
+}

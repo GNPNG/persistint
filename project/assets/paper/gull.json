@@ -1,0 +1,18 @@
+{
+  "source": ["project/assets/florida/gull.png"],
+  "cols": 4,
+  "rows": 2,
+  "src_frame": [96, 96],
+  "scaled_frame": [96, 96],
+  "frame": [152, 152],
+  "pad": 28,
+  "scale": 4.0,
+  "world_h": 24.0,
+  "feet": 0.8157894736842105,
+  "world_h_padded": 38.0,
+  "edges": [2],
+  "files": {
+    "edge2_white": "gull_edge2_white.png",
+    "shadow_soft": "gull_shadow_soft.png"
+  }
+}
