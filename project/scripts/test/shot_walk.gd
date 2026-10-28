@@ -244,6 +244,13 @@ func _teardown() -> void:
 	for c in root.get_children():
 		if c is CanvasLayer and not autoloads.has(String(c.name)):
 			c.queue_free()
+	# Voice's queues first, as test_audio_settings.gd's _quiet() does: its players' `finished`
+	# starts the next part of a line, so a part ending as the players stop would start one more
+	# clip after them and leave its stream in use at exit.
+	var voice := root.get_node_or_null("Voice")
+	if voice != null:
+		(voice.get("_queue") as Array).clear()
+		(voice.get("_at") as Dictionary).clear()
 	for kind: String in ["AudioStreamPlayer", "AudioStreamPlayer2D"]:
 		for p: Node in root.find_children("*", kind, true, false):
 			p.call("stop")
