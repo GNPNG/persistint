@@ -23,13 +23,15 @@ the PaperDoll slot it is worn in, SLOTS):
   - body: placed as drawn (canon sheet only: it sets the frame).
   - dress: drawn on the same baseline as the body; centered on the body, feet on feet.
   - hair: the face opening is measured, scaled to the body's face width, centered on the
-    head and its bottom set on the chin.
+    head and its bottom set on the chin. The opening and the hair's other enclosed white gaps
+    at least "hair_gap_min" px (default 200; the ear gaps beside the face, a gap under a
+    circlet; a highlight is smaller) become transparent.
   - acc, hat: scaled by "scale" and placed at "anchor" relative to the head.
   - top, bottom, shoes: scaled by the body's height over the reference doll's (head top to soles),
     at the height on the frame that matches where the item stands beside her on the sheet (her
     head top on the body's), centred on the body. On the canon sheet the body is the doll.
   Any part: "offset" [dx, dy] (frame px) moves it after placing.
-White background and hair face openings become transparent.
+White background and hair face openings and ear gaps become transparent.
 Layers keep the sheet's resolution (the shared canvas is 721x760 px for the current sheet): no downscale, so
 the doll stays smooth illustration. Code scales it to its display size (player.gd fits it to
 48 world px tall; PaperDoll fits its rect).
@@ -93,6 +95,19 @@ def bbox(mask):
     return xs.min(), ys.min(), xs.max(), ys.max()
 
 
+def gaps(enclosed, hole, rgb, min_px, white):
+    """A hair's enclosed white gaps other than its face opening `hole`, each at least `min_px`
+    px (the ear gaps beside the face, a gap under a circlet; a highlight is smaller), grown 1 px
+    into their light fringe as the outside white is."""
+    rest = enclosed & ~hole
+    lab, n = ndimage.label(rest)
+    if n == 0:
+        return rest
+    sizes = ndimage.sum(rest, lab, range(1, n + 1))
+    gap = np.isin(lab, [i + 1 for i, s in enumerate(sizes) if s >= min_px])
+    return ndimage.binary_dilation(gap, iterations=1) & (rgb.min(axis=2) > white - 40) | gap
+
+
 def landmarks(solid, cfg):
     """The body's landmarks from its mask: head top, feet, neck, chin, head centre x, face width."""
     widths = solid.sum(axis=1)
@@ -111,9 +126,10 @@ def landmarks(solid, cfg):
             "body_cx": head_cx}
 
 
-def place(name, part, rgba, enclosed, lm, cfg, doll):
+def place(name, part, rgba, enclosed, lm, cfg, doll, white):
     """The part scaled, and where its top-left corner goes (in lm's coordinates), by its prefix's
-    rule. doll: the sheet's reference doll's head top and soles (sheet rows), for top/bottom/shoes."""
+    rule. doll: the sheet's reference doll's head top and soles (sheet rows), for top/bottom/shoes;
+    white: the sheet's white threshold, for a hair's gaps."""
     kind = name.split("_")[0]
     scale, ox, oy = 1.0, 0.0, 0.0
     if kind == "body":
@@ -126,8 +142,10 @@ def place(name, part, rgba, enclosed, lm, cfg, doll):
         ox = lm["body_cx"] - (bx0 + bx1) / 2 * scale
         oy = collar - by0 * scale
     elif kind == "hair":
+        # The face opening (the largest enclosed white) sets the fit; it and the ear gaps go clear.
         hole = largest(enclosed)
         rgba[hole, 3] = 0
+        rgba[gaps(enclosed, hole, rgba[:, :, :3], cfg.get("hair_gap_min", 200), white), 3] = 0
         hx0, hy0, hx1, hy1 = bbox(hole)
         scale = lm["face_w"] / (hx1 - hx0)
         ox = lm["head_cx"] - (hx0 + hx1) / 2 * scale
@@ -209,7 +227,7 @@ def main(argv=None):
         for name, part in parts.items():
             if part.get("sheet", CANON) == CANON:
                 rgba, enclosed = cut(sheet, part["crop"], white)
-                layers[name] = place(name, part, rgba, enclosed, lm, cfg, doll)
+                layers[name] = place(name, part, rgba, enclosed, lm, cfg, doll, white)
         # One canvas that holds every canon layer: the frame.
         x0 = min(ox for _, ox, _ in layers.values())
         y0 = min(oy for _, _, oy in layers.values())
@@ -246,7 +264,7 @@ def main(argv=None):
             if part.get("sheet") != sid:
                 continue
             rgba, enclosed = cut(sheet, part["crop"], w)
-            img, ox, oy = place(name, part, rgba, enclosed, lm, cfg, doll)
+            img, ox, oy = place(name, part, rgba, enclosed, lm, cfg, doll, w)
             canvas = on_frame(name, img, ox, oy, frame_body.size)
             canvas.save(out / f"{name}.png")
             print(name, canvas.size)

@@ -7,8 +7,8 @@ failure, 2 when numpy, scipy or Pillow is missing (tools/requirements-art.txt; n
 Run by project/tests/test_paperdoll_tools.gd (tools/run_tests.sh). Writes only to a temp folder.
 
 The synthetic sheets (white background, warm fills and outlines, as the keyed Gemini sheets are):
-  canon     the body (head top y 40, soles y 290), a wig with a face opening, a dress, an
-            accessory and a top drawn at the body's own torso height
+  canon     the body (head top y 40, soles y 290), a wig with a face opening, an ear gap and a
+            highlight, a dress, an accessory and a top drawn at the body's own torso height
   wardrobe  the reference doll at half the body's size (head top y 20, soles y 145) and, beside
             her at her heights, a top, a bottom, a pair of shoes, a hat and a bottom too wide for
             the frame
@@ -17,9 +17,13 @@ wardrobe sheet take the doll's scale (x2) and stand where they would on her, cen
 (the wardrobe top where the canon top is); a hat sits at its anchor; the wide bottom is clipped
 with a warning; the canon parts come out the same with and without the wardrobe sheet in the
 parts file (the frame is the canon parts'); --sheet cuts one sheet the same as a full run and
-writes nothing else; bad sheet names fail. Slots: the cutter's SLOTS are PaperDoll.LAYERS,
-outfits.json has every slot but the body and each option's prefix is its slot, and
-gen_player_rig.view_rule narrows tops, bottoms and shoes like the dress and hats like the head.
+writes nothing else; bad sheet names fail; the wig's face opening and ear gap are clear and its
+highlight stays (bd g0va). Slots: the cutter's SLOTS are PaperDoll.LAYERS, outfits.json has every
+slot but the body and each option's prefix is its slot, and gen_player_rig.view_rule narrows tops,
+bottoms and shoes like the dress and hats like the head. Rigs (bd g0va): gen_player_rig.fill_face
+fills every opening and measures the face; in the committed hair rigs no frame has a near-white
+blob (the ear gaps were sheet white) and the side idle frames leave the side body's brow, eye and
+mouth at least 95% uncovered.
 """
 import json
 import re
@@ -65,6 +69,8 @@ def sheets(tmp):
     doll(d, 40, 40, 1.0)
     d.ellipse([200, 30, 330, 160], fill=FILL, outline=INK, width=2)  # a wig
     d.ellipse([235, 70, 295, 140], fill="white", outline=INK, width=2)  # its face opening
+    d.ellipse([212, 88, 228, 116], fill="white", outline=INK, width=2)  # an ear gap (about 350 px)
+    d.ellipse([300, 50, 304, 54], fill="white")  # a highlight (about 20 px): stays
     d.rectangle([380, 150, 460, 290], fill=FILL, outline=INK, width=2)  # a dress
     d.ellipse([520, 40, 560, 70], fill=FILL, outline=INK, width=2)  # an accessory
     d.rectangle([600, 158, 660, 230], fill=FILL, outline=INK, width=2)  # a top at the torso's height
@@ -125,6 +131,76 @@ def same(a, b):
     return np.array_equal(np.asarray(Image.open(a).convert("RGBA")), np.asarray(Image.open(b).convert("RGBA")))
 
 
+def enclosed_holes(mask, min_px):
+    """How many transparent regions of `min_px` px or more the mask encloses (none touch its edge)."""
+    import numpy as np
+    from scipy import ndimage
+    lab, n = ndimage.label(~mask)
+    edge = set(np.unique(np.concatenate([lab[0], lab[-1], lab[:, 0], lab[:, -1]])))
+    return sum(1 for i in range(1, n + 1) if i not in edge and (lab == i).sum() >= min_px)
+
+
+def rig_frames(path):
+    """A rig sheet's frames by (row, column): 3 views by 8 frames."""
+    from PIL import Image
+    r = Image.open(path).convert("RGBA")
+    fw, fh = r.width // 8, r.height // 3
+    return {(row, i): r.crop((i * fw, row * fh, (i + 1) * fw, (row + 1) * fh)) for row in range(3) for i in range(8)}
+
+
+def face_features(body_frame):
+    """The brow, eye and mouth of a left-facing body frame: the ink inside the head's face half,
+    the outline left out."""
+    import numpy as np
+    from scipy import ndimage
+    a = np.asarray(body_frame)
+    solid = a[:, :, 3] > 128
+    rows = np.where(solid.any(axis=1))[0]
+    top, feet = rows[0], rows[-1]
+    xs = np.where(solid[top + int((feet - top) * 0.22)])[0]
+    ink = solid & (a[:, :, :3].astype(int).sum(axis=2) < 420) & ~ndimage.binary_dilation(~solid, iterations=5)
+    ink[:, int((xs[0] + xs[-1]) / 2):] = False
+    ink[top + int((feet - top) * 0.45):] = False
+    return ink
+
+
+def check_rigs():
+    import numpy as np
+    from PIL import Image, ImageDraw
+    from scipy import ndimage
+    import gen_player_rig
+    wig = Image.new("RGBA", (200, 200))
+    d = ImageDraw.Draw(wig)
+    d.ellipse([10, 10, 190, 190], fill=FILL + (255,), outline=INK + (255,), width=3)
+    d.ellipse([60, 60, 140, 160], fill=(0, 0, 0, 0))  # the face opening
+    d.ellipse([20, 90, 40, 120], fill=(0, 0, 0, 0), outline=INK + (255,), width=2)  # an ear gap
+    filled, box = gen_player_rig.fill_face(wig, 3)
+    inside = np.asarray(filled)[:, :, 3] > 128
+    check(enclosed_holes(inside, 1) == 0 and tuple(box) == (60, 60, 140, 160),
+          f"fill_face fills every opening and measures the face ({enclosed_holes(inside, 1)} left, box {tuple(box)})")
+    a = np.asarray(filled)
+    ring = ((a[:, :, :3].astype(int).sum(axis=2) < 420) & inside)[88:123, 18:43]
+    check(not ring.any(), f"and hides the ear gap's outline under the hair ({int(ring.sum())} ink px left)")
+
+    player = ROOT / "project/assets/characters/player"
+    body = rig_frames(player / "body_base_rig.png")
+    for hair in sorted(player.glob("hair_*_rig.png")):
+        frames = rig_frames(hair)
+        blobs = []
+        for f in frames.values():
+            fa = np.asarray(f)
+            white = (fa[:, :, 3] > 128) & (fa[:, :, :3].min(axis=2) > 225)
+            lab, n = ndimage.label(white)
+            blobs.append(int(ndimage.sum(white, lab, range(1, n + 1)).max()) if n else 0)
+        check(max(blobs) < 60, f"{hair.stem}: no frame has a near-white blob (largest {max(blobs)} px)")
+        seen = []
+        for i in range(4):
+            feat = face_features(body[(1, i)])
+            over = np.asarray(frames[(1, i)])[:, :, 3] > 128
+            seen.append(100.0 * (feat & ~over).sum() / max(1, feat.sum()))
+        check(min(seen) >= 95, f"{hair.stem}: the side idle frames leave the face's features uncovered ({', '.join(f'{s:.0f}%' for s in seen)})")
+
+
 def check_cutter(tmp, cp):
     canon, ward = sheets(tmp)
     a = run(tmp / "canon.png", "--parts", tmp / "parts.json", "--out", tmp / "A")
@@ -157,6 +233,13 @@ def check_cutter(tmp, cp):
     check(alpha(tmp / "A/bottom_wide.png").any(), "and what fits of it is kept")
     hair = alpha(tmp / "A/hair_test.png")
     check(hair.any() and not hair[lm["chin"] - 5, int(lm["head_cx"])], "the wig's face opening is clear over the face")
+    holes = enclosed_holes(hair, 100)
+    check(holes == 2, f"the wig's face opening and ear gap are both clear ({holes} openings of 100 px or more, want 2)")
+    import numpy as np
+    from PIL import Image
+    a = np.asarray(Image.open(tmp / "A/hair_test.png").convert("RGBA"))
+    light = int(((a[:, :, 3] > 128) & (a[:, :, :3].min(axis=2) > 225)).sum())
+    check(light >= 10, f"the wig's highlight stays ({light} near-white px)")
 
     b = run(tmp / "canon.png", "--parts", tmp / "legacy.json", "--out", tmp / "B")
     check(b.returncode == 0 and all(same(tmp / f"A/{n}.png", tmp / f"B/{n}.png") for n in canon),
@@ -217,6 +300,7 @@ def main():
     with tempfile.TemporaryDirectory(prefix="paperdoll-") as d:
         check_cutter(Path(d), cp)
     check_slots(cp)
+    check_rigs()
     print(f"RESULT: {'PASS' if failures == 0 else 'FAIL'} ({failures} failures)")
     return 0 if failures == 0 else 1
 

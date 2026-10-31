@@ -23,10 +23,11 @@ Outputs: project/assets/characters/player/<part>_rig.png for every part
 How each view is made (canon art first; what canon lacks is derived from it, never invented):
   body    front: the canon paper-doll body; side and back: the canon body turnaround's side and
           back views, scaled to the doll's height, feet on its feet and head on its head
-  hair    front: the canon part; back: the same hair with its face opening filled in the hair's
-          own colour (the back of the head); side: that back hair narrowed to the side view's
-          head width, with the face side (an ellipse over the left of the head, from the brow
-          to the chin) opened again and edged in the canon outline colour
+  hair    front: the canon part; back: the same hair with its face opening and ear gaps filled
+          in the hair's own colour (the back of the head); side: that back hair narrowed to the
+          side view's head width, with the face side (an ellipse over the left of the head, from
+          just above the side body's brow to the chin) opened again and edged in the canon
+          outline colour
   dress, top, bottom, shoes
           front and back: the part as drawn; side: narrowed to the side body's torso width and
           centred on it
@@ -99,9 +100,10 @@ def narrow(im, cx, ratio, new_cx=None):
     return out
 
 
-def fill_face(hair):
-    """The hair with its face opening (transparent and enclosed) filled in the hair's colour;
-    returns the image and the opening's bounding box."""
+def fill_face(hair, ink_w=0):
+    """The hair with its openings (transparent and enclosed) filled in the hair's colour: the
+    face opening, and the ear gaps beside it with their outline (`ink_w` px around them) too, as
+    seen from behind they are under the hair. Returns the image and the face opening's bounding box."""
     a = np.asarray(hair).copy()
     solid = a[..., 3] > 128
     lab, n = ndimage.label(~solid)
@@ -110,15 +112,32 @@ def fill_face(hair):
     if not holes:
         return hair, None
     sizes = ndimage.sum(np.ones_like(lab), lab, holes)
-    hole = lab == holes[int(np.argmax(sizes))]
+    face = lab == holes[int(np.argmax(sizes))]
+    gaps = np.isin(lab, holes) & ~face
     rgb = a[..., :3][solid].astype(int)
     bright = rgb[rgb.sum(axis=1) > 330]  # leave out the outline
     colour = np.median(bright if len(bright) else rgb, axis=0).astype(np.uint8)
-    grown = ndimage.binary_dilation(hole, iterations=2) & ~solid | hole
+    grown = ndimage.binary_dilation(face, iterations=2) & ~solid | face
+    if ink_w > 0 and gaps.any():
+        grown |= ndimage.binary_dilation(gaps, iterations=ink_w)
+    else:
+        grown |= gaps
     a[grown, :3] = colour
     a[grown, 3] = 255
-    ys, xs = np.where(hole)
+    ys, xs = np.where(face)
     return Image.fromarray(a, "RGBA"), (xs.min(), ys.min(), xs.max(), ys.max())
+
+
+def brow(body, cx, top, feet, ink_w):
+    """The top row of a left-facing body's brow: the highest ink drawn inside the head's face
+    half (the outline, `ink_w` px wide, left out), from the head top to the chin."""
+    a = np.asarray(body)
+    solid = a[..., 3] > 128
+    ink = solid & (a[..., :3].astype(int).sum(axis=2) < 420)
+    ink &= ~ndimage.binary_dilation(~solid, iterations=2 * ink_w)
+    ink[:, int(cx):] = False
+    ink[top + int((feet - top) * 0.45):] = False
+    return int(np.where(ink.any(axis=1))[0][0])
 
 
 def open_face(hair, box, ink_w):
@@ -164,6 +183,8 @@ def main():
     side_torso_cx, side_torso_w = torso(alpha(side_body), top, feet)
     head_ratio = min(1.0, side_head_w / head_w)
     torso_ratio = min(1.0, side_torso_w / front_torso_w)
+    ink_w = max(2, round(size[1] / 160))
+    side_brow = brow(side_body, side_cx, top, feet, ink_w)
 
     k = FRAME_H / size[1]
     fw = round(size[0] * k)
@@ -177,15 +198,16 @@ def main():
         if rule == "body":
             views = {"front": im, "side": side_body, "back": back_body}
         elif rule == "hair":
-            back, hole = fill_face(im)
+            back, hole = fill_face(im, ink_w)
             side = narrow(back, head_cx, head_ratio, side_cx)
             if hole:
                 hx0, hy0, hx1, hy1 = hole
                 hw = (hx1 - hx0) * head_ratio
                 hh = hy1 - hy0
-                # the face side of the head, from the brow to below the chin, front edge past the head
-                box = (round(side_cx - hw * 1.05), round(hy0 + hh * 0.30), round(side_cx + hw * 0.18), round(hy1 + hh * 0.25))
-                side = open_face(side, box, max(2, round(size[1] / 160)))
+                # the face side of the head, from just above the side body's brow to below the
+                # chin, front edge past the head
+                box = (round(side_cx - hw * 1.05), side_brow - round(hh * 0.05), round(side_cx + hw * 0.18), round(hy1 + hh * 0.25))
+                side = open_face(side, box, ink_w)
             views = {"front": im, "side": side, "back": back}
         elif rule == "torso":
             views = {"front": im, "side": narrow(im, front_torso_cx, torso_ratio, side_torso_cx), "back": im}
