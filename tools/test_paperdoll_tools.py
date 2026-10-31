@@ -182,7 +182,7 @@ def check_rigs():
     ring = ((a[:, :, :3].astype(int).sum(axis=2) < 420) & inside)[88:123, 18:43]
     check(not ring.any(), f"and hides the ear gap's outline under the hair ({int(ring.sum())} ink px left)")
 
-    player = ROOT / "project/assets/characters/player"
+    player = gen_player_rig.OUT
     body = rig_frames(player / "body_base_rig.png")
     for hair in sorted(player.glob("hair_*_rig.png")):
         frames = rig_frames(hair)
