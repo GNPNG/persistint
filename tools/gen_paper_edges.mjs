@@ -60,6 +60,22 @@ function parse(argv) {
 }
 
 const magick = (args) => execFileSync(MAGICK, args, { stdio: ["ignore", "pipe", "inherit"] }).toString();
+
+/** A w x h 8-bit grey PGM of uniform noise from `seed` (mulberry32). The noise is made here, not by
+ * ImageMagick's +noise, whose output for a seed differs between builds and, with OpenMP, with the
+ * thread count: the bake must come out the same on every machine. */
+function noisePgm(file, w, h, seed) {
+  let s = seed >>> 0;
+  const px = Buffer.alloc(w * h);
+  for (let j = 0; j < px.length; j++) {
+    s = (s + 0x6d2b79f5) >>> 0;
+    let t = Math.imul(s ^ (s >>> 15), 1 | s);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    px[j] = ((t ^ (t >>> 14)) >>> 0) >>> 24;
+  }
+  fs.writeFileSync(file, Buffer.concat([Buffer.from(`P5\n${w} ${h}\n255\n`), px]));
+  return file;
+}
 const size = (p) => magick(["identify", "-format", "%w %h", p]).trim().split(" ").map(Number);
 const rgb = (c) => `rgb(${c.join(",")})`;
 // Python-style JSON floats (4.0, not 4) so the sidecar reads like the .py tool's.
@@ -101,13 +117,13 @@ function bake(a) {
       for (const e of a.edges) {
         const r = e * scale, rs = Math.max(1, r * 0.6);
         const cell = (kind, p) => path.join(tmp, `${kind}_e${e}_${p}_${String(i).padStart(3, "0")}.png`);
+        const noise = noisePgm(path.join(tmp, `noise_e${e}_${String(i).padStart(3, "0")}.pgm`), cw, ch, a.seed * 100003 + e * 1009 + i);
         const args = [f, "-filter", "Lanczos", "-resize", `${fw}x${fh}!`, "-background", "none", "-gravity", "center",
           "-extent", `${pw}x${ph}`, "+repage", "-write", "mpr:art", "+delete",
           // The ring: the alpha grown by r or by 0.6 r, picked by a coarse noise field; slightly softened.
           "mpr:art", "-alpha", "extract", "-morphology", "Dilate", `Square:${Math.max(1, Math.ceil(rs))}`,
           "(", "mpr:art", "-alpha", "extract", "-morphology", "Dilate", `Square:${Math.max(1, Math.ceil(r))}`, ")",
-          "(", "-size", `${cw}x${ch}`, "xc:gray", "-seed", String(a.seed * 100003 + e * 1009 + i), "+noise", "Random",
-          "-colorspace", "gray", "-filter", "Catrom", "-resize", `${pw}x${ph}!`, "-threshold", "46.3%", ")",
+          "(", noise, "-colorspace", "gray", "-filter", "Catrom", "-resize", `${pw}x${ph}!`, "-threshold", "46.3%", ")",
           "-compose", "Over", "-composite", "-blur", "0x0.6", "-write", "mpr:ring", "+delete"];
         for (const p of papers) {
           const paper = ["(", "-size", `${pw}x${ph}`, `xc:${rgb(PAPERS[p])}`, "mpr:ring", "-alpha", "off", "-compose", "CopyOpacity", "-composite", ")"];
