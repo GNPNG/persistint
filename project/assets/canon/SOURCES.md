@@ -26,23 +26,53 @@ folder.
 Not recorded in the repository, for the author to add: the Gemini model and the prompt behind
 each sheet, and how the world-building overview was made.
 
+## Layered sheets
+
+A character drawn as separate layers on one sheet (the character's own bald body first, then the hair,
+clothes and shoes), keyed to white in `project/assets/sheets/` (staging, not shipped);
+`project/data/paperdoll_parts.json` names the sheet under "sheets" and each cut in the Sprites table
+names it and its crop.
+
+| Sheet | Made with | Prompt | Keyed copy the cutter reads |
+|---|---|---|---|
+| `barren_susan` | Codex image_gen (render commit c24c327, bd uowd) | none (requested on a bead); drop `prompts/image/characters/assets/char_barren_susan_layers.png` | `project/assets/sheets/characters/char_barren_susan_layers_white.png` |
+| `daughter` | Codex image_gen (render commit dd7de65, bd uowd) | none (requested on a bead); drop `prompts/image/characters/assets/char_daughter_layers.png` | `project/assets/sheets/characters/char_daughter_layers_white.png` |
+| `father` | Codex image_gen (render commit 30adeb6, bd uowd) | none (requested on a bead); drop `prompts/image/characters/assets/char_father_layers.png` | `project/assets/sheets/characters/char_father_layers_white.png` |
+| `initiate` | Codex image_gen (render commit 9ef4bc7, bd uowd) | none (requested on a bead); drop `prompts/image/characters/assets/char_initiate_layers.png` | `project/assets/sheets/characters/char_initiate_layers_white.png` |
+| `mother` | Codex image_gen (render commit 0b61ff7, bd uowd) | none (requested on a bead); drop `prompts/image/characters/assets/char_mother_layers.png` | `project/assets/sheets/characters/char_mother_layers_white.png` |
+
 ## Sprites
 
 | Sprite | Tool | Sheet | Crop (WxH+X+Y on the sheet) |
 |---|---|---|---|
 | `acc_bow.png` | `tools/cut_paperdoll.py` | `Gemini_Generated_Image_ktfw` | 209x141+664+594 |
+| `body_barren_susan.png` | `tools/cut_paperdoll.py` | `barren_susan` | 376x700+68+115 |
 | `body_base.png` | `tools/cut_paperdoll.py` | `Gemini_Generated_Image_ktfw` | 402x698+97+300 |
+| `body_daughter.png` | `tools/cut_paperdoll.py` | `daughter` | 484x795+38+82 |
+| `body_father.png` | `tools/cut_paperdoll.py` | `father` | 392x687+53+112 |
+| `body_initiate.png` | `tools/cut_paperdoll.py` | `initiate` | 381x741+55+115 |
+| `body_mother.png` | `tools/cut_paperdoll.py` | `mother` | 374x678+57+128 |
+| `bottom_father.png` | `tools/cut_paperdoll.py` | `father` | 230x84+919+598 |
 | `deco_flowers.png` | `tools/gen_island_deco.py` | (drawn in code) | - |
 | `deco_heart.png` | `tools/cut_island_props.py` | `PERSISTINT` | 46x46+61+96 |
 | `deco_sparkle.png` | `tools/cut_island_props.py` | `PERSISTINT` | 46x50+1742+175 |
 | `deco_tree_a.png` | `tools/gen_island_deco.py` | (drawn in code) | - |
 | `deco_tree_b.png` | `tools/gen_island_deco.py` | (drawn in code) | - |
 | `deco_tree_c.png` | `tools/gen_island_deco.py` | (drawn in code) | - |
+| `dress_barren_susan.png` | `tools/cut_paperdoll.py` | `barren_susan` | 297x397+891+418 |
+| `dress_daughter.png` | `tools/cut_paperdoll.py` | `daughter` | 430x319+1179+458 |
+| `dress_initiate.png` | `tools/cut_paperdoll.py` | `initiate` | 281x289+997+400 |
+| `dress_mother.png` | `tools/cut_paperdoll.py` | `mother` | 431x411+936+411 |
 | `dress_robe.png` | `tools/cut_paperdoll.py` | `Gemini_Generated_Image_ktfw` | 534x400+1530+600 |
 | `dress_uniform.png` | `tools/cut_paperdoll.py` | `Gemini_Generated_Image_ktfw` | 309x371+980+628 |
 | `dress_white.png` | `tools/cut_paperdoll.py` | `Gemini_Generated_Image_ktfw` | 409x432+2105+569 |
+| `hair_barren_susan.png` | `tools/cut_paperdoll.py` | `barren_susan` | 356x366+470+114 |
 | `hair_braids.png` | `tools/cut_paperdoll.py` | `Gemini_Generated_Image_ktfw` | 534x512+1530+99 |
 | `hair_crown.png` | `tools/cut_paperdoll.py` | `Gemini_Generated_Image_ktfw` | 402x511+1095+81 |
+| `hair_daughter.png` | `tools/cut_paperdoll.py` | `daughter` | 681x515+512+61 |
+| `hair_father.png` | `tools/cut_paperdoll.py` | `father` | 386x322+465+138 |
+| `hair_initiate.png` | `tools/cut_paperdoll.py` | `initiate` | 507x326+459+115 |
+| `hair_mother.png` | `tools/cut_paperdoll.py` | `mother` | 453x539+461+128 |
 | `hair_pigtails.png` | `tools/cut_paperdoll.py` | `Gemini_Generated_Image_ktfw` | 379x419+595+89 |
 | `hair_short.png` | `tools/cut_paperdoll.py` | `Gemini_Generated_Image_ktfw` | 423x374+2199+90 |
 | `npc_barren.png` | `tools/cut_canon_sprites.sh` | `Gemini_Generated_Image_4bzs` | copy of npc_barren_front |
@@ -78,6 +108,10 @@ each sheet, and how the world-building overview was made.
 | `prop_sign_b.png` | `tools/cut_island_props.py` | `Gemini_Generated_Image_i7kl` | 400x520+2230+910 |
 | `prop_skull_altar.png` | render of `prompts/image/levels/temple/prop_skull_altar.md` (grok, 2026-11-02), keyed and fitted by hand (`.claude/skills/gemini-assets/SKILL.md` step 3) | `prompts/image/levels/temple/assets/prop_skull_altar.png` | replaces the cut of `PERSISTINT` 230x230+1040+1100 |
 | `prop_tag_x.png` | `tools/cut_island_props.py` | `Gemini_Generated_Image_481b` | 520x680+140+760 |
+| `shoes_daughter.png` | `tools/cut_paperdoll.py` | `daughter` | 257x109+1267+777 |
+| `shoes_father.png` | `tools/cut_paperdoll.py` | `father` | 274x80+894+718 |
+| `shoes_initiate.png` | `tools/cut_paperdoll.py` | `initiate` | 205x169+1034+689 |
+| `top_father.png` | `tools/cut_paperdoll.py` | `father` | 307x138+881+460 |
 
 `tools/gen_island_deco.py` draws its trees and flowers from code (palette from dev/STYLE.md, no
 randomness, no model). `npc_<caste>.png` is the front view, copied by
