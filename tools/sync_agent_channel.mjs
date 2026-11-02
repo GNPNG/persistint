@@ -274,6 +274,23 @@ export function refuse(prompt, file) {
   return "";
 }
 
+/** The one file under the channel's drop/ named <id>.<ext>, as a drop/-relative path with forward
+ *  slashes, or "" when there is none or more than one. */
+export function findDrop(dropDir, id) {
+  const hits = [];
+  const walk = (dir) => {
+    let entries = [];
+    try { entries = fs.readdirSync(dir, { withFileTypes: true }); } catch { return; }
+    for (const e of entries) {
+      const p = path.join(dir, e.name);
+      if (e.isDirectory()) walk(p);
+      else if (path.parse(e.name).name === id) hits.push(path.relative(dropDir, p).split(path.sep).join("/"));
+    }
+  };
+  walk(dropDir);
+  return hits.length === 1 ? hits[0] : "";
+}
+
 function intake(a) {
   const doneDir = path.join(a.channel, "done");
   if (!fs.existsSync(doneDir)) return 0;
@@ -285,7 +302,13 @@ function intake(a) {
     if (isFile(landedFile)) continue;
     let done;
     try { done = JSON.parse(readText(path.join(doneDir, f))); } catch { done = {}; }
-    const prompt = known.get(id);
+    // An id with no prompt file is a render the coordinator asked for on a bead (layered sheets, host
+    // dolls): it lands when exactly one drop file carries its name; the renderer's notes are its record.
+    let prompt = known.get(id);
+    if (!prompt) {
+      const found = findDrop(path.join(a.channel, "drop"), id);
+      if (found) prompt = { drop: found, game: "", file: "", prompt: "", requested: true };
+    }
     const dropFile = prompt ? path.join(a.channel, "drop", prompt.drop) : "";
     const why = refuse(prompt, dropFile);
     const record = { id, received_at: new Date().toISOString(), agent: done.agent || "", tool: done.tool || "", model: done.model || "", rendered_at: done.rendered_at || "" };
@@ -320,7 +343,8 @@ function intake(a) {
       const sha = prompt.prompt ? (sha256(prompt.prompt)) : "";
       const prov = [`Render ${id} from the coordination repository (bd uowd)`, "",
         `Rendered by ${record.agent || "?"} with ${record.tool || "?"} (${record.model || "?"}), ${record.rendered_at || "?"}.`,
-        `Prompt: ${rel(prompt.file, a.beads)}${sha && done.prompt_sha256 && sha !== done.prompt_sha256 ? " (the renderer's prompt_sha256 differs from the prompt file's)" : ""}.`,
+        prompt.requested ? "Prompt: requested on a bead by the coordinator (no prompt file)." :
+          `Prompt: ${rel(prompt.file, a.beads)}${sha && done.prompt_sha256 && sha !== done.prompt_sha256 ? " (the renderer's prompt_sha256 differs from the prompt file's)" : ""}.`,
         done.notes ? `Renderer's notes: ${String(done.notes).slice(0, 500)}` : "",
         `At ${targets.join(" and ")}. Land steps, suite and deploy follow on this branch.`].filter((l) => l !== "").join("\n");
       git(wt, ["-c", "user.name=cc-srv", "-c", "user.email=cc-srv@gnomatix.com", "commit", "--quiet", "-m", prov]);
