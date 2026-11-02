@@ -69,7 +69,7 @@ func _run() -> void:
 	iv.autostart = false
 	root.add_child(iv)
 	await process_frame
-	_check(iv.return_scene() == "res://scenes/minigames/hottest_chains.tscn", "cruise-chapter Interview returns to the cruise")
+	_check(iv.return_scene() == "res://scenes/cruise/ship_section.tscn", "cruise-chapter Interview returns to the ship")
 	ws.reset()
 	_check(iv.return_scene() == VILLAGE, "island-chapter Interview still returns to the village")
 	iv.free()
