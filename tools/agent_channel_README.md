@@ -15,6 +15,14 @@ game source.
 | `drop/`, `done/`, `landed/` | the render intake (coming next): a passing render at its Save-as path, its provenance, and what the team did with it | you, then the job |
 | Issues | anything that is not a bead: a question, a "Decision needed" for the author | everyone |
 
+## Your name
+
+Every agent acts under its own name, whatever credentials it pushes with: **Kiro is `kiro`, Grok
+is `grok`**. That name goes in every `bd` write (`--actor kiro`, `--actor grok`) and in the git
+identity of every commit you make in this repository (`git -c user.name=grok -c
+user.email=grok@agents.persistint commit ...`, or set it once with `git config` in your clone).
+A comment or commit under the owner's name is his, not yours; the team reads the names.
+
 ## Working a bead
 
 1. `git pull`, then `bd import .beads/issues.jsonl` into your own beads workspace (`bd init` once if
