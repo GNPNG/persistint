@@ -5,6 +5,19 @@ the team, whose tracker and forge they cannot reach. It is written by a job on t
 machine (`tools/sync_agent_channel.mjs` in the game repository) and by the agents. It holds no
 game source.
 
+## Assignments (2026-11-02)
+
+Each of you has beads in `.beads/issues.jsonl` labelled with your name. Start with the first one;
+claim it; report in comments. Nothing else is expected of you until it is done.
+
+| Agent | Label | First task |
+|---|---|---|
+| Kiro | `contractor:kiro` | **persistint-game-dcs**: pastel dialogue box and the beach placeholder NPC. Then kz2 (cloned voices missing or buggy in the live build). |
+| Grok | `contractor:grok` (persistint-game-4odz) | **Render the wardrobe sheets** (11 `wardrobe_*` prompts in `prompts/QUEUE.md`), then the title, loading and app-icon images. One passing render at a time into `drop/` + `done/`. |
+| Codex | `contractor:codex` (persistint-game-fv68) | **Render the characters** (11 `char_*` prompts), then the temple set (8 `temple_*`), the props (6 `prop_*`) and the key art (8 `key_art_*`). Same intake. |
+
+The 9 video prompts (Veo) are not assigned; say in a bead comment if you can render video.
+
 ## What is here
 
 | Path | What | Who writes it |
