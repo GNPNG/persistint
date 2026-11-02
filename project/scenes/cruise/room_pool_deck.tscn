@@ -1,0 +1,37 @@
+[gd_scene format=4]
+
+[ext_resource type="Script" path="res://scripts/map.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/cruise/room_pool_deck.png" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://scenes/maps/door.tscn" id="4"]
+
+[sub_resource type="NavigationPolygon" id="navpoly"]
+vertices = PackedVector2Array(24, 70, 616, 70, 616, 376, 24, 376)
+polygons = [PackedInt32Array(0, 1, 2, 3)]
+outlines = [PackedVector2Array(24, 70, 616, 70, 616, 376, 24, 376)]
+
+[node name="PoolDeck" type="Node2D"]
+y_sort_enabled = true
+script = ExtResource("1")
+map_size = Vector2(640, 400)
+
+[node name="Background" type="Sprite2D" parent="."]
+position = Vector2(320, 200)
+z_index = -10
+texture = ExtResource("2")
+
+[node name="Nav" type="NavigationRegion2D" parent="."]
+navigation_polygon = SubResource("navpoly")
+
+[node name="spawn_default" type="Marker2D" parent="."]
+position = Vector2(320, 340)
+
+[node name="Player" parent="." instance=ExtResource("3")]
+position = Vector2(320, 340)
+
+[node name="ShipDoor" parent="." instance=ExtResource("4")]
+position = Vector2(320, 364)
+target_scene = "res://scenes/cruise/ship_section.tscn"
+target_spawn = "spawn_from_pool_deck"
+exit_label = "Back to the ship"
+

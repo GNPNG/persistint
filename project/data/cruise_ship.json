@@ -1,0 +1,26 @@
+{
+	"_note": "The cruise ship as a walkable place (bd ue6, mandate eatw; author 2026-11-02: 'like a cross-section, like in The Life Aquatic ... walk from her cabin to the different decks and rooms in a vertical slice, but zoom to the overhead on different decks, or in the different rooms'; 'a disco dance club, pool deck, hot tub, bar area. all that'). tools/gen_cruise_ship.mjs builds scenes/cruise/ship_section.tscn (the side-view slice: one walk strip per deck, stairs between them, a door per room) and one overhead scene per room with a 'floor' (scenes/cruise/room_<id>.tscn, a door back to the slice at spawn_from_<id>), plus placeholder art in assets/cruise/ until the renders land (prompts/image/cruise/). A room with 'scene' set opens that existing scene instead (the minigames). Decks top to bottom; x is along the ship (bow left), rooms are placed by 'x' on their deck's walk strip. 'size' is the world px of the slice; each deck is 'deck_h' tall.",
+	"size": [960, 540],
+	"deck_h": 130,
+	"top": 60,
+	"stairs_x": 480,
+	"music": "cruise_lounge",
+	"decks": [
+		{"id": "sun", "title": "Sun Deck", "rooms": [
+			{"id": "pool_deck", "title": "Pool Deck", "x": 170, "floor": [640, 400], "what": "the pool, the loungers and the poolside party"},
+			{"id": "hot_tub", "title": "Hot Tub", "x": 330, "floor": [420, 320], "what": "the hot tub by the rail"},
+			{"id": "bar", "title": "Bar", "x": 700, "floor": [520, 360], "what": "the open-air bar"}
+		]},
+		{"id": "promenade", "title": "Promenade Deck", "rooms": [
+			{"id": "disco", "title": "Disco Dance Club", "x": 150, "floor": [560, 400], "what": "the dance floor and the DJ booth"},
+			{"id": "dining", "title": "Dining Room", "x": 330, "floor": [600, 400], "what": "tables, the buffet"},
+			{"id": "interview", "title": "Interview Room", "x": 620, "scene": "res://scenes/minigames/interview.tscn", "what": "The Interview"},
+			{"id": "runway", "title": "Runway", "x": 740, "scene": "res://scenes/minigames/hottest_chains.tscn", "what": "Hottest of the HOT"},
+			{"id": "comedy", "title": "Comedy Stage", "x": 860, "scene": "res://scenes/minigames/next_top_comic.tscn", "what": "America's Next Top Comic"}
+		]},
+		{"id": "cabins", "title": "Cabin Deck", "rooms": [
+			{"id": "cabin", "title": "Her Cabin", "x": 120, "floor": [360, 280], "start": true, "what": "the player's cabin: the bed, the mirror, the wardrobe"},
+			{"id": "corridor", "title": "Corridor", "x": 400, "floor": [900, 220], "what": "the cabin corridor"}
+		]}
+	]
+}

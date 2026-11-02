@@ -68,7 +68,7 @@ function prompts() {
 
 function toolMentions() {
   const out = new Map();
-  const tools = fs.readdirSync(path.join(ROOT, "tools")).filter((n) => /\.(py|sh)$/.test(n) && isFile(path.join(ROOT, "tools", n)))
+  const tools = fs.readdirSync(path.join(ROOT, "tools")).filter((n) => /\.(py|sh|mjs)$/.test(n) && !/^test_/.test(n) && isFile(path.join(ROOT, "tools", n)))
     .map((n) => `tools/${n}`).sort(cmpParts);
   for (const t of tools) {
     if (t === "tools/gen_sources.py") continue;
