@@ -5,7 +5,7 @@ All notable changes, newest first. The format follows
 [Semantic Versioning](https://semver.org/). `tools/version.py bump` turns the Unreleased section
 into the new version's heading; the Updates page on the site shows the released versions.
 
-## v0.3.9 — 2026-11-02
+## v0.4.0 — 2026-11-02
 
 ### Added
 
