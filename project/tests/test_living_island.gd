@@ -8,6 +8,11 @@ extends SceneTree
 ##   e) on the Festival of the Fourteenth the cast gathers in the Great Hall
 ##   f) a phase change while a map is loaded moves the cast (walk or fade, no flags set)
 ##   g) every spot is reachable from spawn_default over the map's nav
+##   h) the morning notice shows the day's cohort signals once a day; the notice board reopens
+##      them; a day with no signal shows nothing
+##   i) ask around: while the Offering is accepted but not delivered, a villager's bark says
+##      where the Priestess is when she is off this map
+##   j) the journal lists where the four Covenant NPCs are
 ## Run: godot --headless --path project -s tests/test_living_island.gd
 
 const VILLAGE := "res://scenes/maps/village.tscn"
@@ -40,6 +45,9 @@ func _run() -> void:
 	await _village()
 	await _temple()
 	await _great_hall()
+	await _notice()
+	await _ask_around()
+	await _journal()
 
 	_ws.reset()
 	if had_save:
@@ -143,7 +151,7 @@ func _village() -> void:
 	var from: Vector2 = m.get_node("spawn_default").position
 	var region: NavigationRegion2D = m.get_node("Nav")
 	for n in ["spot_well", "spot_shore", "spot_garden", "spot_greenhouse", "spot_compound",
-			"GreatHallDoor", "spawn_from_great_hall"]:
+			"GreatHallDoor", "spawn_from_great_hall", "NoticeBoard"]:
 		_check(_reaches(region, from, m.get_node(n).position), "village: walkable route from spawn to " + n)
 	# (f) A phase change while the map is loaded: who must go leaves on foot, who must be
 	# elsewhere on the map walks over; no flag is set for a schedule leave.
@@ -223,6 +231,118 @@ func _great_hall() -> void:
 	for n in ["spot_great_hall_priestess", "spot_great_hall_initiate", "spot_great_hall_barren", "ExitDoor", "FestivalStage"]:
 		_check(_reaches(region, from, m.get_node(n).position), "great_hall: walkable route from spawn to " + n)
 	m.queue_free()
+	await process_frame
+
+
+## (h) The morning notice: the day's cohort signals once a day on the island maps, again from
+## the village notice board; a day with no signal shows nothing.
+func _notice() -> void:
+	var texts := {}
+	for entry: Dictionary in _cal.get("cohort_signals", []):
+		texts[str(entry.get("id", ""))] = str(entry.get("text", ""))
+	var want_by_day := {1: ["gate_opens"], 13: ["fourteenth_eve"], 14: ["festival_of_the_fourteenth"], 22: ["sacred_weeks"], 12: []}
+	for day: int in [1, 13, 14, 22, 12]:
+		_ws.reset()
+		_clock.day = day
+		_clock.phase_index = 0
+		var m := await _load(VILLAGE)
+		var notice := m.get_node_or_null("HUD/CohortNotice") as Control
+		_check(notice != null, "the village HUD has the cohort notice")
+		if notice == null:
+			m.queue_free()
+			await process_frame
+			continue
+		var body := notice.find_child("Body", true, false) as Label
+		var want: Array = want_by_day[day]
+		if want.is_empty():
+			_check(not notice.visible, "day %d: no signal, no morning notice" % day)
+			_check(not _ws.has_flag("_notice_day"), "day %d: nothing shown, nothing marked seen" % day)
+		else:
+			_check(notice.visible, "day %d: the morning notice shows" % day)
+			for id: String in want:
+				_check(body != null and texts.get(id, "") != "" and body.text.contains(texts[id]),
+					"day %d: the notice carries the %s signal" % [day, id])
+			_check(int(_ws.get_flag("_notice_day", -1)) == day, "day %d: the day is marked seen" % day)
+			# Once a day: a map loaded again the same day shows nothing.
+			notice.shut()
+			m.queue_free()
+			await process_frame
+			m = await _load(VILLAGE)
+			notice = m.get_node_or_null("HUD/CohortNotice") as Control
+			_check(notice != null and not notice.visible, "day %d: the notice shows once a day" % day)
+			if day == 1:
+				# The notice board reopens today's signals, with the day/phase line.
+				var board := m.get_node_or_null("NoticeBoard")
+				_check(board != null, "the village has the NoticeBoard by the spawn plaza")
+				board.interact()
+				_check(notice.visible, "the notice board reopens the notice")
+				var status := notice.find_child("Status", true, false) as Label
+				_check(status != null and status.visible and status.text == _clock.status_text(),
+					"the board's notice carries the day and phase")
+				body = notice.find_child("Body", true, false) as Label
+				_check(body != null and body.text.contains(texts["gate_opens"]), "the board shows today's signal again")
+		m.queue_free()
+		await process_frame
+
+
+## (i) Ask around: while the Offering is accepted but not delivered and the Priestess is off
+## this map, a villager's bark says where she is; delivered, or her on this map, the usual bark.
+func _ask_around() -> void:
+	_ws.reset()
+	_ws.set_flag("quest_offering_accepted", true)
+	_clock.day = 2
+	_clock.phase_index = 0  # morning: the Priestess inspects initiates in the temple
+	_check(_clock.sought_npc() == "priestess", "the seeking rule points at the Priestess")
+	var m := await _load(VILLAGE)
+	var barren: Node = m.get_node("Barren")
+	var temple_name := str((_clock.place("temple") as Dictionary).get("name", "the temple"))
+	var hint: String = _clock.ask_around_hint("priestess", VILLAGE)
+	_check(hint.contains(temple_name), "the hint names the temple (%s)" % hint)
+	_check(barren.current_bark() == hint, "morning: a Barren's walk-by bark is the hint")
+	_check(m.get_node("Priestess").current_bark() != hint, "the sought one's own bark is not the hint")
+	# Delivered: nobody is sought, the usual bark is back.
+	_ws.set_flag("offering_delivered", true)
+	_check(_clock.sought_npc() == "", "delivered: nobody is sought")
+	_check(barren.current_bark() != hint, "delivered: the usual bark is back")
+	# Sought again, but at midday she is on this map: no hint.
+	_ws.set_flag("offering_delivered", false)
+	_clock.phase_index = 1  # midday: the Priestess is in the village on doctrinal rounds
+	_check(_clock.sought_npc() == "priestess", "delivered unset: the Priestess is sought again")
+	var here_hint: String = _clock.ask_around_hint("priestess", VILLAGE)
+	_check(barren.current_bark() != hint and barren.current_bark() != here_hint,
+		"midday: the Priestess is on this map, no hint")
+	m.queue_free()
+	await process_frame
+
+
+## (j) The journal lists where the four Covenant NPCs are (read-only).
+func _journal() -> void:
+	_ws.reset()
+	_clock.day = 2
+	_clock.phase_index = 0  # morning: the Priestess inspects initiates in the temple
+	var cast := root.get_node("/root/Cast")
+	# Loaded at run time, not preloaded: a -s main script's compile (and its preloads') cannot
+	# resolve the autoload singletons (WorldState, Cast) that the journal script names.
+	var journal: CanvasLayer = (load("res://scripts/ui/journal.gd") as GDScript).new()
+	root.add_child(journal)
+	await process_frame
+	var texts: Array[String] = []
+	for l in journal.find_children("*", "Label", true, false):
+		texts.append((l as Label).text)
+	_check(texts.has("Where is everyone"), "the journal has the Where is everyone heading")
+	var priestess_line := ""
+	for npc_id: String in ["priestess", "initiate", "drone", "barren"]:
+		var prefix := "    %s: " % cast.full(npc_id)
+		var found := ""
+		for t: String in texts:
+			if t.begins_with(prefix):
+				found = t
+		_check(found != "", "the journal says where %s is" % cast.full(npc_id))
+		if npc_id == "priestess":
+			priestess_line = found
+	var temple_name := str((_clock.place("temple") as Dictionary).get("name", "the temple"))
+	_check(priestess_line.contains(temple_name), "morning: the journal puts the Priestess in the temple")
+	journal.queue_free()
 	await process_frame
 
 

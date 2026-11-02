@@ -14,8 +14,9 @@ const CALENDAR_PATH := "res://data/calendar.json"
 var day := 1
 var phase_index := 0
 var _elapsed := 0.0
-## data/calendar.json: "cohort_signals" (Priestess cohort signals) and "schedules"
-## (per-NPC locations); entries carry a "when" condition block, see matches_when().
+## data/calendar.json: "cohort_signals" (Priestess cohort signals), "schedules" (per-NPC
+## locations), "places", "schedule_hold" and "ask_around"; schedule and signal entries carry a
+## "when" condition block, see matches_when().
 var calendar_data: Dictionary = {}
 
 
@@ -177,6 +178,60 @@ func whereabouts(npc_id: String) -> Dictionary:
 	if str(entry.get("location", "")) == location:
 		activity = str(entry.get("activity", ""))
 	return {"location": location, "activity": activity, "place": place(location)}
+
+
+## The npc_id the ask-around "seeking" rules (calendar.json "ask_around") currently point at
+## ("" for none): the first rule whose "if" holds. In an "if", true asks for the flag set and
+## false for it not set (WorldState.matches would ask for a flag that is literally false, and
+## offering_delivered is only ever set true); any other value must equal the flag exactly.
+func sought_npc() -> String:
+	for rule: Dictionary in calendar_data.get("ask_around", {}).get("seeking", []):
+		var ok := true
+		for flag: String in rule.get("if", {}):
+			var want: Variant = rule["if"][flag]
+			if want is bool:
+				if WorldState.has_flag(flag) != want:
+					ok = false
+					break
+			elif WorldState.get_flag(flag) != want:
+				ok = false
+				break
+		if ok:
+			return str(rule.get("npc", ""))
+	return ""
+
+
+## The ask-around hint for a sought NPC, from whereabouts(): the calendar.json "ask_around"
+## template for the kind of place she is in, filled with her name (Cast), her place's "where"
+## and her activity. The kind is "here" (this_scene is her map), "elsewhere" (another map has
+## her), "away" (her place has no map) or "asleep" (the dormitory's away). "" when the data has
+## no ask_around block, no place for her, or no template for the kind.
+func ask_around_hint(npc_id: String, this_scene: String) -> String:
+	var templates: Dictionary = calendar_data.get("ask_around", {}).get("templates", {})
+	var w := whereabouts(npc_id)
+	var place: Dictionary = w.get("place", {})
+	if place.is_empty():
+		return ""
+	var scene := scene_of(place)
+	var kind := "elsewhere"
+	if scene != "" and scene == this_scene:
+		kind = "here"
+	elif scene == "":
+		kind = "asleep" if str(w.get("location", "")) == "dormitory" else "away"
+	var entry: Variant = templates.get(kind)
+	var text := ""
+	if entry is Dictionary:
+		text = str(entry.get("text", ""))
+	elif entry is String:
+		text = entry
+	if text == "":
+		return ""
+	var activity := str(w.get("activity", ""))
+	if activity == "":
+		text = text.replace(", {activity}", "").replace("{activity}", "").replace("  ", " ").strip_edges()
+	else:
+		text = text.replace("{activity}", activity)
+	return text.replace("{name}", Cast.full(npc_id)).replace("{where}", str(place.get("where", "")))
 
 
 func status_text() -> String:
