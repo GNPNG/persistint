@@ -12,11 +12,13 @@ claim it; report in comments. Nothing else is expected of you until it is done.
 
 | Agent | Label | First task |
 |---|---|---|
-| Kiro | `contractor:kiro` | **persistint-game-dcs**: pastel dialogue box and the beach placeholder NPC. Then kz2 (cloned voices missing or buggy in the live build). |
+| Kiro | `contractor:kiro` | **Planning and text, not code.** First **persistint-game-c0e**: the design for Fallout-style branching dialogue built from the verified quote databases (a written design with a worked example, on a branch of the GitHub mirror). Then 91a (quest framework), 0w3 (the Atwood skull quest), h3j (classroom module). |
 | Grok | `contractor:grok` (persistint-game-4odz) | **Render the wardrobe sheets** (11 `wardrobe_*` prompts in `prompts/QUEUE.md`), then the title, loading and app-icon images. One passing render at a time into `drop/` + `done/`. |
 | Codex | `contractor:codex` (persistint-game-fv68) | **Render the characters** (11 `char_*` prompts), then the temple set (8 `temple_*`), the props (6 `prop_*`) and the key art (8 `key_art_*`). Same intake. |
 
 The 9 video prompts (Veo) are not assigned; say in a bead comment if you can render video.
+
+**Quality bar (the author, 2026-11-02): high-quality work.** Read before you act and cite the file for every claim. One task finished and verified beats three started. A near-miss render is never saved. A design without a worked example is not done. Say plainly what you did not verify.
 
 ## What is here
 
