@@ -75,6 +75,11 @@ func _run() -> void:
 	_check(not fb.is_unlocked("landing"), "Landing still locked with a piece missing")
 	_check(fb.missing("landing") == [needs[-1]], "Landing names the one piece still missing")
 	_check(fb.enter("landing", WRECK).is_empty(), "a locked flashback cannot be entered")
+	_check(fb.enter("landing", WRECK, "spawn_default", true).get("scene") == LANDING and fb.active().get("id") == "landing",
+		"forced (the playtest Flashbacks menu), a locked one is entered")
+	fb.leave(WRECK)
+	_check(fb.active().is_empty() and not fb.is_unlocked("landing"), "and leaving it recovers nothing")
+	_check(fb.enter("nosuch", WRECK, "spawn_default", true).is_empty(), "an unknown id is refused even forced")
 
 	# Unlock on pickup.
 	var pickup: Node = load(PICKUP).instantiate()

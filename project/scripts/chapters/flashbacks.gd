@@ -114,9 +114,11 @@ static func nearest_spawn(scene_root: Node) -> String:
 
 
 ## Starts flashback `id` from `origin_scene` (where to come back to). Archives and clears the
-## player flags, sets the chapter, and returns the entry ({scene, spawn}); {} if locked.
-static func enter(id: String, origin_scene := "", origin_spawn := "spawn_default") -> Dictionary:
-	if not is_unlocked(id) or not active().is_empty():
+## player flags, sets the chapter, and returns the entry ({scene, spawn}); {} if locked, unknown
+## or one is already playing. `force` enters a locked one (the playtest Flashbacks menu, bd e8dh)
+## without recovering its pieces.
+static func enter(id: String, origin_scene := "", origin_spawn := "spawn_default", force := false) -> Dictionary:
+	if flashback(id).is_empty() or (not force and not is_unlocked(id)) or not active().is_empty():
 		return {}
 	var ws := _ws()
 	var origin := {"scene": origin_scene, "spawn": origin_spawn}

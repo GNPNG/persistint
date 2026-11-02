@@ -8,6 +8,7 @@ const MAIN_MENU := "res://scenes/ui/main_menu.tscn"
 const VOICE_REVIEW := "res://scenes/playtest/voice_review.tscn"
 const MainMenu := preload("res://scripts/ui/main_menu.gd")  # its static fullscreen helpers
 const TextDownload := preload("res://scripts/util/text_download.gd")
+const Flashbacks := preload("res://scripts/chapters/flashbacks.gd")
 
 var _sliders: Dictionary = {}
 
@@ -206,7 +207,8 @@ func import_from_text(text: String) -> void:
 
 
 ## --- Playtest (bd dhn2): a row that shows only in playtest mode (the Playtest autoload). Voice
-## review opens the voice review; Export playtest hands its verdicts back as one file, the way
+## review opens the voice review; Flashbacks (bd e8dh) is a menu of the cruise episodes, each
+## played from here, locked or not; Export playtest hands its verdicts back as one file, the way
 ## Export save hands back the save; Playtest off turns the mode off. It sits above the save status
 ## line, which says what happened for both rows. ---
 
@@ -229,6 +231,17 @@ func _add_playtest_row(rows: VBoxContainer) -> void:
 		b.text = pair[1]
 		b.pressed.connect(pair[2])
 		_playtest_row.add_child(b)
+	var jump := MenuButton.new()
+	jump.name = "FlashbacksButton"
+	jump.text = "Flashbacks"
+	jump.flat = false
+	var menu := jump.get_popup()
+	for f: Dictionary in Flashbacks.all():
+		menu.add_item(String(f.get("title", f["id"])))
+		menu.set_item_metadata(menu.item_count - 1, f["id"])
+	menu.index_pressed.connect(func(i: int) -> void: play_flashback(String(menu.get_item_metadata(i))))
+	_playtest_row.add_child(jump)
+	_playtest_row.move_child(jump, 2)  # after Voice review: the two review tools first
 	rows.add_child(_playtest_row)
 	rows.move_child(_playtest_row, _save_status.get_index())
 
@@ -253,6 +266,28 @@ func playtest_off() -> void:
 func open_voice_review() -> void:
 	AudioSettings.close()
 	get_tree().call_deferred("change_scene_to_file", VOICE_REVIEW)
+
+
+## Flashbacks (bd e8dh): starts a cruise episode from here, locked or not (its pieces are not
+## recovered, so the journal is untouched), the way the journal plays an unlocked one; the episode
+## comes back to this scene afterwards. False, with the status line saying so, when one is already
+## playing.
+func start_flashback(id: String) -> bool:
+	var here := get_tree().current_scene
+	var origin := here.scene_file_path if here else ""
+	var title := String(Flashbacks.flashback(id).get("title", id))
+	if Flashbacks.enter(id, origin, Flashbacks.nearest_spawn(here), true).is_empty():
+		_save_status.text = "Couldn't start %s: one is already playing." % title
+		return false
+	_save_status.text = "Playing %s" % title
+	return true
+
+
+## The menu's pick: the episode's intro card, closing the settings (ending the pause, in play).
+func play_flashback(id: String) -> void:
+	if start_flashback(id):
+		AudioSettings.close()
+		get_tree().call_deferred("change_scene_to_file", Flashbacks.CARD_SCENE)
 
 
 func export_playtest() -> void:

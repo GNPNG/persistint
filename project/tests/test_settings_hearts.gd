@@ -140,6 +140,23 @@ func _run() -> void:
 	for name: String in ["VoiceReviewButton", "ExportPlaytestButton", "PlaytestOffButton"]:
 		_check(screen.playtest_row().get_node_or_null(name) is Button, "the Playtest row has %s" % name)
 
+	# --- Flashbacks (bd e8dh): a menu of every episode; a pick plays it, locked or not. ---
+	var fb: Script = load("res://scripts/chapters/flashbacks.gd")
+	var jump: Control = screen.playtest_row().get_node_or_null("FlashbacksButton")
+	var titles: Array = fb.all().map(func(f: Dictionary) -> String: return String(f["title"]))
+	var items: Array = []
+	if jump is MenuButton:
+		for i in jump.get_popup().item_count:
+			items.append(jump.get_popup().get_item_text(i))
+	_check(jump is MenuButton and items == titles, "the Playtest row has a Flashbacks menu of every episode (%s)" % [items])
+	var ws: Node = root.get_node("/root/WorldState")
+	_check(not fb.is_unlocked("next_top_comic") and screen.start_flashback("next_top_comic") and fb.active().get("id") == "next_top_comic"
+		and ws.get_flag("_location", {}).get("scene") == fb.CARD_SCENE,
+		"a pick starts a locked episode from the settings, at its intro card (%s)" % screen.save_status())
+	_check(not screen.start_flashback("landing") and screen.save_status().begins_with("Couldn't start"), "a second pick while one plays is refused, and the status line says so")
+	fb.leave(MENU)
+	_check(fb.active().is_empty() and not fb.is_unlocked("next_top_comic"), "leaving it restores the state and granted nothing")
+
 	# --- Kept across a reload, in the settings file beside the other settings. ---
 	_check(_saved_on() == true, "the mode is saved ([playtest] enabled = true)")
 	var cfg := ConfigFile.new()
