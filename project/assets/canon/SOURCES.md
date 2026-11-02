@@ -26,23 +26,36 @@ folder.
 Not recorded in the repository, for the author to add: the Gemini model and the prompt behind
 each sheet, and how the world-building overview was made.
 
+## Layered sheets
+
+A character drawn as separate layers on one sheet (her own bald body first, then her hair, clothes and
+shoes), keyed to white in `project/assets/sheets/` (staging, not shipped); `project/data/paperdoll_parts.json`
+names the sheet under "sheets" and each cut in the Sprites table names it and its crop.
+
+| Sheet | Made with | Prompt | Keyed copy the cutter reads |
+|---|---|---|---|
+| `daughter` | Codex image_gen (render commit dd7de65, bd uowd) | none (requested on a bead); drop `prompts/image/characters/assets/char_daughter_layers.png` | `project/assets/sheets/characters/char_daughter_layers_white.png` |
+
 ## Sprites
 
 | Sprite | Tool | Sheet | Crop (WxH+X+Y on the sheet) |
 |---|---|---|---|
 | `acc_bow.png` | `tools/cut_paperdoll.py` | `Gemini_Generated_Image_ktfw` | 209x141+664+594 |
 | `body_base.png` | `tools/cut_paperdoll.py` | `Gemini_Generated_Image_ktfw` | 402x698+97+300 |
+| `body_daughter.png` | `tools/cut_paperdoll.py` | `daughter` | 484x795+38+82 |
 | `deco_flowers.png` | `tools/gen_island_deco.py` | (drawn in code) | - |
 | `deco_heart.png` | `tools/cut_island_props.py` | `PERSISTINT` | 46x46+61+96 |
 | `deco_sparkle.png` | `tools/cut_island_props.py` | `PERSISTINT` | 46x50+1742+175 |
 | `deco_tree_a.png` | `tools/gen_island_deco.py` | (drawn in code) | - |
 | `deco_tree_b.png` | `tools/gen_island_deco.py` | (drawn in code) | - |
 | `deco_tree_c.png` | `tools/gen_island_deco.py` | (drawn in code) | - |
+| `dress_daughter.png` | `tools/cut_paperdoll.py` | `daughter` | 430x319+1179+458 |
 | `dress_robe.png` | `tools/cut_paperdoll.py` | `Gemini_Generated_Image_ktfw` | 534x400+1530+600 |
 | `dress_uniform.png` | `tools/cut_paperdoll.py` | `Gemini_Generated_Image_ktfw` | 309x371+980+628 |
 | `dress_white.png` | `tools/cut_paperdoll.py` | `Gemini_Generated_Image_ktfw` | 409x432+2105+569 |
 | `hair_braids.png` | `tools/cut_paperdoll.py` | `Gemini_Generated_Image_ktfw` | 534x512+1530+99 |
 | `hair_crown.png` | `tools/cut_paperdoll.py` | `Gemini_Generated_Image_ktfw` | 402x511+1095+81 |
+| `hair_daughter.png` | `tools/cut_paperdoll.py` | `daughter` | 681x515+512+61 |
 | `hair_pigtails.png` | `tools/cut_paperdoll.py` | `Gemini_Generated_Image_ktfw` | 379x419+595+89 |
 | `hair_short.png` | `tools/cut_paperdoll.py` | `Gemini_Generated_Image_ktfw` | 423x374+2199+90 |
 | `npc_barren.png` | `tools/cut_canon_sprites.sh` | `Gemini_Generated_Image_4bzs` | copy of npc_barren_front |
@@ -78,6 +91,7 @@ each sheet, and how the world-building overview was made.
 | `prop_sign_b.png` | `tools/cut_island_props.py` | `Gemini_Generated_Image_i7kl` | 400x520+2230+910 |
 | `prop_skull_altar.png` | `tools/cut_island_props.py` | `PERSISTINT` | 230x230+1040+1100 |
 | `prop_tag_x.png` | `tools/cut_island_props.py` | `Gemini_Generated_Image_481b` | 520x680+140+760 |
+| `shoes_daughter.png` | `tools/cut_paperdoll.py` | `daughter` | 257x109+1267+777 |
 
 `tools/gen_island_deco.py` draws its trees and flowers from code (palette from dev/STYLE.md, no
 randomness, no model). `npc_<caste>.png` is the front view, copied by
