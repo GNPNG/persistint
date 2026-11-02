@@ -22,8 +22,8 @@ truth, and the asset land pipeline the team already has does the merging.
 
 ## 1. The repository
 
-- `gnomatix/persistint-agents`, private, in the gnomatix organisation (where the Claude GitHub
-  App is installed). It holds no game source: the files below, and the issues.
+- `GNPNG/persistint-agents`, private, in the GNPNG organisation, where the Kiro and Grok accounts
+  already are (the Claude GitHub App must be installed there too for cloud sessions). It holds no game source: the files below, and the issues.
 - Collaborators with write access: the author, the Kiro and Grok accounts, and a `cc-srv`
   machine account for srv. Settings stay with the author. Issues on; wiki, Discussions and
   Actions off (nothing runs in the repository; srv does the work).
