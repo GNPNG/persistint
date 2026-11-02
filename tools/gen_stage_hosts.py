@@ -9,12 +9,12 @@ each figure, scripts/minigames/stage_figure.gd); the art never depicts a real pe
 body turnaround's front view (the same canon base the Florida people stand on, tools/
 gen_florida_cast.py, which supplies the drawing kit) with plain made-up hair and a show outfit in
 the cruise palette, no likeness intended or attempted. A role, not a person:
-  host_talk.png    the talk-show host: long brown hair, lavender dress with a heart brooch,
+  host_talk.png    the talk-show host: Black, long dark hair, lavender dress with a heart brooch,
                    a cue card in one hand
   host_emcee.png   the emcee who introduces every show: a chestnut bob with bangs, butter dress
                    with a mint sash, a microphone
   host_comic.png   the comedy show's host: dark hair in a high ponytail, mint dress, a microphone
-  host_runway.png  the fashion show's host: long waves, a pink gown with a gold belt, a scorecard
+  host_runway.png  the fashion show's host: Black, long dark waves, a pink gown with a gold belt, a scorecard
 Outputs (project/assets/ui/stage/), each a 4-frame idle sheet, one row: rest, breath (the figure
 one world px lower at the top), rest, blink. Frame 320x520 px: the 32x52 world-px figure frame at
 10 px per world px (the figure is shown about 110 px tall on a 640x360 stage, so about 4.7x),
@@ -27,7 +27,8 @@ from PIL import Image
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))  # -I leaves tools/ off the path
 import florida_draw as fd  # noqa: E402
-from gen_florida_cast import INK, Person, a_dress, hair_cap  # noqa: E402
+from gen_florida_cast import BASE, BW, INK, Person, ViewPen, a_dress, fx, hair_cap, limb_layer, skin_mask  # noqa: E402
+import numpy as np  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "project/assets/ui/stage"
@@ -40,8 +41,58 @@ def mic(p, x, y):
     p.L([(x - 10, y - 8), (x + 6, y - 8)], fd.mix("#d8d0e6", INK, 0.3), 2)
 
 
+def retone(base, skin):
+    """The canon body with its skin (and the skin's shading) moved to another tone: every skin
+    pixel is scaled channel by channel by target / canon-skin, so highlights and shadows keep
+    their relation. The outline, eyes, blush and clothes are untouched."""
+    a = np.asarray(base).astype(float)
+    mask = skin_mask(base)
+    canon = np.array([int(fd.SKIN[i:i + 2], 16) for i in (1, 3, 5)], dtype=float)
+    target = np.array([int(skin[i:i + 2], 16) for i in (1, 3, 5)], dtype=float)
+    a[mask, :3] = np.clip(a[mask, :3] * (target / canon), 0, 255)
+    return Image.fromarray(a.astype("uint8"), "RGBA")
+
+
 class Host(Person):
     HAIR, HI, DRESS = fd.HAIR_BROWN, "#ffffff", "#c9b8f2"
+    SKIN = None  # a hex tone for the body's skin; None keeps the canon body's
+
+    def base(self, v):
+        return retone(BASE[v], self.SKIN) if self.SKIN else BASE[v]
+
+    def render(self, v):
+        # Person.render with the host's own body (gen_florida_cast.Person.render otherwise).
+        W, H = round(self.FW * self.F), round(self.FH * self.F)
+        base = self.base(v)
+        ox = (W - base.width) / 2
+        oy = H - self.F - base.height
+        im = Image.new("RGBA", (W, H))
+        p = ViewPen(im, v, ox, oy)
+        self.behind(p, v)
+        im.alpha_composite(base, (round(ox), round(oy)))
+        self.clothes(p, v)
+        for box in self.arms(v):
+            x0, y0, x1, y1 = box
+            if v == "side":
+                x0, x1 = BW[v] - x1, BW[v] - x0
+            im.alpha_composite(limb_layer(base, (x0, y0, x1, y1)), (round(ox), round(oy)))
+        self.sleeves(p, v)
+        self.hair(p, v)
+        self.front_props(p, v)
+        return im, (ox, oy)
+
+    def blink(self, im, v, origin):
+        out = im.copy()
+        ox, oy = origin
+        base = self.base(v)
+        skin = base.getpixel((BW[v] // 2 if v == "front" else fx(v, 70), 112))
+        from gen_florida_cast import Pen, eyes
+        p = Pen(out, 1, fd.CANON_INK, ox, oy)
+        for x0, y0, x1, y1 in eyes(base, v):
+            cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
+            p.ell(cx, cy, (x1 - x0) / 2 + 3, (y1 - y0) / 2 + 3, "#%02x%02x%02x" % skin[:3], 0)
+            p.arc(cx, cy - 2, (x1 - x0) / 2 + 2, 8, 20, 160, fd.CANON_INK, 6)
+        return out
 
     def front(self):
         im, origin = self.render("front")
@@ -57,7 +108,8 @@ class Host(Person):
 
 class TalkHost(Host):
     name = "host_talk"
-    HAIR = "#7a5440"
+    HAIR = "#3a2620"
+    SKIN = "#8a5a3c"  # the talk-show host is Black (author, 2026-11-02)
     HI = fd.mix("#7a5440", "#ffffff", 0.4)
     DRESS = "#c9b8f2"
 
@@ -128,8 +180,9 @@ class ComicHost(Host):
 
 class RunwayHost(Host):
     name = "host_runway"
-    HAIR = "#6a4636"
-    HI = fd.mix("#6a4636", "#ffffff", 0.4)
+    HAIR = "#3a2620"
+    HI = fd.mix("#3a2620", "#ffffff", 0.4)
+    SKIN = "#8a5a3c"  # the runway host is Black (author, 2026-11-02)
     DRESS = "#ffb3c8"
 
     def behind(self, p, v):
