@@ -41,6 +41,7 @@
 [ext_resource type="Script" path="res://scripts/mirror.gd" id="39_fc6uv"]
 [ext_resource type="Texture2D" path="res://assets/paper/mirror_edge2_white.png" id="40_ll8i7"]
 [ext_resource type="Texture2D" path="res://assets/paper/mirror_shadow_soft.png" id="41_5w0jm"]
+[ext_resource type="Script" path="res://scripts/placeholder_prop.gd" id="42_phprop"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_x3m8m"]
 radius = 14.0
@@ -993,6 +994,7 @@ npc_id = "initiate"
 sprite_texture = "npc_initiate"
 dialogue_path = "res://dialogue/offering.dialogue"
 voice_pitch = 1.25
+scheduled = true
 
 [node name="Drone" type="Area2D" parent="." unique_id=377724044 instance=ExtResource("35_jeck0")]
 position = Vector2(304, 520)
@@ -1001,6 +1003,7 @@ npc_id = "drone"
 caste = "drone"
 sprite_texture = "npc_drone"
 voice_pitch = 0.7
+scheduled = true
 
 [node name="Barren" type="Area2D" parent="." unique_id=417552392 instance=ExtResource("35_jeck0")]
 position = Vector2(560, 600)
@@ -1009,6 +1012,7 @@ npc_id = "barren"
 caste = "barren"
 sprite_texture = "npc_barren"
 voice_pitch = 0.9
+scheduled = true
 
 [node name="TempleDoor" type="Area2D" parent="." unique_id=884034778 instance=ExtResource("37_1dqp1")]
 position = Vector2(192, 912)
@@ -1054,6 +1058,55 @@ position = Vector2(1139.2, 752)
 script = ExtResource("38_0n0ky")
 target_scene = "res://scenes/florida/beach.tscn"
 exit_label = "To the Tropical Beach"
+
+[node name="spot_well" type="Marker2D" parent="."]
+position = Vector2(688, 416)
+
+[node name="spot_shore" type="Marker2D" parent="."]
+position = Vector2(592, 808)
+
+[node name="spot_garden" type="Marker2D" parent="."]
+position = Vector2(304, 520)
+
+[node name="spot_greenhouse" type="Marker2D" parent="."]
+position = Vector2(448, 496)
+
+[node name="spot_compound" type="Marker2D" parent="."]
+position = Vector2(400, 496)
+
+[node name="Greenhouse" type="Sprite2D" parent="."]
+position = Vector2(432, 528)
+script = ExtResource("42_phprop")
+art_path = "greenhouse"
+fallback_path = "res://assets/canon/prop_bunker.png"
+height = 44.0
+
+[node name="Well" type="Sprite2D" parent="."]
+position = Vector2(688, 424)
+script = ExtResource("42_phprop")
+art_path = "well"
+fallback_path = "res://assets/canon/prop_seal_o.png"
+height = 28.0
+
+[node name="Priestess" type="Area2D" parent="." instance=ExtResource("35_jeck0")]
+position = Vector2(304, 880)
+script = ExtResource("36_4d6df")
+npc_id = "priestess"
+caste = "priestess"
+sprite_texture = "npc_priestess"
+dialogue_path = "res://dialogue/priestess.dialogue"
+voice_pitch = 0.85
+scheduled = true
+
+[node name="GreatHallDoor" type="Area2D" parent="." instance=ExtResource("37_1dqp1")]
+position = Vector2(748.8, 224)
+script = ExtResource("38_0n0ky")
+target_scene = "res://scenes/maps/great_hall.tscn"
+target_spawn = "spawn_from_village"
+exit_label = "To the Great Hall"
+
+[node name="spawn_from_great_hall" type="Marker2D" parent="."]
+position = Vector2(723.2, 249.6)
 
 [node name="Ground" type="TileMapLayer" parent="." unique_id=1816580329]
 z_index = -10

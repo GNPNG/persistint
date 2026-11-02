@@ -887,6 +887,12 @@ position = Vector2(72, 272)
 [node name="spawn_from_puzzle" type="Marker2D" parent="." unique_id=1463043866]
 position = Vector2(800, 400)
 
+[node name="spot_temple_priestess" type="Marker2D" parent="."]
+position = Vector2(480, 264)
+
+[node name="spot_temple_initiate" type="Marker2D" parent="."]
+position = Vector2(288, 416)
+
 [node name="Player" type="CharacterBody2D" parent="." unique_id=19485720 instance=ExtResource("21_k2y53")]
 position = Vector2(480, 496)
 script = ExtResource("22_luwk4")
@@ -899,6 +905,16 @@ caste = "priestess"
 sprite_texture = "npc_priestess"
 dialogue_path = "res://dialogue/priestess.dialogue"
 voice_pitch = 0.85
+scheduled = true
+
+[node name="Initiate" type="Area2D" parent="." instance=ExtResource("23_cv2ov")]
+position = Vector2(288, 416)
+script = ExtResource("24_6dkda")
+npc_id = "initiate"
+sprite_texture = "npc_initiate"
+dialogue_path = "res://dialogue/offering.dialogue"
+voice_pitch = 1.25
+scheduled = true
 
 [node name="ExitDoor" type="Area2D" parent="." unique_id=1850325154 instance=ExtResource("25_e0dkp")]
 position = Vector2(480, 624)

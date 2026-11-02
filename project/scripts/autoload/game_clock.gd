@@ -136,6 +136,49 @@ func schedule_for(npc_id: String) -> Dictionary:
 	return {}
 
 
+## The places table entry for a schedule location (calendar.json "places"), or {}.
+func place(location: String) -> Dictionary:
+	return calendar_data.get("places", {}).get(location, {})
+
+
+## The scene of a places entry as a String ("" for a place with no map; the data uses null).
+static func scene_of(p: Dictionary) -> String:
+	var scene: Variant = p.get("scene")
+	if scene is String:
+		return scene
+	return ""
+
+
+## Where npc_id is right now per the Calendar of Blood: the location of the first schedule
+## entry whose "when" holds, honouring "schedule_hold": while none of the NPC's hold flags is
+## set she keeps the village (her home spot) whatever the schedule says, so the Initiate waits
+## in the village until the player has answered the Offering. "" when no entry matches:
+## the NPC stays where her scene placed her.
+func location_for(npc_id: String) -> String:
+	var hold: Dictionary = calendar_data.get("schedule_hold", {}).get(npc_id, {})
+	if not hold.is_empty():
+		var held := true
+		for flag: String in hold.get("until_any", []):
+			if WorldState.has_flag(flag):
+				held = false
+				break
+		if held:
+			return "village"
+	return str(schedule_for(npc_id).get("location", ""))
+
+
+## Where npc_id is and what she is doing, for hint text (an ask-around): {"location",
+## "activity", "place"}; place is the calendar.json "places" entry ({} for an unmapped
+## location), activity "" when the (held) location is not what the schedule says.
+func whereabouts(npc_id: String) -> Dictionary:
+	var location := location_for(npc_id)
+	var entry := schedule_for(npc_id)
+	var activity := ""
+	if str(entry.get("location", "")) == location:
+		activity = str(entry.get("activity", ""))
+	return {"location": location, "activity": activity, "place": place(location)}
+
+
 func status_text() -> String:
 	var festival := "  ✿ FESTIVAL ✿" if is_festival() else ""
 	return "Day %d — %s (Cycle %d, day %d/%d)%s" % [day, phase().capitalize(), cycle_number(), cycle_day(), DAYS_PER_CYCLE, festival]
