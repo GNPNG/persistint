@@ -1,0 +1,121 @@
+[gd_scene format=4]
+
+[ext_resource type="Script" path="res://scripts/map.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/cruise/ship_section.png" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://scenes/maps/door.tscn" id="4"]
+
+[sub_resource type="NavigationPolygon" id="navpoly"]
+vertices = PackedVector2Array(50, 154, 910, 154, 910, 178, 50, 178, 50, 284, 910, 284, 910, 308, 50, 308, 50, 414, 910, 414, 910, 438, 50, 438, 458, 154, 502, 154, 502, 438, 458, 438)
+polygons = [PackedInt32Array(0, 1, 2, 3), PackedInt32Array(4, 5, 6, 7), PackedInt32Array(8, 9, 10, 11), PackedInt32Array(12, 13, 14, 15)]
+outlines = [PackedVector2Array(50, 154, 910, 154, 910, 178, 50, 178), PackedVector2Array(50, 284, 910, 284, 910, 308, 50, 308), PackedVector2Array(50, 414, 910, 414, 910, 438, 50, 438), PackedVector2Array(458, 154, 502, 154, 502, 438, 458, 438)]
+
+[node name="ShipSection" type="Node2D"]
+y_sort_enabled = true
+script = ExtResource("1")
+map_size = Vector2(960, 540)
+
+[node name="Background" type="Sprite2D" parent="."]
+position = Vector2(480, 270)
+z_index = -10
+texture = ExtResource("2")
+
+[node name="Nav" type="NavigationRegion2D" parent="."]
+navigation_polygon = SubResource("navpoly")
+
+[node name="spawn_from_pool_deck" type="Marker2D" parent="."]
+position = Vector2(170, 168)
+
+[node name="spawn_from_hot_tub" type="Marker2D" parent="."]
+position = Vector2(330, 168)
+
+[node name="spawn_from_bar" type="Marker2D" parent="."]
+position = Vector2(700, 168)
+
+[node name="spawn_from_disco" type="Marker2D" parent="."]
+position = Vector2(150, 298)
+
+[node name="spawn_from_dining" type="Marker2D" parent="."]
+position = Vector2(330, 298)
+
+[node name="spawn_from_interview" type="Marker2D" parent="."]
+position = Vector2(620, 298)
+
+[node name="spawn_from_runway" type="Marker2D" parent="."]
+position = Vector2(740, 298)
+
+[node name="spawn_from_comedy" type="Marker2D" parent="."]
+position = Vector2(860, 298)
+
+[node name="spawn_from_cabin" type="Marker2D" parent="."]
+position = Vector2(120, 428)
+
+[node name="spawn_from_corridor" type="Marker2D" parent="."]
+position = Vector2(400, 428)
+
+[node name="spawn_default" type="Marker2D" parent="."]
+position = Vector2(120, 428)
+
+[node name="Player" parent="." instance=ExtResource("3")]
+position = Vector2(120, 428)
+
+[node name="PoolDeckDoor" parent="." instance=ExtResource("4")]
+position = Vector2(170, 168)
+target_scene = "res://scenes/cruise/room_pool_deck.tscn"
+target_spawn = "spawn_default"
+exit_label = "Pool Deck"
+
+[node name="HotTubDoor" parent="." instance=ExtResource("4")]
+position = Vector2(330, 168)
+target_scene = "res://scenes/cruise/room_hot_tub.tscn"
+target_spawn = "spawn_default"
+exit_label = "Hot Tub"
+
+[node name="BarDoor" parent="." instance=ExtResource("4")]
+position = Vector2(700, 168)
+target_scene = "res://scenes/cruise/room_bar.tscn"
+target_spawn = "spawn_default"
+exit_label = "Bar"
+
+[node name="DiscoDoor" parent="." instance=ExtResource("4")]
+position = Vector2(150, 298)
+target_scene = "res://scenes/cruise/room_disco.tscn"
+target_spawn = "spawn_default"
+exit_label = "Disco Dance Club"
+
+[node name="DiningDoor" parent="." instance=ExtResource("4")]
+position = Vector2(330, 298)
+target_scene = "res://scenes/cruise/room_dining.tscn"
+target_spawn = "spawn_default"
+exit_label = "Dining Room"
+
+[node name="InterviewDoor" parent="." instance=ExtResource("4")]
+position = Vector2(620, 298)
+target_scene = "res://scenes/minigames/interview.tscn"
+target_spawn = "spawn_default"
+exit_label = "Interview Room"
+
+[node name="RunwayDoor" parent="." instance=ExtResource("4")]
+position = Vector2(740, 298)
+target_scene = "res://scenes/minigames/hottest_chains.tscn"
+target_spawn = "spawn_default"
+exit_label = "Runway"
+
+[node name="ComedyDoor" parent="." instance=ExtResource("4")]
+position = Vector2(860, 298)
+target_scene = "res://scenes/minigames/next_top_comic.tscn"
+target_spawn = "spawn_default"
+exit_label = "Comedy Stage"
+
+[node name="CabinDoor" parent="." instance=ExtResource("4")]
+position = Vector2(120, 428)
+target_scene = "res://scenes/cruise/room_cabin.tscn"
+target_spawn = "spawn_default"
+exit_label = "Her Cabin"
+
+[node name="CorridorDoor" parent="." instance=ExtResource("4")]
+position = Vector2(400, 428)
+target_scene = "res://scenes/cruise/room_corridor.tscn"
+target_spawn = "spawn_default"
+exit_label = "Corridor"
+
