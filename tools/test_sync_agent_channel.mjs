@@ -203,6 +203,18 @@ function main() {
     git(agent, ["pull", "--quiet", "--ff-only", "origin", "main"]);
     check(!fs.existsSync(path.join(agent, "drop/prompts/image/test/assets/one.png")), "and its drop leaves the channel");
 
+    // --- A run while another holds the channel's lock does nothing; a lock left by a dead run is taken over.
+    fs.writeFileSync(`${chan}.lock`, `${process.pid}\n`);
+    const held = git(chan, ["rev-parse", "HEAD"]).trim();
+    bd(ws, ["comment", rules.id, "--actor", "forge", "a forge comment while the lock is held"]);
+    out = sync(["--beads", ws, "--channel", chan, "--remote", remote]);
+    check(/lock\s+another run/.test(out) && git(chan, ["rev-parse", "HEAD"]).trim() === held && fs.existsSync(`${chan}.lock`),
+      "a run while another holds the lock does nothing and leaves the lock alone");
+    fs.writeFileSync(`${chan}.lock`, "999999999\n");
+    out = sync(["--beads", ws, "--channel", chan, "--remote", remote]);
+    check(!/lock\s+another run/.test(out) && git(chan, ["rev-parse", "HEAD"]).trim() !== held && !fs.existsSync(`${chan}.lock`),
+      "a stale lock from a dead run is taken over, the run does its work, and the lock is released");
+
     // --- Dry run writes nothing.
     const before = git(chan, ["rev-parse", "HEAD"]).trim();
     bd(ws, ["comment", rules.id, "--actor", "forge", "a forge comment after the dry run starts"]);

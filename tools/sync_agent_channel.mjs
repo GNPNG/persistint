@@ -456,9 +456,31 @@ function commit(a, summary, wouldChange) {
   return true;
 }
 
+/** Take the channel's lock (<channel>.lock holding the pid), or say who holds it and return null. Two runs
+ *  on one channel clone (the PM2 job and a hand run) collide in the clone and in the landing worktrees;
+ *  a lock left by a run that died is taken over. */
+function acquireLock(file) {
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try { fs.writeFileSync(file, `${process.pid}\n`, { flag: "wx" }); return file; } catch (e) { if (e.code !== "EEXIST") throw e; }
+    let pid = 0;
+    try { pid = parseInt(readText(file), 10) || 0; } catch { continue; }
+    let alive = false;
+    if (pid > 0) { try { process.kill(pid, 0); alive = true; } catch (e) { alive = e.code === "EPERM"; } }
+    if (alive) { console.log(`lock     another run (pid ${pid}) holds ${file}; this run does nothing`); return null; }
+    fs.rmSync(file, { force: true });
+  }
+  return null;
+}
+
 export function main(argv = process.argv.slice(2)) {
   const a = parse(argv);
   fs.mkdirSync(path.join(a.beads, ".cache"), { recursive: true });
+  const lock = acquireLock(`${a.channel}.lock`);
+  if (!lock) return;
+  try { run1(a); } finally { fs.rmSync(lock, { force: true }); }
+}
+
+function run1(a) {
   const lastExported = lastExport(a);
   pull(a);
   const before = exportBeads(a.beads);
