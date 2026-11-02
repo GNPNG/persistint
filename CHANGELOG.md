@@ -9,6 +9,12 @@ into the new version's heading; the Updates page on the site shows the released 
 
 ### Added
 
+- Florida gifts: the key lime pie, sea grape jelly, guava pastry, mango smoothie and shell wind
+  chime can be given to the dolphins, crabs, gulls, mermaids and ponies. Each kind has
+  favourites, every gift gets a happy reaction, and each friend keeps friendship hearts (one
+  heart-earning gift a day, up to five). At three hearts a dolphin shows you a trick, a crab walks
+  with you, a gull brings you a shell each day, a mermaid does a bubble trick and a pony nuzzles
+  you.
 - Your name: New Game asks for your full name and, if you like, a nickname. In Florida the
   Father on the beach and the Daughter at the stable call you by it when you come back: your
   nickname, or else your first name.

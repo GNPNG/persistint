@@ -14,6 +14,7 @@ const FOAL_SIZE := 0.65
 @onready var bubble: Label = $BarkBubble
 
 var _panel: CanvasLayer
+var _bubble_timer: SceneTreeTimer
 
 
 func _ready() -> void:
@@ -40,6 +41,7 @@ func interact() -> void:
 	_panel = PANEL_SCRIPT.new()
 	_panel.pony_id = pony_id
 	_panel.spoke.connect(say)
+	_panel.cheered.connect(float_text)
 	add_child(_panel)
 
 
@@ -49,7 +51,11 @@ func say(text: String) -> void:
 		return
 	bubble.say("%s: %s" % [Ponies.display_name(pony_id), text])
 	Voice.speak(text, float(Ponies.data().get("pitch", 1.0)), "pony")
-	get_tree().create_timer(3.0).timeout.connect(bubble.hide)
+	# One wait per pony: a new line (a quick second gift) restarts it rather than being cut short.
+	if _bubble_timer and _bubble_timer.timeout.is_connected(bubble.hide):
+		_bubble_timer.timeout.disconnect(bubble.hide)
+	_bubble_timer = get_tree().create_timer(3.0)
+	_bubble_timer.timeout.connect(bubble.hide)
 	var tw := create_tween()
 	tw.tween_property(doll, "position:y", -8.0, 0.15)
 	tw.tween_property(doll, "position:y", 0.0, 0.15)

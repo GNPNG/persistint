@@ -152,10 +152,13 @@ func _unhandled_input(event: InputEvent) -> void:
 ## the mirror, a door, a pickup, a Florida critter) is walked to and used, as a click on it would
 ## be, so the game plays from the keyboard alone (QA-07). What a click can't pick (input_pickable
 ## off: an NPC walking off the map, npc.gd leave_via) the key passes over too. Returns it, or null
-## when nothing is near.
+## when nothing is near. A companion (is_companion() true: a Florida crab walking beside her) is
+## always near, so it is only picked when nothing else is in range.
 func interact_nearest() -> Node2D:
 	var best: Node2D = null
 	var best_d := INTERACT_RANGE
+	var companion: Node2D = null
+	var companion_d := INTERACT_RANGE
 	var scene := get_tree().current_scene
 	if scene == null:
 		return null
@@ -163,9 +166,15 @@ func interact_nearest() -> Node2D:
 		if n == self or not n.has_method("interact") or not n.is_visible_in_tree() or not (n as Area2D).input_pickable:
 			continue
 		var d := global_position.distance_to(n.global_position)
-		if d < best_d:
+		if n.has_method("is_companion") and n.is_companion():
+			if d < companion_d:
+				companion = n
+				companion_d = d
+		elif d < best_d:
 			best = n
 			best_d = d
+	if best == null:
+		best = companion
 	if best:
 		approach(best)
 	return best

@@ -85,6 +85,7 @@ Reached through the village's exit to the tropical beach.
 | Garden (plants grow with the days) and craft bench (some crafted pieces can be worn on the paper doll) | Playable |
 | Aquarium with mermaids | Playable |
 | Pony stable: groom (a makeover for ponies), ride (faster click-to-walk, H to get off), and raise foals whose coat, mane and spots mix from both parents | Playable |
+| Gifts: the crafted foods and the shell wind chime are presents for the dolphins, crabs, gulls, mermaids and ponies; each kind has favourites, every gift is welcome, friendship hearts build a day at a time, and a good friend does something special (a dolphin trick, a crab that walks with you, a gull that brings a shell, a mermaid bubble trick, a pony nuzzle) | Playable (draft text) |
 | Art | Mostly placeholder |
 
 ### The Cruise
