@@ -1,0 +1,9 @@
+# git filter-repo --replace-message rules applied by tools/publish.py on every publication (SOP-14).
+# Python regex over the whole commit message. The author's own words from a conversation belong in the
+# private forge, never in a public message, so:
+#  1. a paragraph that opens with an "Author, <date>" attribution is removed whole;
+#  2. a parenthetical "(author <date>: ...)" or "(author <date>)" is removed;
+#  3. a trailing "; the author <date>" inside another parenthetical is dropped.
+regex:(?m)^Author,? \d{4}-\d{2}-\d{2}[^\n]*\n(?:(?!\n)[^\n]*\n)*\n?==>
+regex:\s*\((?:the )?[Aa]uthor,? \d{4}-\d{2}-\d{2}(?::\s*[^)\n]*)?\)==>
+regex:;\s*(?:the )?[Aa]uthor,? \d{4}-\d{2}-\d{2}(?::\s*[^)\n]*)?\)==>)

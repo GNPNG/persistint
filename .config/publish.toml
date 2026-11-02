@@ -1,18 +1,20 @@
 # Publication and replication targets for this repository (SOP-14). Read by tools/publish.py, which runs
 # from a cron on srv over a list of repositories; each repository describes its own targets here.
 #   mode = "filtered": main and tags only, every commit rewritten to remove `remove_paths` and the blobs
-#                      listed in `strip_blobs_file`; force-pushed; the destination is a regenerated copy.
+#                      listed in `strip_blobs_file`, commit messages rewritten by `replace_messages_file`;
+#                      force-pushed; the destination is a regenerated copy.
 #   mode = "mirror":   every ref as is (git push --mirror), for a replica or a migration between forges.
 
 [[target]]
 name = "github-public"
 mode = "filtered"
 dest = "https://github.com/GNPNG/persistint.git"
-on = ["refs/tags/v*"]              # the trigger: a version tag; add "refs/tags/dev-*" for dev builds (author 2026-10-25: "more sensibly, it gets
-                                   # triggered by tagging"); add "main" to publish the pace of work on every push
+on = ["refs/tags/v*"]              # the trigger: a version tag (the author's decision, 2026-10-25); add "refs/tags/dev-*" for dev
+                                   # builds, or "main" to publish the pace of work on every push
 refs = ["main", "refs/tags/v*"]    # what is pushed when it fires
 remove_paths = ["art/canon/gemini/*"]
 strip_blobs_file = "tools/publish_public.blobs"
+replace_messages_file = "tools/publish_public.messages"   # commit-message rules: no conversation quotes in public history
 note = "public wiki and public bug reports live here; AGENTS.md says this is not the working source"
 
 # [[target]]

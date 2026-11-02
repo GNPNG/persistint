@@ -6,7 +6,8 @@ Trigger: each target has `on`, the ref patterns that fire it (default: version t
 "main" for a target that should run on every push). With --changed (the loop passes the refs that moved
 since its last tick) a target runs only if a changed ref matches; without it every target runs.
 Target modes (canned pipelines; the repository only fills in parameters):
-  filtered  fresh mirror clone, git filter-repo removing remove_paths and the blobs in strip_blobs_file
+  filtered  fresh mirror clone, git filter-repo removing remove_paths and the blobs in strip_blobs_file,
+            rewriting commit messages by the rules in replace_messages_file (git filter-repo --replace-message)
             from every commit, force-push of `refs` (default main and v* tags). The private repository
             is never rewritten; the destination is regenerated each run.
   mirror    git push --mirror of every ref: a replica, or a migration between forges.
@@ -48,7 +49,10 @@ def filtered(repo, t, dry, steps) -> None:
         sb = t.get("strip_blobs_file")
         if sb and (repo / sb).is_file() and (repo / sb).stat().st_size:
             args += ["--strip-blobs-with-ids", str(repo / sb)]
-        sh(args, cwd=pub); steps.append(f"filter-repo: {len(globs)} path globs removed, blobs file {sb or 'none'}")
+        rm = t.get("replace_messages_file")
+        if rm and (repo / rm).is_file() and (repo / rm).stat().st_size:
+            args += ["--replace-message", str(repo / rm)]
+        sh(args, cwd=pub); steps.append(f"filter-repo: {len(globs)} path globs removed, blobs file {sb or 'none'}, message rules {rm or 'none'}")
         push = refs_matching(pub, t.get("refs", ["main", "refs/tags/v*"]))
         if not push:
             raise RuntimeError("nothing to publish: no ref matches " + str(t.get("refs")))
