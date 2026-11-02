@@ -5,7 +5,7 @@ All notable changes, newest first. The format follows
 [Semantic Versioning](https://semver.org/). `tools/version.py bump` turns the Unreleased section
 into the new version's heading; the Updates page on the site shows the released versions.
 
-## Unreleased
+## v0.3.9 — 2026-11-02
 
 ### Added
 
@@ -24,15 +24,30 @@ into the new version's heading; the Updates page on the site shows the released 
   view and the small one for one level out; tap one to go to it.
 - Development: a playtest mode for reviewing the game: the voice review ships with the game, with
   a way back to the menu, and its notes export as one file.
+- Cruise ship: the ship is a walkable cross-section, one deck above another with stairs between
+  them and a door into every room, and each room opens as its own overhead scene (the disco, the
+  pool deck, the hot tub, the bar and the rest), with the show stages where they were. The ship
+  has its music, and the Interview returns to the ship when it ends.
+- Playtest: a Flashbacks entry in the settings' Playtest row plays any cruise episode directly.
+- Art: fourteen new renders for the temple (the pavilion, cushion, candles and altar) and the
+  cast (Betty the priestess, the polar bear cub, the mother, the mermaid, Gloria the initiate,
+  Hannah, the father, Bruce, the daughter and Susan).
 
 ### Changed
 
 - Florida: at the end of his talk on the beach the Father says he's headed to the house to look at
   the garden, and goes there, the way the Daughter goes to the ponies. Both of them walk off to the
   way out to where they are going instead of vanishing on the spot.
+- Doors: a door is the thing it sits on (the stable door, the village door, the garden's beach
+  door, the temple's ruins door) with no marker on the ground; a door that has no prop yet still
+  shows its marker.
+- Stage hosts: the talk-show host and the runway host are Black women.
 
 ### Fixed
 
+- Player hair: the ear gaps are cut clear, and the side of the face opens from the brow in the
+  sideways view.
+- Settings sliders draw their track and fill again, as tall as the style's minimum.
 - Text in the world (door names, speech bubbles, the little words that float up in Florida) is
   drawn at the screen's full resolution, and in the ruins above the gloom, so light letters no
   longer come out grey. The floating words stay solid until they fade at the end, and a speech
