@@ -6,3 +6,4 @@ What made each file here (release checklist LP-04, sops/09). Prompt files carry 
 | File | Made by | From | Added |
 |---|---|---|---|
 | `key_art_cruise.png` | Gemini image | `prompts/image/levels/cruise/key_art_cruise.md` | 2026-11-02 |
+| `key_art_landing.png` | Gemini image | `prompts/image/levels/cruise/key_art_landing.md` | 2026-11-02 |
