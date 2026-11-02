@@ -1,4 +1,5 @@
 {
+	"_note": "Calendar of Blood. cohort_signals: [{id, cohort, when, text}], the Priestess's cycle notices; when is a GameClock.matches_when block. schedules: npc_id -> [{when, location, activity}], first entry whose when holds wins (GameClock.schedule_for). places: location -> {name, scene, spot, where}: scene is the res:// map for the location (null: no map, the NPC is away indoors and absent from every map), spot the Marker2D on that map (null: the NPC's own scene position; %s in the name is filled with the npc_id, per-NPC spots), where a short phrase for hint text. schedule_hold: npc_id -> {until_any: [flag, ...]}: while none of the flags is set the NPC keeps the village (her home spot) whatever the schedule says. The Initiate opens the Offering quest, so she holds her village spot until the player has answered her (quest_offering_accepted or refused_offering); this keeps the first minutes unchanged. New text is DRAFT (_draft).",
 	"cohort_signals": [
 		{ "id": "gate_opens", "cohort": "first", "when": { "cycle_day_min": 1, "cycle_day_max": 3 },
 		  "text": "The first cohort's Gate has opened. By the Covenant's count, a new cycle begins today." },
@@ -49,5 +50,21 @@
 			{ "when": { "phase": "midday" }, "location": "village", "activity": "manual labor" },
 			{ "when": { "phase": "evening" }, "location": "shore", "activity": "mending nets" }
 		]
+	},
+	"places": {
+		"village": { "name": "the village", "scene": "res://scenes/maps/village.tscn", "spot": null, "where": "in the village", "_draft": true },
+		"temple": { "name": "the temple", "scene": "res://scenes/maps/temple.tscn", "spot": "spot_temple_%s", "where": "at the temple", "_draft": true },
+		"well": { "name": "the well", "scene": "res://scenes/maps/village.tscn", "spot": "spot_well", "where": "at the well", "_draft": true },
+		"shore": { "name": "the shore", "scene": "res://scenes/maps/village.tscn", "spot": "spot_shore", "where": "on the shore", "_draft": true },
+		"garden": { "name": "the garden", "scene": "res://scenes/maps/village.tscn", "spot": "spot_garden", "where": "in the garden", "_draft": true },
+		"greenhouse": { "name": "the greenhouse", "scene": "res://scenes/maps/village.tscn", "spot": "spot_greenhouse", "where": "in the greenhouse", "_draft": true },
+		"compound": { "name": "the drone compound", "scene": "res://scenes/maps/village.tscn", "spot": "spot_compound", "where": "in the drone compound", "_draft": true },
+		"great_hall": { "name": "the Great Hall", "scene": "res://scenes/maps/great_hall.tscn", "spot": "spot_great_hall_%s", "where": "in the Great Hall", "_draft": true },
+		"dormitory": { "name": "the initiates' dormitory", "scene": null, "spot": null, "where": "in the dormitory", "_draft": true },
+		"birth_chambers": { "name": "the birth chambers", "scene": null, "spot": null, "where": "in the birth chambers", "_draft": true }
+	},
+	"schedule_hold": {
+		"_note": "npc_id -> {until_any: [flag, ...]}: while none of the flags is set, GameClock.location_for answers village for the NPC whatever the schedule says, so she keeps her home spot.",
+		"initiate": { "until_any": ["quest_offering_accepted", "refused_offering"] }
 	}
 }
