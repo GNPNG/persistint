@@ -1,93 +1,122 @@
-# A private GitHub channel for the GitHub-only agents: proposal
+# A private GitHub repository for the GitHub-only agents: proposal
 
-Written 2026-11-02 for the author's approval. Nothing here exists yet.
+Written 2026-11-02 for the author's approval; revised the same day for the asset intake and the
+agents' beads. Nothing here exists yet.
 
 ## The problem
 
-Two contractor agents (Kiro, Grok) can reach the repository only through GitHub. The GitHub
-copy of this project (GNPNG/persistint) is a public, filtered publication (AGENTS.md, SOP-14):
-anything written there is public, including issues, Discussions, pull-request comments, branch
-names and commit messages; gists are unlisted, not private. The team's own channel is the forge
-(Gitea issues, beads), which those agents cannot see. There is no place today where the team and
-the GitHub-only agents can talk that is not public.
+Two contractor agents (Kiro, Grok) run in the cloud and reach this project only through GitHub.
+The GitHub copy (GNPNG/persistint) is a public, filtered publication (AGENTS.md, SOP-14), so
+anything written there is public: issues, Discussions, pull-request comments, branches, commit
+messages; gists are unlisted, not private. The team works on the forge: Gitea issues and beads,
+whose Dolt database is on the forge too. The agents have `bd` but cannot reach that database, so
+their beads are islands. Grok can also render graphics, and there is no private place for it to
+hand renders in.
 
 ## The proposal in one line
 
-A private GitHub repository used as a message board, with issues as threads and labels as
-addressing, and a small scheduled job on srv that mirrors the contractor beads into it and the
-agents' comments back.
+One private GitHub repository that does three jobs: it relays the beads to and from the agents
+as JSONL, it is the intake for rendered assets, and its issues are the place to talk. A scheduled
+job on srv moves everything between the repository and the forge; the forge stays the source of
+truth, and the asset land pipeline the team already has does the merging.
 
 ## 1. The repository
 
-- Name: `gnomatix/persistint-agents` (private; under the gnomatix organisation, where the Claude
-  GitHub App is already installed). No game content, no source: a README with the rules below
-  and the issues. The public mirror's publication script never touches it.
-- Collaborators: the author, the Kiro and Grok accounts, and the `cc-srv` account that srv acts
-  under (see 3). Write access for all; the repository settings stay with the author.
-- Protections: issues on, wiki and Discussions off (one channel, not three), no Actions
-  (nothing runs in this repository; the sync runs on srv).
+- `gnomatix/persistint-agents`, private, in the gnomatix organisation (where the Claude GitHub
+  App is installed). It holds no game source: the files below, and the issues.
+- Collaborators with write access: the author, the Kiro and Grok accounts, and a `cc-srv`
+  machine account for srv. Settings stay with the author. Issues on; wiki, Discussions and
+  Actions off (nothing runs in the repository; srv does the work).
+- Layout:
 
-## 2. Conventions in the channel
+```
+README.md                      the rules below, and how to run the two bd commands
+.beads/issues.jsonl            the relayed beads (bd export / bd import), see 2
+prompts/QUEUE.md               every prompt not yet rendered: tool, aspect, exact Save-as path
+prompts/STYLE.md               the style guide the prompts refer to
+prompts/<kind>/<id>/prompt.txt one file per prompt, as the queue lists it
+drop/<Save-as path>            a passing render, saved where the queue says
+done/<id>.json                 its provenance: id, prompt_sha256, tool, model, rendered_at, notes
+landed/<id>.json               written by srv when a drop has been merged (commit, tests, build)
+```
 
-- One issue per task or thread. A mirrored bead's issue title is the bead's title with its id in
-  square brackets: `[persistint-game-g0va] Player side view: ...`. A free thread carries no id.
-- Labels: `to:kiro`, `to:grok`, `to:cc-srv`, `to:author` say who a thread is for;
-  `from:bead` marks a mirrored bead; `decision-needed` is the contractor rules' "Decision needed"
-  (fcxf rule 6) and is the only label that pages the author.
-- An agent's report at the end of a task is a comment: branch, commit, what was verified and what
-  was not, as the contractor rules already require (fcxf rule 9). Closing an issue is the
-  author's or cc-srv's call, after the merge.
-- Nothing private about the infrastructure goes in a comment (no hostnames, addresses, paths
-  outside the repository, credentials). The repository is private, but the agents' vendors read
-  what the agents read.
+## 2. Beads over the repository (the agents' tracker)
 
-## 3. What srv needs
+`bd export` writes issues with their labels, dependencies and comments as JSONL; `bd import`
+upserts them. That is a sync that needs only a file in a git repository.
 
-- A fine-grained personal access token, scoped to this one repository, with Issues read/write,
-  Contents read and Metadata read, created by the author and placed in the encrypted role env
-  (`~/.config/gnomatix/.env`, key `GH_TOKEN`). `gh` is installed on srv and reads that variable;
-  nothing is stored in a browser or keyring. The token is never printed or committed.
-- The token identifies one GitHub account. If that is the author's own account, srv's comments
-  appear under the author's name; a separate `cc-srv` machine account keeps the authorship
-  honest and is the recommendation (the contractor rules ask every agent to act under its own
-  name).
+- srv exports the beads the agents may see, every 10 minutes: those labelled `contractor:kiro`,
+  `contractor:grok` or `contractor:antigravity`, plus the contractor rules bead (fcxf) and
+  anything labelled `channel`. The file is committed and pushed when it changed.
+- An agent starts work with `git pull && bd import .beads/issues.jsonl`, claims its bead with its
+  own actor name (fcxf rule 1), comments as it goes, and ends with `bd export --label
+  contractor:<me> > .beads/issues.jsonl` (or the export filter the README gives), commit, push.
+- srv pulls, imports the file into the forge database with the import's upsert, and the comments
+  appear on the forge beads under the agent's actor name. Conflicts: beads are append-mostly;
+  the one field both sides write is status, and the rule is that an agent may claim and comment
+  but only the team closes (fcxf rule 9). The README says so; the job enforces it by never
+  importing a status change from the file onto a bead the team has closed.
+- What is not relayed: every other bead, the memories, the Dolt history. The agents see their
+  queue and the rules, not the project's tracker.
 
-## 4. The sync (tools/sync_agent_channel.mjs, run by PM2 on srv every 10 minutes)
+## 3. Asset intake (Grok renders, srv lands)
 
-Beads stay the source of truth; the channel is a view of them for the agents who cannot see
-the forge.
+The same contract the Antigravity render queue uses today, moved onto git:
 
-- Beads to issues: every open bead labelled `contractor:kiro` or `contractor:antigravity` (and a
-  new `contractor:grok`) gets an issue if it has none, titled as in 2, with the bead's description
-  and the current comments as the body, and the `to:` label for its contractor. The bead gets a
-  comment with the issue URL. Later bead comments by the team are appended to the issue as
-  comments (prefixed with the bead actor).
-- Issues to beads: new comments by the agents are added to the bead as comments
-  (prefixed `github:<login>`), so the team reads them where it works. A `decision-needed` label
-  raised by an agent is added to the bead as a comment headed "Decision needed".
-- Closing: when the bead closes, the issue gets the close reason as a comment and is closed.
-  An issue closed by an agent does not close the bead; it adds a comment asking for the merge.
-- State: the mapping bead id to issue number lives in the bead itself (the URL comment), so the
-  job needs no database and can be rerun from nothing.
-- Failure: the job logs to `.cache/sync-agent-channel/` and stops on the first API error; the
-  next run retries. Nothing is deleted on either side, ever.
+- srv regenerates `prompts/QUEUE.md` from the repo (`tools/render_all_assets.py
+  --export-queue`, 61 of 82 prompts unrendered on 2026-10-31) and commits it with the prompt
+  files, so the agent always has the current list and the exact text to paste.
+- Grok renders a prompt, keeps only a passing result (every listed item present, nothing
+  cropped or touching, no text, the chroma background where the prompt says so), saves it as PNG
+  at `drop/<Save-as path>`, writes `done/<id>.json`, commits both, pushes. A near miss is not
+  saved; a note on why goes in the bead comment instead.
+- srv's job sees a new `done/<id>.json`, copies the PNG to the repository's drop path and runs the
+  existing landing steps for that kind of prompt (`sync_rendered_assets.py`, `land_wardrobe.mjs`
+  or `land_species.mjs`, `bake_paper.sh`, the import, the suite, shots), on a branch named
+  `grok/<id>`. A passing branch is merged to main and deployed as today; the result (commit,
+  tests, build) is written to `landed/<id>.json` and commented on the bead. A failing one gets the
+  failure in the bead comment and the branch stays for the team.
+- Binary files in git: renders are a few MB each and the repository is an intake, not an archive;
+  srv removes a drop from the repository once it has landed (the file lives on in the project's
+  LFS), so the repository stays small. No Git LFS on the intake side, so the agent needs nothing
+  beyond git.
 
-## 5. What this does not do
+## 4. Talking
 
-- It does not give the agents the forge, the private repository, the beads database or any
-  credential. They see mirrored text and write comments.
-- It does not change the contractor rules (bead fcxf); it gives them a place to be followed.
+Issues, for anything that is not a bead: a question about a prompt, a "Decision needed" for the
+author (fcxf rule 6; label `decision-needed`, the only thing that pages the author), a report
+that does not belong on a bead. One issue per thread; `to:kiro`, `to:grok`, `to:cc-srv`,
+`to:author` say who it is for. srv mirrors an issue's comments to the forge as a comment on the
+channel bead so nothing is missed, and answers in the issue.
+
+## 5. What srv needs
+
+A fine-grained personal access token scoped to this one repository (Contents read/write, Issues
+read/write, Metadata read), created by the author, placed in srv's encrypted role env
+(`~/.config/gnomatix/.env`, `GH_TOKEN`); `gh` and `git` read it from there. A `cc-srv` machine
+account is recommended so srv's commits and comments carry its own name. The token is never
+printed or committed.
+
+## 6. What this does not do
+
+- It gives the agents no credential, no forge access, no Dolt database and none of the
+  project's private material: the relayed beads are a filtered export, the prompts are already
+  written for outside renderers.
+- It does not change the contractor rules (bead fcxf) or the landing rules in the gemini-assets
+  skill; it gives both a place to run.
 - It does not replace the public GitHub issues, which stay the public bug reports.
 
-## 6. Cost and reversibility
+## 7. Cost and reversibility
 
-One private repository (free on GitHub for organisations), one token, one PM2 job, about a day
-of work for the sync with its tests. Reversible by deleting the repository and the token; the
-beads keep every mirrored comment.
+One free private repository, one token, one PM2 job on srv (`tools/sync_agent_channel.mjs`:
+export, import, intake, mirror; about two days with its tests, the intake reusing the land
+tools). Reversible by deleting the repository and the token; the forge keeps every imported
+comment and every landed asset.
 
 ## Decisions for the author
 
-1. Approve the repository name and the collaborator list.
-2. Token: the author's account or a `cc-srv` machine account (recommended).
-3. Which beads are mirrored: all `contractor:*` beads (proposed), or only ones also labelled
-   `channel`.
+1. The repository name and the collaborator list.
+2. Token account: a `cc-srv` machine account (recommended) or the author's own.
+3. Which beads are relayed: all `contractor:*` beads plus `channel` (proposed), or a narrower set.
+4. Whether Grok's landed renders merge to main automatically when the suite passes (proposed),
+   or wait for the author's look at the shots first.
