@@ -5,6 +5,10 @@ extends Sprite2D
 ## no code change (SOP-03/04 art drops). The drop path is built with %, so the asset gate
 ## (tools/check_assets.mjs) does not ask for the not-yet-rendered file.
 ## The node's origin is the prop's feet (SpriteFit), so it y-sorts with everything else.
+## Paper look (bd gsd, tests/test_paper_world.gd): the art shown is dressed with its baked sheet and
+## soft shadow at load (PaperBake.dress), as the Florida props are. The fallback art is baked
+## (tools/bake_paper.sh); a rendered drop is shown unbordered until it is added to the props list
+## there and baked.
 
 ## Art name of the drop under assets/island (prop_<art_path>.png).
 @export var art_path := ""
@@ -25,3 +29,4 @@ func _ready() -> void:
 		t = load(fallback_path)
 	texture = t
 	SpriteFit.fit(self, height)
+	PaperBake.dress(self)

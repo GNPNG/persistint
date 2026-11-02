@@ -31,6 +31,17 @@
 			]
 		},
 		"res://scenes/maps/temple.tscn": "temple",
+		"res://scenes/maps/great_hall.tscn": {
+			"track": "temple",
+			"when": [
+				{
+					"when": {
+						"festival": true
+					},
+					"track": "festival_fourteenth"
+				}
+			]
+		},
 		"res://scenes/minigames/ritual_puzzle.tscn": "ritual_puzzle",
 		"res://scenes/ruins/ruins_wreck.tscn": "ruins_wreck",
 		"res://scenes/ruins/ruins_corridor.tscn": "ruins_colony",

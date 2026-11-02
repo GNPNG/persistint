@@ -633,7 +633,8 @@ func _build_village() -> void:
 		"dialogue_path": "res://dialogue/priestess.dialogue", "voice_pitch": 0.85, "scheduled": true})
 	_door("GreatHallDoor", _px(23.4, 7.0), {
 		"target_scene": "res://scenes/maps/great_hall.tscn", "target_spawn": "spawn_from_village",
-		"exit_label": "To the Great Hall"})
+		"exit_label": "To the Great Hall",
+		"show_marker": true})
 	# Arrivals from the Great Hall stand south of its door, clear of the door's trigger.
 	_marker("spawn_from_great_hall", _px(22.6, 8.25))
 
@@ -855,5 +856,6 @@ func _build_great_hall() -> void:
 	_placeholder_prop("Banner", _px(9.5, 3.3), "great_hall_banner", "res://assets/canon/prop_icon_queen_mother.png", 64.0)
 	_door("ExitDoor", _px(9.5, 11.5), {
 		"target_scene": "res://scenes/maps/village.tscn", "target_spawn": "spawn_from_great_hall",
-		"exit_label": "Back to the Village"})
+		"exit_label": "Back to the Village",
+		"show_marker": true})
 	_save("res://scenes/maps/great_hall.tscn")

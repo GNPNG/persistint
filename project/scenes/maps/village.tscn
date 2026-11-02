@@ -1116,6 +1116,7 @@ voice_pitch = 0.85
 scheduled = true
 
 [node name="GreatHallDoor" type="Area2D" parent="." instance=ExtResource("37_1dqp1")]
+show_marker = true
 position = Vector2(748.8, 224)
 script = ExtResource("38_0n0ky")
 target_scene = "res://scenes/maps/great_hall.tscn"

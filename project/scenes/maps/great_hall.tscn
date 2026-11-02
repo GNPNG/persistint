@@ -86,6 +86,7 @@ art_path = "great_hall_banner"
 fallback_path = "res://assets/canon/prop_icon_queen_mother.png"
 
 [node name="ExitDoor" type="Area2D" parent="." unique_id=93634656 instance=ExtResource("6_od74w")]
+show_marker = true
 position = Vector2(304, 368)
 script = ExtResource("7_foxvl")
 target_scene = "res://scenes/maps/village.tscn"
