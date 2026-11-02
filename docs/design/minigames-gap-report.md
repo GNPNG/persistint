@@ -1,12 +1,12 @@
 # Mini-games: what was built against what was specified
 
-Bead persistint-game-usl0 (P0). Author, 2026-11-02 09:25 UTC, verbatim:
+Bead persistint-game-usl0 (P0), raised by the author on 2026-11-02 at 09:25 UTC. His assessment,
+in this report's words: the mini-games are not yet games; the opening text of each one makes a
+joke of the plot of his book, which he finds insulting and not funny; he specified the games in
+the design notes and the discussion, and the agents that built them worked from a one-line
+summary instead of those notes.
 
-> The mini games are TERRIBLE. They aren't even games right now. And the opening text for each one is BAD. It's making a joke out of the plot of my book.
-> It's actually insulting, and not funny at the same time.
-> I spec'd out the games --- it seems like the agents that implemented it didn't refer to the notes and discussion; they just read a summary line and implemented it
-
-This report quotes, per game, (a) what the author specified (dev/DESIGN.md §2, the five verbatim
+This report quotes, per game, (a) what the author specified (dev/DESIGN.md §2, the five design
 notes on bead qqx of 2026-10-24, dev/COMEDY-RUBRIC.md), (b) the opening text the player actually
 sees today, with the file it comes from, and (c) what the build does, so the gap is on the page.
 Nothing here is a proposal for new story text: that is the author's. The fixes it names are
