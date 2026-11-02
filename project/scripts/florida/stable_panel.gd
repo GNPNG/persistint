@@ -2,18 +2,25 @@ extends CanvasLayer
 ## StablePanel — the grooming panel for one pony (the paper-doll makeover, on a pony): a big
 ## PonyDoll preview, Brush, mane style and accessory pickers, Ride, and one "Foal with ..."
 ## button per grown-up friend (in a short scrolling list, so a big herd still fits the 360 px
-## view). Every choice is a good one; nothing is scored. Sizes come from themes/default.tres.
+## view). Under the preview: the pony's friendship, a "Give ..." button per Florida gift in the
+## inventory and, for a good friend, Nuzzle. Every choice is a good one; nothing is scored.
+## Sizes come from themes/default.tres.
 
 signal spoke(text: String)
+## A float text over the pony (the hearts a gift earned, or the unlock's cheer).
+signal cheered(text: String)
 
 ## How many "Foal with ..." buttons show before the list scrolls.
 const FOAL_ROWS := 3
+## And how many "Give ..." buttons (Florida gifts).
+const GIFT_ROWS := 3
 ## The pony in the panel is shown this tall (world px of the panel, before the UI scale).
 const PREVIEW_HEIGHT := 114.0
 
 var pony_id := ""
 
 var _box: VBoxContainer
+var _friends: VBoxContainer
 var _doll: PonyDoll
 
 
@@ -28,9 +35,16 @@ func _ready() -> void:
 	var hbox := HBoxContainer.new()
 	hbox.name = "HBox"
 	panel.add_child(hbox)
+	var side := VBoxContainer.new()
+	side.name = "Side"
+	hbox.add_child(side)
 	var preview := Control.new()
 	preview.custom_minimum_size = Vector2(150, 130)
-	hbox.add_child(preview)
+	side.add_child(preview)
+	# Gifts go under the preview, so the button column is no taller for them.
+	_friends = VBoxContainer.new()
+	_friends.name = "Friends"
+	side.add_child(_friends)
 	_doll = PonyDoll.new()
 	_doll.name = "Preview"
 	# The doll stands on its hooves (origin at the feet): PREVIEW_HEIGHT tall, centred in the box.
@@ -45,8 +59,8 @@ func _ready() -> void:
 
 
 func _build() -> void:
-	for c in _box.get_children():
-		_box.remove_child(c)
+	for c in _box.get_children() + _friends.get_children():
+		c.get_parent().remove_child(c)
 		c.queue_free()
 	_doll.set_outfit(Ponies.parts(pony_id))
 	var today: int = GameClock.day
@@ -67,6 +81,7 @@ func _build() -> void:
 		var now: String = Ponies.pony(pony_id)["groom"].get(slot, "none")
 		var label: String = Ponies.data()["groom_labels"].get(now, now)
 		_button("%s: %s  >" % ["Mane" if slot == "mane_style" else "Wear", label], _groom.bind(slot))
+	_build_gifts()
 	if Ponies.riding() == pony_id:
 		_button("Hop down", _dismount)
 	elif Ponies.is_foal(pony_id, today):
@@ -90,6 +105,39 @@ func _build() -> void:
 			var rows := mini(friends.size(), FOAL_ROWS)
 			scroll.custom_minimum_size = Vector2(0, rows * row + (rows - 1) * sep)
 	_button("Close", queue_free, false)
+
+
+## Friendship (Florida gifts): the pony's hearts once there is a gift to give or a heart earned,
+## one "Give ..." button per gift in the inventory (a short scrolling list, as the foals), and
+## Nuzzle for a good friend; all under the preview.
+func _build_gifts() -> void:
+	var items := Florida.giftable_in_inventory()
+	var hearts := Florida.hearts(pony_id)
+	if items.is_empty() and hearts == 0:
+		return
+	var friendship := Label.new()
+	friendship.name = "Friendship"
+	friendship.text = "Friendship: %d / %d" % [hearts, Florida.max_hearts()]
+	_friends.add_child(friendship)
+	if not items.is_empty():
+		var scroll := ScrollContainer.new()
+		scroll.name = "Gifts"
+		scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		var list := VBoxContainer.new()
+		list.name = "List"
+		list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		scroll.add_child(list)
+		_friends.add_child(scroll)
+		for item: String in items:
+			var b := _button("Give %s (%d)" % [Florida.label(item), Florida.count(item)], _gift.bind(item), true, list)
+			b.name = "Give_%s" % item
+		var row := maxf(list.get_child(0).get_combined_minimum_size().y, 13.0)
+		var sep := float(list.get_theme_constant("separation"))
+		var rows := mini(items.size(), GIFT_ROWS)
+		scroll.custom_minimum_size = Vector2(0, rows * row + (rows - 1) * sep)
+	if Florida.has_unlock(pony_id, "pony"):
+		var nuzzle := _button(Florida.unlock_for("pony").get("label", "Nuzzle"), _nuzzle, true, _friends)
+		nuzzle.name = "Nuzzle"
 
 
 func _button(text: String, action: Callable, rebuild := true, parent: Control = null) -> Button:
@@ -122,6 +170,20 @@ func _ride() -> void:
 		return
 	spoke.emit(Ponies.line("ride"))
 	queue_free()
+
+
+func _gift(item: String) -> void:
+	var r := Florida.give(pony_id, "pony", item, GameClock.day)
+	if r.is_empty():
+		return
+	spoke.emit(r["line"])
+	var cheer := Florida.gift_float(r)
+	if cheer != "":
+		cheered.emit(cheer)
+
+
+func _nuzzle() -> void:
+	spoke.emit(Florida.unlock_line("pony"))
 
 
 func _dismount() -> void:

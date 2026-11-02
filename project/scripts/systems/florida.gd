@@ -162,6 +162,134 @@ static func current_outfit() -> Dictionary:
 	return outfit
 
 
+# --- gifts -------------------------------------------------------------------
+# The made things nobody wears are gifts for the critters and the ponies ("gifts" in the data).
+# Each friend (a critter's cast id nickname, a pony's cast id) keeps its own hearts in fl_hearts.
+
+static func gifts() -> Dictionary:
+	return data().get("gifts", {})
+
+
+## The giftable recipe ids, in the data's order.
+static func gift_items() -> Array:
+	return gifts().get("items", [])
+
+
+## The giftable things the player has at least one of.
+static func giftable_in_inventory() -> Array:
+	return gift_items().filter(func(item: String) -> bool: return count(item) > 0)
+
+
+static func hearts(who: String) -> int:
+	return int(_ws().get_flag("fl_hearts", {}).get(who, 0))
+
+
+static func max_hearts() -> int:
+	return int(gifts().get("max_hearts", 5))
+
+
+## A kind's favourites, lines, effects and unlock (dolphin, crab, gull, mermaid or pony).
+static func gift_kind(kind: String) -> Dictionary:
+	return gifts().get("kinds", {}).get(kind, {})
+
+
+## "loved" for one of the kind's favourites, else "liked": every gift is welcome.
+static func reaction_for(kind: String, item: String) -> String:
+	return "loved" if item in gift_kind(kind).get("loved", []) else "liked"
+
+
+## Gives one `item` to `who` (of `kind`). Returns {} when it can't be given (not a gift, none in
+## the inventory, an unknown kind); else {reaction, line, effect, hearts, gained, unlocked}. Only
+## the first hearts_per_day gifts of a day earn hearts (capped at max_hearts); `unlocked` is true
+## for exactly the gift that brings the friend up to the kind's unlock.
+static func give(who: String, kind: String, item: String, today: int) -> Dictionary:
+	var info := gift_kind(kind)
+	if who == "" or info.is_empty() or not (item in gift_items()) or count(item) < 1:
+		return {}
+	add_item(item, -1)
+	var before := hearts(who)
+	var reaction := reaction_for(kind, item)
+	var gained := 0
+	# fl_gift_day {who: {day, n}}: how many heart-earning gifts the friend had on its last gift day
+	var days: Dictionary = _ws().get_flag("fl_gift_day", {}).duplicate(true)
+	var last: Dictionary = days.get(who, {})
+	var earned := int(last.get("n", 0)) if int(last.get("day", -1)) == today else 0
+	if earned < int(gifts().get("hearts_per_day", 1)):
+		days[who] = {"day": today, "n": earned + 1}
+		_ws().set_flag("fl_gift_day", days)
+		gained = mini(int(gifts().get("hearts", {}).get(reaction, 1)), max_hearts() - before)
+	if gained > 0:
+		var all: Dictionary = _ws().get_flag("fl_hearts", {}).duplicate()
+		all[who] = before + gained
+		_ws().set_flag("fl_hearts", all)
+	var need := int(unlock_for(kind).get("hearts", 0))
+	var effects: Dictionary = info.get("effect", {})
+	return {
+		"reaction": reaction,
+		"line": gift_line(kind, "max" if before >= max_hearts() else reaction).replace("{item}", label(item)),
+		"effect": effects.get("loved" if before >= max_hearts() else reaction, "hop"),
+		"hearts": before + gained,
+		"gained": gained,
+		"unlocked": need > 0 and before < need and before + gained >= need,
+	}
+
+
+## The float text for a give() result: the unlock's, else the hearts earned, else "" (no float).
+static func gift_float(result: Dictionary) -> String:
+	var floats: Dictionary = gifts().get("floats", {})
+	var gained := int(result.get("gained", 0))
+	if result.get("unlocked", false):
+		return floats.get("unlocked", "")
+	if gained <= 0:
+		return ""
+	var text: String = floats.get("heart" if gained == 1 else "hearts", "")
+	return text.replace("{n}", str(gained))
+
+
+## One of the kind's gift lines ("loved", "liked" or "max"), "" if it has none.
+static func gift_line(kind: String, key: String) -> String:
+	var lines: Array = gift_kind(kind).get("lines", {}).get(key, [])
+	return lines.pick_random() if not lines.is_empty() else ""
+
+
+## The kind's unlock: {id, hearts, label, effect, lines, ...}.
+static func unlock_for(kind: String) -> Dictionary:
+	return gift_kind(kind).get("unlock", {})
+
+
+static func has_unlock(who: String, kind: String) -> bool:
+	var unlock := unlock_for(kind)
+	return not unlock.is_empty() and hearts(who) >= int(unlock.get("hearts", 0))
+
+
+## One of the unlock's lines under `key` ("lines", or "lines_off" / "lines_none").
+static func unlock_line(kind: String, key := "lines") -> String:
+	var lines: Array = unlock_for(kind).get(key, [])
+	return lines.pick_random() if not lines.is_empty() else ""
+
+
+## The gull's unlock: a good-friend gull brings one shell a day. True when it brought one now.
+static func gull_shell(who: String, today: int) -> bool:
+	if not has_unlock(who, "gull"):
+		return false
+	var days: Dictionary = _ws().get_flag("fl_gull_shell_day", {}).duplicate()
+	if int(days.get(who, -1)) == today:
+		return false
+	days[who] = today
+	_ws().set_flag("fl_gull_shell_day", days)
+	add_item("shell")
+	return true
+
+
+## The crab walking beside the player ("" for none; the crab's unlock).
+static func following() -> String:
+	return _ws().get_flag("fl_following", "")
+
+
+static func set_following(who: String) -> void:
+	_ws().set_flag("fl_following", who)
+
+
 ## WorldState looked up at run time, so this script also compiles in headless SceneTree tests.
 static func _ws() -> Node:
 	return (Engine.get_main_loop() as SceneTree).root.get_node("/root/WorldState")

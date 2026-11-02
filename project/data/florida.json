@@ -1,5 +1,5 @@
 {
-	"_note": "Tropical Florida Keys sandbox (DESIGN.md section 3). Pure play, no scoring, nothing can be done wrong. Plants grow with days (GameClock); watering only speeds them up. Every item shows by its 'label' (Florida.label): plants, recipes, and 'items' (things found, not grown or made). Recipes with a 'wear' block go on the paper doll; the rest are just made, kept and enjoyed. A critter 'surprise' fires when the doll's outfit matches 'when' (first match wins; the entry without 'when' is every critter's default, so every outfit gets a delighted reaction). 'lines' are spoken as the critter's bubble through Voice.speak; 'names' are the critters' cast ids in data/cast.json (set per placed critter as nickname; shown through Cast.short).",
+	"_note": "Tropical Florida Keys sandbox (DESIGN.md section 3). Pure play, no scoring, nothing can be done wrong. Plants grow with days (GameClock); watering only speeds them up. Every item shows by its 'label' (Florida.label): plants, recipes, and 'items' (things found, not grown or made). Recipes with a 'wear' block go on the paper doll; the rest are just made, kept and enjoyed. A critter 'surprise' fires when the doll's outfit matches 'when' (first match wins; the entry without 'when' is every critter's default, so every outfit gets a delighted reaction). 'lines' are spoken as the critter's bubble through Voice.speak; 'names' are the critters' cast ids in data/cast.json (set per placed critter as nickname; shown through Cast.short). 'gifts': the made things nobody wears can be given to the critters and the ponies, for friendship hearts and a small thing each kind does for a good friend (every gift is welcome).",
 	"plants": {
 		"hibiscus": {
 			"label": "Hibiscus",
@@ -409,6 +409,224 @@
 					]
 				}
 			]
+		}
+	},
+	"gifts": {
+		"_note": "Gifts (Florida.give): 'items' are the recipes without a 'wear' block, in the order the Give buttons show. Each critter (by its cast id nickname) and each pony (by its cast id) keeps its own friendship hearts, up to 'max_hearts'. A gift a kind lists under 'loved' earns hearts.loved, any other gift hearts.liked: every gift is welcome and gets a happy reaction. Only the first 'hearts_per_day' gifts of a GameClock day earn hearts for that friend; later ones that day are still taken happily. 'floats' are the float texts over the friend: 'heart' / 'hearts' for the hearts earned ({n}), 'unlocked' when the gift brings the unlock. 'lines' loved/liked/max are spoken for the gift ({item} is the gift's label; 'max' once the friend's hearts are full), 'effect' is the critter's tween for loved/liked (jump, spin, wiggle, hop, as surprises; flip is a leap with a spin; a pony has no 'effect', it hops whenever it speaks). 'unlock': once a friend has 'hearts' hearts, the gift panel (the stable panel, for a pony) shows a button 'label' that plays 'effect' and says one of 'lines'. Unlock ids: trick and bubbles (an effect and a line), follow (the crab walks beside you on its map until 'label_off' or you leave; 'lines_off' when it stays), shell (the gull brings one Shell a GameClock day; 'lines_none' later that day), nuzzle (a pony nuzzle, in the stable panel).",
+		"_draft": "Every line and button label under gifts is draft text for the author's approval.",
+		"items": [
+			"key_lime_pie",
+			"sea_grape_jelly",
+			"guava_pastry",
+			"mango_smoothie",
+			"shell_wind_chime"
+		],
+		"max_hearts": 5,
+		"hearts": {
+			"loved": 2,
+			"liked": 1
+		},
+		"hearts_per_day": 1,
+		"floats": {
+			"heart": "+{n} heart",
+			"hearts": "+{n} hearts",
+			"unlocked": "Good friends!"
+		},
+		"kinds": {
+			"dolphin": {
+				"loved": [
+					"mango_smoothie",
+					"shell_wind_chime"
+				],
+				"effect": {
+					"loved": "flip",
+					"liked": "jump"
+				},
+				"lines": {
+					"loved": [
+						"{item}! My favorite! I'm doing a flip for it!",
+						"You remembered! {item} is the best thing in the whole ocean!",
+						"Ee-ee! {item}! I'll keep it in my secret cove!"
+					],
+					"liked": [
+						"A present? For me? Thank you! Splash!",
+						"{item}! I've never had one! It's wonderful!",
+						"You brought me something! You are so kind!"
+					],
+					"max": [
+						"Best friends forever! Ee-ee-ee!",
+						"You are my favorite person on every beach!",
+						"Another one? Okay, a double flip! Watch!"
+					]
+				},
+				"unlock": {
+					"id": "trick",
+					"hearts": 3,
+					"label": "Show me a trick",
+					"effect": "flip",
+					"lines": [
+						"Ready? One, two, three, wheee!",
+						"I practiced this one just for you!",
+						"Ta-da! Did you see how high? So high!"
+					]
+				}
+			},
+			"crab": {
+				"loved": [
+					"sea_grape_jelly",
+					"shell_wind_chime"
+				],
+				"effect": {
+					"loved": "spin",
+					"liked": "wiggle"
+				},
+				"lines": {
+					"loved": [
+						"{item}! Click-click! That's my favorite thing!",
+						"For me? {item}? I'm dancing sideways!",
+						"Oh! Oh! {item}! I'm so happy my claws are clapping!"
+					],
+					"liked": [
+						"A present! Thank you! I'll keep it by my rock!",
+						"{item}! You're the nicest person on the sand!",
+						"Click-click! A gift! I'm a little shy, but thank you!"
+					],
+					"max": [
+						"You're my best friend! Click-click forever!",
+						"I told all my cousins about you!",
+						"Another gift! I don't need one, I just like you!"
+					]
+				},
+				"unlock": {
+					"id": "follow",
+					"hearts": 3,
+					"label": "Walk with me",
+					"label_off": "Stay here",
+					"effect": "wiggle",
+					"lines": [
+						"Yes! I'll walk with you! Sideways is fine, right?",
+						"Let's go exploring! Click-click!",
+						"Wait for me! Okay, I'm right beside you!"
+					],
+					"lines_off": [
+						"Okay! I'll wait right here by my rock!",
+						"That was fun! Come back soon!"
+					]
+				}
+			},
+			"gull": {
+				"loved": [
+					"key_lime_pie",
+					"guava_pastry"
+				],
+				"effect": {
+					"loved": "spin",
+					"liked": "hop"
+				},
+				"lines": {
+					"loved": [
+						"{item}! Squawk! That's my very favorite snack!",
+						"{item}?! Is it my birthday? It feels like my birthday!",
+						"Oh, {item}! I'll eat it slowly. No, fast! Yum!"
+					],
+					"liked": [
+						"A present! Squawk! That means thank you!",
+						"{item}! I didn't even have to ask!",
+						"You brought me something! Today has everything!"
+					],
+					"max": [
+						"Best friends! I'll tell the whole pier!",
+						"Squawk squawk! That's two thank yous!",
+						"You are my favorite person and also my favorite snack person!"
+					]
+				},
+				"unlock": {
+					"id": "shell",
+					"hearts": 3,
+					"label": "Found anything?",
+					"effect": "hop",
+					"lines": [
+						"I found you a shell! It was right by the water!",
+						"Here! A shell! I picked the shiniest one!",
+						"A present for my friend! It's a shell!"
+					],
+					"lines_none": [
+						"Nothing yet! I'll look again tomorrow!",
+						"I already found you one today! Tomorrow, another!"
+					]
+				}
+			},
+			"mermaid": {
+				"loved": [
+					"shell_wind_chime",
+					"sea_grape_jelly"
+				],
+				"effect": {
+					"loved": "spin",
+					"liked": "wiggle"
+				},
+				"lines": {
+					"loved": [
+						"{item}! Oh, it's perfect! I'll hang it by the glass!",
+						"{item}! The fish will love it as much as I do!",
+						"You remembered my favorite! {item}!"
+					],
+					"liked": [
+						"A present! How lovely! Thank you, friend!",
+						"{item}! I've never had one under the sea!",
+						"For me? The show is even better with you!"
+					],
+					"max": [
+						"My dearest friend! The mermaids will hear about this!",
+						"Best friends! Wave at the fish, they're cheering!",
+						"Another gift! You're a treasure, you know!"
+					]
+				},
+				"unlock": {
+					"id": "bubbles",
+					"hearts": 3,
+					"label": "Bubble trick",
+					"effect": "spin",
+					"lines": [
+						"Watch! A bubble ring! Now two! Now a heart!",
+						"Bubbles for my best friend! Pop, pop, pop!",
+						"I've been saving my biggest bubble for you!"
+					]
+				}
+			},
+			"pony": {
+				"loved": [
+					"guava_pastry",
+					"key_lime_pie"
+				],
+				"lines": {
+					"loved": [
+						"{item}! My favorite! Nicker nicker!",
+						"Ooh, {item}! I'll share. Maybe. No, it's mine!",
+						"{item}! You know me so well!"
+					],
+					"liked": [
+						"A treat! Thank you! Swish swish!",
+						"{item}! Yum! Can I have a brush too?",
+						"For me? You're the kindest!"
+					],
+					"max": [
+						"Best friends! I'll give you the smoothest ride!",
+						"You're my favorite person in the whole stable!",
+						"Another treat? I love you! I mean, thank you!"
+					]
+				},
+				"unlock": {
+					"id": "nuzzle",
+					"hearts": 3,
+					"label": "Nuzzle",
+					"lines": [
+						"Nuzzle nuzzle! You smell like sunshine!",
+						"Mmm, a big soft nuzzle for my friend!",
+						"Snuffle! That's a pony hug!"
+					]
+				}
+			}
 		}
 	}
 }
