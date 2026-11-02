@@ -133,6 +133,9 @@ func _run() -> void:
 	await process_frame
 	_check(card.find_child("Heading", true, false).text == fb.card("landing")["heading"] and card.entry.get("scene") == LANDING,
 		"intro card shows the Landing and goes on to it")
+	if ResourceLoader.exists(card.CARD_ART):
+		var scrim := card.find_child("Scrim", true, false) as ColorRect
+		_check(scrim != null and scrim.color.a >= 0.5, "the intro card has a dark scrim over its art")
 	card.go_on()
 	_check(ws.get_flag("_location", {}).get("scene") == LANDING, "after the card, Continue resumes inside the flashback")
 	card.queue_free()

@@ -54,6 +54,10 @@ func _run() -> void:
 		"card shows the island chapter's end card")
 	var heading_size: int = (card.find_child("Heading", true, false) as Label).get_theme_font_size("font_size")
 	_check(heading_size == 30, "its heading is 30 px, as STYLE.md 4.10 has it and the flashback card shows it (%d)" % heading_size)
+	if ResourceLoader.exists(card.CARD_ART):
+		var scrim := card.find_child("Scrim", true, false) as ColorRect
+		_check(scrim != null and scrim.color.a >= 0.5 and scrim.get_index() < card.find_child("Heading", true, false).get_parent().get_index(),
+			"a dark scrim lies between the card art and the text")
 	_check(ws.get_flag("chapter") == "cruise", "jump sets chapter to cruise")
 	var archive: Variant = ws.get_flag("chapter_archive_island")
 	_check(archive is Dictionary and archive.get("outfit_hair") == "hair_rose" and archive.get("outfit_dress") == "dress_teal",
