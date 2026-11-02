@@ -128,6 +128,44 @@ function main() {
     check(byTitle(ws, "Agent's own bead") !== undefined, "a new bead from the agent with a contractor label is created on the forge");
     check(byTitle(ws, "Unlabelled bead") === undefined, "a new bead without a relayed label is not");
 
+    // --- Intake: a passing render becomes a branch of the game repository; a bad one is refused.
+    const wsRemote = path.join(tmp, "ws-remote.git");
+    sh("git", ["init", "--quiet", "--bare", "--initial-branch=main", wsRemote], tmp);
+    fs.writeFileSync(path.join(ws, "prompts/image/test/one.md"), "---\nid: one\ntool: Gemini image\ndrop: prompts/image/test/assets/one.png\ngame: project/assets/test/one.png\n---\n\n# one\n\n## Prompt\n\nA prompt.\n\n## Notes\n\nNone.\n");
+    fs.writeFileSync(path.join(ws, "prompts/image/test/two.md"), "---\nid: two\ntool: Gemini image\ndrop: prompts/image/test/assets/two.png\ngame: project/assets/test/two.png\n---\n\n## Prompt\n\nAnother.\n");
+    git(ws, ["add", "-A", "--", "prompts"]); git(ws, ["commit", "--quiet", "-m", "prompts"]); git(ws, ["branch", "-M", "main"]);
+    git(ws, ["remote", "add", "origin", wsRemote]); git(ws, ["push", "--quiet", "-u", "origin", "main"]);
+    git(agent, ["pull", "--quiet", "--ff-only", "origin", "main"]);
+    const png = Buffer.concat([Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]), Buffer.from("not really a png body")]);
+    fs.mkdirSync(path.join(agent, "drop/prompts/image/test/assets"), { recursive: true });
+    fs.mkdirSync(path.join(agent, "done"), { recursive: true });
+    fs.writeFileSync(path.join(agent, "drop/prompts/image/test/assets/one.png"), png);
+    fs.writeFileSync(path.join(agent, "done/one.json"), JSON.stringify({ id: "one", tool: "Gemini image", model: "test", rendered_at: now, notes: "fine" }));
+    fs.writeFileSync(path.join(agent, "drop/prompts/image/test/assets/two.png"), "this is text");
+    fs.writeFileSync(path.join(agent, "done/two.json"), JSON.stringify({ id: "two" }));
+    fs.writeFileSync(path.join(agent, "done/nosuch.json"), JSON.stringify({ id: "nosuch" }));
+    git(agent, ["add", "-A"]); git(agent, ["commit", "--quiet", "-m", "agent: renders"]); git(agent, ["push", "--quiet", "origin", "main"]);
+    out = sync(["--beads", ws, "--channel", chan, "--remote", remote]);
+    check(/intake\s+one: grok\/one \w+ pushed/.test(out), "a passing render lands on a branch grok/<id>");
+    const branches = sh("git", ["ls-remote", "--heads", wsRemote], tmp);
+    check(branches.includes("refs/heads/grok/one") && !branches.includes("refs/heads/grok/two"), "the branch is on the game repository's origin, and only for the passing render");
+    const tree = sh("git", ["ls-tree", "-r", "--name-only", "grok/one"], ws);
+    check(tree.includes("prompts/image/test/assets/one.png") && tree.includes("project/assets/test/one.png"), "the render is at its drop path and its game path");
+    const msg = sh("git", ["log", "-1", "--format=%B", "grok/one"], ws);
+    check(msg.includes("Gemini image") && msg.includes("model: test") && msg.includes("Renderer's notes: fine"), "the commit carries the renderer's provenance");
+    git(agent, ["pull", "--quiet", "--ff-only", "origin", "main"]);
+    const landedOne = JSON.parse(fs.readFileSync(path.join(agent, "landed/one.json"), "utf8"));
+    const landedTwo = JSON.parse(fs.readFileSync(path.join(agent, "landed/two.json"), "utf8"));
+    const landedNo = JSON.parse(fs.readFileSync(path.join(agent, "landed/nosuch.json"), "utf8"));
+    check(landedOne.status === "branch" && landedOne.branch === "grok/one" && /^[0-9a-f]{7,}$/.test(landedOne.commit), "landed/one.json records the branch and commit");
+    check(landedTwo.status === "refused" && landedTwo.why === "not a PNG", `a file that is not a PNG is refused with the reason (${landedTwo.why})`);
+    check(landedNo.status === "refused" && landedNo.why === "no prompt with that id", `an unknown id is refused (${landedNo.why})`);
+    check(!fs.existsSync(path.join(agent, "drop/prompts/image/test/assets/one.png")) && fs.existsSync(path.join(agent, "drop/prompts/image/test/assets/two.png")),
+      "the landed render leaves the channel; the refused file stays for the renderer to see");
+    out = sync(["--beads", ws, "--channel", chan, "--remote", remote]);
+    check(/intake\s+nothing new/.test(out), "a second run lands nothing again");
+    check(!fs.existsSync(path.join(ws, ".cache/agent-channel-land/one")), "the landing worktree is removed");
+
     // --- Dry run writes nothing.
     const before = git(chan, ["rev-parse", "HEAD"]).trim();
     bd(ws, ["comment", rules.id, "--actor", "forge", "a forge comment after the dry run starts"]);

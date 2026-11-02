@@ -37,13 +37,24 @@
  *            tools/render_all_assets.py --export-queue when python3 is on PATH), prompts/STYLE.md,
  *            prompts/README.md and every prompt file prompts/<kind>/<group>/<id>.md (not the
  *            rendered assets beside them), so the renderer has the exact text to paste
+ *   intake   the renders: for each <channel>/done/<id>.json with no <channel>/landed/<id>.json,
+ *            the prompt <id> is looked up in prompts/**\/*.md (front matter id, tool, drop, game);
+ *            the file at <channel>/drop/<drop path> is checked (present, not empty, a PNG when the
+ *            drop path says .png); then, in a worktree of this repository at origin/main, the
+ *            render is put at its drop path and, when the game path has the same extension, at
+ *            its game path too, committed on a branch grok/<id> with the provenance from
+ *            done/<id>.json, and the branch is pushed to origin. landed/<id>.json records the
+ *            branch and commit (or the reason the render was refused), and the binary is removed
+ *            from the channel: the branch holds it now. The land steps, the suite and the deploy
+ *            run on that branch as for any contributor's branch (tools/land_wardrobe.mjs,
+ *            tools/run_tests.sh); they are not run here.
  *   readme   <channel>/README.md from tools/agent_channel_README.md when it differs
  *   commit   one commit when anything changed, then push (unless --no-push)
- * The render intake (drop/, done/, landed/) is the next step and not in this version.
  * Exit 0 when the run completed (changes or none), 1 on an error (the run stops at the first).
  * Logs one line per step to stdout. The test: node tools/test_sync_agent_channel.mjs.
  */
 import { spawnSync } from "node:child_process";
+import crypto from "node:crypto";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -204,6 +215,106 @@ function readme(a) {
   return true;
 }
 
+// --- Intake: the renders, onto branches of this repository.
+
+/** Every prompt of the repository by id: {id, tool, drop, game, file, prompt}. */
+export function prompts(repo) {
+  const out = new Map();
+  const dir = path.join(repo, "prompts");
+  if (!fs.existsSync(dir)) return out;
+  for (const p of rglob(dir).filter((f) => f.endsWith(".md") && path.dirname(f) !== dir && !rel(f, dir).split("/").includes("assets"))) {
+    const text = readText(p);
+    const fm = text.match(/^---\n([\s\S]*?)\n---\n/);
+    if (!fm) continue;
+    const meta = {};
+    for (const line of fm[1].split("\n")) { const m = line.match(/^(\w+):\s*(.*)$/); if (m) meta[m[1]] = m[2].trim(); }
+    if (!meta.id || !meta.drop) continue;
+    const body = text.match(/\n## Prompt\n([\s\S]*?)(?:\n## |\s*$)/);
+    out.set(meta.id, { ...meta, file: p, prompt: body ? body[1].trim() : "" });
+  }
+  return out;
+}
+
+const PNG = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
+
+/** Why a drop is refused, or "" when it passes. */
+export function refuse(prompt, file) {
+  if (!prompt) return "no prompt with that id";
+  if (!isFile(file)) return `no file at drop/${prompt.drop}`;
+  const size = fs.statSync(file).size;
+  if (size === 0) return "the file is empty";
+  if (prompt.drop.toLowerCase().endsWith(".png")) {
+    const head = Buffer.alloc(8);
+    const fd = fs.openSync(file, "r");
+    try { fs.readSync(fd, head, 0, 8, 0); } finally { fs.closeSync(fd); }
+    if (!head.equals(PNG)) return "not a PNG";
+  }
+  return "";
+}
+
+function intake(a) {
+  const doneDir = path.join(a.channel, "done");
+  if (!fs.existsSync(doneDir)) return 0;
+  const known = prompts(a.beads);
+  let landed = 0;
+  for (const f of fs.readdirSync(doneDir).filter((n) => n.endsWith(".json")).sort()) {
+    const id = f.slice(0, -5);
+    const landedFile = path.join(a.channel, "landed", `${id}.json`);
+    if (isFile(landedFile)) continue;
+    let done;
+    try { done = JSON.parse(readText(path.join(doneDir, f))); } catch { done = {}; }
+    const prompt = known.get(id);
+    const dropFile = prompt ? path.join(a.channel, "drop", prompt.drop) : "";
+    const why = refuse(prompt, dropFile);
+    const record = { id, received_at: new Date().toISOString(), tool: done.tool || "", model: done.model || "", rendered_at: done.rendered_at || "" };
+    if (why) {
+      console.log(`intake   ${id}: refused (${why})`);
+      if (!a.dryRun) writeText(landedFile, JSON.stringify({ ...record, status: "refused", why }, null, 2) + "\n");
+      continue;
+    }
+    if (a.dryRun) { console.log(`intake   ${id}: would land on grok/${id}`); landed++; continue; }
+    const branch = `grok/${id}`;
+    const wt = path.join(a.beads, ".cache", "agent-channel-land", id);
+    git(a.beads, ["fetch", "--quiet", "origin", "main"]);
+    if (git(a.beads, ["ls-remote", "--exit-code", "--heads", "origin", branch], { okToFail: true }).status === 0) {
+      console.log(`intake   ${id}: branch ${branch} is already on origin; recording it`);
+      writeText(landedFile, JSON.stringify({ ...record, status: "branch", branch, note: "the branch existed already" }, null, 2) + "\n");
+      continue;
+    }
+    fs.rmSync(wt, { recursive: true, force: true });
+    git(a.beads, ["worktree", "prune"]);
+    git(a.beads, ["worktree", "add", "--quiet", "--detach", wt, "origin/main"]);
+    try {
+      git(wt, ["checkout", "--quiet", "-b", branch]);
+      const targets = [prompt.drop];
+      if (prompt.game && path.extname(prompt.game).toLowerCase() === path.extname(prompt.drop).toLowerCase()) targets.push(prompt.game);
+      for (const t of targets) { fs.mkdirSync(path.join(wt, path.dirname(t)), { recursive: true }); fs.copyFileSync(dropFile, path.join(wt, t)); }
+      git(wt, ["add", "--", ...targets]);
+      const sha = prompt.prompt ? (sha256(prompt.prompt)) : "";
+      const prov = [`Render ${id} from the coordination repository (bd uowd)`, "",
+        `Tool: ${record.tool || "?"}; model: ${record.model || "?"}; rendered ${record.rendered_at || "?"}.`,
+        `Prompt: ${rel(prompt.file, a.beads)}${sha && done.prompt_sha256 && sha !== done.prompt_sha256 ? " (the renderer's prompt_sha256 differs from the prompt file's)" : ""}.`,
+        done.notes ? `Renderer's notes: ${String(done.notes).slice(0, 500)}` : "",
+        `At ${targets.join(" and ")}. Land steps, suite and deploy follow on this branch.`].filter((l) => l !== "").join("\n");
+      git(wt, ["-c", "user.name=cc-srv", "-c", "user.email=cc-srv@gnomatix.com", "commit", "--quiet", "-m", prov]);
+      const commit = git(wt, ["rev-parse", "--short", "HEAD"]).stdout.trim();
+      git(wt, ["push", "--quiet", "origin", branch]);
+      writeText(landedFile, JSON.stringify({ ...record, status: "branch", branch, commit, paths: targets }, null, 2) + "\n");
+      git(a.channel, ["rm", "--quiet", "--", path.join("drop", prompt.drop)]);
+      console.log(`intake   ${id}: ${branch} ${commit} pushed; drop removed from the channel`);
+      landed++;
+    } finally {
+      git(a.beads, ["worktree", "remove", "--force", wt], { okToFail: true });
+    }
+  }
+  if (!landed) console.log("intake   nothing new");
+  return landed;
+}
+
+function sha256(text) {
+  return crypto.createHash("sha256").update(text).digest("hex");
+}
+
 // --- The clone, the commit, the push.
 
 function pull(a) {
@@ -240,9 +351,11 @@ export function main(argv = process.argv.slice(2)) {
   const imported = importFromChannel(a, before);
   const forge = imported && !a.dryRun ? exportBeads(a.beads) : before;
   const relayed = exportToChannel(a, forge);
-  const prompts = a.prompts ? mirrorPrompts(a) : 0;
+  const mirrored = a.prompts ? mirrorPrompts(a) : 0;
+  const landed = intake(a);
   const readmeChanged = readme(a);
-  commit(a, `${relayed.n} bead(s) relayed, ${imported} imported, ${prompts} prompt file(s) changed`, relayed.changed || prompts > 0 || readmeChanged);
+  commit(a, `${relayed.n} bead(s) relayed, ${imported} imported, ${mirrored} prompt file(s) changed, ${landed} render(s) landed`,
+    relayed.changed || mirrored > 0 || landed > 0 || readmeChanged);
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(new URL(import.meta.url).pathname)) {
