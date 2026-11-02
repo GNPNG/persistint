@@ -153,7 +153,7 @@ change. Rows are sorted by path.
 | `project/assets/florida/shell_scallop.png` | shell_scallop | `tools/cut_island_props.py` project/data/florida_canon.json (canon tide scroll, sheet 481b) | still, canon sheet resolution; shown 11 world px tall | - |
 | `project/assets/florida/shell_spiral.png` | shell_spiral | `tools/cut_island_props.py` project/data/florida_canon.json (canon tide scroll, sheet 481b) | still, canon sheet resolution; shown 11 world px tall | - |
 | `project/assets/island/mirror.png` | mirror | `tools/gen_village_props.py` | single 104x160 (26x40 world px at 4x), foot y 148 | - |
-| `project/assets/island/temple_pavilion.png` | temple_pavilion | `tools/gen_village_props.py` | single 600x560 (150x140 world px at 4x), foot y 544, door at x 300 | - |
+| `project/assets/island/temple_pavilion.png` | temple_pavilion | render of `prompts/image/levels/temple/temple_pavilion.md` (codex), keyed and fitted by hand; it replaced the `tools/gen_village_props.py` drawing | single 600x560 (150x140 world px at 4x), foot y 544, door at x 300 | - |
 | `project/assets/ruins/clone_bill_clinton.png` | clone_bill_clinton | `tools/gen_clone_children.py` | 192x272 frames (24x34 world px); rows 0-2 front/side(right; flip for left)/back: cols 0-1 idle, 2-5 walk; row 3 the floss, cols 0-5; row 4 the dab, cols 0-2 (front views, ZombieChild.dance); scale 1/8, SpriteFrames via scripts/ruins/sheet_rig.gd | - |
 | `project/assets/ruins/clone_bill_gates.png` | clone_bill_gates | `tools/gen_clone_children.py` | 192x272 frames (24x34 world px); rows 0-2 front/side(right; flip for left)/back: cols 0-1 idle, 2-5 walk; row 3 the floss, cols 0-5; row 4 the dab, cols 0-2 (front views, ZombieChild.dance); scale 1/8, SpriteFrames via scripts/ruins/sheet_rig.gd | - |
 | `project/assets/ruins/clone_epstein.png` | clone_epstein | `tools/gen_clone_children.py` | 192x272 frames (24x34 world px); rows 0-2 front/side(right; flip for left)/back: cols 0-1 idle, 2-5 walk; row 3 the floss, cols 0-5; row 4 the dab, cols 0-2 (front views, ZombieChild.dance); scale 1/8, SpriteFrames via scripts/ruins/sheet_rig.gd | - |
@@ -238,7 +238,7 @@ change. Rows are sorted by path.
 | `project/assets/ruins/ruins_vending.png` | ruins_vending | `tools/gen_ruins_art.py` | 384x592 still, scale 1/8, feet at bottom centre | - |
 | `project/assets/ruins/vignette.png` | vignette | `tools/gen_ruins_art.py` | 1280x720 screen overlay, linear filter | - |
 | `project/assets/temple/temple_candles.png` | temple_candles | `tools/gen_temple_props.py` | 96x176 frames (24x44 world px at 4x), foot (48, 168); row 0 idle x 4 (flicker); SpriteFrames temple_candles.tres | - |
-| `project/assets/temple/temple_cushion.png` | temple_cushion | `tools/gen_temple_props.py` | single 120x80 (30x20 world px at 4x), foot y 72 | - |
+| `project/assets/temple/temple_cushion.png` | temple_cushion | render of `prompts/image/levels/temple/temple_cushion.md` (codex), keyed and fitted by hand; it replaced the `tools/gen_temple_props.py` drawing | single 120x80 (30x20 world px at 4x), foot y 72 | - |
 | `project/assets/temple/temple_plinth.png` | temple_plinth | `tools/gen_temple_props.py` | single 128x56 (32x14 world px at 4x), pillar foot y 36 | - |
 | `project/assets/temple/temple_shadow.png` | temple_shadow | `tools/gen_temple_props.py` | single 96x32 (24x8 world px at 4x) | - |
 | `project/assets/temple/temple_twinkle.png` | temple_twinkle | `tools/gen_temple_props.py` | 48x48 frames (12x12 world px at 4x), centred; row 0 idle x 6; SpriteFrames temple_twinkle.tres | - |
