@@ -50,6 +50,16 @@ func _ready() -> void:
 		else:
 			_label(box, "%s  (locked)\n    Missing: %s" % [e["title"], ", ".join(e["missing"])], "SubtleLabel")
 
+	# Where the Covenant cast is right now (the Calendar of Blood, GameClock.whereabouts);
+	# read-only, a name and a place per line.
+	_heading(box, "Where is everyone")  # _draft
+	for npc_id: String in ["priestess", "initiate", "drone", "barren"]:
+		var w: Dictionary = GameClock.whereabouts(npc_id)
+		var place_name := str((w.get("place") as Dictionary).get("name", ""))
+		if place_name == "":  # no schedule entry right now: her home spot, the village
+			place_name = str(GameClock.place("village").get("name", "the village"))
+		_label(box, "    %s: %s" % [Cast.full(npc_id), place_name])
+
 
 ## Titles of the recovered pieces, in recovery order.
 func recovered() -> Array:

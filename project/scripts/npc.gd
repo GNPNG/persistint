@@ -438,10 +438,32 @@ func leave_path(to: Vector2) -> PackedVector2Array:
 
 
 func current_bark() -> String:
+	var hint := _ask_around_hint()
+	if hint != "":
+		return hint
 	for entry: Dictionary in _barks.get(npc_id, []):
 		if WorldState.matches(entry.get("if", {})) and GameClock.matches_when(entry.get("when", {})):
 			return entry.get("text", "")
 	return "..."
+
+
+## The ask-around hint (data/calendar.json "ask_around") when someone is sought
+## (GameClock.sought_npc, the Offering's Priestess), this NPC is not her, and she is off this
+## map: the walk-by and interact bark says where she is instead of the usual line. Only the
+## Covenant cast (a scheduled NPC) knows her schedule; the Florida NPCs never give the hint.
+## On the Fourteenth the festival barks keep priority (the whole Covenant is in the Great Hall
+## then, so the hint would only send the player there anyway); when she is on this map the
+## player can simply walk up to her, so the usual bark plays.
+func _ask_around_hint() -> String:
+	if not scheduled or GameClock.is_festival():
+		return ""
+	var sought := GameClock.sought_npc()
+	if sought == "" or sought == npc_id:
+		return ""
+	var scene := GameClock.scene_of(GameClock.whereabouts(sought).get("place", {}))
+	if scene != "" and scene == _map_scene():
+		return ""
+	return GameClock.ask_around_hint(sought, _map_scene())
 
 
 func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:

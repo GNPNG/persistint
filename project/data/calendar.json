@@ -66,5 +66,17 @@
 	"schedule_hold": {
 		"_note": "npc_id -> {until_any: [flag, ...]}: while none of the flags is set, GameClock.location_for answers village for the NPC whatever the schedule says, so she keeps her home spot.",
 		"initiate": { "until_any": ["quest_offering_accepted", "refused_offering"] }
+	},
+	"ask_around": {
+		"_note": "Ask around: while a seeking rule's if holds, the walk-by and interact bark of an NPC who is not the sought one (and whose map she is not on) is the hint for where she is (npc.gd current_bark, GameClock.sought_npc / ask_around_hint). templates: kind -> {text, _draft}; the kind is here (the sought one's place is on this map), elsewhere (another map), away (a place with no map), asleep (the dormitory's away). {name} is her full name (Cast), {where} her place's where, {activity} what she is doing. In an if, true means the flag is set and false that it is not (WorldState.matches would need a flag that is literally false, and offering_delivered is only ever set true). On the Fourteenth the festival barks keep priority over the hint. New text is DRAFT (_draft).",
+		"templates": {
+			"here": { "text": "{name}? Right over there, {activity}.", "_draft": true },
+			"elsewhere": { "text": "{name}? This time of day she's {where}, {activity}.", "_draft": true },
+			"away": { "text": "{name}? {where}. Nobody goes in there.", "_draft": true },
+			"asleep": { "text": "{name}? Asleep {where}. The quarter wakes with the morning.", "_draft": true }
+		},
+		"seeking": [
+			{ "npc": "priestess", "if": { "quest_offering_accepted": true, "offering_delivered": false } }
+		]
 	}
 }

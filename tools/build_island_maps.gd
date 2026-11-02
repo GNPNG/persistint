@@ -626,13 +626,16 @@ func _build_village() -> void:
 	_marker("spot_compound", _px(12.5, 15.5))
 	_placeholder_prop("Greenhouse", _px(13.5, 16.5), "greenhouse", "res://assets/canon/prop_bunker.png", 44.0)
 	_placeholder_prop("Well", _px(21.5, 13.25), "well", "res://assets/canon/prop_seal_o.png", 28.0)
+	# The notice board on the spawn plaza reopens the day's cohort signals (FEAT-003).
+	_notice_board(_px(18.0, 12.0))
 	_character("res://scenes/npc/npc.tscn", "Priestess", _px(9.5, 27.5), {
 		"npc_id": "priestess", "caste": "priestess", "sprite_texture": "npc_priestess",
 		"dialogue_path": "res://dialogue/priestess.dialogue", "voice_pitch": 0.85, "scheduled": true})
 	_door("GreatHallDoor", _px(23.4, 7.0), {
 		"target_scene": "res://scenes/maps/great_hall.tscn", "target_spawn": "spawn_from_village",
 		"exit_label": "To the Great Hall"})
-	_marker("spawn_from_great_hall", _px(22.6, 7.8))
+	# Arrivals from the Great Hall stand south of its door, clear of the door's trigger.
+	_marker("spawn_from_great_hall", _px(22.6, 8.25))
 
 	# ---- Exit points for other areas. ----
 	_door("Exit_Ruins", _px(rx + 0.5, 24.3), {
@@ -676,6 +679,28 @@ func _mirror(pos: Vector2) -> void:
 	if mirror_shadow:
 		_add(mirror_shadow, "PaperShadow", sp)
 	_add(cs, "CollisionShape2D", m)
+
+
+func _notice_board(pos: Vector2) -> void:
+	## The village notice board: click it (or E next to it) and it reopens today's cohort
+	## signals (scripts/notice_board.gd, scripts/ui/cohort_notice.gd). Its art is a drop
+	## (scripts/placeholder_prop.gd): the rendered prop_notice_board.png replaces the sign.
+	var b := Area2D.new()
+	b.position = pos
+	b.set_script(load("res://scripts/notice_board.gd"))
+	_add(b, "NoticeBoard")
+	var s := Sprite2D.new()
+	s.set_script(load("res://scripts/placeholder_prop.gd"))
+	s.set("art_path", "notice_board")
+	s.set("fallback_path", "res://assets/canon/prop_sign_a.png")
+	s.set("height", 40.0)
+	_add(s, "Sprite2D", b)
+	var cs := CollisionShape2D.new()
+	cs.position = Vector2(0, -14)
+	var shape := CircleShape2D.new()
+	shape.radius = 14.0
+	cs.shape = shape
+	_add(cs, "CollisionShape2D", b)
 
 
 # ---------- temple (30 x 20 cells) ----------

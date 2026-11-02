@@ -19,8 +19,14 @@ const WARDROBE_SCENE := "res://scenes/ui/wardrobe.tscn"
 var _hud_label: Label
 var _wardrobe: CanvasLayer
 var _journal: CanvasLayer
+var _notice: PanelContainer
 const JOURNAL_SCRIPT := preload("res://scripts/ui/journal.gd")
-const HUD_ICON := preload("res://assets/canon/prop_calendar.png")
+const COHORT_NOTICE := preload("res://scripts/ui/cohort_notice.gd")
+## The clock tag's canon Calendar of Blood icon, loaded at run time: a compile-time preload of
+## it would keep the whole map script from compiling where the texture is not imported (the art
+## is a Git LFS file), and every map would lose its script, HUD included. Null where it cannot
+## load; the tag shows the text alone then.
+var _hud_icon: Texture2D = load("res://assets/canon/prop_calendar.png")
 
 
 func _ready() -> void:
@@ -38,6 +44,36 @@ func _ready() -> void:
 	_build_hud()
 	GameClock.phase_changed.connect(func(_p: String) -> void: _update_hud())
 	GameClock.day_changed.connect(func(_d: int) -> void: _update_hud())
+	if _is_island_map():
+		GameClock.day_changed.connect(func(_d: int) -> void: _maybe_show_notice())
+		_maybe_show_notice()
+
+
+## True for the Little St. Piere Island maps (the village, the temple, the Great Hall), where
+## the morning notice of the day's cohort signals shows; Florida and the ruins have no Covenant
+## notices.
+func _is_island_map() -> bool:
+	return scene_file_path.contains("/maps/") and not scene_file_path.contains("/florida/") and not scene_file_path.contains("/ruins/")
+
+
+## --- Cohort signals (the Calendar of Blood, data/calendar.json): the morning notice shows the
+## day's signals once a day (WorldState "_notice_day"); the village notice board
+## (scripts/notice_board.gd) opens them again with the day/phase line. ---
+func _maybe_show_notice() -> void:
+	if _notice == null or int(WorldState.get_flag("_notice_day", -1)) == GameClock.day:
+		return
+	if GameClock.active_cohort_signals().is_empty():
+		return  # a day with no signal (e.g. cycle days 12-13) shows nothing
+	show_cohort_notice()
+
+
+## Today's cohort signals on the HUD notice, with the day/phase line when the notice board
+## asked (with_status); showing marks the day seen.
+func show_cohort_notice(with_status := false) -> void:
+	if _notice == null:
+		return
+	_notice.show_signals(GameClock.active_cohort_signals(), with_status)
+	WorldState.set_flag("_notice_day", GameClock.day)
 
 
 func _spawn_player() -> void:
@@ -74,7 +110,7 @@ func _build_hud() -> void:
 	row.add_theme_constant_override("separation", 4)
 	tag.add_child(row)
 	var icon := TextureRect.new()
-	icon.texture = HUD_ICON
+	icon.texture = _hud_icon
 	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	icon.custom_minimum_size = Vector2(15, 14)
@@ -92,6 +128,9 @@ func _build_hud() -> void:
 		s.slot = pair[2]
 		s.pressed.connect(pair[3])
 		layer.add_child(s)
+	if _is_island_map():
+		_notice = COHORT_NOTICE.new()
+		layer.add_child(_notice)
 	_hud_layer = layer
 	_build_zoom_figures()
 	_update_hud()
