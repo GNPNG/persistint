@@ -40,6 +40,9 @@ const exportMap = (ws) => new Map(bd(ws, ["export"]).split("\n").filter((l) => l
 const byTitle = (ws, title) => [...exportMap(ws).values()].find((r) => r.title === title);
 
 function checkMerge() {
+  const edited = { id: "x-2", title: "T", status: "open", labels: ["contractor:kiro"], comments: [{ id: "c1", author: "cc", text: "moved to the dev log" }] };
+  const stale = merge(edited, { ...edited, comments: [{ id: "c1", author: "cc", text: "the old text" }] }, "now");
+  check(stale.record === null, "merge: a comment whose id the Gitea record already has is known, even if its text was edited there");
   const forge = { id: "x-1", title: "T", status: "open", labels: ["contractor:kiro"], comments: [{ author: "forge", text: "a" }] };
   let m = merge(forge, { ...forge, title: "changed", status: "in_progress", assignee: "kiro", comments: [...forge.comments, { author: "kiro", text: "b" }] }, "now");
   check(m.record && m.record.title === "T" && m.record.status === "in_progress" && m.record.assignee === "kiro" && m.record.comments.length === 2 && m.record.updated_at === "now",

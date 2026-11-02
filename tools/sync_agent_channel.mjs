@@ -149,8 +149,11 @@ export function merge(forge, incoming, now = new Date().toISOString()) {
   }
   if (forge.status === "closed") return { record: null, why: "closed on the forge" };
   const record = { ...forge };
+  // A comment is known when the Gitea record already has its id (its text may have been edited
+  // there since it was relayed, e.g. moved to the encrypted dev/ log), or the same author and text.
   const have = new Set((forge.comments || []).map(commentKey));
-  const added = (incoming.comments || []).filter((c) => !have.has(commentKey(c)));
+  const haveIds = new Set((forge.comments || []).map((c) => c.id).filter(Boolean));
+  const added = (incoming.comments || []).filter((c) => !(c.id && haveIds.has(c.id)) && !have.has(commentKey(c)));
   let changed = added.length > 0;
   if (added.length) record.comments = [...(forge.comments || []), ...added];
   if (incoming.status !== forge.status && AGENT_STATUSES.has(incoming.status)) { record.status = incoming.status; changed = true; }
