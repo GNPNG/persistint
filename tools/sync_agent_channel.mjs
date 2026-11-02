@@ -94,7 +94,11 @@ function parse(argv) {
 function run(cmd, args, opts = {}) {
   const r = spawnSync(cmd, args, { encoding: "utf8", ...opts });
   if (r.error) throw new Error(`${cmd}: ${r.error.message}`);
-  if (r.status !== 0 && !opts.okToFail) throw new Error(`${cmd} ${args.join(" ")} exited ${r.status}: ${(r.stderr || "").trim().slice(-400)}`);
+  if (r.status !== 0 && !opts.okToFail) {
+    // The Authorization header git gets as -c is never written to a log.
+    const shown = args.map((x) => (String(x).startsWith("http.https://github.com/.extraheader=") ? "http.https://github.com/.extraheader=<redacted>" : x));
+    throw new Error(`${cmd} ${shown.join(" ")} exited ${r.status}: ${(r.stderr || "").trim().slice(-400)}`);
+  }
   return r;
 }
 
@@ -283,7 +287,9 @@ function intake(a) {
     }
     fs.rmSync(wt, { recursive: true, force: true });
     git(a.beads, ["worktree", "prune"]);
-    git(a.beads, ["worktree", "add", "--quiet", "--detach", wt, "origin/main"]);
+    // The landing worktree only adds a render and its provenance, and a worktree has no git-crypt
+    // key of its own, so the smudge filter (dev/*.md) is a no-op here or 'worktree add' aborts.
+    git(a.beads, ["-c", "filter.git-crypt.smudge=cat", "-c", "filter.git-crypt.required=false", "worktree", "add", "--quiet", "--detach", wt, "origin/main"]);
     try {
       git(wt, ["checkout", "--quiet", "-b", branch]);
       const targets = [prompt.drop];
