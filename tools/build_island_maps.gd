@@ -1,9 +1,11 @@
 extends SceneTree
-## Builds the island tileset and the village/temple map scenes.
+## Builds the island tileset and the village/temple/great hall map scenes.
 ## Run, from the repo root, after any art change:
 ##   python3 -I tools/gen_island_tiles.py && python3 -I tools/gen_temple_props.py && python3 -I tools/gen_village_props.py
 ##   godot --headless --path project --import
 ##   cd project && godot --headless --path . -s ../tools/build_island_maps.gd
+## Only the Great Hall (off the shipped tileset, no tileset rebuild):
+##   cd project && godot --headless --path . -s ../tools/build_island_maps.gd -- --only=great_hall
 ##   (the canon props come from python3 -I tools/cut_island_props.py, the greenery from
 ##   python3 -I tools/gen_island_deco.py)
 ## Paper look (bd gsd): tools/bake_paper.sh greenery props (and the import) before this; _prop and
@@ -54,16 +56,31 @@ func _process(_delta: float) -> bool:
 	for n: String in cuts["props"]:
 		_heights[n] = float(cuts["props"][n]["height"])
 	_heights.merge(OTHER_HEIGHTS)
-	_build_tileset()
-	_build_village()
-	_build_temple()
+	# `-- --only=great_hall` builds just the Great Hall off the shipped tileset (no tileset
+	# rebuild), for adding the hall without re-running the island generators.
+	var only := ""
+	for arg in OS.get_cmdline_user_args():
+		if arg.begins_with("--only="):
+			only = arg.get_slice("=", 1)
+	if only == "great_hall":
+		_load_tile_index()
+		_ts = load(TILESET_PATH)
+		_build_great_hall()
+	else:
+		_build_tileset()
+		_build_village()
+		_build_temple()
+		_build_great_hall()
 	quit()
 	return true
 
 
 # ---------- tileset ----------
 
-func _build_tileset() -> void:
+## Reads the tile index (assets/tiles/island_tiles.json): names to atlas cells, walkable and
+## solid sets, edge overlay rows. _build_tileset uses it to make the tileset; an --only build
+## reads it to place tiles off the shipped tileset.
+func _load_tile_index() -> void:
 	var index: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(INDEX_PATH))
 	_walk = index["walk"]
 	_solid = index["solid"] + index["anim"]  # water animates and is solid
@@ -77,6 +94,11 @@ func _build_tileset() -> void:
 	for n: String in index["blocked"]:
 		var c: Array = index["blocked"][n]
 		_blocked_cells[n] = Vector2i(int(c[0]), int(c[1]))
+
+
+func _build_tileset() -> void:
+	var index: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(INDEX_PATH))
+	_load_tile_index()
 	_ts = TileSet.new()
 	_ts.tile_size = Vector2i(_tile_px, _tile_px)
 	_ts.add_physics_layer()
@@ -357,6 +379,20 @@ func _marker(node_name: String, pos: Vector2) -> void:
 	_add(m, node_name)
 
 
+func _placeholder_prop(node_name: String, base: Vector2, art: String, fallback: String, height: float) -> Sprite2D:
+	## A prop whose art is a drop that may not be rendered yet (scripts/placeholder_prop.gd loads
+	## it at run time, falling back to existing art); base is its feet, so it y-sorts by where it
+	## stands. Nothing is drawn at build time.
+	var s := Sprite2D.new()
+	s.position = base
+	s.set_script(load("res://scripts/placeholder_prop.gd"))
+	s.set("art_path", art)
+	s.set("fallback_path", fallback)
+	s.set("height", height)
+	_add(s, node_name)
+	return s
+
+
 func _inst(path: String, node_name: String, pos: Vector2, props := {}) -> Node2D:
 	var n: Node2D = load(path).instantiate()
 	n.position = pos
@@ -567,15 +603,40 @@ func _build_village() -> void:
 	_character("res://scenes/player/player.tscn", "Player", _px(19.5, 13.0))
 	_character("res://scenes/npc/npc.tscn", "Initiate", _px(20.6, 13.95), {
 		"npc_id": "initiate", "caste": "initiate", "sprite_texture": "npc_initiate",
-		"dialogue_path": "res://dialogue/offering.dialogue", "voice_pitch": 1.25})
+		"dialogue_path": "res://dialogue/offering.dialogue", "voice_pitch": 1.25, "scheduled": true})
 	_character("res://scenes/npc/npc.tscn", "Drone", _px(9.5, 16.25), {
-		"npc_id": "drone", "caste": "drone", "sprite_texture": "npc_drone", "voice_pitch": 0.7})
+		"npc_id": "drone", "caste": "drone", "sprite_texture": "npc_drone", "voice_pitch": 0.7,
+		"scheduled": true})
 	_character("res://scenes/npc/npc.tscn", "Barren", _px(17.5, 18.75), {
-		"npc_id": "barren", "caste": "barren", "sprite_texture": "npc_barren", "voice_pitch": 0.9})
+		"npc_id": "barren", "caste": "barren", "sprite_texture": "npc_barren", "voice_pitch": 0.9,
+		"scheduled": true})
 	_door("TempleDoor", _px(tx, ty + 1.5), {
 		"target_scene": "res://scenes/maps/temple.tscn", "target_spawn": "spawn_from_village",
 		"exit_label": "To the Temple"})
 	_mirror(_px(19.5, 11.5))
+
+	# The Calendar of Blood schedule spots (data/calendar.json "places"), the doctrinal-rounds
+	# Priestess, the Great Hall door with its return spawn, and the placeholder greenhouse and
+	# well (scripts/placeholder_prop.gd: the rendered drop replaces the fallback art).
+	_marker("spot_well", _px(21.5, 13.0))
+	# The sand near the dock has a tree in it, so the shore spot is the south beach by the wreck.
+	_marker("spot_shore", _px(18.5, 25.25))
+	_marker("spot_garden", _px(9.5, 16.25))
+	_marker("spot_greenhouse", _px(14.0, 15.5))
+	_marker("spot_compound", _px(12.5, 15.5))
+	_placeholder_prop("Greenhouse", _px(13.5, 16.5), "greenhouse", "res://assets/canon/prop_bunker.png", 44.0)
+	_placeholder_prop("Well", _px(21.5, 13.25), "well", "res://assets/canon/prop_seal_o.png", 28.0)
+	# The notice board on the spawn plaza reopens the day's cohort signals (FEAT-003).
+	_notice_board(_px(18.0, 12.0))
+	_character("res://scenes/npc/npc.tscn", "Priestess", _px(9.5, 27.5), {
+		"npc_id": "priestess", "caste": "priestess", "sprite_texture": "npc_priestess",
+		"dialogue_path": "res://dialogue/priestess.dialogue", "voice_pitch": 0.85, "scheduled": true})
+	_door("GreatHallDoor", _px(23.4, 7.0), {
+		"target_scene": "res://scenes/maps/great_hall.tscn", "target_spawn": "spawn_from_village",
+		"exit_label": "To the Great Hall",
+		"show_marker": true})
+	# Arrivals from the Great Hall stand south of its door, clear of the door's trigger.
+	_marker("spawn_from_great_hall", _px(22.6, 8.25))
 
 	# ---- Exit points for other areas. ----
 	_door("Exit_Ruins", _px(rx + 0.5, 24.3), {
@@ -619,6 +680,28 @@ func _mirror(pos: Vector2) -> void:
 	if mirror_shadow:
 		_add(mirror_shadow, "PaperShadow", sp)
 	_add(cs, "CollisionShape2D", m)
+
+
+func _notice_board(pos: Vector2) -> void:
+	## The village notice board: click it (or E next to it) and it reopens today's cohort
+	## signals (scripts/notice_board.gd, scripts/ui/cohort_notice.gd). Its art is a drop
+	## (scripts/placeholder_prop.gd): the rendered prop_notice_board.png replaces the sign.
+	var b := Area2D.new()
+	b.position = pos
+	b.set_script(load("res://scripts/notice_board.gd"))
+	_add(b, "NoticeBoard")
+	var s := Sprite2D.new()
+	s.set_script(load("res://scripts/placeholder_prop.gd"))
+	s.set("art_path", "notice_board")
+	s.set("fallback_path", "res://assets/canon/prop_sign_a.png")
+	s.set("height", 40.0)
+	_add(s, "Sprite2D", b)
+	var cs := CollisionShape2D.new()
+	cs.position = Vector2(0, -14)
+	var shape := CircleShape2D.new()
+	shape.radius = 14.0
+	cs.shape = shape
+	_add(cs, "CollisionShape2D", b)
 
 
 # ---------- temple (30 x 20 cells) ----------
@@ -690,10 +773,16 @@ func _build_temple() -> void:
 	_marker("spawn_from_village", Vector2(15 * CELL, 17 * CELL + 24))
 	_marker("spawn_from_ruins", Vector2(2 * CELL + 8, 8 * CELL + 16))
 	_marker("spawn_from_puzzle", Vector2(25 * CELL, 12 * CELL + 16))
+	# The Calendar of Blood spots (data/calendar.json "places": spot_temple_<npc>).
+	_marker("spot_temple_priestess", Vector2(15 * CELL, 7 * CELL + 40))
+	_marker("spot_temple_initiate", Vector2(9 * CELL, 13 * CELL))
 	_character("res://scenes/player/player.tscn", "Player", Vector2(15 * CELL, 15 * CELL + 16))
 	_character("res://scenes/npc/npc.tscn", "Priestess", Vector2(15 * CELL, 7 * CELL + 40), {
 		"npc_id": "priestess", "caste": "priestess", "sprite_texture": "npc_priestess",
-		"dialogue_path": "res://dialogue/priestess.dialogue", "voice_pitch": 0.85})
+		"dialogue_path": "res://dialogue/priestess.dialogue", "voice_pitch": 0.85, "scheduled": true})
+	_character("res://scenes/npc/npc.tscn", "Initiate", Vector2(9 * CELL, 13 * CELL), {
+		"npc_id": "initiate", "caste": "initiate", "sprite_texture": "npc_initiate",
+		"dialogue_path": "res://dialogue/offering.dialogue", "voice_pitch": 1.25, "scheduled": true})
 	_door("ExitDoor", Vector2(15 * CELL, 19 * CELL + 16), {
 		"target_scene": "res://scenes/maps/village.tscn", "target_spawn": "spawn_from_temple",
 		"exit_label": "Back to the Village"})
@@ -706,3 +795,67 @@ func _build_temple() -> void:
 		"target_scene": "res://scenes/ruins/ruins_wreck.tscn", "target_spawn": "spawn_default",
 		"exit_label": "Into the Ruins of Utopia"})
 	_save("res://scenes/maps/temple.tscn")
+
+
+# ---------- great hall (20 x 12 cells) ----------
+## A small placeholder interior for the Calendar of Blood "great_hall" schedule location: the
+## Festival of the Fourteenth gathers the cast here (data/calendar.json), and the full festival
+## event builds on the FestivalStage markers later. Temple marble, a dais at the head, a banner
+## (a placeholder prop: the rendered drop replaces it). Run alone with `-- --only=great_hall`.
+
+func _build_great_hall() -> void:
+	_begin("GreatHall", 20, 12, "floor")
+	# Cream and blush marble like the temple's, the row under the north wall shaded.
+	for x in 20:
+		for y in range(4, 11):
+			var blush := (x + y) % 2 == 1
+			if y == 4:
+				_grid[Vector2i(x, y)] = "floor_nb" if blush else "floor_n"
+			elif blush:
+				_grid[Vector2i(x, y)] = "floor_b"
+			elif _rng.randf() < 0.12:
+				_grid[Vector2i(x, y)] = "floor_alt"
+	# High north wall (cap, face, wainscot), wall tops round the other three sides.
+	_fill(0, 0, 19, 0, "wall_cap")
+	_fill(0, 1, 19, 2, "wall")
+	_fill(0, 3, 19, 3, "wall_base")
+	_fill(0, 4, 0, 10, "wall_l")
+	_fill(19, 4, 19, 10, "wall_r")
+	_fill(0, 11, 19, 11, "wall_s")
+	_grid[Vector2i(0, 11)] = "wall_sl"
+	_grid[Vector2i(19, 11)] = "wall_sr"
+	_piece(9, 11, "door_s", 2, 1)  # exit, back to the village
+	_piece(8, 4, "dais", 4, 3)  # the head of the hall, where the Priestess leads the festival
+
+	_marker("spawn_default", _px(9.5, 9.5))
+	_marker("spawn_from_village", _px(10.5, 9.5))
+	_character("res://scenes/player/player.tscn", "Player", _px(9.5, 9.5))
+	# The scheduled cast's festival spots (data/calendar.json "places": spot_great_hall_<npc>):
+	# the Priestess at the head of the hall, the Initiate and a Barren flanking the dais.
+	_marker("spot_great_hall_priestess", _px(9.5, 7.5))
+	_marker("spot_great_hall_initiate", _px(8.5, 8.5))
+	_marker("spot_great_hall_barren", _px(11.5, 8.5))
+	_character("res://scenes/npc/npc.tscn", "Priestess", _px(9.5, 7.5), {
+		"npc_id": "priestess", "caste": "priestess", "sprite_texture": "npc_priestess",
+		"dialogue_path": "res://dialogue/priestess.dialogue", "voice_pitch": 0.85, "scheduled": true})
+	_character("res://scenes/npc/npc.tscn", "Initiate", _px(8.5, 8.5), {
+		"npc_id": "initiate", "caste": "initiate", "sprite_texture": "npc_initiate",
+		"dialogue_path": "res://dialogue/offering.dialogue", "voice_pitch": 1.25, "scheduled": true})
+	_character("res://scenes/npc/npc.tscn", "Barren", _px(11.5, 8.5), {
+		"npc_id": "barren", "caste": "barren", "sprite_texture": "npc_barren", "voice_pitch": 0.9,
+		"scheduled": true})
+	# The stage the Festival of the Fourteenth event (a later feature) plays on; the markers
+	# name where its performers stand.
+	var stage := Node2D.new()
+	stage.position = _px(9.5, 5.0)
+	_add(stage, "FestivalStage")
+	for pair: Array in [["stage_left", Vector2(-64, 0)], ["stage_right", Vector2(64, 0)], ["stage_front", Vector2(0, 48)]]:
+		var m := Marker2D.new()
+		m.position = pair[1]
+		_add(m, pair[0], stage)
+	_placeholder_prop("Banner", _px(9.5, 3.3), "great_hall_banner", "res://assets/canon/prop_icon_queen_mother.png", 64.0)
+	_door("ExitDoor", _px(9.5, 11.5), {
+		"target_scene": "res://scenes/maps/village.tscn", "target_spawn": "spawn_from_great_hall",
+		"exit_label": "Back to the Village",
+		"show_marker": true})
+	_save("res://scenes/maps/great_hall.tscn")

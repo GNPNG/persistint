@@ -14,6 +14,12 @@ func _initialize() -> void:
 
 func _run() -> void:
 	await process_frame
+	# The scheduled NPCs (calendar.json) stand at their scene's default spots on a plain Day 2
+	# midday; pin the clock so the checks below see those spots.
+	var clock: Node = root.get_node("/root/GameClock")
+	clock.set_process(false)
+	clock.day = 2
+	clock.phase_index = 1
 	await _village()
 	await _temple()
 	print("RESULT: %s (%d failures)" % ["PASS" if _failures == 0 else "FAIL", _failures])
@@ -50,13 +56,18 @@ func nav_ready(region: NavigationRegion2D) -> void:
 
 func _village() -> void:
 	var m := await _load(VILLAGE)
-	for n in ["Ground", "Nav", "Player", "Initiate", "Drone", "Barren", "TempleDoor", "Mirror",
-			"spawn_default", "spawn_from_temple", "Exit_Ruins", "Exit_Cruise", "Exit_Tropical"]:
+	for n in ["Ground", "Nav", "Player", "Initiate", "Drone", "Barren", "Priestess", "TempleDoor", "Mirror",
+			"spawn_default", "spawn_from_temple", "Exit_Ruins", "Exit_Cruise", "Exit_Tropical",
+			"GreatHallDoor", "spawn_from_great_hall",
+			"spot_well", "spot_shore", "spot_garden", "spot_greenhouse", "spot_compound"]:
 		_check(m.get_node_or_null(n) != null, "village has " + n)
 	_check(m.get_node("Initiate").npc_id == "initiate" and m.get_node("Initiate").dialogue_path.ends_with("offering.dialogue"),
 		"village Initiate keeps npc_id and dialogue")
 	_check(m.get_node("TempleDoor").target_scene == TEMPLE and m.get_node("TempleDoor").target_spawn == "spawn_from_village",
 		"village TempleDoor leads to temple spawn_from_village")
+	_check(m.get_node("GreatHallDoor").target_scene == "res://scenes/maps/great_hall.tscn"
+			and m.get_node("GreatHallDoor").target_spawn == "spawn_from_village",
+		"village GreatHallDoor leads to the Great Hall spawn_from_village")
 	_check(m.get_node("Exit_Ruins").target_scene == "res://scenes/ruins/ruins_wreck.tscn" and m.get_node("Exit_Ruins").target_spawn == "spawn_default"
 			and not m.get_node("Exit_Ruins").locked, "village Exit_Ruins leads to the ruins wreck")
 	_check(m.get_node("Exit_Tropical").target_scene == "res://scenes/florida/beach.tscn" and m.get_node("Exit_Tropical").target_spawn == "spawn_default"
@@ -73,7 +84,9 @@ func _village() -> void:
 		"village walls collide, plaza does not")
 	var from: Vector2 = m.get_node("spawn_default").position
 	var region: NavigationRegion2D = m.get_node("Nav")
-	for n in ["TempleDoor", "Initiate", "Drone", "Barren", "Mirror", "Exit_Ruins", "Exit_Cruise", "Exit_Tropical", "spawn_from_temple", "spawn_from_tropical"]:
+	for n in ["TempleDoor", "Initiate", "Drone", "Barren", "Priestess", "Mirror", "Exit_Ruins", "Exit_Cruise", "Exit_Tropical",
+			"GreatHallDoor", "spawn_from_temple", "spawn_from_tropical", "spawn_from_great_hall",
+			"spot_well", "spot_shore", "spot_garden", "spot_greenhouse", "spot_compound"]:
 		_check(_reaches(region, from, m.get_node(n).position), "village: walkable route from spawn to " + n)
 	var drone: Node2D = m.get_node("Drone")
 	var ground: TileMapLayer = m.get_node("Ground")  # scaled: its 128 px atlas cells sit on the 32 px grid
@@ -85,8 +98,8 @@ func _village() -> void:
 
 func _temple() -> void:
 	var m := await _load(TEMPLE)
-	for n in ["Ground", "Nav", "Player", "Priestess", "ExitDoor", "RitualTable", "RuinsDoor",
-			"spawn_default", "spawn_from_village", "spawn_from_puzzle"]:
+	for n in ["Ground", "Nav", "Player", "Priestess", "Initiate", "ExitDoor", "RitualTable", "RuinsDoor",
+			"spawn_default", "spawn_from_village", "spawn_from_puzzle", "spot_temple_priestess", "spot_temple_initiate"]:
 		_check(m.get_node_or_null(n) != null, "temple has " + n)
 	_check(m.get_node("ExitDoor").target_spawn == "spawn_from_temple" and not m.get_node("RuinsDoor").locked
 			and m.get_node("RuinsDoor").target_scene == "res://scenes/ruins/ruins_wreck.tscn",
@@ -94,7 +107,8 @@ func _temple() -> void:
 	_check(m.get_node("RitualTable").target_scene.ends_with("ritual_puzzle.tscn"), "temple RitualTable leads to the puzzle")
 	var from: Vector2 = m.get_node("spawn_default").position
 	var region: NavigationRegion2D = m.get_node("Nav")
-	for n in ["Priestess", "ExitDoor", "RitualTable", "RuinsDoor", "spawn_from_village", "spawn_from_puzzle"]:
+	for n in ["Priestess", "Initiate", "ExitDoor", "RitualTable", "RuinsDoor", "spawn_from_village", "spawn_from_puzzle",
+			"spot_temple_priestess", "spot_temple_initiate"]:
 		_check(_reaches(region, from, m.get_node(n).position), "temple: walkable route from spawn to " + n)
 	m.queue_free()
 	await process_frame

@@ -45,6 +45,13 @@ static var _barks: Dictionary = {}
 ## Where the NPC goes when hide_if_flag is set while it's here (a res:// map: the stable, the
 ## garden): it walks to this map's door to there and is gone at it (leave_via), not on the spot.
 @export var leave_to := ""
+## On for an NPC who follows the Calendar of Blood (data/calendar.json "schedules" and "places",
+## GameClock.location_for): she stands at the spot of the place her schedule puts her in while
+## this map is its scene, and is absent everywhere else (a place with no map means she is away
+## indoors). On a phase or day change she walks to the door of where she is due next (or fades
+## when the map has no door to it), appears at her spot, or walks over when the spot changes on
+## the same map. Off for NPCs the calendar does not schedule (the Florida cast).
+@export var scheduled := false
 ## Off for the second of a pair who share one npc_id and its barks (the beach psychologists): walking
 ## past, only the first one barks; talking to either opens their conversation.
 @export var walk_by_bark := true
@@ -59,6 +66,9 @@ var _baked := false
 var _last_position := Vector2.ZERO
 ## Set while the NPC walks off the map or fades out (leave_via).
 var _leaving := false
+## The position the scene placed the NPC at (its default spot; _ready), for a scheduled NPC
+## whose place has no spot marker (calendar.json "places" spot null).
+var _home := Vector2.ZERO
 ## The rig's sheet when _process last checked it, and whether it is a directional rig (idle_down).
 var _frames_seen: SpriteFrames
 var _directional := false
@@ -87,9 +97,15 @@ func _ready() -> void:
 	input_event.connect(_on_input_event)
 	$Proximity.body_entered.connect(_on_proximity_entered)
 	$Proximity.body_exited.connect(_on_proximity_exited)
+	_home = global_position
 	_apply_presence()
 	if show_if_flag != "" or hide_if_flag != "":
 		WorldState.flag_changed.connect(_on_flag_changed)
+	if scheduled:
+		if is_present():
+			_snap_to_spot()
+		GameClock.phase_changed.connect(_on_schedule_tick)
+		GameClock.day_changed.connect(_on_schedule_tick)
 
 
 ## Art lookup, first match wins: a caste rig sheet (assets/characters/<name>_rig.png), then in
@@ -200,11 +216,127 @@ func _process(delta: float) -> void:
 		rig.play(anim)
 
 
-## True when the flags say this NPC is here right now.
+## True when the flags (and the calendar, for a scheduled NPC) say this NPC is here right now.
 func is_present() -> bool:
 	if show_if_flag != "" and not WorldState.has_flag(show_if_flag):
 		return false
-	return hide_if_flag == "" or not WorldState.has_flag(hide_if_flag)
+	if hide_if_flag != "" and WorldState.has_flag(hide_if_flag):
+		return false
+	if scheduled and not _schedule_target()["here"]:
+		return false
+	return true
+
+
+## Where a scheduled NPC should be right now: {"here": is it this map, "spot": world position}.
+## The calendar place for GameClock.location_for(npc_id) names the scene and the Marker2D on
+## it; a place with no scene (the dormitory, the birth chambers) or a scene that is not this
+## map means she is away. With no schedule entry at all she keeps the spot her scene gave her.
+func _schedule_target() -> Dictionary:
+	var location := GameClock.location_for(npc_id)
+	if location == "":
+		return {"here": true, "spot": _home}
+	var scene := GameClock.scene_of(GameClock.place(location))
+	if scene == "" or scene != _map_scene():
+		return {"here": false, "spot": _home}
+	return {"here": true, "spot": _spot_position(GameClock.place(location))}
+
+
+## The res:// scene the schedule sends this NPC to now ("" when the place has no map).
+func _schedule_scene() -> String:
+	var location := GameClock.location_for(npc_id)
+	if location == "":
+		return ""
+	return GameClock.scene_of(GameClock.place(location))
+
+
+## The world position of a place's spot on this map: the named Marker2D ("%s" in the data is
+## filled with npc_id, per-NPC spots), or the node's home spot when the place names none.
+func _spot_position(p: Dictionary) -> Vector2:
+	var raw: Variant = p.get("spot")
+	if not raw is String or raw == "":
+		return _home
+	var spot: String = raw
+	if "%s" in spot:
+		spot = spot % npc_id
+	var map := _map()
+	var marker := map.find_child(spot, true, false) if map != null else null
+	if marker is Node2D:
+		return (marker as Node2D).global_position
+	return _home
+
+
+## The map node this NPC stands on (the outermost parent under the scene root), or null.
+func _map() -> Node:
+	if not is_inside_tree():
+		return null
+	var map: Node = self
+	while map.get_parent() != null and map.get_parent() != get_tree().root:
+		map = map.get_parent()
+	return map
+
+
+## The scene file path of this NPC's map ("" outside a map, e.g. a bare node in a test).
+func _map_scene() -> String:
+	var map := _map()
+	return map.scene_file_path if map != null else ""
+
+
+## Stands at the spot the schedule gives her on this map (called on map load).
+func _snap_to_spot() -> void:
+	var target := _schedule_target()
+	if target["here"]:
+		global_position = target["spot"]
+		_last_position = global_position
+
+
+## A phase or day changed: re-read the calendar and go where it says. While a dialogue balloon
+## is open she stays put (the move is re-checked at the next change); while mid-leave the walk
+## she is on decides. Does nothing for an unscheduled NPC.
+func _on_schedule_tick(_arg: Variant = null) -> void:
+	if not scheduled or _leaving or not is_inside_tree():
+		return
+	if get_tree().get_first_node_in_group("dialogue_balloon") != null:
+		return
+	var target := _schedule_target()
+	if not target["here"]:
+		if is_visible_in_tree():
+			leave_via(_schedule_scene())
+	elif is_present():  # the flags own her when they say absent
+		if not is_visible_in_tree():
+			_arrive(target["spot"])
+		elif global_position.distance_to(target["spot"]) > 4.0:
+			_walk_to_spot(target["spot"])
+
+
+## Appears at the spot after a phase or day change brought her here: a fade in over LEAVE_FADE.
+func _arrive(spot: Vector2) -> void:
+	global_position = spot
+	_last_position = spot
+	modulate.a = 0.0
+	_set_here(true)
+	create_tween().tween_property(self, "modulate:a", 1.0, LEAVE_FADE)
+
+
+## Walks to a new spot on this same map over the walkable area, like leave_via but staying:
+## not clickable on the way, clickable again at the spot.
+func _walk_to_spot(spot: Vector2) -> void:
+	_leaving = true
+	input_pickable = false
+	bubble.hide()
+	var tw := create_tween()
+	var from := global_position
+	for point: Vector2 in leave_path(spot):
+		tw.tween_property(self, "global_position", point, from.distance_to(point) / LEAVE_SPEED)
+		from = point
+	tw.tween_callback(_at_spot)
+
+
+## The end of _walk_to_spot: she is at her new spot and stays on the map.
+func _at_spot() -> void:
+	_leaving = false
+	_last_position = global_position
+	if is_present():
+		input_pickable = true
 
 
 ## hide_if_flag set while the NPC is here: it leaves on foot (leave_via), never on the spot. Any
@@ -235,10 +367,12 @@ func _set_here(here: bool) -> void:
 ## Leaves the map on foot: walks to `where` (a door, or the res:// map a door here leads to;
 ## leave_to when null) over the walkable area at LEAVE_SPEED, facing the way it goes (_process),
 ## and is gone on reaching it. With no such door it fades out over LEAVE_FADE instead. It sets
-## hide_if_flag first (WorldState saves it), so a map left mid-walk and come back to has it gone.
-## On the way it can't be clicked, used (the E key) or barked at, and it blocks nothing: an NPC is
-## an Area2D, which neither stops the player nor sets off a door (a door goes for the player's
-## body). Returns the door it walks to; null when it fades (or is already leaving).
+## no flag itself: the flag that sent it away is already set when hide_if_flag caused the leave
+## (so a map left mid-walk and come back to has it gone), and a schedule leave (_on_schedule_tick)
+## sets nothing, since a map re-reads the calendar when it is loaded. On the way it can't be
+## clicked, used (the E key) or barked at, and it blocks nothing: an NPC is an Area2D, which
+## neither stops the player nor sets off a door (a door goes for the player's body). Returns the
+## door it walks to; null when it fades (or is already leaving).
 func leave_via(where: Variant = null) -> Node2D:
 	if _leaving:
 		return null
@@ -249,8 +383,6 @@ func leave_via(where: Variant = null) -> Node2D:
 	$CollisionShape2D.set_deferred("disabled", true)
 	$Proximity.set_deferred("monitoring", false)
 	bubble.hide()
-	if hide_if_flag != "" and not WorldState.has_flag(hide_if_flag):
-		WorldState.set_flag(hide_if_flag, true)
 	var door: Node2D = where as Node2D if where is Node2D else exit_door(str(where))
 	var tw := create_tween()
 	if door == null:
@@ -281,9 +413,7 @@ func _gone() -> void:
 func exit_door(scene: String) -> Node2D:
 	if scene == "" or not is_inside_tree():
 		return null
-	var map: Node = self
-	while map.get_parent() != null and map.get_parent() != get_tree().root:
-		map = map.get_parent()
+	var map := _map()
 	var best: Node2D = null
 	for n: Node in get_tree().get_nodes_in_group("doors"):
 		var door := n as Node2D
@@ -308,10 +438,32 @@ func leave_path(to: Vector2) -> PackedVector2Array:
 
 
 func current_bark() -> String:
+	var hint := _ask_around_hint()
+	if hint != "":
+		return hint
 	for entry: Dictionary in _barks.get(npc_id, []):
 		if WorldState.matches(entry.get("if", {})) and GameClock.matches_when(entry.get("when", {})):
 			return entry.get("text", "")
 	return "..."
+
+
+## The ask-around hint (data/calendar.json "ask_around") when someone is sought
+## (GameClock.sought_npc, the Offering's Priestess), this NPC is not her, and she is off this
+## map: the walk-by and interact bark says where she is instead of the usual line. Only the
+## Covenant cast (a scheduled NPC) knows her schedule; the Florida NPCs never give the hint.
+## On the Fourteenth the festival barks keep priority (the whole Covenant is in the Great Hall
+## then, so the hint would only send the player there anyway); when she is on this map the
+## player can simply walk up to her, so the usual bark plays.
+func _ask_around_hint() -> String:
+	if not scheduled or GameClock.is_festival():
+		return ""
+	var sought := GameClock.sought_npc()
+	if sought == "" or sought == npc_id:
+		return ""
+	var scene := GameClock.scene_of(GameClock.whereabouts(sought).get("place", {}))
+	if scene != "" and scene == _map_scene():
+		return ""
+	return GameClock.ask_around_hint(sought, _map_scene())
 
 
 func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:

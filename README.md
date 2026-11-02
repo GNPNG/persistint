@@ -67,6 +67,7 @@ the headless tests in `project/tests/` exercise most of it.
 | Paper-doll wardrobe (hair, dress, accessory), kept in the save | Playable |
 | Ritual puzzle in the Temple | Playable |
 | Calendar of Blood: day phases, 28-day cycles and the Festival of the Fourteenth, which change what NPCs say | Playable |
+| The living island: the Covenant cast keeps the Calendar of Blood schedules (well, shore, garden, greenhouse, compound, temple, dormitory) and gathers in the Great Hall for the Festival of the Fourteenth; a morning notice of the day's cohort signals and a notice board on the spawn plaza; asking around for the Priestess while the Offering is to be delivered, and where everyone is in the journal | Playable (placeholder art, draft text) |
 | Ruins of Utopia: six rooms, from the wrecked ship down into the bunker and its clone lab, with 14 pieces of Forbidden Knowledge to recover | Playable |
 | Journal of Forbidden Knowledge (J): recovered pieces, named tactics, and the cruise flashbacks they unlock, each played from the journal | Playable |
 | Name It | Built; its moments are waiting on the author's answers, so none appear in the game yet |

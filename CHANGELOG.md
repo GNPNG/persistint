@@ -9,6 +9,14 @@ into the new version's heading; the Updates page on the site shows the released 
 
 ### Added
 
+- The living island: the Initiate, Drone, Barren and Priestess keep their Calendar of Blood
+  schedules through the day (the well, the shore, the garden, the greenhouse, the drone
+  compound, the temple, the dormitory), and on the Festival of the Fourteenth everyone gathers
+  in the new Great Hall, reached from the plaza by the MainHouse.
+- Cohort signals: each morning on the island the day's signals show on a small notice, and the
+  notice board on the spawn plaza shows them again with the day and phase. While the Offering
+  is accepted but not yet delivered, ask around: walking up to anyone says where the Priestess
+  is, and the journal lists where everyone is. (Draft text.)
 - Florida gifts: the key lime pie, sea grape jelly, guava pastry, mango smoothie and shell wind
   chime can be given to the dolphins, crabs, gulls, mermaids and ponies. Each kind has
   favourites, every gift gets a happy reaction, and each friend keeps friendship hearts (one
