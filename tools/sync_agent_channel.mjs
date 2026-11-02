@@ -42,7 +42,7 @@
  *            the file at <channel>/drop/<drop path> is checked (present, not empty, a PNG when the
  *            drop path says .png); then, in a worktree of this repository at origin/main, the
  *            render is put at its drop path and, when the game path has the same extension, at
- *            its game path too, committed on a branch grok/<id> with the provenance from
+ *            its game path too, committed on a branch render/<id> with the provenance (renderer, tool, model, time) from
  *            done/<id>.json, and the branch is pushed to origin. landed/<id>.json records the
  *            branch and commit (or the reason the render was refused), and the binary is removed
  *            from the channel: the branch holds it now. The land steps, the suite and the deploy
@@ -266,14 +266,14 @@ function intake(a) {
     const prompt = known.get(id);
     const dropFile = prompt ? path.join(a.channel, "drop", prompt.drop) : "";
     const why = refuse(prompt, dropFile);
-    const record = { id, received_at: new Date().toISOString(), tool: done.tool || "", model: done.model || "", rendered_at: done.rendered_at || "" };
+    const record = { id, received_at: new Date().toISOString(), agent: done.agent || "", tool: done.tool || "", model: done.model || "", rendered_at: done.rendered_at || "" };
     if (why) {
       console.log(`intake   ${id}: refused (${why})`);
       if (!a.dryRun) writeText(landedFile, JSON.stringify({ ...record, status: "refused", why }, null, 2) + "\n");
       continue;
     }
-    if (a.dryRun) { console.log(`intake   ${id}: would land on grok/${id}`); landed++; continue; }
-    const branch = `grok/${id}`;
+    if (a.dryRun) { console.log(`intake   ${id}: would land on render/${id}`); landed++; continue; }
+    const branch = `render/${id}`;
     const wt = path.join(a.beads, ".cache", "agent-channel-land", id);
     git(a.beads, ["fetch", "--quiet", "origin", "main"]);
     if (git(a.beads, ["ls-remote", "--exit-code", "--heads", "origin", branch], { okToFail: true }).status === 0) {
@@ -292,7 +292,7 @@ function intake(a) {
       git(wt, ["add", "--", ...targets]);
       const sha = prompt.prompt ? (sha256(prompt.prompt)) : "";
       const prov = [`Render ${id} from the coordination repository (bd uowd)`, "",
-        `Tool: ${record.tool || "?"}; model: ${record.model || "?"}; rendered ${record.rendered_at || "?"}.`,
+        `Rendered by ${record.agent || "?"} with ${record.tool || "?"} (${record.model || "?"}), ${record.rendered_at || "?"}.`,
         `Prompt: ${rel(prompt.file, a.beads)}${sha && done.prompt_sha256 && sha !== done.prompt_sha256 ? " (the renderer's prompt_sha256 differs from the prompt file's)" : ""}.`,
         done.notes ? `Renderer's notes: ${String(done.notes).slice(0, 500)}` : "",
         `At ${targets.join(" and ")}. Land steps, suite and deploy follow on this branch.`].filter((l) => l !== "").join("\n");

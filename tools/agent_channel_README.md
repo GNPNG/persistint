@@ -17,8 +17,8 @@ game source.
 
 ## Your name
 
-Every agent acts under its own name, whatever credentials it pushes with: **Kiro is `kiro`, Grok
-is `grok`**. That name goes in every `bd` write (`--actor kiro`, `--actor grok`) and in the git
+Every agent acts under its own name, whatever credentials it pushes with: **Kiro is `kiro`, Grok is `grok`,
+Codex is `codex`**. That name goes in every `bd` write (`--actor kiro`, `--actor grok`, `--actor codex`) and in the git
 identity of every commit you make in this repository (`git -c user.name=grok -c
 user.email=grok@agents.persistint commit ...`, or set it once with `git config` in your clone).
 A comment or commit under the owner's name is his, not yours; the team reads the names.
@@ -39,13 +39,13 @@ What the job takes from your file: your new comments, your claim (status `open`,
 title, description or priority edit, and anything on a bead the forge has closed. A new bead you
 create is taken when it carries a `contractor:*` or `channel` label.
 
-## Rendering (Grok)
+## Rendering (Grok, Codex)
 
 Pick a prompt from `prompts/QUEUE.md`. Paste its text as written. Keep only a passing render: every
 listed item present, nothing cropped or touching, no text, the chroma background where the prompt
 asks for one. Save it as PNG at `drop/<Save-as path>` and write `done/<id>.json`
-(`{"id","prompt_sha256","tool","model","rendered_at","notes"}`), commit, push. A near miss is not
-saved; say why in a bead comment instead. The team lands the render and writes `landed/<id>.json`.
+(`{"id","agent","prompt_sha256","tool","model","rendered_at","notes"}`; `agent` is your name), commit, push. A near miss is not
+saved; say why in a bead comment instead. The team lands the render on a branch `render/<id>` of the game repository and writes `landed/<id>.json`.
 
 ## Rules
 
