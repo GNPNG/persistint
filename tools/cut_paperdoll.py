@@ -20,7 +20,10 @@ parts set the frame (the canvas that holds them all); a part from another sheet 
 frame, measured against the cut body as it stands on it (body_base.png), and clipped to it, with a
 warning when anything falls off. The part's prefix before the first underscore picks the rule (and
 the PaperDoll slot it is worn in, SLOTS):
-  - body: placed as drawn (canon sheet only: it sets the frame).
+  - body: on the canon sheet, placed as drawn (it sets the frame). On another sheet (a layered
+    sheet for another character, one body per sheet), scaled to the canon body's height and placed
+    at its head top and centre; that sheet's other parts are then measured against this body, and
+    it is the sheet's doll for tops, bottoms and shoes when the sheet names no "doll".
   - dress: drawn on the same baseline as the body; centered on the body, feet on feet.
   - hair: the face opening is measured, scaled to the body's face width, centered on the
     head and its bottom set on the chin. The opening and the hair's other enclosed white gaps
@@ -206,8 +209,10 @@ def main(argv=None):
         sid = part.get("sheet", CANON)
         if sid != CANON and sid not in sheets:
             sys.exit(f"cut_paperdoll: {name}: no sheet {sid!r} in \"sheets\"")
-        if sid != CANON and name.split("_")[0] == "body":
-            sys.exit(f"cut_paperdoll: {name}: a body sets the frame, so it is cut from the canon sheet")
+    for sid in sheets:
+        own = [n for n, p in parts.items() if p.get("sheet") == sid and n.split("_")[0] == "body"]
+        if len(own) > 1:
+            sys.exit(f"cut_paperdoll: sheet {sid!r} has {len(own)} bodies ({', '.join(own)}); a layered sheet has one")
     only = set(a.only) if a.only else None
     if only and only - set(sheets) - {CANON}:
         sys.exit(f"cut_paperdoll: no such sheet: {', '.join(sorted(only - set(sheets) - {CANON}))}")
@@ -260,11 +265,34 @@ def main(argv=None):
             d, _ = cut(sheet, spec["doll"], w)
             rows = np.where((d[:, :, 3] > 0).any(axis=1))[0]
             doll = (crop_y(spec["doll"]) + rows[0], crop_y(spec["doll"]) + rows[-1])
-        for name, part in parts.items():
-            if part.get("sheet") != sid:
+        mine = {n: p for n, p in parts.items() if p.get("sheet") == sid}
+        sheet_lm = lm
+        for name, part in mine.items():
+            if name.split("_")[0] != "body":
+                continue
+            # A layered sheet's own body (another character): fitted to the frame at the canon body's
+            # height, head top and centre; the sheet's other parts then fit it, and it is the
+            # sheet's doll for tops, bottoms and shoes when the sheet names none.
+            rgba, _ = cut(sheet, part["crop"], w)
+            solid = rgba[:, :, 3] > 0
+            own = landmarks(solid, cfg)
+            scale = (lm["feet"] - lm["top"]) / (own["feet"] - own["top"])
+            ox = lm["body_cx"] - own["body_cx"] * scale + part.get("offset", [0, 0])[0]
+            oy = lm["top"] - own["top"] * scale + part.get("offset", [0, 0])[1]
+            img = Image.fromarray(rgba, "RGBA")
+            img = img.resize((round(img.width * scale), round(img.height * scale)), Image.LANCZOS)
+            canvas = on_frame(name, img, round(ox), round(oy), frame_body.size)
+            canvas.save(out / f"{name}.png")
+            print(name, canvas.size)
+            sheet_lm = landmarks(np.asarray(canvas)[:, :, 3] > 128, cfg)
+            if doll is None:
+                rows = np.where(solid.any(axis=1))[0]
+                doll = (crop_y(part["crop"]) + rows[0], crop_y(part["crop"]) + rows[-1])
+        for name, part in mine.items():
+            if name.split("_")[0] == "body":
                 continue
             rgba, enclosed = cut(sheet, part["crop"], w)
-            img, ox, oy = place(name, part, rgba, enclosed, lm, cfg, doll, w)
+            img, ox, oy = place(name, part, rgba, enclosed, sheet_lm, cfg, doll, w)
             canvas = on_frame(name, img, ox, oy, frame_body.size)
             canvas.save(out / f"{name}.png")
             print(name, canvas.size)

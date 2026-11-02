@@ -266,6 +266,51 @@ def check_cutter(tmp, cp):
           "a top on a sheet without its reference doll fails")
 
 
+def check_layered_body(tmp, cp):
+    """A layered sheet with its own body (a character other than the canon doll, drawn at 0.6 of its
+    size): the body is fitted to the canon frame (same height, head top, centre), and the sheet's
+    dress and shoes fit that body, not the canon one."""
+    from PIL import Image, ImageDraw
+    canon, _ = sheets(tmp)
+    lay = Image.new("RGB", (600, 220), "white")
+    d = ImageDraw.Draw(lay)
+    doll(d, 20, 20, 0.6)  # her body: head top y 20, soles y 170
+    d.rectangle([200, 85, 260, 170], fill=FILL, outline=INK, width=2)  # her dress
+    d.rectangle([300, 163, 312, 170], fill=FILL, outline=INK, width=2)  # her shoes, on her baseline
+    d.rectangle([318, 163, 330, 170], fill=FILL, outline=INK, width=2)
+    lay.save(tmp / "layers_white.png")
+    cfg = json.loads((tmp / "parts.json").read_text())
+    cfg["sheets"]["guest"] = {"path": str(tmp / "layers_white.png")}
+    cfg["parts"].update({
+        "body_guest": {"sheet": "guest", "crop": "80x170+10+10"},
+        "dress_guest": {"sheet": "guest", "crop": "80x100+190+78"},
+        "shoes_guest": {"sheet": "guest", "crop": "44x20+293+156"},
+    })
+    (tmp / "layered.json").write_text(json.dumps(cfg))
+    r = run(tmp / "canon.png", "--parts", tmp / "layered.json", "--out", tmp / "L")
+    check(r.returncode == 0, f"a layered sheet with its own body cuts (exit {r.returncode}: {r.stderr.strip()[-300:]})")
+    if r.returncode != 0:
+        return
+    size = Image.open(tmp / "L/body_base.png").size
+    check(Image.open(tmp / "L/body_guest.png").size == size, "her body is on the frame")
+    base = cp.landmarks(alpha(tmp / "L/body_base.png"), {})
+    own = cp.landmarks(alpha(tmp / "L/body_guest.png", 128), {})
+    check(near(own["feet"] - own["top"], base["feet"] - base["top"], 2),
+          f"her body is fitted to the canon height ({own['feet'] - own['top']} vs {base['feet'] - base['top']})")
+    check(near(own["top"], base["top"], 2) and near(own["body_cx"], base["body_cx"], 2),
+          f"her head top and centre are the canon body's ({own['top']}, {own['body_cx']} vs {base['top']}, {base['body_cx']})")
+    x0, y0, x1, y1 = box(alpha(tmp / "L/dress_guest.png", 128))
+    check(near(y1, own["feet"], 3) and near((x0 + x1) / 2, own["body_cx"], 2),
+          f"her dress fits her body down to her soles (bottom y {y1}, want {own['feet']})")
+    x0, y0, x1, y1 = box(alpha(tmp / "L/shoes_guest.png", 128))
+    check(near(y1, own["feet"], 3), f"her shoes stand on her soles, her body as the sheet's doll (y {y1}, want {own['feet']})")
+    two = json.loads((tmp / "layered.json").read_text())
+    two["parts"]["body_extra"] = {"sheet": "guest", "crop": "80x170+10+10"}
+    (tmp / "two.json").write_text(json.dumps(two))
+    check(run(tmp / "canon.png", "--parts", tmp / "two.json", "--out", tmp / "M").returncode != 0,
+          "two bodies on one sheet fail")
+
+
 def check_slots(cp):
     import gen_player_rig
     gd = (ROOT / "project/scripts/systems/paper_doll.gd").read_text()
@@ -299,6 +344,8 @@ def main():
     import cut_paperdoll as cp
     with tempfile.TemporaryDirectory(prefix="paperdoll-") as d:
         check_cutter(Path(d), cp)
+    with tempfile.TemporaryDirectory(prefix="paperdoll-") as d:
+        check_layered_body(Path(d), cp)
     check_slots(cp)
     check_rigs()
     print(f"RESULT: {'PASS' if failures == 0 else 'FAIL'} ({failures} failures)")
