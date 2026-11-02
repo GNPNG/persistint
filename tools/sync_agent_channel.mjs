@@ -114,6 +114,17 @@ export function git(dir, args, opts = {}) {
   return run("git", [...pre, ...args], { cwd: dir, ...opts });
 }
 
+/** The git-crypt filters this clone configures (filter.git-crypt, filter.git-crypt-<key name>, ...). */
+function gitCryptFilters(dir) {
+  const r = git(dir, ["config", "--get-regexp", "^filter\\.git-crypt"], { okToFail: true });
+  const names = new Set();
+  for (const line of (r.stdout || "").split("\n")) {
+    const m = line.match(/^(filter\.git-crypt[^.\s]*)\./);
+    if (m) names.add(m[1]);
+  }
+  return [...names];
+}
+
 function bd(beads, args, opts = {}) {
   return run("bd", ["-C", beads, "--no-color", ...args], opts);
 }
@@ -289,7 +300,9 @@ function intake(a) {
     git(a.beads, ["worktree", "prune"]);
     // The landing worktree only adds a render and its provenance, and a worktree has no git-crypt
     // key of its own, so the smudge filter (dev/*.md) is a no-op here or 'worktree add' aborts.
-    git(a.beads, ["-c", "filter.git-crypt.smudge=cat", "-c", "filter.git-crypt.required=false", "worktree", "add", "--quiet", "--detach", wt, "origin/main"]);
+    const noCrypt = [];
+    for (const f of gitCryptFilters(a.beads)) noCrypt.push("-c", `${f}.smudge=cat`, "-c", `${f}.required=false`);
+    git(a.beads, [...noCrypt, "worktree", "add", "--quiet", "--detach", wt, "origin/main"]);
     try {
       git(wt, ["checkout", "--quiet", "-b", branch]);
       const targets = [prompt.drop];
