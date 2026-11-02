@@ -66,17 +66,17 @@ each sheet, and how the world-building overview was made.
 | `npc_priestess_front.png` | `tools/cut_canon_sprites.sh` | `Gemini_Generated_Image_4bzs` | 216x438+1004+60 |
 | `npc_priestess_side.png` | `tools/cut_canon_sprites.sh` | `Gemini_Generated_Image_4bzs` | 207x439+1304+59 |
 | `prop_bunker.png` | `tools/cut_island_props.py` | `Gemini_Generated_Image_i7kl` | 950x900+1700+40 |
-| `prop_calendar.png` | `tools/cut_island_props.py` | `Gemini_Generated_Image_481b` | 820x720+880+740 |
+| `prop_calendar.png` | render of `prompts/image/levels/temple/prop_calendar.md` (grok, 2026-11-02), keyed and fitted by hand (`.claude/skills/gemini-assets/SKILL.md` step 3) | `prompts/image/levels/temple/assets/prop_calendar.png` | replaces the cut of `Gemini_Generated_Image_481b` 820x720+880+740 |
 | `prop_fence_a.png` | `tools/cut_island_props.py` | `Gemini_Generated_Image_i7kl` | 680x400+85+1040 |
 | `prop_fence_b.png` | `tools/cut_island_props.py` | `Gemini_Generated_Image_i7kl` | 680x400+850+1040 |
-| `prop_icon_queen_mother.png` | `tools/cut_island_props.py` | `PERSISTINT` | 272x310+982+745 |
+| `prop_icon_queen_mother.png` | render of `prompts/image/levels/temple/prop_icon_queen_mother.md` (grok, 2026-11-02), keyed and fitted by hand (`.claude/skills/gemini-assets/SKILL.md` step 3) | `prompts/image/levels/temple/assets/prop_icon_queen_mother.png` | replaces the cut of `PERSISTINT` 272x310+982+745 |
 | `prop_pillar_orb.png` | `tools/cut_island_props.py` | `PERSISTINT` | 190x310+1290+1010 |
 | `prop_scroll.png` | `tools/cut_canon_sprites.sh` | `Gemini_Generated_Image_481b` | 820x680+1850+765 |
 | `prop_seal_o.png` | `tools/cut_island_props.py` | `PERSISTINT` | 180x170+1585+790 |
 | `prop_ship.png` | `tools/cut_island_props.py` | `Gemini_Generated_Image_i7kl` | 1380x1000+100+60 |
 | `prop_sign_a.png` | `tools/cut_island_props.py` | `Gemini_Generated_Image_i7kl` | 460x520+1640+910 |
 | `prop_sign_b.png` | `tools/cut_island_props.py` | `Gemini_Generated_Image_i7kl` | 400x520+2230+910 |
-| `prop_skull_altar.png` | `tools/cut_island_props.py` | `PERSISTINT` | 230x230+1040+1100 |
+| `prop_skull_altar.png` | render of `prompts/image/levels/temple/prop_skull_altar.md` (grok, 2026-11-02), keyed and fitted by hand (`.claude/skills/gemini-assets/SKILL.md` step 3) | `prompts/image/levels/temple/assets/prop_skull_altar.png` | replaces the cut of `PERSISTINT` 230x230+1040+1100 |
 | `prop_tag_x.png` | `tools/cut_island_props.py` | `Gemini_Generated_Image_481b` | 520x680+140+760 |
 
 `tools/gen_island_deco.py` draws its trees and flowers from code (palette from dev/STYLE.md, no
