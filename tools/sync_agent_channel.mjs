@@ -299,7 +299,6 @@ function intake(a) {
   for (const f of fs.readdirSync(doneDir).filter((n) => n.endsWith(".json")).sort()) {
     const id = f.slice(0, -5);
     const landedFile = path.join(a.channel, "landed", `${id}.json`);
-    if (isFile(landedFile)) continue;
     let done;
     try { done = JSON.parse(readText(path.join(doneDir, f))); } catch { done = {}; }
     // An id with no prompt file is a render the coordinator asked for on a bead (layered sheets, host
@@ -310,20 +309,37 @@ function intake(a) {
       if (found) prompt = { drop: found, game: "", file: "", prompt: "", requested: true };
     }
     const dropFile = prompt ? path.join(a.channel, "drop", prompt.drop) : "";
+    // A landed record ends the matter unless the renderer delivered again: a new rendered_at in done/,
+    // or a drop file back at the path of a render that landed (landing removes the drop).
+    let previous = null;
+    if (isFile(landedFile)) {
+      try { previous = JSON.parse(readText(landedFile)); } catch { previous = {}; }
+      const again = (done.rendered_at && done.rendered_at !== (previous.rendered_at || "")) || (previous.status === "branch" && isFile(dropFile));
+      if (!again) continue;
+      delete previous.previous;  // keep one level of history, not a chain
+    }
     const why = refuse(prompt, dropFile);
-    const record = { id, received_at: new Date().toISOString(), agent: done.agent || "", tool: done.tool || "", model: done.model || "", rendered_at: done.rendered_at || "" };
+    const record = { id, received_at: new Date().toISOString(), agent: done.agent || "", tool: done.tool || "", model: done.model || "", rendered_at: done.rendered_at || "", ...(previous ? { previous } : {}) };
     if (why) {
       console.log(`intake   ${id}: refused (${why})`);
       if (!a.dryRun) writeText(landedFile, JSON.stringify({ ...record, status: "refused", why }, null, 2) + "\n");
       continue;
     }
     if (a.dryRun) { console.log(`intake   ${id}: would land on render/${id}`); landed++; continue; }
-    const branch = `render/${id}`;
     const wt = path.join(a.beads, ".cache", "agent-channel-land", id);
     git(a.beads, ["fetch", "--quiet", "origin", "main"]);
-    if (git(a.beads, ["ls-remote", "--exit-code", "--heads", "origin", branch], { okToFail: true }).status === 0) {
-      console.log(`intake   ${id}: branch ${branch} is already on origin; recording it`);
-      writeText(landedFile, JSON.stringify({ ...record, status: "branch", branch, note: "the branch existed already" }, null, 2) + "\n");
+    // render/<id> may exist already: the same render from a run interrupted after its push (record it),
+    // or an earlier delivery of this id, from this agent or another (land this one on render/<id>-r<n>).
+    let branch = "", already = "";
+    for (let n = 1; !branch && !already; n++) {
+      const b = n === 1 ? `render/${id}` : `render/${id}-r${n}`;
+      if (git(a.beads, ["ls-remote", "--exit-code", "--heads", "origin", b], { okToFail: true }).status !== 0) branch = b;
+      else if (sameRender(a.beads, b, prompt.drop, dropFile)) already = b;
+    }
+    if (already) {
+      console.log(`intake   ${id}: the same render is already on ${already}; recorded`);
+      writeText(landedFile, JSON.stringify({ ...record, status: "branch", branch: already, note: "the same render was on the branch already" }, null, 2) + "\n");
+      git(a.channel, ["rm", "--quiet", "--", path.join("drop", prompt.drop)], { okToFail: true });
       continue;
     }
     fs.rmSync(wt, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
@@ -346,7 +362,8 @@ function intake(a) {
         prompt.requested ? "Prompt: requested on a bead by the coordinator (no prompt file)." :
           `Prompt: ${rel(prompt.file, a.beads)}${sha && done.prompt_sha256 && sha !== done.prompt_sha256 ? " (the renderer's prompt_sha256 differs from the prompt file's)" : ""}.`,
         done.notes ? `Renderer's notes: ${String(done.notes).slice(0, 500)}` : "",
-        `At ${targets.join(" and ")}. Land steps, suite and deploy follow on this branch.`].filter((l) => l !== "").join("\n");
+        `At ${targets.join(" and ")}. Land steps, suite and deploy follow on this branch.`,
+        branch !== `render/${id}` ? `An earlier delivery of this id is on render/${id}; this one replaces it if it passes review.` : ""].filter((l) => l !== "").join("\n");
       git(wt, ["-c", "user.name=cc-srv", "-c", "user.email=cc-srv@gnomatix.com", "commit", "--quiet", "-m", prov]);
       const commit = git(wt, ["rev-parse", "--short", "HEAD"]).stdout.trim();
       git(wt, ["push", "--quiet", "origin", branch]);
@@ -364,6 +381,18 @@ function intake(a) {
 
 function sha256(text) {
   return crypto.createHash("sha256").update(text).digest("hex");
+}
+
+/** Whether the branch on origin already holds this drop file at its drop path: the same Git LFS object
+ *  (the pointer's sha256 is the file's) or, without LFS, the same blob. */
+function sameRender(repo, branch, dropPath, dropFile) {
+  git(repo, ["fetch", "--quiet", "origin", `+refs/heads/${branch}:refs/remotes/origin/${branch}`]);
+  const blob = git(repo, ["rev-parse", "--verify", "--quiet", `refs/remotes/origin/${branch}:${dropPath}`], { okToFail: true });
+  if (blob.status !== 0) return false;
+  const body = git(repo, ["cat-file", "-p", blob.stdout.trim()]).stdout;
+  const oid = /^version https:\/\/git-lfs\S*\noid sha256:([0-9a-f]{64})$/m.exec(body);
+  if (oid) return oid[1] === crypto.createHash("sha256").update(fs.readFileSync(dropFile)).digest("hex");
+  return git(repo, ["hash-object", "--no-filters", dropFile]).stdout.trim() === blob.stdout.trim();
 }
 
 // --- The clone, the commit, the push.

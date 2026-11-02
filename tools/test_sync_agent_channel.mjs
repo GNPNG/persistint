@@ -175,6 +175,34 @@ function main() {
     check(/intake\s+nothing new/.test(out), "a second run lands nothing again");
     check(!fs.existsSync(path.join(ws, ".cache/agent-channel-land/one")), "the landing worktree is removed");
 
+    // --- A re-delivery of the same id (a new render after a NEAR verdict, or another agent's render of
+    // an id already landed) lands on its own branch instead of being taken for the first one.
+    git(agent, ["pull", "--quiet", "--ff-only", "origin", "main"]);
+    const png2 = Buffer.concat([png, Buffer.from(" the second render")]);
+    const redeliver = (rendered_at) => {
+      fs.mkdirSync(path.join(agent, "drop/prompts/image/test/assets"), { recursive: true });
+      fs.writeFileSync(path.join(agent, "drop/prompts/image/test/assets/one.png"), png2);
+      fs.writeFileSync(path.join(agent, "done/one.json"), JSON.stringify({ id: "one", tool: "Gemini image", model: "test", rendered_at, notes: "fixed", agent: "codex" }));
+      git(agent, ["add", "-A"]); git(agent, ["commit", "--quiet", "-m", "agent: render one again"]); git(agent, ["push", "--quiet", "origin", "main"]);
+    };
+    redeliver(new Date(Date.now() + 60000).toISOString());
+    out = sync(["--beads", ws, "--channel", chan, "--remote", remote]);
+    check(/intake\s+one: render\/one-r2 \w+ pushed/.test(out), "a re-delivery lands on render/<id>-r2 instead of being dropped");
+    let heads = sh("git", ["ls-remote", "--heads", wsRemote], tmp);
+    check(heads.includes("refs/heads/render/one-r2"), "the re-delivery's branch is on the game repository's origin");
+    check(sh("git", ["log", "-1", "--format=%B", "render/one-r2"], ws).includes("An earlier delivery of this id is on render/one"), "its commit points to the earlier delivery");
+    git(agent, ["pull", "--quiet", "--ff-only", "origin", "main"]);
+    const landedAgain = JSON.parse(fs.readFileSync(path.join(agent, "landed/one.json"), "utf8"));
+    check(landedAgain.branch === "render/one-r2" && landedAgain.previous && landedAgain.previous.branch === "render/one", "landed/one.json records the new branch and keeps the earlier record");
+    check(!fs.existsSync(path.join(agent, "drop/prompts/image/test/assets/one.png")), "the re-delivered render leaves the channel");
+    // --- The same render delivered again (a run interrupted after its push) is recorded, not landed twice.
+    redeliver(new Date(Date.now() + 120000).toISOString());
+    out = sync(["--beads", ws, "--channel", chan, "--remote", remote]);
+    heads = sh("git", ["ls-remote", "--heads", wsRemote], tmp);
+    check(/intake\s+one: the same render is already on render\/one-r2/.test(out) && !heads.includes("refs/heads/render/one-r3"), "the same image again is recorded against its branch, with no new branch");
+    git(agent, ["pull", "--quiet", "--ff-only", "origin", "main"]);
+    check(!fs.existsSync(path.join(agent, "drop/prompts/image/test/assets/one.png")), "and its drop leaves the channel");
+
     // --- Dry run writes nothing.
     const before = git(chan, ["rev-parse", "HEAD"]).trim();
     bd(ws, ["comment", rules.id, "--actor", "forge", "a forge comment after the dry run starts"]);
