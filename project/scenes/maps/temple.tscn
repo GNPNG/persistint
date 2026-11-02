@@ -901,6 +901,7 @@ dialogue_path = "res://dialogue/priestess.dialogue"
 voice_pitch = 0.85
 
 [node name="ExitDoor" type="Area2D" parent="." unique_id=1850325154 instance=ExtResource("25_e0dkp")]
+show_marker = true
 position = Vector2(480, 624)
 script = ExtResource("26_vnopc")
 target_scene = "res://scenes/maps/village.tscn"
@@ -935,7 +936,7 @@ texture = ExtResource("28_1xmgu")
 offset = Vector2(0, -108)
 
 [node name="RuinsDoor" type="Area2D" parent="." unique_id=748823084 instance=ExtResource("25_e0dkp")]
-position = Vector2(24, 256)
+position = Vector2(20, 244)
 script = ExtResource("26_vnopc")
 target_scene = "res://scenes/ruins/ruins_wreck.tscn"
 exit_label = "Into the Ruins of Utopia"

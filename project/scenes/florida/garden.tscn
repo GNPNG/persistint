@@ -190,7 +190,7 @@ scale = Vector2(0.25, 0.25)
 offset = Vector2(0, -112)
 
 [node name="BeachDoor" parent="." instance=ExtResource("14")]
-position = Vector2(160, 512)
+position = Vector2(160, 524)
 target_scene = "res://scenes/florida/beach.tscn"
 target_spawn = "spawn_from_garden"
 exit_label = "Back to the Beach"

@@ -34,6 +34,7 @@ position = Vector2(120, 316)
 position = Vector2(120, 300)
 
 [node name="HallDoor" parent="." instance=ExtResource("5")]
+show_marker = true
 position = Vector2(80, 300)
 target_scene = "res://scenes/ruins/ruins_clone_hall.tscn"
 target_spawn = "spawn_from_records"

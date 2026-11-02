@@ -187,12 +187,12 @@ target_spawn = "spawn_from_beach"
 exit_label = "To the Aquarium"
 
 [node name="StableDoor" parent="." instance=ExtResource("15")]
-position = Vector2(248, 340)
+position = Vector2(222, 338)
 target_scene = "res://scenes/florida/stable.tscn"
 target_spawn = "spawn_from_beach"
 
 [node name="VillageDoor" parent="." instance=ExtResource("15")]
-position = Vector2(736, 352)
+position = Vector2(736, 340)
 target_scene = "res://scenes/maps/village.tscn"
 target_spawn = "spawn_from_tropical"
 exit_label = "Back to the Village"

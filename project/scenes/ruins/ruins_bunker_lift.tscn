@@ -37,12 +37,14 @@ position = Vector2(840, 316)
 position = Vector2(120, 300)
 
 [node name="CoreDoor" parent="." instance=ExtResource("5")]
+show_marker = true
 position = Vector2(80, 300)
 target_scene = "res://scenes/ruins/ruins_core.tscn"
 target_spawn = "spawn_from_bunker"
 exit_label = "Up to the Reliquary Core"
 
 [node name="HallDoor" parent="." instance=ExtResource("5")]
+show_marker = true
 position = Vector2(880, 300)
 target_scene = "res://scenes/ruins/ruins_clone_hall.tscn"
 target_spawn = "spawn_from_lift"

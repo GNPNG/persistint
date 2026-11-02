@@ -37,12 +37,14 @@ position = Vector2(840, 316)
 position = Vector2(120, 300)
 
 [node name="WreckDoor" parent="." instance=ExtResource("5")]
+show_marker = true
 position = Vector2(80, 300)
 target_scene = "res://scenes/ruins/ruins_wreck.tscn"
 target_spawn = "spawn_from_corridor"
 exit_label = "Back to the Promenade Deck"
 
 [node name="CoreDoor" parent="." instance=ExtResource("5")]
+show_marker = true
 position = Vector2(880, 300)
 target_scene = "res://scenes/ruins/ruins_core.tscn"
 target_spawn = "spawn_from_corridor"

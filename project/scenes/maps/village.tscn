@@ -1044,12 +1044,14 @@ target_scene = "res://scenes/ruins/ruins_wreck.tscn"
 exit_label = "To the Ruins of Utopia"
 
 [node name="Exit_Cruise" type="Area2D" parent="." unique_id=2013182087 instance=ExtResource("37_1dqp1")]
+show_marker = true
 position = Vector2(542.72, 319.36)
 script = ExtResource("38_0n0ky")
 target_scene = "res://scenes/chapters/chapter_end.tscn"
 exit_label = "Back to the Cruise"
 
 [node name="Exit_Tropical" type="Area2D" parent="." unique_id=1380966595 instance=ExtResource("37_1dqp1")]
+show_marker = true
 position = Vector2(1139.2, 752)
 script = ExtResource("38_0n0ky")
 target_scene = "res://scenes/florida/beach.tscn"

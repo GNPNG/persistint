@@ -39,12 +39,14 @@ position = Vector2(840, 316)
 position = Vector2(120, 300)
 
 [node name="LiftDoor" parent="." instance=ExtResource("5")]
+show_marker = true
 position = Vector2(80, 300)
 target_scene = "res://scenes/ruins/ruins_bunker_lift.tscn"
 target_spawn = "spawn_from_hall"
 exit_label = "Back to the Descent Hatch"
 
 [node name="RecordsDoor" parent="." instance=ExtResource("5")]
+show_marker = true
 position = Vector2(880, 300)
 target_scene = "res://scenes/ruins/ruins_records.tscn"
 target_spawn = "spawn_from_hall"

@@ -1,11 +1,12 @@
 extends Area2D
 ## Door — proximity map transition, or a locked door with a bark.
 ## Also used for mini-game entrances (a mini-game is just another scene).
-## Every door shows a little kawaii doormat with a bobbing arrow (assets/common/door_marker.png,
-## drawn by tools/gen_door_marker.py: 160x192 frames stored at 4x, shown 48 px tall; row 0 "open" x 8,
-## row 1 "locked"), names where it goes
-## when hovered or when the player is close, and can be clicked: the player walks over
-## and goes through, like approaching an NPC.
+## A door is the real thing in the world (the garden arch, the aquarium's door, the rowboat, the
+## temple gate): it draws nothing of its own, names where it goes when hovered or when the
+## player is close, and can be clicked: the player walks over and goes through, like
+## approaching an NPC. tests/test_exits.gd requires a prop at every door. The doormat marker
+## (assets/common/door_marker.png, tools/gen_door_marker.py; author 2026-11-02: "they look like
+## shit, they don't make any sense") is kept only for show_marker = true, which nothing sets.
 
 const NEAR_DISTANCE := 72.0
 const MARKER_SHEET := "res://assets/common/door_marker.png"
@@ -25,8 +26,8 @@ static var _marker_frames: SpriteFrames
 @export var locked_bark := "It is sealed."
 ## Shown on hover/proximity, e.g. "Back to the Temple". Empty: named from target_scene.
 @export var exit_label := ""
-## Off for entrances that already have their own prop (the ritual table).
-@export var show_marker := true
+## The old doormat marker; a door is its prop now, so this stays off.
+@export var show_marker := false
 
 @onready var label: Label = $Label
 
