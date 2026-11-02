@@ -43,6 +43,12 @@ function checkMerge() {
   const edited = { id: "x-2", title: "T", status: "open", labels: ["contractor:kiro"], comments: [{ id: "c1", author: "cc", text: "moved to the dev log" }] };
   const stale = merge(edited, { ...edited, comments: [{ id: "c1", author: "cc", text: "the old text" }] }, "now");
   check(stale.record === null, "merge: a comment whose id the Gitea record already has is known, even if its text was edited there");
+  const claimed = { id: "x-3", title: "T", status: "in_progress", assignee: "kiro", labels: ["contractor:kiro"], comments: [] };
+  const staleCopy = { ...claimed, status: "open", assignee: "" };
+  check(merge(claimed, staleCopy, "now", staleCopy).record === null,
+    "merge: a status the channel still carries from the job's last export is not a claim (no revert of another channel's claim)");
+  const real = merge(claimed, { ...staleCopy, status: "blocked" }, "now", staleCopy);
+  check(real.record && real.record.status === "blocked", "merge: a status the agent changed since the last export is taken");
   const forge = { id: "x-1", title: "T", status: "open", labels: ["contractor:kiro"], comments: [{ author: "forge", text: "a" }] };
   let m = merge(forge, { ...forge, title: "changed", status: "in_progress", assignee: "kiro", comments: [...forge.comments, { author: "kiro", text: "b" }] }, "now");
   check(m.record && m.record.title === "T" && m.record.status === "in_progress" && m.record.assignee === "kiro" && m.record.comments.length === 2 && m.record.updated_at === "now",

@@ -140,7 +140,9 @@ const commentKey = (c) => `${c.author || ""}\n${c.text || ""}`;
 // --- Import: the agents' changes, rebuilt on the forge's record.
 
 /** The record to import for an incoming one, or null with the reason to skip it. */
-export function merge(forge, incoming, now = new Date().toISOString()) {
+/** last: the record as this job last exported it to the channel (undefined when unknown). A status or
+ *  assignee the agent did not change since then is the job's own stale copy, not a claim. */
+export function merge(forge, incoming, now = new Date().toISOString(), last = undefined) {
   if (!forge) {
     if (!isRelayed(incoming)) return { record: null, why: "new bead without a relayed label" };
     const record = { ...incoming, updated_at: now };
@@ -156,14 +158,16 @@ export function merge(forge, incoming, now = new Date().toISOString()) {
   const added = (incoming.comments || []).filter((c) => !(c.id && haveIds.has(c.id)) && !have.has(commentKey(c)));
   let changed = added.length > 0;
   if (added.length) record.comments = [...(forge.comments || []), ...added];
-  if (incoming.status !== forge.status && AGENT_STATUSES.has(incoming.status)) { record.status = incoming.status; changed = true; }
-  if ((incoming.assignee || "") !== (forge.assignee || "") && incoming.assignee) { record.assignee = incoming.assignee; changed = true; }
+  const agentSetStatus = !last || incoming.status !== last.status;
+  const agentSetAssignee = !last || (incoming.assignee || "") !== (last.assignee || "");
+  if (agentSetStatus && incoming.status !== forge.status && AGENT_STATUSES.has(incoming.status)) { record.status = incoming.status; changed = true; }
+  if (agentSetAssignee && (incoming.assignee || "") !== (forge.assignee || "") && incoming.assignee) { record.assignee = incoming.assignee; changed = true; }
   if (!changed) return { record: null, why: "nothing new" };
   record.updated_at = now;
   return { record, why: `${added.length} comment(s)${record.status !== forge.status ? `, status ${forge.status} -> ${record.status}` : ""}` };
 }
 
-function importFromChannel(a, forge) {
+function importFromChannel(a, forge, lastExported = new Map()) {
   const file = path.join(a.channel, RELAY_FILE);
   if (!isFile(file)) { console.log("import   no issues.jsonl in the channel yet"); return 0; }
   const byId = new Map(forge.map((r) => [r.id, r]));
@@ -172,7 +176,7 @@ function importFromChannel(a, forge) {
     let incoming;
     try { incoming = JSON.parse(line); } catch { console.log("import   skipped a line that is not JSON"); continue; }
     if (incoming._type && incoming._type !== "issue") continue;
-    const { record, why } = merge(byId.get(incoming.id), incoming);
+    const { record, why } = merge(byId.get(incoming.id), incoming, undefined, lastExported.get(incoming.id));
     if (record) { out.push(record); console.log(`import   ${incoming.id}: ${why}`); } else if (why !== "nothing new") console.log(`import   ${incoming.id}: skipped (${why})`);
   }
   if (!out.length) { console.log("import   nothing to import"); return 0; }
@@ -299,7 +303,7 @@ function intake(a) {
       writeText(landedFile, JSON.stringify({ ...record, status: "branch", branch, note: "the branch existed already" }, null, 2) + "\n");
       continue;
     }
-    fs.rmSync(wt, { recursive: true, force: true });
+    fs.rmSync(wt, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
     git(a.beads, ["worktree", "prune"]);
     // The landing worktree only adds a render and its provenance, and a worktree has no git-crypt
     // key of its own, so the smudge filter (dev/*.md) is a no-op here or 'worktree add' aborts.
@@ -307,7 +311,8 @@ function intake(a) {
     for (const f of gitCryptFilters(a.beads)) noCrypt.push("-c", `${f}.smudge=cat`, "-c", `${f}.required=false`);
     git(a.beads, [...noCrypt, "worktree", "add", "--quiet", "--detach", wt, "origin/main"]);
     try {
-      git(wt, ["checkout", "--quiet", "-b", branch]);
+      // -B: a local render/<id> left by an interrupted run is reset here, not an error.
+      git(wt, ["checkout", "--quiet", "-B", branch]);
       const targets = [prompt.drop];
       if (prompt.game && path.extname(prompt.game).toLowerCase() === path.extname(prompt.drop).toLowerCase()) targets.push(prompt.game);
       for (const t of targets) { fs.mkdirSync(path.join(wt, path.dirname(t)), { recursive: true }); fs.copyFileSync(dropFile, path.join(wt, t)); }
@@ -339,6 +344,21 @@ function sha256(text) {
 
 // --- The clone, the commit, the push.
 
+/** What this job last exported to the channel: the relayed beads at the channel's HEAD before the pull,
+ *  by id (empty when there is no clone or no commit yet). Used so that a bead's status in a channel that
+ *  only carries a stale copy (another agent claimed it through the other channel) is not imported. */
+function lastExport(a) {
+  const out = new Map();
+  if (!fs.existsSync(path.join(a.channel, ".git"))) return out;
+  const r = git(a.channel, ["show", `HEAD:${RELAY_FILE.split(path.sep).join("/")}`], { okToFail: true });
+  if (r.status !== 0) return out;
+  for (const line of (r.stdout || "").split("\n")) {
+    if (!line.trim()) continue;
+    try { const rec = JSON.parse(line); if (rec.id) out.set(rec.id, rec); } catch { /* not a record */ }
+  }
+  return out;
+}
+
 function pull(a) {
   if (!fs.existsSync(path.join(a.channel, ".git"))) {
     if (!a.remote) throw new Error("no clone at --channel and no --remote / AGENT_CHANNEL_REMOTE to clone from");
@@ -349,8 +369,26 @@ function pull(a) {
     console.log(`pull     cloned ${a.remote.replace(/\/\/[^@]+@/, "//")}`);
     return;
   }
-  const r = git(a.channel, ["pull", "--quiet", "--ff-only", "origin", "main"], { okToFail: true });
-  console.log(r.status === 0 ? "pull     up to date with origin/main" : "pull     origin/main not there yet (first push pending)");
+  git(a.channel, ["fetch", "--quiet", "origin"], { okToFail: true });
+  if (git(a.channel, ["rev-parse", "--verify", "--quiet", "origin/main"], { okToFail: true }).status !== 0) {
+    console.log("pull     origin/main not there yet (first push pending)");
+    return;
+  }
+  // Tracked files left changed by an interrupted run are the job's own outputs; this run writes them again.
+  git(a.channel, ["reset", "--quiet", "--hard", "HEAD"], { okToFail: true });
+  if (git(a.channel, ["merge", "--quiet", "--ff-only", "origin/main"], { okToFail: true }).status === 0) {
+    console.log("pull     up to date with origin/main");
+    return;
+  }
+  // Diverged: the agents pushed while the job had unpushed commits. Put the job's commits on top of
+  // theirs; if that conflicts, take theirs, since every file the job writes is regenerated this run.
+  if (git(a.channel, ["rebase", "--quiet", "origin/main"], { okToFail: true }).status === 0) {
+    console.log("pull     rebased the job's unpushed commits onto origin/main");
+    return;
+  }
+  git(a.channel, ["rebase", "--abort"], { okToFail: true });
+  git(a.channel, ["reset", "--quiet", "--hard", "origin/main"]);
+  console.log("pull     diverged from origin/main and could not rebase; reset to it (this run regenerates the job's files)");
 }
 
 function commit(a, summary, wouldChange) {
@@ -368,9 +406,10 @@ function commit(a, summary, wouldChange) {
 export function main(argv = process.argv.slice(2)) {
   const a = parse(argv);
   fs.mkdirSync(path.join(a.beads, ".cache"), { recursive: true });
+  const lastExported = lastExport(a);
   pull(a);
   const before = exportBeads(a.beads);
-  const imported = importFromChannel(a, before);
+  const imported = importFromChannel(a, before, lastExported);
   const forge = imported && !a.dryRun ? exportBeads(a.beads) : before;
   const relayed = exportToChannel(a, forge);
   const mirrored = a.prompts ? mirrorPrompts(a) : 0;
