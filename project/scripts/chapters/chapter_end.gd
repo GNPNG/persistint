@@ -6,9 +6,11 @@ extends Control
 const Chapters := preload("res://scripts/chapters/chapters.gd")
 const FALLBACK := "res://scenes/ui/main_menu.tscn"
 ## The card art behind the text (prompts/image/ui/chapter_cards/chapter_card_before_the_wreck.md;
-## a generated stand-in until the render lands at the same path). The cruise flashbacks are the
+## the render landed 2026-11-02, under the scrim below). The cruise flashbacks are the
 ## same era, so their cards use it too.
 const CARD_ART := "res://assets/ui/chapter_cards/chapter_card_before_the_wreck.png"
+## How dark the scrim over the card art is (0..1): enough for the white text on the bright pastel render.
+const SCRIM_ALPHA := 0.55
 
 var autostart := true
 var seconds := 9.0
@@ -40,6 +42,13 @@ func _build_ui() -> void:
 		art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 		art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		add_child(art)
+		# The art is bright pastel: a near-black scrim over it keeps the 85%-white text readable.
+		var scrim := ColorRect.new()
+		scrim.name = "Scrim"
+		scrim.color = Color(0.02, 0.03, 0.06, SCRIM_ALPHA)
+		scrim.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		scrim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		add_child(scrim)
 	var box := VBoxContainer.new()
 	box.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE, 24)
 	box.alignment = BoxContainer.ALIGNMENT_CENTER

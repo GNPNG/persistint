@@ -5,4 +5,7 @@ What made each file here (release checklist LP-04, sops/09). Prompt files carry 
 
 | File | Made by | From | Added |
 |---|---|---|---|
+| `beach_arrival.ogv` | Gemini Veo | `prompts/video/levels/florida/beach_arrival.md` | 2026-11-02 |
+| `ruins_promenade.ogv` | Gemini Veo | `prompts/video/levels/ruins/ruins_promenade.md` | 2026-11-02 |
+| `show_open.ogv` | Gemini Veo | `prompts/video/levels/cruise/show_open.md` | 2026-11-02 |
 | `studio_intro.ogv` | Gemini Veo | `prompts/video/ui/studio_intro.md` | 2026-10-24 |
