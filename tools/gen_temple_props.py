@@ -14,8 +14,10 @@ map builder at scale 0.25, so a 24x44 frame is 96x176 file px):
   temple_shadow.png   single 24x8 image, a soft contact shadow put under furnishings
   temple_twinkle.png  sprite sheet, frame 12x12, 1 row (idle) x 6 columns (a four-point sparkle
                       swelling and fading); centred
-The canon sheets have none of these, so they are drawn in the canon sticker look: warm-brown
+These stand-ins are drawn in the canon sticker look: warm-brown
 outline #8a5a5a, flat pastel fills, one highlight, gold #ffe3a8 / edge #e0b24a.
+Landed props are preserved; candle/twinkle strips built by build_temple_strips.py
+are also preserved using their embedded provenance marker.
 Drawn at 16x and downscaled with LANCZOS to 4x the map size (O); the map shows them at
 scale 0.25, so every size below is in world pixels and the files are 4x that.
 """
@@ -175,6 +177,10 @@ def twinkle(frame):
 
 def put(im, name):
     """Save one output, unless a landed render is at its path (tools/landed_renders.py, bd up1u)."""
+    from build_temple_strips import keep_strip
+    if name in ("temple_candles.png", "temple_twinkle.png") and keep_strip(OUT / name):
+        print(name, "kept: built from landed still")
+        return
     if not keep(OUT / name):
         im.save(OUT / name)
 
