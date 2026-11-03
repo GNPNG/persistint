@@ -81,7 +81,15 @@ for (const repo of DEV_REPOS) {
       console.log(`up    ${name}: would push ${branch} ${sha.slice(0, 7)} to Gitea`);
       continue;
     }
-    git(["push", "-q", "origin", `refs/remotes/dev/${branch}:${ref}`]);
+    // The branch's Git LFS files live in the dev repo's LFS store: fetch them, or the pre-push hook has
+    // nothing to upload to Gitea and the push fails (bd sxai: Codex's 37 voice clips, 2026-11-03).
+    git(["lfs", "fetch", repo, `refs/remotes/dev/${branch}`], true);
+    const pushed = git(["push", "-q", "origin", `refs/remotes/dev/${branch}:${ref}`], true);
+    if (pushed.status !== 0) {
+      // One branch that cannot be pushed is reported and skipped; the other branches still go up.
+      console.log(`up    ${name}: ${branch} push to Gitea failed: ${(pushed.stderr || "").trim().split("\n").pop()}`);
+      continue;
+    }
     giteaBranches.set(ref, sha);
     console.log(`up    ${name}: ${branch} -> Gitea ${sha.slice(0, 7)}`);
   }
