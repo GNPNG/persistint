@@ -55,10 +55,11 @@ def parse_prompt_file(md_path: Path) -> dict | None:
     if "drop" not in meta or "tool" not in meta:
         return None
     meta["prompt"] = " ".join(pr.group(1).strip().splitlines())
+    # The aspect: front matter, else the first ratio the prompt itself states (what the renderer
+    # pastes; bd e8e8: temple_twinkle says 1:1 only there), else the first in Notes, else 16:9.
     notes = NOTES_RE.search(text)
-    ratio = meta.get("aspect") or (RATIO_RE.search(notes.group(1)).group(1)
-                                    if notes and RATIO_RE.search(notes.group(1)) else None)
-    meta["aspect"] = ratio or "16:9"
+    stated = RATIO_RE.search(meta["prompt"]) or (RATIO_RE.search(notes.group(1)) if notes else None)
+    meta["aspect"] = meta.get("aspect") or (stated.group(1) if stated else "16:9")
     meta["kind"] = KIND.get(meta["tool"], "other")
     meta["md_path"] = str(md_path.relative_to(ROOT))
     drop = ROOT / meta["drop"]
