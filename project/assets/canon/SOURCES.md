@@ -37,6 +37,7 @@ names it and its crop.
 |---|---|---|---|
 | `barren_susan` | Codex image_gen (render commit c24c327, bd uowd) | none (requested on a bead); drop `prompts/image/characters/assets/char_barren_susan_layers.png` | `project/assets/sheets/characters/char_barren_susan_layers_white.png` |
 | `daughter` | Codex image_gen (render commit dd7de65, bd uowd) | none (requested on a bead); drop `prompts/image/characters/assets/char_daughter_layers.png` | `project/assets/sheets/characters/char_daughter_layers_white.png` |
+| `drone_bruce` | Codex image_gen (render commit aaa9dc0, bd uowd) | none (requested on a bead); drop `prompts/image/characters/assets/char_drone_bruce_layers.png` | `project/assets/sheets/characters/char_drone_bruce_layers_white.png` |
 | `father` | Codex image_gen (render commit 30adeb6, bd uowd) | none (requested on a bead); drop `prompts/image/characters/assets/char_father_layers.png` | `project/assets/sheets/characters/char_father_layers_white.png` |
 | `initiate` | Codex image_gen (render commit 9ef4bc7, bd uowd) | none (requested on a bead); drop `prompts/image/characters/assets/char_initiate_layers.png` | `project/assets/sheets/characters/char_initiate_layers_white.png` |
 | `mother` | Codex image_gen (render commit 0b61ff7, bd uowd) | none (requested on a bead); drop `prompts/image/characters/assets/char_mother_layers.png` | `project/assets/sheets/characters/char_mother_layers_white.png` |
@@ -49,6 +50,7 @@ names it and its crop.
 | `body_barren_susan.png` | `tools/cut_paperdoll.py` | `barren_susan` | 376x700+68+115 |
 | `body_base.png` | `tools/cut_paperdoll.py` | `Gemini_Generated_Image_ktfw` | 402x698+97+300 |
 | `body_daughter.png` | `tools/cut_paperdoll.py` | `daughter` | 484x795+38+82 |
+| `body_drone_bruce.png` | `tools/cut_paperdoll.py` | `drone_bruce` | 383x708+68+128 |
 | `body_father.png` | `tools/cut_paperdoll.py` | `father` | 392x687+53+112 |
 | `body_initiate.png` | `tools/cut_paperdoll.py` | `initiate` | 381x741+55+115 |
 | `body_mother.png` | `tools/cut_paperdoll.py` | `mother` | 374x678+57+128 |
@@ -61,6 +63,7 @@ names it and its crop.
 | `deco_tree_c.png` | `tools/gen_island_deco.py` | (drawn in code) | - |
 | `dress_barren_susan.png` | `tools/cut_paperdoll.py` | `barren_susan` | 297x397+891+418 |
 | `dress_daughter.png` | `tools/cut_paperdoll.py` | `daughter` | 430x319+1179+458 |
+| `dress_drone_bruce.png` | `tools/cut_paperdoll.py` | `drone_bruce` | 288x412+1017+427 |
 | `dress_initiate.png` | `tools/cut_paperdoll.py` | `initiate` | 281x289+997+400 |
 | `dress_mother.png` | `tools/cut_paperdoll.py` | `mother` | 431x411+936+411 |
 | `dress_robe.png` | `tools/cut_paperdoll.py` | `Gemini_Generated_Image_ktfw` | 534x400+1530+600 |
@@ -70,6 +73,7 @@ names it and its crop.
 | `hair_braids.png` | `tools/cut_paperdoll.py` | `Gemini_Generated_Image_ktfw` | 534x512+1530+99 |
 | `hair_crown.png` | `tools/cut_paperdoll.py` | `Gemini_Generated_Image_ktfw` | 402x511+1095+81 |
 | `hair_daughter.png` | `tools/cut_paperdoll.py` | `daughter` | 681x515+512+61 |
+| `hair_drone_bruce.png` | `tools/cut_paperdoll.py` | `drone_bruce` | 487x401+481+112 |
 | `hair_father.png` | `tools/cut_paperdoll.py` | `father` | 386x322+465+138 |
 | `hair_initiate.png` | `tools/cut_paperdoll.py` | `initiate` | 507x326+459+115 |
 | `hair_mother.png` | `tools/cut_paperdoll.py` | `mother` | 453x539+461+128 |

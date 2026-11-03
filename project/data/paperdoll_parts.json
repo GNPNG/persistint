@@ -6,7 +6,8 @@
 		"initiate":     { "path": "project/assets/sheets/characters/char_initiate_layers_white.png" },
 		"barren_susan": { "path": "project/assets/sheets/characters/char_barren_susan_layers_white.png" },
 		"mother":       { "path": "project/assets/sheets/characters/char_mother_layers_white.png" },
-		"father":       { "path": "project/assets/sheets/characters/char_father_layers_white.png" }
+		"father":       { "path": "project/assets/sheets/characters/char_father_layers_white.png" },
+		"drone_bruce":  { "path": "project/assets/sheets/characters/char_drone_bruce_layers_white.png" }
 	},
 	"parts": {
 		"body_base":          { "crop": "402x698+97+300" },
@@ -36,6 +37,9 @@
 		"hair_father":        { "sheet": "father", "crop": "386x322+465+138" },
 		"top_father":         { "sheet": "father", "crop": "307x138+881+460" },
 		"bottom_father":      { "sheet": "father", "crop": "230x84+919+598" },
-		"shoes_father":       { "sheet": "father", "crop": "274x80+894+718" }
+		"shoes_father":       { "sheet": "father", "crop": "274x80+894+718" },
+		"body_drone_bruce":   { "sheet": "drone_bruce", "crop": "383x708+68+128" },
+		"hair_drone_bruce":   { "sheet": "drone_bruce", "crop": "487x401+481+112" },
+		"dress_drone_bruce":  { "sheet": "drone_bruce", "crop": "288x412+1017+427" }
 	}
 }
