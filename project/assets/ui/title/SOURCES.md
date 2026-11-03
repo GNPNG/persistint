@@ -38,7 +38,7 @@ What made each file here (release checklist LP-04, sops/09). Prompt files carry 
 | `sky_night.png` | `tools/gen_title_fx.py` | drawn or cut by the tool (its docstring names inputs) | 2026-10-24 |
 | `sun.png` | `tools/gen_title_fx.py` | drawn or cut by the tool (its docstring names inputs) | 2026-10-24 |
 | `title_screen.png` | Gemini image | `prompts/image/ui/title/title_screen.md` | 2026-10-23 |
-| `title_screen_plain.png` | `tools/gen_brand_art.py`, `tools/gen_ui_art.py` | drawn or cut by the tool (its docstring names inputs); a Gemini image render is planned (`prompts/image/ui/title/title_screen_plain.md`), not landed yet | 2026-10-23 |
+| `title_screen_plain.png` | Gemini image | `prompts/image/ui/title/title_screen_plain.md` | 2026-10-23 |
 | `waves.png` | `tools/gen_title_fx.py` | drawn or cut by the tool (its docstring names inputs) | 2026-10-24 |
 | `wordmark.png` | `tools/gen_brand_art.py` | drawn or cut by the tool (its docstring names inputs) | 2026-10-23 |
 | `wordmark_letters.png` | `tools/gen_brand_art.py` | drawn or cut by the tool (its docstring names inputs) | 2026-10-24 |
