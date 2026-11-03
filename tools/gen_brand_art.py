@@ -35,7 +35,11 @@ Outputs:
                                              app_icon.md: the striped gold-domed temple on a
                                              little island under a heart and a sparkle, on a
                                              turquoise-to-blush rounded square; reads at 64x64
-                                             (project.godot application/config/icon)
+                                             (project.godot application/config/icon). Not
+                                             written once the render has landed at
+                                             prompts/image/ui/icon/assets/app_icon.png (the game
+                                             copy is that render masked to its rounded square at
+                                             1024x1024)
 Everything is drawn at SUPER x its output size and downscaled with LANCZOS (soft, antialiased
 edges, STYLE.md 4.1). No randomness: the same inputs give the same PNGs.
 """
@@ -47,6 +51,7 @@ from PIL import Image, ImageChops, ImageDraw, ImageFilter, ImageFont
 ROOT = Path(__file__).resolve().parent.parent
 ASSETS = ROOT / "project/assets"
 FONT = ROOT / "art/brand/fonts/Fredoka-VF.ttf"
+ICON_RENDER = "prompts/image/ui/icon/assets/app_icon.png"
 SUPER = 2
 
 INK = (138, 90, 90)          # #8a5a5a warm-brown outline
@@ -254,4 +259,8 @@ if __name__ == "__main__":
     print(layout_path.relative_to(ROOT))
     save(title_screen(), "ui/title/title_screen.png")
     save(boot_splash(), "ui/brand/boot_splash.png")
-    save(app_icon(), "ui/icon/app_icon.png")
+    # The landed Gemini render (bd on0t) replaces the stand-in; a rerun keeps it.
+    if (ROOT / ICON_RENDER).exists():
+        print("project/assets/ui/icon/app_icon.png kept: the render has landed at", ICON_RENDER)
+    else:
+        save(app_icon(), "ui/icon/app_icon.png")

@@ -5,4 +5,4 @@ What made each file here (release checklist LP-04, sops/09). Prompt files carry 
 
 | File | Made by | From | Added |
 |---|---|---|---|
-| `app_icon.png` | `tools/gen_brand_art.py` | drawn or cut by the tool (its docstring names inputs); a Gemini image render is planned (`prompts/image/ui/icon/app_icon.md`), not landed yet | 2026-10-23 |
+| `app_icon.png` | Gemini image | `prompts/image/ui/icon/app_icon.md` | 2026-10-23 |
