@@ -5,6 +5,22 @@ All notable changes, newest first. The format follows
 [Semantic Versioning](https://semver.org/). `tools/version.py bump` turns the Unreleased section
 into the new version's heading; the Updates page on the site shows the released versions.
 
+## v0.5.0 — 2026-11-03
+
+### Changed
+
+- New art on the time-jump card between the island and the cruise, and on the card before each
+  cruise flashback: the white cruise ship lit up at sunset, with streamers and balloons. A soft
+  dark band behind the words keeps them easy to read on the bright picture.
+- Newly drawn props in the temple, the village, the ruins and the Great Hall: the wall calendar,
+  the Queen Mother's portrait icons, the skull altar with its flower crown, the round Seal of the
+  O, the flower urn, the temple cushion and the temple pavilion.
+
+### Fixed
+
+- The temple pavilion in the village and the cushion in the temple no longer sit on green
+  squares.
+
 ## v0.4.0 — 2026-11-02
 
 ### Added
