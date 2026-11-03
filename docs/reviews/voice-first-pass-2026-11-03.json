@@ -1,0 +1,2067 @@
+{
+  "date": "2026-11-03T05:48:46.876783+00:00",
+  "base_commit": "98bc1d6b7078b02448a73f3f683c300e6e355adb",
+  "scope": "37 missing clips only, unchanged manifest text and assigned stock voices. Existing clips retained.",
+  "generator": "Coqui XTTS v2",
+  "environment": {
+    "python": "3.11.17",
+    "torch": "2.4.1+cpu",
+    "coqui_tts": "0.24.3",
+    "transformers": "4.46.3",
+    "godot": "4.6.3"
+  },
+  "voice_assignments": {
+    "Gloria": "Daisy Studious",
+    "Priestess Betty": "Ana Florence",
+    "Bruce": "Andrew Chipper",
+    "Susan": "Gracie Wise"
+  },
+  "generation": {
+    "attempts_1_and_2": "Unmodified tools/generate_voice_clips.py with repository defaults and tools/audio_levels.py normalization",
+    "attempt_3": {
+      "keys": [
+        "f78e54db4867127c1e964594bd6d017f",
+        "ac1cbdc5121d21cc98eede6c1e08f59b",
+        "7674177d5d3266cacf0df66b7bf40890",
+        "5d46593ab5473e87da72123f95d5ebfc",
+        "e64470992f09e7ccc2e5c6cf22294957"
+      ],
+      "settings": {
+        "split_sentences": false,
+        "temperature": 0.65,
+        "top_p": 0.8
+      }
+    },
+    "attempt_4": {
+      "keys": [
+        "f78e54db4867127c1e964594bd6d017f",
+        "5d46593ab5473e87da72123f95d5ebfc"
+      ],
+      "settings": {
+        "split_sentences": false,
+        "temperature": 0.45,
+        "top_p": 0.8,
+        "speed": 0.92
+      }
+    },
+    "retry_reason": "Retry3 automatic threshold failures plus8 transcript content discrepancies. Whole-line rendering used to remove fragment-related stray speech; canonical text unchanged."
+  },
+  "validation": {
+    "exporter_check": "475 lines; manifest current",
+    "text_check": "tools/verify_voice_clips.py; faster-whisper small.en CPU int8; threshold0.8",
+    "automatic_text_flags": 0,
+    "text_min": 0.8,
+    "audio_level_pass": 37,
+    "line_key_pass": 37,
+    "godot_import_load_pass": 37,
+    "audio_format": "PCM16 mono 24000Hz",
+    "duration_seconds": 248.976
+  },
+  "human_review": [
+    {
+      "key": "f78e54db4867127c1e964594bd6d017f",
+      "speaker": "Priestess Betty",
+      "reason": "Repeated ASR transcription of obedient as obedience despite four takes. Final score0.857 passes automatic threshold; pronunciation requires listening review before approval."
+    }
+  ],
+  "not_checked": [
+    "Subjective performance and voice listening review",
+    "Full-game64-test suite and in-scene playback; needs cc-srv test",
+    "Encrypted historical voice ratings; flagged legacy keys requested from coordinator"
+  ],
+  "clips": [
+    {
+      "line": {
+        "speaker": "Gloria",
+        "text": "The festival was in the cool season last cycle. Now it's hot. Probably the weather is wrong.",
+        "key": "9f534297411278963dfc8002ef6879c6",
+        "clip": "res://audio/voice/9f534297411278963dfc8002ef6879c6.wav"
+      },
+      "final_transcription": {
+        "key": "9f534297411278963dfc8002ef6879c6",
+        "speaker": "Gloria",
+        "text": "The festival was in the cool season last cycle. Now it's hot. Probably the weather is wrong.",
+        "heard": "Festival was in the cool season last cycle now. It's hot probably the weather is wrong",
+        "text_sim": 0.97,
+        "voice_sim": null,
+        "flagged": false
+      },
+      "audio": {
+        "key": "9f534297411278963dfc8002ef6879c6",
+        "sha256": "a1602dd62e21b804f9933c61c53d351f50742f8a63be57933eb38737ab8539c7",
+        "bytes": 286894,
+        "format": {
+          "sample_rate": 24000,
+          "channels": 1,
+          "sample_width": 2,
+          "duration": 5.975
+        },
+        "levels": {
+          "I": -16.1,
+          "M": -12.4,
+          "LRA": 2.3,
+          "TP": -1.3,
+          "mean": -17.0
+        },
+        "level_pass": true,
+        "key_pass": true
+      },
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "key": "9f534297411278963dfc8002ef6879c6",
+          "speaker": "Gloria",
+          "text": "The festival was in the cool season last cycle. Now it's hot. Probably the weather is wrong.",
+          "heard": "Festival was in the cool season last cycle now. It's hot probably the weather is wrong",
+          "text_sim": 0.97,
+          "voice_sim": null,
+          "flagged": false
+        }
+      ]
+    },
+    {
+      "line": {
+        "speaker": "Gloria",
+        "text": "Good morning, sister! Have you been seen yet today?",
+        "key": "362f6911725696dcf48d624add1ae9e2",
+        "clip": "res://audio/voice/362f6911725696dcf48d624add1ae9e2.wav"
+      },
+      "final_transcription": {
+        "key": "362f6911725696dcf48d624add1ae9e2",
+        "speaker": "Gloria",
+        "text": "Good morning, sister! Have you been seen yet today?",
+        "heard": "Good morning, sister. Have you been seen yet today?",
+        "text_sim": 1.0,
+        "voice_sim": null,
+        "flagged": false
+      },
+      "audio": {
+        "key": "362f6911725696dcf48d624add1ae9e2",
+        "sha256": "c263670d721df594805f5d0a688de2fa167a2b299948e2fa29aac40e0de902bd",
+        "bytes": 170638,
+        "format": {
+          "sample_rate": 24000,
+          "channels": 1,
+          "sample_width": 2,
+          "duration": 3.553
+        },
+        "levels": {
+          "I": -16.0,
+          "M": -11.0,
+          "LRA": 2.6,
+          "TP": -1.3,
+          "mean": -16.5
+        },
+        "level_pass": true,
+        "key_pass": true
+      },
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "key": "362f6911725696dcf48d624add1ae9e2",
+          "speaker": "Gloria",
+          "text": "Good morning, sister! Have you been seen yet today?",
+          "heard": "Good morning, sister. Have you been seen yet today?",
+          "text_sim": 1.0,
+          "voice_sim": null,
+          "flagged": false
+        }
+      ]
+    },
+    {
+      "line": {
+        "speaker": "Gloria",
+        "text": "Lights out soon. The icons watch us sleep, which is very comforting.",
+        "key": "d21de6043daca3b06b96a43a8258fe11",
+        "clip": "res://audio/voice/d21de6043daca3b06b96a43a8258fe11.wav"
+      },
+      "final_transcription": {
+        "key": "d21de6043daca3b06b96a43a8258fe11",
+        "speaker": "Gloria",
+        "text": "Lights out soon. The icons watch us sleep, which is very comforting.",
+        "heard": "Lights out soon. The icons watch us sleep, which is very comforting.",
+        "text_sim": 1.0,
+        "voice_sim": null,
+        "flagged": false
+      },
+      "audio": {
+        "key": "d21de6043daca3b06b96a43a8258fe11",
+        "sha256": "5a9cdf57a2e0f86bf47fdb11d008fb244cf2ba37b760acb85c6f3e2a7b82d8ed",
+        "bytes": 233614,
+        "format": {
+          "sample_rate": 24000,
+          "channels": 1,
+          "sample_width": 2,
+          "duration": 4.865
+        },
+        "levels": {
+          "I": -16.7,
+          "M": -12.0,
+          "LRA": 1.5,
+          "TP": -1.3,
+          "mean": -17.3
+        },
+        "level_pass": true,
+        "key_pass": true
+      },
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "key": "d21de6043daca3b06b96a43a8258fe11",
+          "speaker": "Gloria",
+          "text": "Lights out soon. The icons watch us sleep, which is very comforting.",
+          "heard": "Lights out soon. The icons watch us sleep, which is very comforting.",
+          "text_sim": 1.0,
+          "voice_sim": null,
+          "flagged": false
+        }
+      ]
+    },
+    {
+      "line": {
+        "speaker": "Priestess Betty",
+        "text": "Today the cohort rises as one. Do try to look luminous, dear. The icons are counting.",
+        "key": "494b9b416cf41114488d04afd530e0c9",
+        "clip": "res://audio/voice/494b9b416cf41114488d04afd530e0c9.wav"
+      },
+      "final_transcription": {
+        "key": "494b9b416cf41114488d04afd530e0c9",
+        "speaker": "Priestess Betty",
+        "text": "Today the cohort rises as one. Do try to look luminous, dear. The icons are counting.",
+        "heard": "Today the cohort rises as one.  Do try to look luminous dear.  The icons are counting.",
+        "text_sim": 1.0,
+        "voice_sim": null,
+        "flagged": false
+      },
+      "audio": {
+        "key": "494b9b416cf41114488d04afd530e0c9",
+        "sha256": "94cac74c9e044ff99c5b43fbd6f86d7e1ff0aa6b8da8991104f792c20ed3e641",
+        "bytes": 340142,
+        "format": {
+          "sample_rate": 24000,
+          "channels": 1,
+          "sample_width": 2,
+          "duration": 7.085
+        },
+        "levels": {
+          "I": -16.0,
+          "M": -11.8,
+          "LRA": 2.9,
+          "TP": -1.3,
+          "mean": -16.4
+        },
+        "level_pass": true,
+        "key_pass": true
+      },
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "key": "494b9b416cf41114488d04afd530e0c9",
+          "speaker": "Priestess Betty",
+          "text": "Today the cohort rises as one. Do try to look luminous, dear. The icons are counting.",
+          "heard": "Today the cohort rises as one.  Do try to look luminous dear.  The icons are counting.",
+          "text_sim": 1.0,
+          "voice_sim": null,
+          "flagged": false
+        }
+      ]
+    },
+    {
+      "line": {
+        "speaker": "Priestess Betty",
+        "text": "Tomorrow is the Fourteenth. Everything is ready, because I made it ready, because nobody else would.",
+        "key": "c78301804b8de7e9a84d784247f08d26",
+        "clip": "res://audio/voice/c78301804b8de7e9a84d784247f08d26.wav"
+      },
+      "final_transcription": {
+        "key": "c78301804b8de7e9a84d784247f08d26",
+        "speaker": "Priestess Betty",
+        "text": "Tomorrow is the Fourteenth. Everything is ready, because I made it ready, because nobody else would.",
+        "heard": "Tomorrow is the fourteenth.  Everything is ready, because I made it ready,  because nobody else would.",
+        "text_sim": 1.0,
+        "voice_sim": null,
+        "flagged": false
+      },
+      "audio": {
+        "key": "c78301804b8de7e9a84d784247f08d26",
+        "sha256": "d590889f1b41f7ddd24cce12a873acd7f940a73e8b17bbe56632921c1f02314c",
+        "bytes": 322702,
+        "format": {
+          "sample_rate": 24000,
+          "channels": 1,
+          "sample_width": 2,
+          "duration": 6.721
+        },
+        "levels": {
+          "I": -16.2,
+          "M": -11.8,
+          "LRA": 2.5,
+          "TP": -1.3,
+          "mean": -16.4
+        },
+        "level_pass": true,
+        "key_pass": true
+      },
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "key": "c78301804b8de7e9a84d784247f08d26",
+          "speaker": "Priestess Betty",
+          "text": "Tomorrow is the Fourteenth. Everything is ready, because I made it ready, because nobody else would.",
+          "heard": "Tomorrow is the fourteenth.  Everything is ready, because I made it ready,  because nobody else would.",
+          "text_sim": 1.0,
+          "voice_sim": null,
+          "flagged": false
+        }
+      ]
+    },
+    {
+      "line": {
+        "speaker": "Priestess Betty",
+        "text": "The obedient simply glow, don't you think?",
+        "key": "f78e54db4867127c1e964594bd6d017f",
+        "clip": "res://audio/voice/f78e54db4867127c1e964594bd6d017f.wav"
+      },
+      "final_transcription": {
+        "key": "f78e54db4867127c1e964594bd6d017f",
+        "speaker": "Priestess Betty",
+        "text": "The obedient simply glow, don't you think?",
+        "heard": "The obedience simply glow, don't you think?",
+        "text_sim": 0.857,
+        "voice_sim": null,
+        "flagged": false
+      },
+      "audio": {
+        "key": "f78e54db4867127c1e964594bd6d017f",
+        "sha256": "faafe908535cb62c716e857c25fab78b9b7f29200429f96bccd384e1577540e5",
+        "bytes": 133742,
+        "format": {
+          "sample_rate": 24000,
+          "channels": 1,
+          "sample_width": 2,
+          "duration": 2.785
+        },
+        "levels": {
+          "I": -16.0,
+          "M": -11.2,
+          "LRA": 0.0,
+          "TP": -1.4,
+          "mean": -15.9
+        },
+        "level_pass": true,
+        "key_pass": true
+      },
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "key": "f78e54db4867127c1e964594bd6d017f",
+          "speaker": "Priestess Betty",
+          "text": "The obedient simply glow, don't you think?",
+          "heard": "The obedience simply glow, don't you think?",
+          "text_sim": 0.857,
+          "voice_sim": null,
+          "flagged": false
+        },
+        {
+          "attempt": 2,
+          "key": "f78e54db4867127c1e964594bd6d017f",
+          "speaker": "Priestess Betty",
+          "text": "The obedient simply glow, don't you think?",
+          "heard": "The obedience simply glow, don't you think?",
+          "text_sim": 0.857,
+          "voice_sim": null,
+          "flagged": false
+        },
+        {
+          "attempt": 3,
+          "key": "f78e54db4867127c1e964594bd6d017f",
+          "speaker": "Priestess Betty",
+          "text": "The obedient simply glow, don't you think?",
+          "heard": "The obedience simply glowed, don't you think?",
+          "text_sim": 0.714,
+          "voice_sim": null,
+          "flagged": true
+        },
+        {
+          "attempt": 4,
+          "key": "f78e54db4867127c1e964594bd6d017f",
+          "speaker": "Priestess Betty",
+          "text": "The obedient simply glow, don't you think?",
+          "heard": "The obedience simply glow, don't you think?",
+          "text_sim": 0.857,
+          "voice_sim": null,
+          "flagged": false
+        }
+      ]
+    },
+    {
+      "line": {
+        "speaker": "Priestess Betty",
+        "text": "'No thank you.' What a fascinating phrase.",
+        "key": "1476312f780bd13f574b205329087933",
+        "clip": "res://audio/voice/1476312f780bd13f574b205329087933.wav"
+      },
+      "final_transcription": {
+        "key": "1476312f780bd13f574b205329087933",
+        "speaker": "Priestess Betty",
+        "text": "'No thank you.' What a fascinating phrase.",
+        "heard": "No thank you. What a fascinating phrase.",
+        "text_sim": 0.8,
+        "voice_sim": null,
+        "flagged": false
+      },
+      "audio": {
+        "key": "1476312f780bd13f574b205329087933",
+        "sha256": "bb5e624e2ff6b318d469351fa552c946e7c810431052fab59fca5a0dd6b76f90",
+        "bytes": 222350,
+        "format": {
+          "sample_rate": 24000,
+          "channels": 1,
+          "sample_width": 2,
+          "duration": 4.631
+        },
+        "levels": {
+          "I": -16.2,
+          "M": -11.7,
+          "LRA": 1.7,
+          "TP": -1.3,
+          "mean": -16.6
+        },
+        "level_pass": true,
+        "key_pass": true
+      },
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "key": "1476312f780bd13f574b205329087933",
+          "speaker": "Priestess Betty",
+          "text": "'No thank you.' What a fascinating phrase.",
+          "heard": "No thank you. What a fascinating phrase.",
+          "text_sim": 0.8,
+          "voice_sim": null,
+          "flagged": false
+        }
+      ]
+    },
+    {
+      "line": {
+        "speaker": "Priestess Betty",
+        "text": "The Gate has opened, so the new cycle begins. The cohort agrees, and the cohort is never wrong. We checked each other.",
+        "key": "03e33a434915a0101d69965ef802d95a",
+        "clip": "res://audio/voice/03e33a434915a0101d69965ef802d95a.wav"
+      },
+      "final_transcription": {
+        "key": "03e33a434915a0101d69965ef802d95a",
+        "speaker": "Priestess Betty",
+        "text": "The Gate has opened, so the new cycle begins. The cohort agrees, and the cohort is never wrong. We checked each other.",
+        "heard": "The gate has opened, so the new cycle begins.  The cohort agrees, and the cohort is never wrong.  We checked each other.",
+        "text_sim": 1.0,
+        "voice_sim": null,
+        "flagged": false
+      },
+      "audio": {
+        "key": "03e33a434915a0101d69965ef802d95a",
+        "sha256": "e983f1736375dd5d2474559fae9f6e928f2ab388079a34618053df3883fe2e2e",
+        "bytes": 447150,
+        "format": {
+          "sample_rate": 24000,
+          "channels": 1,
+          "sample_width": 2,
+          "duration": 9.314
+        },
+        "levels": {
+          "I": -16.1,
+          "M": -11.2,
+          "LRA": 4.0,
+          "TP": -0.9,
+          "mean": -16.6
+        },
+        "level_pass": true,
+        "key_pass": true
+      },
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "key": "03e33a434915a0101d69965ef802d95a",
+          "speaker": "Priestess Betty",
+          "text": "The Gate has opened, so the new cycle begins. The cohort agrees, and the cohort is never wrong. We checked each other.",
+          "heard": "The gate has opened, so the new cycle begins.  The cohort agrees, and the cohort is never wrong.  We checked each other.",
+          "text_sim": 1.0,
+          "voice_sim": null,
+          "flagged": false
+        }
+      ]
+    },
+    {
+      "line": {
+        "speaker": "Priestess Betty",
+        "text": "The rites are scheduled for the days when the womb calls. Which, happily, are the days we've always held them.",
+        "key": "b56de434543076de29a8abed32f37a1a",
+        "clip": "res://audio/voice/b56de434543076de29a8abed32f37a1a.wav"
+      },
+      "final_transcription": {
+        "key": "b56de434543076de29a8abed32f37a1a",
+        "speaker": "Priestess Betty",
+        "text": "The rites are scheduled for the days when the womb calls. Which, happily, are the days we've always held them.",
+        "heard": "The rites are scheduled for the days when the womb calls, which, happily, are the days  we've always held them.",
+        "text_sim": 1.0,
+        "voice_sim": null,
+        "flagged": false
+      },
+      "audio": {
+        "key": "b56de434543076de29a8abed32f37a1a",
+        "sha256": "e443177a3c8e8ea111de47549c4e332f9c0f5abbaedf3374d0d960cbb515d24f",
+        "bytes": 327310,
+        "format": {
+          "sample_rate": 24000,
+          "channels": 1,
+          "sample_width": 2,
+          "duration": 6.817
+        },
+        "levels": {
+          "I": -16.1,
+          "M": -11.9,
+          "LRA": 1.5,
+          "TP": -1.2,
+          "mean": -16.3
+        },
+        "level_pass": true,
+        "key_pass": true
+      },
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "key": "b56de434543076de29a8abed32f37a1a",
+          "speaker": "Priestess Betty",
+          "text": "The rites are scheduled for the days when the womb calls. Which, happily, are the days we've always held them.",
+          "heard": "The rites are scheduled for the days when the womb calls, which, happily, are the days  we've always held them.",
+          "text_sim": 1.0,
+          "voice_sim": null,
+          "flagged": false
+        }
+      ]
+    },
+    {
+      "line": {
+        "speaker": "Priestess Betty",
+        "text": "No calendars, no thermometers, no 'tests.' Devices of domination. We count in blood, and blood does not lie.",
+        "key": "17677be72b93010767c3310c43c38920",
+        "clip": "res://audio/voice/17677be72b93010767c3310c43c38920.wav"
+      },
+      "final_transcription": {
+        "key": "17677be72b93010767c3310c43c38920",
+        "speaker": "Priestess Betty",
+        "text": "No calendars, no thermometers, no 'tests.' Devices of domination. We count in blood, and blood does not lie.",
+        "heard": "No calendars, no thermometers, no tests, devices of domination.  We count in blood, and blood does not lie.",
+        "text_sim": 0.919,
+        "voice_sim": null,
+        "flagged": false
+      },
+      "audio": {
+        "key": "17677be72b93010767c3310c43c38920",
+        "sha256": "a8eeeef4f06bbbb913914707c5ea2df959161913a779d35654b489307c9ecdd5",
+        "bytes": 540846,
+        "format": {
+          "sample_rate": 24000,
+          "channels": 1,
+          "sample_width": 2,
+          "duration": 11.266
+        },
+        "levels": {
+          "I": -16.1,
+          "M": -11.7,
+          "LRA": 3.4,
+          "TP": -1.3,
+          "mean": -16.5
+        },
+        "level_pass": true,
+        "key_pass": true
+      },
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "key": "17677be72b93010767c3310c43c38920",
+          "speaker": "Priestess Betty",
+          "text": "No calendars, no thermometers, no 'tests.' Devices of domination. We count in blood, and blood does not lie.",
+          "heard": "No calendars, no thermometers, no tests, devices of domination.  We count in blood, and blood does not lie.",
+          "text_sim": 0.919,
+          "voice_sim": null,
+          "flagged": false
+        }
+      ]
+    },
+    {
+      "line": {
+        "speaker": "Priestess Betty",
+        "text": "The rite is done. If the Mothers' number does not grow, it is a failure of devotion. It is always a failure of devotion.",
+        "key": "5ca8a6060680af6756b9c6e364e5864d",
+        "clip": "res://audio/voice/5ca8a6060680af6756b9c6e364e5864d.wav"
+      },
+      "final_transcription": {
+        "key": "5ca8a6060680af6756b9c6e364e5864d",
+        "speaker": "Priestess Betty",
+        "text": "The rite is done. If the Mothers' number does not grow, it is a failure of devotion. It is always a failure of devotion.",
+        "heard": "The right is done.  If the mother's number does not grow,  it is a failure of devotion.  It is always a failure of devotion.",
+        "text_sim": 0.917,
+        "voice_sim": null,
+        "flagged": false
+      },
+      "audio": {
+        "key": "5ca8a6060680af6756b9c6e364e5864d",
+        "sha256": "d2c0ecba30caa6061894546f71422743edfd40d4a06743d8d740b0722a37264f",
+        "bytes": 418478,
+        "format": {
+          "sample_rate": 24000,
+          "channels": 1,
+          "sample_width": 2,
+          "duration": 8.717
+        },
+        "levels": {
+          "I": -16.0,
+          "M": -12.0,
+          "LRA": 2.0,
+          "TP": -1.3,
+          "mean": -16.4
+        },
+        "level_pass": true,
+        "key_pass": true
+      },
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "key": "5ca8a6060680af6756b9c6e364e5864d",
+          "speaker": "Priestess Betty",
+          "text": "The rite is done. If the Mothers' number does not grow, it is a failure of devotion. It is always a failure of devotion.",
+          "heard": "The right is done.  If the mother's number does not grow,  it is a failure of devotion.  It is always a failure of devotion.",
+          "text_sim": 0.917,
+          "voice_sim": null,
+          "flagged": false
+        }
+      ]
+    },
+    {
+      "line": {
+        "speaker": "Priestess Betty",
+        "text": "The sacred weeks. Everything feels unbearable and enormous. That is communion, dear. Do not take an aspirin.",
+        "key": "b1647ff5c5747b8c7a3687b6270e2a0b",
+        "clip": "res://audio/voice/b1647ff5c5747b8c7a3687b6270e2a0b.wav"
+      },
+      "final_transcription": {
+        "key": "b1647ff5c5747b8c7a3687b6270e2a0b",
+        "speaker": "Priestess Betty",
+        "text": "The sacred weeks. Everything feels unbearable and enormous. That is communion, dear. Do not take an aspirin.",
+        "heard": "The sacred weeks.  Everything feels unbearable and enormous.  That is communion, dear.  Do not take an aspirin.",
+        "text_sim": 1.0,
+        "voice_sim": null,
+        "flagged": false
+      },
+      "audio": {
+        "key": "b1647ff5c5747b8c7a3687b6270e2a0b",
+        "sha256": "77fb94b6f427e0bd3979ac71eff511c9da5addf3be6bb4191e247a473b030051",
+        "bytes": 417486,
+        "format": {
+          "sample_rate": 24000,
+          "channels": 1,
+          "sample_width": 2,
+          "duration": 8.696
+        },
+        "levels": {
+          "I": -16.1,
+          "M": -11.2,
+          "LRA": 2.4,
+          "TP": -1.4,
+          "mean": -16.4
+        },
+        "level_pass": true,
+        "key_pass": true
+      },
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "key": "b1647ff5c5747b8c7a3687b6270e2a0b",
+          "speaker": "Priestess Betty",
+          "text": "The sacred weeks. Everything feels unbearable and enormous. That is communion, dear. Do not take an aspirin.",
+          "heard": "The sacred weeks.  Everything feels unbearable and enormous.  That is communion, dear.  Do not take an aspirin.",
+          "text_sim": 1.0,
+          "voice_sim": null,
+          "flagged": false
+        }
+      ]
+    },
+    {
+      "line": {
+        "speaker": "Priestess Betty",
+        "text": "Yes, the Fourteenth lands a little later each cycle. That is the cohort's business, not the sky's.",
+        "key": "ca71d6aa100d4bc332752fb88aed098b",
+        "clip": "res://audio/voice/ca71d6aa100d4bc332752fb88aed098b.wav"
+      },
+      "final_transcription": {
+        "key": "ca71d6aa100d4bc332752fb88aed098b",
+        "speaker": "Priestess Betty",
+        "text": "Yes, the Fourteenth lands a little later each cycle. That is the cohort's business, not the sky's.",
+        "heard": "Yes. The fourteenth lands a little later. Each cycle. That is the cohort's business,  not the sky's.",
+        "text_sim": 1.0,
+        "voice_sim": null,
+        "flagged": false
+      },
+      "audio": {
+        "key": "ca71d6aa100d4bc332752fb88aed098b",
+        "sha256": "dcc8800338a1ed29a4f89e4357aa1d3e41be62a075e4dfca097918cc59a312ef",
+        "bytes": 380558,
+        "format": {
+          "sample_rate": 24000,
+          "channels": 1,
+          "sample_width": 2,
+          "duration": 7.927
+        },
+        "levels": {
+          "I": -16.2,
+          "M": -12.4,
+          "LRA": 1.2,
+          "TP": -1.2,
+          "mean": -17.2
+        },
+        "level_pass": true,
+        "key_pass": true
+      },
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "key": "ca71d6aa100d4bc332752fb88aed098b",
+          "speaker": "Priestess Betty",
+          "text": "Yes, the Fourteenth lands a little later each cycle. That is the cohort's business, not the sky's.",
+          "heard": "Yes. The fourteenth lands a little later. Each cycle. That is the cohort's business,  not the sky's.",
+          "text_sim": 1.0,
+          "voice_sim": null,
+          "flagged": false
+        }
+      ]
+    },
+    {
+      "line": {
+        "speaker": "Priestess Betty",
+        "text": "Anyone found measuring the tides at night will be asked to sit quietly for a very long time.",
+        "key": "0aefa5d063e7823e512c9a4b17105470",
+        "clip": "res://audio/voice/0aefa5d063e7823e512c9a4b17105470.wav"
+      },
+      "final_transcription": {
+        "key": "0aefa5d063e7823e512c9a4b17105470",
+        "speaker": "Priestess Betty",
+        "text": "Anyone found measuring the tides at night will be asked to sit quietly for a very long time.",
+        "heard": "Anyone found measuring the tides at night will be asked to sit quietly for a very long  time.",
+        "text_sim": 1.0,
+        "voice_sim": null,
+        "flagged": false
+      },
+      "audio": {
+        "key": "0aefa5d063e7823e512c9a4b17105470",
+        "sha256": "8abe86a512989cfb9216210aee8121bd6b0d4965c2ac1da6dcb308990658942f",
+        "bytes": 276078,
+        "format": {
+          "sample_rate": 24000,
+          "channels": 1,
+          "sample_width": 2,
+          "duration": 5.75
+        },
+        "levels": {
+          "I": -16.0,
+          "M": -11.2,
+          "LRA": 2.5,
+          "TP": -1.3,
+          "mean": -16.0
+        },
+        "level_pass": true,
+        "key_pass": true
+      },
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "key": "0aefa5d063e7823e512c9a4b17105470",
+          "speaker": "Priestess Betty",
+          "text": "Anyone found measuring the tides at night will be asked to sit quietly for a very long time.",
+          "heard": "Anyone found measuring the tides at night will be asked to sit quietly for a very long  time.",
+          "text_sim": 1.0,
+          "voice_sim": null,
+          "flagged": false
+        }
+      ]
+    },
+    {
+      "line": {
+        "speaker": "Priestess Betty",
+        "text": "Stand straighter, dear. The icons are watching.",
+        "key": "46575e091a973073f8aa7be052fe3dcd",
+        "clip": "res://audio/voice/46575e091a973073f8aa7be052fe3dcd.wav"
+      },
+      "final_transcription": {
+        "key": "46575e091a973073f8aa7be052fe3dcd",
+        "speaker": "Priestess Betty",
+        "text": "Stand straighter, dear. The icons are watching.",
+        "heard": "Stand straighter, dear. The icons are watching.",
+        "text_sim": 1.0,
+        "voice_sim": null,
+        "flagged": false
+      },
+      "audio": {
+        "key": "46575e091a973073f8aa7be052fe3dcd",
+        "sha256": "26e508acb253af7e6fa615ac25e76545b9f075adf08719db238f8618bb5855ab",
+        "bytes": 202382,
+        "format": {
+          "sample_rate": 24000,
+          "channels": 1,
+          "sample_width": 2,
+          "duration": 4.215
+        },
+        "levels": {
+          "I": -16.3,
+          "M": -12.1,
+          "LRA": 1.3,
+          "TP": -1.3,
+          "mean": -17.3
+        },
+        "level_pass": true,
+        "key_pass": true
+      },
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "key": "46575e091a973073f8aa7be052fe3dcd",
+          "speaker": "Priestess Betty",
+          "text": "Stand straighter, dear. The icons are watching.",
+          "heard": "Stand straighter, dear. The icons are watching.",
+          "text_sim": 1.0,
+          "voice_sim": null,
+          "flagged": false
+        }
+      ]
+    },
+    {
+      "line": {
+        "speaker": "Bruce",
+        "text": "They brought us the tonic early this morning. Festival day. I don't ask what's in it.",
+        "key": "0a998e69ddc4de8d493629c368ebc6a8",
+        "clip": "res://audio/voice/0a998e69ddc4de8d493629c368ebc6a8.wav"
+      },
+      "final_transcription": {
+        "key": "0a998e69ddc4de8d493629c368ebc6a8",
+        "speaker": "Bruce",
+        "text": "They brought us the tonic early this morning. Festival day. I don't ask what's in it.",
+        "heard": "They brought us the tonic early this morning.  Festival day.  I don't ask what's in it.",
+        "text_sim": 1.0,
+        "voice_sim": null,
+        "flagged": false
+      },
+      "audio": {
+        "key": "0a998e69ddc4de8d493629c368ebc6a8",
+        "sha256": "c66796cc8decb9b57c93298771a26d6dca4752d9e6710c240587eaa720f5414e",
+        "bytes": 282286,
+        "format": {
+          "sample_rate": 24000,
+          "channels": 1,
+          "sample_width": 2,
+          "duration": 5.879
+        },
+        "levels": {
+          "I": -16.4,
+          "M": -11.6,
+          "LRA": 1.9,
+          "TP": -1.2,
+          "mean": -17.3
+        },
+        "level_pass": true,
+        "key_pass": true
+      },
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "key": "0a998e69ddc4de8d493629c368ebc6a8",
+          "speaker": "Bruce",
+          "text": "They brought us the tonic early this morning. Festival day. I don't ask what's in it.",
+          "heard": "They brought us the tonic early this morning.  Best of all day.  I don't ask what's in it.",
+          "text_sim": 0.882,
+          "voice_sim": null,
+          "flagged": false
+        },
+        {
+          "attempt": 2,
+          "key": "0a998e69ddc4de8d493629c368ebc6a8",
+          "speaker": "Bruce",
+          "text": "They brought us the tonic early this morning. Festival day. I don't ask what's in it.",
+          "heard": "They brought us the tonic early this morning.  Festival day.  I don't ask what's in it.",
+          "text_sim": 1.0,
+          "voice_sim": null,
+          "flagged": false
+        }
+      ]
+    },
+    {
+      "line": {
+        "speaker": "Bruce",
+        "text": "Rites tomorrow. They'll collect us at sunset and return us by sunrise. Fine. The tomatoes can wait.",
+        "key": "ac1cbdc5121d21cc98eede6c1e08f59b",
+        "clip": "res://audio/voice/ac1cbdc5121d21cc98eede6c1e08f59b.wav"
+      },
+      "final_transcription": {
+        "key": "ac1cbdc5121d21cc98eede6c1e08f59b",
+        "speaker": "Bruce",
+        "text": "Rites tomorrow. They'll collect us at sunset and return us by sunrise. Fine. The tomatoes can wait.",
+        "heard": "Rights tomorrow, they'll collect us at sunset and return us by sunrise.  Fine.  The tomatoes can wait.",
+        "text_sim": 0.941,
+        "voice_sim": null,
+        "flagged": false
+      },
+      "audio": {
+        "key": "ac1cbdc5121d21cc98eede6c1e08f59b",
+        "sha256": "e142c2ef49aa6b9d9b1d91a3e895708db95f9d4fd111f2b9f8890f92e50a3bcb",
+        "bytes": 363118,
+        "format": {
+          "sample_rate": 24000,
+          "channels": 1,
+          "sample_width": 2,
+          "duration": 7.563
+        },
+        "levels": {
+          "I": -16.2,
+          "M": -11.6,
+          "LRA": 3.2,
+          "TP": -1.3,
+          "mean": -17.1
+        },
+        "level_pass": true,
+        "key_pass": true
+      },
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "key": "ac1cbdc5121d21cc98eede6c1e08f59b",
+          "speaker": "Bruce",
+          "text": "Rites tomorrow. They'll collect us at sunset and return us by sunrise. Fine. The tomatoes can wait.",
+          "heard": "rights tomorrow. They'll collect us at sunset and return us by sunrise. Fine. Die. The tomatoes  can wait.",
+          "text_sim": 0.914,
+          "voice_sim": null,
+          "flagged": false
+        },
+        {
+          "attempt": 2,
+          "key": "ac1cbdc5121d21cc98eede6c1e08f59b",
+          "speaker": "Bruce",
+          "text": "Rites tomorrow. They'll collect us at sunset and return us by sunrise. Fine. The tomatoes can wait.",
+          "heard": "rights tomorrow. They'll collect us at sunset and return us by sunrise. Fine, Dot U. The  tomatoes can wait.",
+          "text_sim": 0.889,
+          "voice_sim": null,
+          "flagged": false
+        },
+        {
+          "attempt": 3,
+          "key": "ac1cbdc5121d21cc98eede6c1e08f59b",
+          "speaker": "Bruce",
+          "text": "Rites tomorrow. They'll collect us at sunset and return us by sunrise. Fine. The tomatoes can wait.",
+          "heard": "Rights tomorrow, they'll collect us at sunset and return us by sunrise.  Fine.  The tomatoes can wait.",
+          "text_sim": 0.941,
+          "voice_sim": null,
+          "flagged": false
+        }
+      ]
+    },
+    {
+      "line": {
+        "speaker": "Bruce",
+        "text": "Extra weeding today. Festival greens for the Fourteenth.",
+        "key": "cbaf5183994180e5f63c4933594b1d92",
+        "clip": "res://audio/voice/cbaf5183994180e5f63c4933594b1d92.wav"
+      },
+      "final_transcription": {
+        "key": "cbaf5183994180e5f63c4933594b1d92",
+        "speaker": "Bruce",
+        "text": "Extra weeding today. Festival greens for the Fourteenth.",
+        "heard": "extra weeding today. Festival greens for the 14th.",
+        "text_sim": 0.875,
+        "voice_sim": null,
+        "flagged": false
+      },
+      "audio": {
+        "key": "cbaf5183994180e5f63c4933594b1d92",
+        "sha256": "f34e8c41fa708ed3e5dd71876c448c8813881e04c605a26faffc4936160f65cd",
+        "bytes": 209038,
+        "format": {
+          "sample_rate": 24000,
+          "channels": 1,
+          "sample_width": 2,
+          "duration": 4.353
+        },
+        "levels": {
+          "I": -16.3,
+          "M": -12.4,
+          "LRA": 1.3,
+          "TP": -1.3,
+          "mean": -17.1
+        },
+        "level_pass": true,
+        "key_pass": true
+      },
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "key": "cbaf5183994180e5f63c4933594b1d92",
+          "speaker": "Bruce",
+          "text": "Extra weeding today. Festival greens for the Fourteenth.",
+          "heard": "extra weeding today. Festival greens for the 14th.",
+          "text_sim": 0.875,
+          "voice_sim": null,
+          "flagged": false
+        }
+      ]
+    },
+    {
+      "line": {
+        "speaker": "Bruce",
+        "text": "They say the Gate is open, so they'll want us soon. Nobody's told us what day it is for a while.",
+        "key": "200027b5cc31a3c956283353a378df26",
+        "clip": "res://audio/voice/200027b5cc31a3c956283353a378df26.wav"
+      },
+      "final_transcription": {
+        "key": "200027b5cc31a3c956283353a378df26",
+        "speaker": "Bruce",
+        "text": "They say the Gate is open, so they'll want us soon. Nobody's told us what day it is for a while.",
+        "heard": "They say the gate is open, so they'll want us soon.  Nobody's told us what day it is for a while.",
+        "text_sim": 1.0,
+        "voice_sim": null,
+        "flagged": false
+      },
+      "audio": {
+        "key": "200027b5cc31a3c956283353a378df26",
+        "sha256": "d8ad95205950f74fff46525504180445a6b83e6e8fc10b1c35466d5c86cf0052",
+        "bytes": 311438,
+        "format": {
+          "sample_rate": 24000,
+          "channels": 1,
+          "sample_width": 2,
+          "duration": 6.487
+        },
+        "levels": {
+          "I": -16.1,
+          "M": -11.5,
+          "LRA": 0.8,
+          "TP": -1.2,
+          "mean": -16.7
+        },
+        "level_pass": true,
+        "key_pass": true
+      },
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "key": "200027b5cc31a3c956283353a378df26",
+          "speaker": "Bruce",
+          "text": "They say the Gate is open, so they'll want us soon. Nobody's told us what day it is for a while.",
+          "heard": "They say the gate is open, so they'll want us soon.  Nobody's told us what day it is for a while.",
+          "text_sim": 1.0,
+          "voice_sim": null,
+          "flagged": false
+        }
+      ]
+    },
+    {
+      "line": {
+        "speaker": "Bruce",
+        "text": "Watering the greenhouse. Glass houses, funny thing. Everyone can see in. Nobody looks.",
+        "key": "1826f95d35cf5081d22ee3f32356ee1d",
+        "clip": "res://audio/voice/1826f95d35cf5081d22ee3f32356ee1d.wav"
+      },
+      "final_transcription": {
+        "key": "1826f95d35cf5081d22ee3f32356ee1d",
+        "speaker": "Bruce",
+        "text": "Watering the greenhouse. Glass houses, funny thing. Everyone can see in. Nobody looks.",
+        "heard": "Watering the greenhouse.  Glass houses, funny thing.  Everyone can see in.  Nobody looks.",
+        "text_sim": 1.0,
+        "voice_sim": null,
+        "flagged": false
+      },
+      "audio": {
+        "key": "1826f95d35cf5081d22ee3f32356ee1d",
+        "sha256": "8f52ec88e369368d94c971634ebd6b6de598cb93dc9a2fe90b2b3f0491577335",
+        "bytes": 366286,
+        "format": {
+          "sample_rate": 24000,
+          "channels": 1,
+          "sample_width": 2,
+          "duration": 7.629
+        },
+        "levels": {
+          "I": -16.2,
+          "M": -12.7,
+          "LRA": 1.6,
+          "TP": -1.3,
+          "mean": -17.5
+        },
+        "level_pass": true,
+        "key_pass": true
+      },
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "key": "1826f95d35cf5081d22ee3f32356ee1d",
+          "speaker": "Bruce",
+          "text": "Watering the greenhouse. Glass houses, funny thing. Everyone can see in. Nobody looks.",
+          "heard": "Watering the greenhouse.  Glass houses, funny thing.  Everyone can see in.  Nobody looks.",
+          "text_sim": 1.0,
+          "voice_sim": null,
+          "flagged": false
+        }
+      ]
+    },
+    {
+      "line": {
+        "speaker": "Bruce",
+        "text": "Back in the compound. The rite 'didn't take' again. They say I need more devotion. I garden. That's my devotion.",
+        "key": "450e287bf369aff6accba409df955cef",
+        "clip": "res://audio/voice/450e287bf369aff6accba409df955cef.wav"
+      },
+      "final_transcription": {
+        "key": "450e287bf369aff6accba409df955cef",
+        "speaker": "Bruce",
+        "text": "Back in the compound. The rite 'didn't take' again. They say I need more devotion. I garden. That's my devotion.",
+        "heard": "back in the compound. The right didn't take again. They say I need more devotion. I garden.  That's my devotion.",
+        "text_sim": 0.85,
+        "voice_sim": null,
+        "flagged": false
+      },
+      "audio": {
+        "key": "450e287bf369aff6accba409df955cef",
+        "sha256": "a539f7bea5fd0a79757363b60407ca882b3f6f95e6841ef96e7d00ad0ac9877f",
+        "bytes": 437486,
+        "format": {
+          "sample_rate": 24000,
+          "channels": 1,
+          "sample_width": 2,
+          "duration": 9.113
+        },
+        "levels": {
+          "I": -16.7,
+          "M": -12.2,
+          "LRA": 2.1,
+          "TP": -1.2,
+          "mean": -17.9
+        },
+        "level_pass": true,
+        "key_pass": true
+      },
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "key": "450e287bf369aff6accba409df955cef",
+          "speaker": "Bruce",
+          "text": "Back in the compound. The rite 'didn't take' again. They say I need more devotion. I garden. That's my devotion.",
+          "heard": "The right didn't take again.  They say I need more devotion.  I garden.  That's my devotion.",
+          "text_sim": 0.722,
+          "voice_sim": null,
+          "flagged": true
+        },
+        {
+          "attempt": 2,
+          "key": "450e287bf369aff6accba409df955cef",
+          "speaker": "Bruce",
+          "text": "Back in the compound. The rite 'didn't take' again. They say I need more devotion. I garden. That's my devotion.",
+          "heard": "back in the compound. The right didn't take again. They say I need more devotion. I garden.  That's my devotion.",
+          "text_sim": 0.85,
+          "voice_sim": null,
+          "flagged": false
+        }
+      ]
+    },
+    {
+      "line": {
+        "speaker": "Bruce",
+        "text": "The Priestesses are in their sacred weeks. Keep your head down and your trowel quiet.",
+        "key": "ddd7df96414257c51286126cb1f24486",
+        "clip": "res://audio/voice/ddd7df96414257c51286126cb1f24486.wav"
+      },
+      "final_transcription": {
+        "key": "ddd7df96414257c51286126cb1f24486",
+        "speaker": "Bruce",
+        "text": "The Priestesses are in their sacred weeks. Keep your head down and your trowel quiet.",
+        "heard": "The priestesses are in their sacred weeks.  Keep your head down, and your trowel quiet.",
+        "text_sim": 1.0,
+        "voice_sim": null,
+        "flagged": false
+      },
+      "audio": {
+        "key": "ddd7df96414257c51286126cb1f24486",
+        "sha256": "fbdadf0daa3d347679a8e2b006f5c8b1201f95b19949b1ea9f42ad2bcd8deacf",
+        "bytes": 278158,
+        "format": {
+          "sample_rate": 24000,
+          "channels": 1,
+          "sample_width": 2,
+          "duration": 5.793
+        },
+        "levels": {
+          "I": -16.2,
+          "M": -12.8,
+          "LRA": 1.3,
+          "TP": -1.2,
+          "mean": -17.3
+        },
+        "level_pass": true,
+        "key_pass": true
+      },
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "key": "ddd7df96414257c51286126cb1f24486",
+          "speaker": "Bruce",
+          "text": "The Priestesses are in their sacred weeks. Keep your head down and your trowel quiet.",
+          "heard": "The priestesses are in their sacred wheat.  Keep your head down and your trowel quiet.",
+          "text_sim": 0.933,
+          "voice_sim": null,
+          "flagged": false
+        },
+        {
+          "attempt": 2,
+          "key": "ddd7df96414257c51286126cb1f24486",
+          "speaker": "Bruce",
+          "text": "The Priestesses are in their sacred weeks. Keep your head down and your trowel quiet.",
+          "heard": "The priestesses are in their sacred weeks.  Keep your head down, and your trowel quiet.",
+          "text_sim": 1.0,
+          "voice_sim": null,
+          "flagged": false
+        }
+      ]
+    },
+    {
+      "line": {
+        "speaker": "Bruce",
+        "text": "Tomatoes ripen when they ripen. The Calendar says otherwise. I trust the tomatoes.",
+        "key": "0c66c0faf982e0fc5769b5ece9f8126b",
+        "clip": "res://audio/voice/0c66c0faf982e0fc5769b5ece9f8126b.wav"
+      },
+      "final_transcription": {
+        "key": "0c66c0faf982e0fc5769b5ece9f8126b",
+        "speaker": "Bruce",
+        "text": "Tomatoes ripen when they ripen. The Calendar says otherwise. I trust the tomatoes.",
+        "heard": "The tomatoes ripen when they ripen.  The calendar says otherwise.  I trust the tomatoes.",
+        "text_sim": 0.963,
+        "voice_sim": null,
+        "flagged": false
+      },
+      "audio": {
+        "key": "0c66c0faf982e0fc5769b5ece9f8126b",
+        "sha256": "ce3b3e82940915726fd8aa6ab78df4c42aa464cac9a37da7301637679e7a2689",
+        "bytes": 302254,
+        "format": {
+          "sample_rate": 24000,
+          "channels": 1,
+          "sample_width": 2,
+          "duration": 6.295
+        },
+        "levels": {
+          "I": -16.6,
+          "M": -11.8,
+          "LRA": 2.2,
+          "TP": -1.2,
+          "mean": -17.6
+        },
+        "level_pass": true,
+        "key_pass": true
+      },
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "key": "0c66c0faf982e0fc5769b5ece9f8126b",
+          "speaker": "Bruce",
+          "text": "Tomatoes ripen when they ripen. The Calendar says otherwise. I trust the tomatoes.",
+          "heard": "The tomatoes ripen when they ripen.  The calendar says otherwise.  I trust the tomatoes.",
+          "text_sim": 0.963,
+          "voice_sim": null,
+          "flagged": false
+        }
+      ]
+    },
+    {
+      "line": {
+        "speaker": "Bruce",
+        "text": "Morning shift. Four hundred seedlings and a watering can. Good thing I like peace and quiet.",
+        "key": "27a74bd14b2778e887c62113036353ac",
+        "clip": "res://audio/voice/27a74bd14b2778e887c62113036353ac.wav"
+      },
+      "final_transcription": {
+        "key": "27a74bd14b2778e887c62113036353ac",
+        "speaker": "Bruce",
+        "text": "Morning shift. Four hundred seedlings and a watering can. Good thing I like peace and quiet.",
+        "heard": "Morning Shift  400 seedlings and a watering can  Good thing I like peace and quiet",
+        "text_sim": 0.903,
+        "voice_sim": null,
+        "flagged": false
+      },
+      "audio": {
+        "key": "27a74bd14b2778e887c62113036353ac",
+        "sha256": "58bcefa1f368c5a5ebd4a63e232c7aa0d23a0a8267adf5bf13ba46ec94eba9a8",
+        "bytes": 322734,
+        "format": {
+          "sample_rate": 24000,
+          "channels": 1,
+          "sample_width": 2,
+          "duration": 6.722
+        },
+        "levels": {
+          "I": -16.1,
+          "M": -11.5,
+          "LRA": 2.1,
+          "TP": -1.3,
+          "mean": -17.0
+        },
+        "level_pass": true,
+        "key_pass": true
+      },
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "key": "27a74bd14b2778e887c62113036353ac",
+          "speaker": "Bruce",
+          "text": "Morning shift. Four hundred seedlings and a watering can. Good thing I like peace and quiet.",
+          "heard": "Morning Shift  400 seedlings and a watering can  Good thing I like peace and quiet",
+          "text_sim": 0.903,
+          "voice_sim": null,
+          "flagged": false
+        }
+      ]
+    },
+    {
+      "line": {
+        "speaker": "Bruce",
+        "text": "The tomatoes listen better than anyone on this island.",
+        "key": "be87682433f55d6e40e2828661589ed8",
+        "clip": "res://audio/voice/be87682433f55d6e40e2828661589ed8.wav"
+      },
+      "final_transcription": {
+        "key": "be87682433f55d6e40e2828661589ed8",
+        "speaker": "Bruce",
+        "text": "The tomatoes listen better than anyone on this island.",
+        "heard": "The tomatoes listen better than anyone on this island.",
+        "text_sim": 1.0,
+        "voice_sim": null,
+        "flagged": false
+      },
+      "audio": {
+        "key": "be87682433f55d6e40e2828661589ed8",
+        "sha256": "3febf4069a8eb41aa88ab465e5215438c1efda922cb4eb827875db630c4bd8cd",
+        "bytes": 151150,
+        "format": {
+          "sample_rate": 24000,
+          "channels": 1,
+          "sample_width": 2,
+          "duration": 3.147
+        },
+        "levels": {
+          "I": -16.0,
+          "M": -11.7,
+          "LRA": 20.1,
+          "TP": -1.3,
+          "mean": -16.6
+        },
+        "level_pass": true,
+        "key_pass": true
+      },
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "key": "be87682433f55d6e40e2828661589ed8",
+          "speaker": "Bruce",
+          "text": "The tomatoes listen better than anyone on this island.",
+          "heard": "The tomatoes listen better than anyone on this island.",
+          "text_sim": 1.0,
+          "voice_sim": null,
+          "flagged": false
+        }
+      ]
+    },
+    {
+      "line": {
+        "speaker": "Susan",
+        "text": "Festival. They'll parade the Mothers and I'll carry the baskets. Same as every cycle, but with ribbons.",
+        "key": "7674177d5d3266cacf0df66b7bf40890",
+        "clip": "res://audio/voice/7674177d5d3266cacf0df66b7bf40890.wav"
+      },
+      "final_transcription": {
+        "key": "7674177d5d3266cacf0df66b7bf40890",
+        "speaker": "Susan",
+        "text": "Festival. They'll parade the Mothers and I'll carry the baskets. Same as every cycle, but with ribbons.",
+        "heard": "Festival! They'll parade the mothers and I'll carry the baskets. Same as every cycle, but with ribbons.",
+        "text_sim": 1.0,
+        "voice_sim": null,
+        "flagged": false
+      },
+      "audio": {
+        "key": "7674177d5d3266cacf0df66b7bf40890",
+        "sha256": "63b8f3ffee3bdb37e8ea977005ee2ed38db3df1759f098dee3fd2c332234ffcc",
+        "bytes": 316526,
+        "format": {
+          "sample_rate": 24000,
+          "channels": 1,
+          "sample_width": 2,
+          "duration": 6.593
+        },
+        "levels": {
+          "I": -16.1,
+          "M": -11.9,
+          "LRA": 0.9,
+          "TP": -1.3,
+          "mean": -17.1
+        },
+        "level_pass": true,
+        "key_pass": true
+      },
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "key": "7674177d5d3266cacf0df66b7bf40890",
+          "speaker": "Susan",
+          "text": "Festival. They'll parade the Mothers and I'll carry the baskets. Same as every cycle, but with ribbons.",
+          "heard": "by Yan Wan, Guia Bo, In, and East Sendye. They'll parade the mothers and I'll carry  the basket. Same as every cycle but with ribbons.",
+          "text_sim": 0.714,
+          "voice_sim": null,
+          "flagged": true
+        },
+        {
+          "attempt": 2,
+          "key": "7674177d5d3266cacf0df66b7bf40890",
+          "speaker": "Susan",
+          "text": "Festival. They'll parade the Mothers and I'll carry the baskets. Same as every cycle, but with ribbons.",
+          "heard": "Umani.  Angili.  Mi nisir me'a birkal.  Awo ous auld yain.  They'll parade the mothers and I'll carry the baskets.  Sain as every cycle, but with ribbons.",
+          "text_sim": 0.698,
+          "voice_sim": null,
+          "flagged": true
+        },
+        {
+          "attempt": 3,
+          "key": "7674177d5d3266cacf0df66b7bf40890",
+          "speaker": "Susan",
+          "text": "Festival. They'll parade the Mothers and I'll carry the baskets. Same as every cycle, but with ribbons.",
+          "heard": "Festival! They'll parade the mothers and I'll carry the baskets. Same as every cycle, but with ribbons.",
+          "text_sim": 1.0,
+          "voice_sim": null,
+          "flagged": false
+        }
+      ]
+    },
+    {
+      "line": {
+        "speaker": "Susan",
+        "text": "Tomorrow they'll all be so sure. I'll be hauling water and counting tides, quietly.",
+        "key": "5d46593ab5473e87da72123f95d5ebfc",
+        "clip": "res://audio/voice/5d46593ab5473e87da72123f95d5ebfc.wav"
+      },
+      "final_transcription": {
+        "key": "5d46593ab5473e87da72123f95d5ebfc",
+        "speaker": "Susan",
+        "text": "Tomorrow they'll all be so sure. I'll be hauling water and counting tides, quietly.",
+        "heard": "tomorrow they'll all be so sure. I'll be hauling water and counting tides quietly.",
+        "text_sim": 1.0,
+        "voice_sim": null,
+        "flagged": false
+      },
+      "audio": {
+        "key": "5d46593ab5473e87da72123f95d5ebfc",
+        "sha256": "540c61050d43d54bbaf11bbfbf57a46646a8ae94207fc225b24df2f13f9de6a5",
+        "bytes": 276078,
+        "format": {
+          "sample_rate": 24000,
+          "channels": 1,
+          "sample_width": 2,
+          "duration": 5.75
+        },
+        "levels": {
+          "I": -16.1,
+          "M": -12.2,
+          "LRA": 2.0,
+          "TP": -1.3,
+          "mean": -16.7
+        },
+        "level_pass": true,
+        "key_pass": true
+      },
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "key": "5d46593ab5473e87da72123f95d5ebfc",
+          "speaker": "Susan",
+          "text": "Tomorrow they'll all be so sure. I'll be hauling water and counting tides, quietly.",
+          "heard": "Tomorrow, they'll be so sure.  I'll be hauling water and counting tides quietly.  Maisie, I'll be here in the water.  Oh... Ma...  Fui...",
+          "text_sim": 0.703,
+          "voice_sim": null,
+          "flagged": true
+        },
+        {
+          "attempt": 2,
+          "key": "5d46593ab5473e87da72123f95d5ebfc",
+          "speaker": "Susan",
+          "text": "Tomorrow they'll all be so sure. I'll be hauling water and counting tides, quietly.",
+          "heard": "Tomorrow they'll all be so sure.  Me?  Why are you dying?  Why me?  I'll be hauling water and counting tides.  Quietly.",
+          "text_sim": 0.8,
+          "voice_sim": null,
+          "flagged": false
+        },
+        {
+          "attempt": 3,
+          "key": "5d46593ab5473e87da72123f95d5ebfc",
+          "speaker": "Susan",
+          "text": "Tomorrow they'll all be so sure. I'll be hauling water and counting tides, quietly.",
+          "heard": "Tomorrow they will be so sure. I'll be holding water and counting tides quietly.",
+          "text_sim": 0.786,
+          "voice_sim": null,
+          "flagged": true
+        },
+        {
+          "attempt": 4,
+          "key": "5d46593ab5473e87da72123f95d5ebfc",
+          "speaker": "Susan",
+          "text": "Tomorrow they'll all be so sure. I'll be hauling water and counting tides, quietly.",
+          "heard": "tomorrow they'll all be so sure. I'll be hauling water and counting tides quietly.",
+          "text_sim": 1.0,
+          "voice_sim": null,
+          "flagged": false
+        }
+      ]
+    },
+    {
+      "line": {
+        "speaker": "Susan",
+        "text": "Heard you refused. Sweetly, even. There's more of us than you'd think.",
+        "key": "7694af54e7f4da292f36f64d432eb5cc",
+        "clip": "res://audio/voice/7694af54e7f4da292f36f64d432eb5cc.wav"
+      },
+      "final_transcription": {
+        "key": "7694af54e7f4da292f36f64d432eb5cc",
+        "speaker": "Susan",
+        "text": "Heard you refused. Sweetly, even. There's more of us than you'd think.",
+        "heard": "Heard you refused, sweetly, even, there's more of us than you'd think.",
+        "text_sim": 1.0,
+        "voice_sim": null,
+        "flagged": false
+      },
+      "audio": {
+        "key": "7694af54e7f4da292f36f64d432eb5cc",
+        "sha256": "a704026e312dbb4358d7d9e0998d3c37053fedc30f306470062dd84baa03e2e2",
+        "bytes": 320174,
+        "format": {
+          "sample_rate": 24000,
+          "channels": 1,
+          "sample_width": 2,
+          "duration": 6.669
+        },
+        "levels": {
+          "I": -16.1,
+          "M": -12.3,
+          "LRA": 3.0,
+          "TP": -1.2,
+          "mean": -16.9
+        },
+        "level_pass": true,
+        "key_pass": true
+      },
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "key": "7694af54e7f4da292f36f64d432eb5cc",
+          "speaker": "Susan",
+          "text": "Heard you refused. Sweetly, even. There's more of us than you'd think.",
+          "heard": "Heard you refused.  Sweetly, even.  Our wide digs.  There's more of us than you'd think.",
+          "text_sim": 0.889,
+          "voice_sim": null,
+          "flagged": false
+        },
+        {
+          "attempt": 2,
+          "key": "7694af54e7f4da292f36f64d432eb5cc",
+          "speaker": "Susan",
+          "text": "Heard you refused. Sweetly, even. There's more of us than you'd think.",
+          "heard": "Heard you refused, sweetly, even, there's more of us than you'd think.",
+          "text_sim": 1.0,
+          "voice_sim": null,
+          "flagged": false
+        }
+      ]
+    },
+    {
+      "line": {
+        "speaker": "Susan",
+        "text": "You arranged their little icons? The water still doesn't care.",
+        "key": "fb021e9dab1ac7ae50e7caa2a7435524",
+        "clip": "res://audio/voice/fb021e9dab1ac7ae50e7caa2a7435524.wav"
+      },
+      "final_transcription": {
+        "key": "fb021e9dab1ac7ae50e7caa2a7435524",
+        "speaker": "Susan",
+        "text": "You arranged their little icons? The water still doesn't care.",
+        "heard": "You arranged their little icons, the water still doesn't care.",
+        "text_sim": 1.0,
+        "voice_sim": null,
+        "flagged": false
+      },
+      "audio": {
+        "key": "fb021e9dab1ac7ae50e7caa2a7435524",
+        "sha256": "d08ba432b410a26b88b339c7b4898d8f3474ffdd23ab1093fcdeea51f62d9e5e",
+        "bytes": 253582,
+        "format": {
+          "sample_rate": 24000,
+          "channels": 1,
+          "sample_width": 2,
+          "duration": 5.281
+        },
+        "levels": {
+          "I": -16.1,
+          "M": -12.9,
+          "LRA": 1.2,
+          "TP": -1.4,
+          "mean": -16.6
+        },
+        "level_pass": true,
+        "key_pass": true
+      },
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "key": "fb021e9dab1ac7ae50e7caa2a7435524",
+          "speaker": "Susan",
+          "text": "You arranged their little icons? The water still doesn't care.",
+          "heard": "You arranged their little icons, the water still doesn't care.",
+          "text_sim": 1.0,
+          "voice_sim": null,
+          "flagged": false
+        }
+      ]
+    },
+    {
+      "line": {
+        "speaker": "Susan",
+        "text": "Gate's open, they say. Another month, another 'maybe next time' for the likes of me.",
+        "key": "c291a91cb90ad2686789fbd15583345a",
+        "clip": "res://audio/voice/c291a91cb90ad2686789fbd15583345a.wav"
+      },
+      "final_transcription": {
+        "key": "c291a91cb90ad2686789fbd15583345a",
+        "speaker": "Susan",
+        "text": "Gate's open, they say. Another month, another 'maybe next time' for the likes of me.",
+        "heard": "gates open, they say. Another month, another, maybe next time, for the likes of me.",
+        "text_sim": 0.8,
+        "voice_sim": null,
+        "flagged": false
+      },
+      "audio": {
+        "key": "c291a91cb90ad2686789fbd15583345a",
+        "sha256": "a558f2c731e1b0a8d90cfc3b72c92ae9275dfb7a2d4a14ae78fb3c429cd9c4a8",
+        "bytes": 458382,
+        "format": {
+          "sample_rate": 24000,
+          "channels": 1,
+          "sample_width": 2,
+          "duration": 9.548
+        },
+        "levels": {
+          "I": -16.4,
+          "M": -12.1,
+          "LRA": 2.4,
+          "TP": -1.2,
+          "mean": -18.1
+        },
+        "level_pass": true,
+        "key_pass": true
+      },
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "key": "c291a91cb90ad2686789fbd15583345a",
+          "speaker": "Susan",
+          "text": "Gate's open, they say. Another month, another 'maybe next time' for the likes of me.",
+          "heard": "gates open, they say. Another month, another, maybe next time, for the likes of me.",
+          "text_sim": 0.8,
+          "voice_sim": null,
+          "flagged": false
+        }
+      ]
+    },
+    {
+      "line": {
+        "speaker": "Susan",
+        "text": "Funny. They do their rites at the start of the cycle. Everyone I've ever known who got lucky, it was in the middle.",
+        "key": "e64470992f09e7ccc2e5c6cf22294957",
+        "clip": "res://audio/voice/e64470992f09e7ccc2e5c6cf22294957.wav"
+      },
+      "final_transcription": {
+        "key": "e64470992f09e7ccc2e5c6cf22294957",
+        "speaker": "Susan",
+        "text": "Funny. They do their rites at the start of the cycle. Everyone I've ever known who got lucky, it was in the middle.",
+        "heard": "funny. They do their rights at the start of the cycle. Everyone I've ever known who got  lucky, it was in the middle.",
+        "text_sim": 0.957,
+        "voice_sim": null,
+        "flagged": false
+      },
+      "audio": {
+        "key": "e64470992f09e7ccc2e5c6cf22294957",
+        "sha256": "28aaeb22456ea04102d10ed6e29b7965ce010f236178a97d3cbf8925ed890d87",
+        "bytes": 367726,
+        "format": {
+          "sample_rate": 24000,
+          "channels": 1,
+          "sample_width": 2,
+          "duration": 7.659
+        },
+        "levels": {
+          "I": -16.3,
+          "M": -12.0,
+          "LRA": 1.7,
+          "TP": -1.2,
+          "mean": -17.2
+        },
+        "level_pass": true,
+        "key_pass": true
+      },
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "key": "e64470992f09e7ccc2e5c6cf22294957",
+          "speaker": "Susan",
+          "text": "Funny. They do their rites at the start of the cycle. Everyone I've ever known who got lucky, it was in the middle.",
+          "heard": "On the hay, they do their rights at the start of the cycle.  Everyone I've ever known who got lucky, it was in the middle.",
+          "text_sim": 0.875,
+          "voice_sim": null,
+          "flagged": false
+        },
+        {
+          "attempt": 2,
+          "key": "e64470992f09e7ccc2e5c6cf22294957",
+          "speaker": "Susan",
+          "text": "Funny. They do their rites at the start of the cycle. Everyone I've ever known who got lucky, it was in the middle.",
+          "heard": "Well, they do their rights at the start of the cycle.  E. Everyone I've ever known who got lucky, it was in the middle.",
+          "text_sim": 0.894,
+          "voice_sim": null,
+          "flagged": false
+        },
+        {
+          "attempt": 3,
+          "key": "e64470992f09e7ccc2e5c6cf22294957",
+          "speaker": "Susan",
+          "text": "Funny. They do their rites at the start of the cycle. Everyone I've ever known who got lucky, it was in the middle.",
+          "heard": "funny. They do their rights at the start of the cycle. Everyone I've ever known who got  lucky, it was in the middle.",
+          "text_sim": 0.957,
+          "voice_sim": null,
+          "flagged": false
+        }
+      ]
+    },
+    {
+      "line": {
+        "speaker": "Susan",
+        "text": "Rites are over and nobody's expecting. Nobody ever asks why. They ask who's to blame.",
+        "key": "f703f909755a3f9826b514e2cde6a941",
+        "clip": "res://audio/voice/f703f909755a3f9826b514e2cde6a941.wav"
+      },
+      "final_transcription": {
+        "key": "f703f909755a3f9826b514e2cde6a941",
+        "speaker": "Susan",
+        "text": "Rites are over and nobody's expecting. Nobody ever asks why. They ask who's to blame.",
+        "heard": "REITs are over and nobody's expecting. Nobody ever asks why. They ask who's to blame.",
+        "text_sim": 0.933,
+        "voice_sim": null,
+        "flagged": false
+      },
+      "audio": {
+        "key": "f703f909755a3f9826b514e2cde6a941",
+        "sha256": "2d6b32589b17412ec668c0647a5b20432927203ad8eef2cf71b6784808b2d908",
+        "bytes": 362670,
+        "format": {
+          "sample_rate": 24000,
+          "channels": 1,
+          "sample_width": 2,
+          "duration": 7.554
+        },
+        "levels": {
+          "I": -16.6,
+          "M": -11.9,
+          "LRA": 2.2,
+          "TP": -1.1,
+          "mean": -17.3
+        },
+        "level_pass": true,
+        "key_pass": true
+      },
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "key": "f703f909755a3f9826b514e2cde6a941",
+          "speaker": "Susan",
+          "text": "Rites are over and nobody's expecting. Nobody ever asks why. They ask who's to blame.",
+          "heard": "REITs are over and nobody's expecting. Nobody ever asks why. They ask who's to blame.",
+          "text_sim": 0.933,
+          "voice_sim": null,
+          "flagged": false
+        }
+      ]
+    },
+    {
+      "line": {
+        "speaker": "Susan",
+        "text": "Everyone's weepy and snappish. They call it holy. I call it Tuesday.",
+        "key": "4a385c0be269f1554a7f030402150834",
+        "clip": "res://audio/voice/4a385c0be269f1554a7f030402150834.wav"
+      },
+      "final_transcription": {
+        "key": "4a385c0be269f1554a7f030402150834",
+        "speaker": "Susan",
+        "text": "Everyone's weepy and snappish. They call it holy. I call it Tuesday.",
+        "heard": "Everyone's weepy and snappish. They call it holy. I call it Tuesday",
+        "text_sim": 1.0,
+        "voice_sim": null,
+        "flagged": false
+      },
+      "audio": {
+        "key": "4a385c0be269f1554a7f030402150834",
+        "sha256": "cd93ff93921f1caae80bd77c0b95590a1c5bdfdcc3a249b353a955da0aac9197",
+        "bytes": 378542,
+        "format": {
+          "sample_rate": 24000,
+          "channels": 1,
+          "sample_width": 2,
+          "duration": 7.885
+        },
+        "levels": {
+          "I": -16.4,
+          "M": -12.5,
+          "LRA": 1.6,
+          "TP": -1.3,
+          "mean": -17.2
+        },
+        "level_pass": true,
+        "key_pass": true
+      },
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "key": "4a385c0be269f1554a7f030402150834",
+          "speaker": "Susan",
+          "text": "Everyone's weepy and snappish. They call it holy. I call it Tuesday.",
+          "heard": "Everyone's weepy and snappish. They call it holy. I call it Tuesday",
+          "text_sim": 1.0,
+          "voice_sim": null,
+          "flagged": false
+        }
+      ]
+    },
+    {
+      "line": {
+        "speaker": "Susan",
+        "text": "The festival drifts. Every cycle it's a bit off. Nobody notices. Noticing needs measuring, and measuring's forbidden.",
+        "key": "499397db4be233c8ff94ee093c79d089",
+        "clip": "res://audio/voice/499397db4be233c8ff94ee093c79d089.wav"
+      },
+      "final_transcription": {
+        "key": "499397db4be233c8ff94ee093c79d089",
+        "speaker": "Susan",
+        "text": "The festival drifts. Every cycle it's a bit off. Nobody notices. Noticing needs measuring, and measuring's forbidden.",
+        "heard": "The festival drifts.  Every cycle it's a bit off.  Nobody notices.  Noticing needs measuring, and measuring's forbidden.",
+        "text_sim": 1.0,
+        "voice_sim": null,
+        "flagged": false
+      },
+      "audio": {
+        "key": "499397db4be233c8ff94ee093c79d089",
+        "sha256": "105d7d9ab1d9e2c844f22b7359460c83d471e56d910ffe0cd367c5844b6940ae",
+        "bytes": 497358,
+        "format": {
+          "sample_rate": 24000,
+          "channels": 1,
+          "sample_width": 2,
+          "duration": 10.36
+        },
+        "levels": {
+          "I": -16.4,
+          "M": -12.6,
+          "LRA": 1.6,
+          "TP": -1.2,
+          "mean": -17.1
+        },
+        "level_pass": true,
+        "key_pass": true
+      },
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "key": "499397db4be233c8ff94ee093c79d089",
+          "speaker": "Susan",
+          "text": "The festival drifts. Every cycle it's a bit off. Nobody notices. Noticing needs measuring, and measuring's forbidden.",
+          "heard": "The festival drifts.  Every cycle it's a bit all.  Nobody notices.  Noticing needs measuring in  and measuring's forbidden.",
+          "text_sim": 0.914,
+          "voice_sim": null,
+          "flagged": false
+        },
+        {
+          "attempt": 2,
+          "key": "499397db4be233c8ff94ee093c79d089",
+          "speaker": "Susan",
+          "text": "The festival drifts. Every cycle it's a bit off. Nobody notices. Noticing needs measuring, and measuring's forbidden.",
+          "heard": "The festival drifts.  Every cycle it's a bit off.  Nobody notices.  Noticing needs measuring, and measuring's forbidden.",
+          "text_sim": 1.0,
+          "voice_sim": null,
+          "flagged": false
+        }
+      ]
+    },
+    {
+      "line": {
+        "speaker": "Susan",
+        "text": "The tide's out. It goes out when the moon says, you know. I'm not saying anything. I'm just standing here.",
+        "key": "d7d09be373bdd31f3a82b4b3fd043caf",
+        "clip": "res://audio/voice/d7d09be373bdd31f3a82b4b3fd043caf.wav"
+      },
+      "final_transcription": {
+        "key": "d7d09be373bdd31f3a82b4b3fd043caf",
+        "speaker": "Susan",
+        "text": "The tide's out. It goes out when the moon says, you know. I'm not saying anything. I'm just standing here.",
+        "heard": "The tide's out.  It goes out when the moon says, you know?  I'm not saying anything.  I'm just standing here.",
+        "text_sim": 1.0,
+        "voice_sim": null,
+        "flagged": false
+      },
+      "audio": {
+        "key": "d7d09be373bdd31f3a82b4b3fd043caf",
+        "sha256": "526b0e22430b6b374704b246e0ad6c543bb277ba1de611d0d7979b664b548d4b",
+        "bytes": 449230,
+        "format": {
+          "sample_rate": 24000,
+          "channels": 1,
+          "sample_width": 2,
+          "duration": 9.357
+        },
+        "levels": {
+          "I": -16.3,
+          "M": -11.3,
+          "LRA": 3.5,
+          "TP": -1.2,
+          "mean": -18.0
+        },
+        "level_pass": true,
+        "key_pass": true
+      },
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "key": "d7d09be373bdd31f3a82b4b3fd043caf",
+          "speaker": "Susan",
+          "text": "The tide's out. It goes out when the moon says, you know. I'm not saying anything. I'm just standing here.",
+          "heard": "The tide's out.  It goes out when the moon says, you know?  I'm not saying anything.  I'm just standing here.",
+          "text_sim": 1.0,
+          "voice_sim": null,
+          "flagged": false
+        }
+      ]
+    },
+    {
+      "line": {
+        "speaker": "Susan",
+        "text": "Water doesn't care what the Calendar says. Neither do I, much.",
+        "key": "f6b471049fad00225857f4c525c7edb2",
+        "clip": "res://audio/voice/f6b471049fad00225857f4c525c7edb2.wav"
+      },
+      "final_transcription": {
+        "key": "f6b471049fad00225857f4c525c7edb2",
+        "speaker": "Susan",
+        "text": "Water doesn't care what the Calendar says. Neither do I, much.",
+        "heard": "Water doesn't care what the calendar says. Neither do I. Much.",
+        "text_sim": 1.0,
+        "voice_sim": null,
+        "flagged": false
+      },
+      "audio": {
+        "key": "f6b471049fad00225857f4c525c7edb2",
+        "sha256": "d9f771d8430331a38713a5449e2549de12226c34f8a0da581fde44a382b63640",
+        "bytes": 262286,
+        "format": {
+          "sample_rate": 24000,
+          "channels": 1,
+          "sample_width": 2,
+          "duration": 5.463
+        },
+        "levels": {
+          "I": -16.6,
+          "M": -11.5,
+          "LRA": 3.6,
+          "TP": -1.1,
+          "mean": -17.5
+        },
+        "level_pass": true,
+        "key_pass": true
+      },
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "key": "f6b471049fad00225857f4c525c7edb2",
+          "speaker": "Susan",
+          "text": "Water doesn't care what the Calendar says. Neither do I, much.",
+          "heard": "Water doesn't care what the calendar says, neither do I much.  Nielden nies, aul nielden.",
+          "text_sim": 0.846,
+          "voice_sim": null,
+          "flagged": false
+        },
+        {
+          "attempt": 2,
+          "key": "f6b471049fad00225857f4c525c7edb2",
+          "speaker": "Susan",
+          "text": "Water doesn't care what the Calendar says. Neither do I, much.",
+          "heard": "Water doesn't care what the calendar says. Neither do I. Much.",
+          "text_sim": 1.0,
+          "voice_sim": null,
+          "flagged": false
+        }
+      ]
+    },
+    {
+      "line": {
+        "speaker": "Priestess Betty",
+        "text": "Welcome, initiate. The Queen Mother sees all who wish to be seen.",
+        "key": "1c62d248fb4873b43437771c1cb98163",
+        "clip": "res://audio/voice/1c62d248fb4873b43437771c1cb98163.wav"
+      },
+      "final_transcription": {
+        "key": "1c62d248fb4873b43437771c1cb98163",
+        "speaker": "Priestess Betty",
+        "text": "Welcome, initiate. The Queen Mother sees all who wish to be seen.",
+        "heard": "Welcome, initiate.  The Queen Mother sees all who wish to be seen.",
+        "text_sim": 1.0,
+        "voice_sim": null,
+        "flagged": false
+      },
+      "audio": {
+        "key": "1c62d248fb4873b43437771c1cb98163",
+        "sha256": "5968d88c1c17f8c548d55e34124514c558f3ef29a6cb5972f0843bb95de70d75",
+        "bytes": 266894,
+        "format": {
+          "sample_rate": 24000,
+          "channels": 1,
+          "sample_width": 2,
+          "duration": 5.559
+        },
+        "levels": {
+          "I": -16.0,
+          "M": -10.9,
+          "LRA": 0.8,
+          "TP": -1.4,
+          "mean": -16.6
+        },
+        "level_pass": true,
+        "key_pass": true
+      },
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "key": "1c62d248fb4873b43437771c1cb98163",
+          "speaker": "Priestess Betty",
+          "text": "Welcome, initiate. The Queen Mother sees all who wish to be seen.",
+          "heard": "Welcome, initiate.  The Queen Mother sees all who wish to be seen.",
+          "text_sim": 1.0,
+          "voice_sim": null,
+          "flagged": false
+        }
+      ]
+    }
+  ]
+}
