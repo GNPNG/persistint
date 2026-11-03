@@ -239,7 +239,7 @@ change. Rows are sorted by path.
 | `project/assets/ruins/vignette.png` | vignette | `tools/gen_ruins_art.py` | 1280x720 screen overlay, linear filter | - |
 | `project/assets/temple/temple_candles.png` | temple_candles | `tools/gen_temple_props.py` | 96x176 frames (24x44 world px at 4x), foot (48, 168); row 0 idle x 4 (flicker); SpriteFrames temple_candles.tres | - |
 | `project/assets/temple/temple_cushion.png` | temple_cushion | render of `prompts/image/levels/temple/temple_cushion.md` (codex), keyed and fitted by hand; it replaced the `tools/gen_temple_props.py` drawing | single 120x80 (30x20 world px at 4x), foot y 72 | - |
-| `project/assets/temple/temple_plinth.png` | temple_plinth | `tools/gen_temple_props.py` | single 128x56 (32x14 world px at 4x), pillar foot y 36 | - |
+| `project/assets/temple/temple_plinth.png` | temple_plinth | render of `prompts/image/levels/temple/temple_plinth.md` (codex), keyed and fitted by hand into the old drawing's 120x47 box; it replaced the `tools/gen_temple_props.py` drawing, so do not rerun that tool over it | single 128x56 (32x14 world px at 4x), pillar foot y 36 | - |
 | `project/assets/temple/temple_shadow.png` | temple_shadow | `tools/gen_temple_props.py` | single 96x32 (24x8 world px at 4x) | - |
 | `project/assets/temple/temple_twinkle.png` | temple_twinkle | `tools/gen_temple_props.py` | 48x48 frames (12x12 world px at 4x), centred; row 0 idle x 6; SpriteFrames temple_twinkle.tres | - |
 | `project/assets/temple/temple_urn.png` | temple_urn | render of `prompts/image/levels/temple/temple_urn.md` (codex), keyed and fitted by hand; it replaced the `tools/gen_temple_props.py` drawing, so do not rerun that tool over it | single 112x144 (28x36 world px at 4x), foot y 136 | - |

@@ -7,7 +7,7 @@ What made each file here (release checklist LP-04, sops/09). Prompt files carry 
 |---|---|---|---|
 | `temple_candles.png` | `tools/gen_temple_props.py` | drawn or cut by the tool (its docstring names inputs) | 2026-10-23 |
 | `temple_cushion.png` | Gemini image | `prompts/image/levels/temple/temple_cushion.md` | 2026-10-23 |
-| `temple_plinth.png` | `tools/gen_temple_props.py` | drawn or cut by the tool (its docstring names inputs); a Gemini image render is planned (`prompts/image/levels/temple/temple_plinth.md`), not landed yet | 2026-10-23 |
+| `temple_plinth.png` | Gemini image | `prompts/image/levels/temple/temple_plinth.md` | 2026-10-23 |
 | `temple_shadow.png` | `tools/gen_temple_props.py` | drawn or cut by the tool (its docstring names inputs) | 2026-10-23 |
 | `temple_twinkle.png` | `tools/gen_temple_props.py` | drawn or cut by the tool (its docstring names inputs) | 2026-10-23 |
 | `temple_urn.png` | Gemini image | `prompts/image/levels/temple/temple_urn.md` | 2026-10-23 |
