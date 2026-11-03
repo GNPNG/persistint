@@ -104,7 +104,7 @@ names it and its crop.
 | `prop_fence_a.png` | `tools/cut_island_props.py` | `Gemini_Generated_Image_i7kl` | 680x400+85+1040 |
 | `prop_fence_b.png` | `tools/cut_island_props.py` | `Gemini_Generated_Image_i7kl` | 680x400+850+1040 |
 | `prop_icon_queen_mother.png` | render of `prompts/image/levels/temple/prop_icon_queen_mother.md` (codex, 2026-11-02), keyed and fitted by hand (`.claude/skills/gemini-assets/SKILL.md` step 3) | `prompts/image/levels/temple/assets/prop_icon_queen_mother.png` | replaces the cut of `PERSISTINT` 272x310+982+745 |
-| `prop_pillar_orb.png` | `tools/cut_island_props.py` | `PERSISTINT` | 190x310+1290+1010 |
+| `prop_pillar_orb.png` | render of `prompts/image/levels/temple/prop_pillar_orb.md` (codex, 2026-11-03), keyed and fitted by hand (`.claude/skills/gemini-assets/SKILL.md` step 3) | `prompts/image/levels/temple/assets/prop_pillar_orb.png` | replaces the `tools/cut_island_props.py` cut of `PERSISTINT` 190x310+1290+1010 |
 | `prop_scroll.png` | `tools/cut_canon_sprites.sh` | `Gemini_Generated_Image_481b` | 820x680+1850+765 |
 | `prop_seal_o.png` | render of `prompts/image/levels/temple/prop_seal_o.md` (codex, 2026-11-03), keyed and fitted by hand (`.claude/skills/gemini-assets/SKILL.md` step 3) | `prompts/image/levels/temple/assets/prop_seal_o.png` | replaces the `tools/cut_island_props.py` cut of `PERSISTINT` 180x170+1585+790 |
 | `prop_ship.png` | `tools/cut_island_props.py` | `Gemini_Generated_Image_i7kl` | 1380x1000+100+60 |
