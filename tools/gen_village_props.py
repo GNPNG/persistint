@@ -14,9 +14,13 @@ Outputs (project/assets/island/):
 Kawaii sticker look: warm-brown outline #8a5a5a, flat fills, one white highlight, gold
 #ffe3a8 with edge #e0b24a. Drawn at 16x and downscaled with LANCZOS to 4x (O).
 """
+import sys
 from pathlib import Path
 
 from PIL import Image, ImageDraw
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from landed_renders import keep  # noqa: E402
 
 OUT = Path(__file__).resolve().parent.parent / "project/assets/island"
 INK = "#8a5a5a"
@@ -114,10 +118,16 @@ def pavilion():
     return im
 
 
+def put(im, name):
+    """Save one output, unless a landed render is at its path (tools/landed_renders.py, bd up1u)."""
+    if not keep(OUT / name):
+        im.save(OUT / name)
+
+
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
-    mirror().resize((26 * O, 40 * O), Image.LANCZOS).save(OUT / "mirror.png")
-    pavilion().resize((150 * O, 140 * O), Image.LANCZOS).save(OUT / "temple_pavilion.png")
+    put(mirror().resize((26 * O, 40 * O), Image.LANCZOS), "mirror.png")
+    put(pavilion().resize((150 * O, 140 * O), Image.LANCZOS), "temple_pavilion.png")
     print("wrote", OUT)
 
 

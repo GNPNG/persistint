@@ -44,14 +44,17 @@ Everything is drawn at SUPER x its output size and downscaled with LANCZOS (soft
 edges, STYLE.md 4.1). No randomness: the same inputs give the same PNGs.
 """
 import math
+import sys
 from pathlib import Path
 
 from PIL import Image, ImageChops, ImageDraw, ImageFilter, ImageFont
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from landed_renders import keep  # noqa: E402
+
 ROOT = Path(__file__).resolve().parent.parent
 ASSETS = ROOT / "project/assets"
 FONT = ROOT / "art/brand/fonts/Fredoka-VF.ttf"
-ICON_RENDER = "prompts/image/ui/icon/assets/app_icon.png"
 SUPER = 2
 
 INK = (138, 90, 90)          # #8a5a5a warm-brown outline
@@ -244,6 +247,8 @@ def app_icon():
 
 def save(im, rel):
     path = ASSETS / rel
+    if keep(path):  # a landed render (bd up1u)
+        return
     path.parent.mkdir(parents=True, exist_ok=True)
     im.save(path, optimize=False)
     print(path.relative_to(ROOT), im.size)
@@ -259,8 +264,4 @@ if __name__ == "__main__":
     print(layout_path.relative_to(ROOT))
     save(title_screen(), "ui/title/title_screen.png")
     save(boot_splash(), "ui/brand/boot_splash.png")
-    # The landed Gemini render (bd on0t) replaces the stand-in; a rerun keeps it.
-    if (ROOT / ICON_RENDER).exists():
-        print("project/assets/ui/icon/app_icon.png kept: the render has landed at", ICON_RENDER)
-    else:
-        save(app_icon(), "ui/icon/app_icon.png")
+    save(app_icon(), "ui/icon/app_icon.png")

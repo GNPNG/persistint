@@ -5,8 +5,10 @@ Each prompt file's front matter names `drop:` (where the rendered file is saved)
 (where the game loads it). .mp4 drops are converted to .ogv (Theora) with ffmpeg, without
 sound unless the front matter says `audio: keep` (then the sound is kept as Vorbis); .mp3 drops
 are re-encoded at 112 kbps for the game copy and normalized to the music target (tools/audio_levels.py:
--18 LUFS, -1.5 dBTP; the drop keeps the render's bitrate and level). `--force [ext]` redoes game
-copies that already exist (all of them, or those with that extension).
+-18 LUFS, -1.5 dBTP; the drop keeps the render's bitrate and level). A game copy that changed at
+or after its drop (git's clock, changed_at) is left alone: it was made from that drop, often keyed,
+fitted or resized by hand (bd up1u). `--force [ext]` redoes game copies that already exist (all of
+them, or those with that extension).
 """
 import re
 import shutil
@@ -51,9 +53,9 @@ for prompt in sorted((ROOT / "prompts").rglob("*.md")):
         continue
     dest.parent.mkdir(parents=True, exist_ok=True)
     forced = FORCE and (FORCE_EXT is None or dest.suffix == "." + FORCE_EXT.lstrip("."))
-    if not forced and dest.exists() and changed_at(dest) >= changed_at(src) and (
-            dest.suffix != src.suffix or dest.suffix == ".mp3"):
-        # Already converted from this drop: re-encoding would only churn the committed file.
+    if not forced and dest.exists() and changed_at(dest) >= changed_at(src):
+        # Already made from this drop: re-encoding would only churn the committed file, and a
+        # copy would undo the keying, fitting or resizing done when it landed (bd up1u).
         continue
     if src.suffix == ".mp4" and dest.suffix == ".ogv":
         keep_audio = re.search(r"^audio: keep$", text, re.M) is not None

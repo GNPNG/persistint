@@ -21,9 +21,13 @@ scale 0.25, so every size below is in world pixels and the files are 4x that.
 """
 import math
 import random
+import sys
 from pathlib import Path
 
 from PIL import Image, ImageDraw
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from landed_renders import keep  # noqa: E402
 
 OUT = Path(__file__).resolve().parent.parent / "project/assets/temple"
 INK = "#8a5a5a"
@@ -169,14 +173,20 @@ def twinkle(frame):
     return im
 
 
+def put(im, name):
+    """Save one output, unless a landed render is at its path (tools/landed_renders.py, bd up1u)."""
+    if not keep(OUT / name):
+        im.save(OUT / name)
+
+
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
-    sheet([candles(f) for f in range(4)], 24, 44).save(OUT / "temple_candles.png")
-    urn().resize((28 * O, 36 * O), Image.LANCZOS).save(OUT / "temple_urn.png")
-    plinth().resize((32 * O, 14 * O), Image.LANCZOS).save(OUT / "temple_plinth.png")
-    cushion().resize((30 * O, 20 * O), Image.LANCZOS).save(OUT / "temple_cushion.png")
-    shadow(24, 8, 110).resize((24 * O, 8 * O), Image.LANCZOS).save(OUT / "temple_shadow.png")
-    sheet([twinkle(f) for f in range(6)], 12, 12).save(OUT / "temple_twinkle.png")
+    put(sheet([candles(f) for f in range(4)], 24, 44), "temple_candles.png")
+    put(urn().resize((28 * O, 36 * O), Image.LANCZOS), "temple_urn.png")
+    put(plinth().resize((32 * O, 14 * O), Image.LANCZOS), "temple_plinth.png")
+    put(cushion().resize((30 * O, 20 * O), Image.LANCZOS), "temple_cushion.png")
+    put(shadow(24, 8, 110).resize((24 * O, 8 * O), Image.LANCZOS), "temple_shadow.png")
+    put(sheet([twinkle(f) for f in range(6)], 12, 12), "temple_twinkle.png")
     print("wrote", OUT)
 
 

@@ -25,7 +25,8 @@ Outputs (all static, no animation frames):
   project/assets/ui/chapter_cards/chapter_card_before_the_wreck.png  (2560x1440)
       stand-in for prompts/image/ui/chapter_cards/chapter_card_before_the_wreck.md
 A Gemini render synced to either stand-in path by tools/sync_rendered_assets.py replaces it with
-no code change (the scenes load whatever PNG is at that path, scaled to cover the screen).
+no code change (the scenes load whatever PNG is at that path, scaled to cover the screen), and
+this tool then leaves that path alone (tools/landed_renders.py, bd up1u).
 
 Style: dev/STYLE.md 4.3/4.4 -- warm-brown outline #8a5a5a, cream #fdf6e3, flat pastel fills
 with one highlight. Noise uses fixed seeds.
@@ -39,9 +40,13 @@ props are stamped at a height in units (canon(name, height)), so they keep their
 whatever resolution the cut tools write them at.
 """
 import random
+import sys
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFilter
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from landed_renders import keep  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 ASSETS = ROOT / "project/assets"
@@ -94,6 +99,8 @@ def down(im, w, h):
 
 def save(im, rel):
     path = ASSETS / rel
+    if keep(path):  # a landed render (bd up1u)
+        return
     path.parent.mkdir(parents=True, exist_ok=True)
     im.save(path, optimize=False)
     print(path.relative_to(ROOT), im.size)
