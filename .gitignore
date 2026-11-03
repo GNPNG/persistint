@@ -43,3 +43,7 @@ web-render.local.json
 
 # The art tools' venv (tools/requirements-art.txt; README, Running the tests)
 .venv/
+
+# Python bytecode (bd q6hl)
+__pycache__/
+*.pyc
