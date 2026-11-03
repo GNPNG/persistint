@@ -6,5 +6,6 @@ What made each file here (release checklist LP-04, sops/09). Prompt files carry 
 | File | Made by | From | Added |
 |---|---|---|---|
 | `loading_basket.png` | Gemini image | `prompts/image/ui/loading/loading_basket.md` | 2026-11-02 |
+| `loading_cub.png` | Gemini image | `prompts/image/ui/loading/loading_cub.md` | 2026-11-03 |
 | `loading_lifering.png` | Gemini image | `prompts/image/ui/loading/loading_lifering.md` | 2026-11-02 |
 | `loading_seashell.png` | Gemini image | `prompts/image/ui/loading/loading_seashell.md` | 2026-11-02 |
