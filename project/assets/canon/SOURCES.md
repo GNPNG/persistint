@@ -111,7 +111,7 @@ names it and its crop.
 | `prop_sign_a.png` | `tools/cut_island_props.py` | `Gemini_Generated_Image_i7kl` | 460x520+1640+910 |
 | `prop_sign_b.png` | `tools/cut_island_props.py` | `Gemini_Generated_Image_i7kl` | 400x520+2230+910 |
 | `prop_skull_altar.png` | render of `prompts/image/levels/temple/prop_skull_altar.md` (codex, 2026-11-03), keyed and fitted by hand (`.claude/skills/gemini-assets/SKILL.md` step 3) | `prompts/image/levels/temple/assets/prop_skull_altar.png` | replaces the cut of `PERSISTINT` 230x230+1040+1100 |
-| `prop_tag_x.png` | `tools/cut_island_props.py` | `Gemini_Generated_Image_481b` | 520x680+140+760 |
+| `prop_tag_x.png` | render of `prompts/image/levels/temple/prop_tag_x.md` (codex, 2026-11-03), keyed and fitted by hand (`.claude/skills/gemini-assets/SKILL.md` step 3) | `prompts/image/levels/temple/assets/prop_tag_x.png` | replaces the `tools/cut_island_props.py` cut of `Gemini_Generated_Image_481b` 520x680+140+760 |
 | `shoes_daughter.png` | `tools/cut_paperdoll.py` | `daughter` | 257x109+1267+777 |
 | `shoes_father.png` | `tools/cut_paperdoll.py` | `father` | 274x80+894+718 |
 | `shoes_initiate.png` | `tools/cut_paperdoll.py` | `initiate` | 205x169+1034+689 |

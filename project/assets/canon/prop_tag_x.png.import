@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/prop_tag_x.png-6ae1b8100f2433f53d85caf3e91669
 
 [params]
 
-compress/mode=1
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.9
 compress/uastc_level=0
