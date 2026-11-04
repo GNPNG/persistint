@@ -1,10 +1,15 @@
 #!/usr/bin/env node
 /**
- * Node port of tools/gen_sources.py, same inputs, same SOURCES.md text, byte for byte: write a
- * SOURCES.md next to the shipped assets (release checklist LP-04, sops/09): for every image,
- * sound and video under project/assets/ and project/audio/, what made it and when.
+ * Write a SOURCES.md next to the shipped assets (release checklist LP-04, sops/09): for every
+ * image, sound and video under project/assets/ and project/audio/, what made it and when. Began as
+ * a port of tools/gen_sources.py; since bd mx18 it also reads render commits, which the Python
+ * version does not, so only this one writes the current text.
  *
  * Sources, most specific first:
+ *   0. a render commit: the newest commit touching the file whose message carries the relay's
+ *      "Rendered by <renderer> with <model>, <timestamp>." line gives the renderer, model and render
+ *      date (and its "Prompt:" line the prompt, when no prompt file names the asset); a later commit
+ *      that changed the file (keying, fitting, masking) is named, not guessed past;
  *   1. a prompt file whose front matter names the asset (`game:`): the generator (`tool:`) and
  *      the prompt file;
  *   2. a voice clip: audio/voice/manifest.json (speaker and line) spoken by Coqui XTTS v2 with
@@ -50,6 +55,27 @@ function firstAdded() {
     else if (line.trim() && !added.has(line.trim())) added.set(line.trim(), date);
   }
   return added;
+}
+
+function renders() {
+  const out = execFileSync("git", ["-c", "core.quotepath=true", "log", "--name-only", "--format=%x00%h%x01%B%x01",
+    "--", "project/assets", "project/audio"], { cwd: ROOT, maxBuffer: 1 << 28 }).toString();
+  const newest = new Map(), found = new Map();
+  for (const rec of out.split("\0").slice(1)) {
+    const [hash, body, names = ""] = rec.split("\x01");
+    const by = body.match(/^Rendered by (\S+) with (.+?), (\d{4}-\d{2}-\d{2})T[^\n]*$/m);
+    const prompt = body.match(/^Prompt: (prompts\/\S+?\.md)\.?$/m);
+    for (const n of names.split("\n")) {
+      const f = n.trim();
+      if (!f) continue;
+      if (!newest.has(f)) newest.set(f, hash);
+      if (by && !found.has(f)) {
+        const later = newest.get(f) !== hash ? `; changed since in ${newest.get(f)}` : "";
+        found.set(f, [`${by[1]} with ${by[2]}, rendered ${by[3]}${later}`, prompt ? prompt[1] : ""]);
+      }
+    }
+  }
+  return found;
 }
 
 function prompts() {
@@ -120,8 +146,13 @@ function voiceLines() {
   return lines;
 }
 
-function describe(r, promptMap, mentions, voices) {
+function describe(r, promptMap, mentions, voices, renderMap) {
   let pending = "";
+  if (renderMap.has(r)) {
+    const [made, commitPrompt] = renderMap.get(r);
+    const prompt = promptMap.has(r) ? promptMap.get(r)[1] : commitPrompt;
+    return [made, prompt ? `\`${prompt}\`` : "the render commit names no prompt"];
+  }
   if (promptMap.has(r)) {
     const [tool, prompt, landed] = promptMap.get(r);
     if (landed) return [tool, `\`${prompt}\``];
@@ -142,31 +173,32 @@ function describe(r, promptMap, mentions, voices) {
   return ["not traced", pending.replace(/^[; ]+/, "")];
 }
 
-function render(folder, files, added, promptMap, mentions, voices) {
+function render(folder, files, added, promptMap, mentions, voices, renderMap) {
   const rows = [];
   let untraced = 0;
   for (const p of files) {
     const r = rel(p);
-    const [made, src] = describe(r, promptMap, mentions, voices);
+    const [made, src] = describe(r, promptMap, mentions, voices, renderMap);
     if (made === "not traced") untraced++;
     rows.push(`| \`${path.basename(p)}\` | ${made} | ${src.split("|").join("/")} | ${added.get(r) || ""} |`);
   }
   const note = untraced ? `\n${untraced} file(s) not traced to a prompt, a voice line or a tool.\n` : "";
   return `${HEADER}\n# Sources: ${rel(folder)}\n\nWhat made each file here (release checklist LP-04, sops/09). ` +
-    "Prompt files carry the generator in their front matter; tools carry their inputs in their " +
-    `docstrings. Regenerate with \`python3 -I tools/gen_sources.py\`.\n${note}\n` +
+    "Render commits carry the renderer, model and date; prompt files carry the planned generator in " +
+    "their front matter; tools carry their inputs in their " +
+    `docstrings. Regenerate with \`node tools/gen_sources.mjs\`.\n${note}\n` +
     "| File | Made by | From | Added |\n|---|---|---|---|\n" + rows.join("\n") + "\n";
 }
 
 export function main(argv = process.argv.slice(2)) {
   const check = argv.includes("--check");
-  const added = firstAdded(), promptMap = prompts(), mentions = toolMentions(), voices = voiceLines();
+  const added = firstAdded(), promptMap = prompts(), mentions = toolMentions(), voices = voiceLines(), renderMap = renders();
   let changed = 0;
   const lines = [];
   for (const [folder, files] of mediaFiles()) {
     const out = path.join(folder, "SOURCES.md");
     if (fs.existsSync(out) && !readText(out).includes(HEADER)) continue;
-    const text = render(folder, files, added, promptMap, mentions, voices);
+    const text = render(folder, files, added, promptMap, mentions, voices, renderMap);
     if (!fs.existsSync(out) || readText(out) !== text) {
       changed++;
       if (check) lines.push(`would change: ${rel(out)}`);
