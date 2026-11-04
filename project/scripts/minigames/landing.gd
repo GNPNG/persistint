@@ -17,6 +17,8 @@ var resolved := 0
 var station := ""
 var failed: Array[String] = []
 var tasks_done: Array[String] = []
+## Stations whose failed system a crew task brought back.
+var saved: Array[String] = []
 var score := 0
 var running := false
 
@@ -194,6 +196,9 @@ func do_task(id: String) -> void:
 	for t: Dictionary in tasks_at(station):
 		if t["id"] == id and not tasks_done.has(id):
 			tasks_done.append(id)
+			if failed.has(station):
+				failed.erase(station)
+				saved.append(station)
 			go_to(station)
 			return
 
@@ -347,6 +352,7 @@ func _finish() -> void:
 	WorldState.set_flag("landing_score", score)
 	WorldState.set_flag("landing_failed", failed.duplicate())
 	WorldState.set_flag("landing_tasks_done", tasks_done.duplicate())
+	WorldState.set_flag("landing_saved", saved.duplicate())
 	WorldState.set_flag("landing_outcome", outcome())
 	var card := str(data.get("end_card", {}).get(outcome(), ""))
 	if not card.is_empty():

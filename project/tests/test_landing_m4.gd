@@ -165,5 +165,63 @@ func _run() -> void:
 	n.queue_free()
 	await process_frame
 
+	# R5: a crew task at a failed station saves its system
+	n = _make()
+	await process_frame
+	var prom_tasks: Array = n.tasks_at("Promenade")
+	var task_id: String = prom_tasks[0]["id"]
+	n.failed.assign(["Promenade", "Spa"])
+	n.go_to("Promenade")
+	n.do_task(task_id)
+	await process_frame
+	_check(not n.failed.has("Promenade") and n.failed.has("Spa"), "a task at a failed station removes only that station from failed")
+	_check(n.saved == ["Promenade"], "the saved station is recorded")
+	_check(n.tasks_done.has(task_id), "the task is recorded as done")
+	var enabled := 0
+	for b: Button in n._controls.get_children():
+		if not b.is_queued_for_deletion() and not b.disabled:
+			enabled += 1
+	_check(enabled > 0, "a Promenade control is enabled again")
+	n.do_task(task_id)
+	_check(n.saved == ["Promenade"] and n.tasks_done.count(task_id) == 1, "the same task done twice saves nothing further")
+	n.queue_free()
+	await process_frame
+
+	# a task at a station that has not failed is just recorded
+	n = _make()
+	await process_frame
+	n.go_to("Promenade")
+	n.do_task(n.tasks_at("Promenade")[0]["id"])
+	_check(n.tasks_done.size() == 1 and n.saved.is_empty() and n.failed.is_empty(), "a task at a healthy station saves nothing")
+	n.queue_free()
+	await process_frame
+
+	# Review Focus 5: a Promenade command can be pressed right after Promenade is saved
+	n = _make()
+	await process_frame
+	n.failed.assign(["Promenade"])
+	n.slots[0]["cmd"] = _cmd(n, "Promenade Stabilizers", "Align the Promenade Stabilizers!")
+	n.go_to("Promenade")
+	n.press("Promenade Stabilizers")
+	_check(n.score == 0, "a failed station's control does nothing")
+	n.do_task(n.tasks_at("Promenade")[0]["id"])
+	n.press("Promenade Stabilizers")
+	_check(n.score == 1 and n.resolved == 1, "a held Promenade command scores right after Promenade is saved")
+	n.queue_free()
+	await process_frame
+
+	# landing_saved is set at the landing
+	n = _make()
+	await process_frame
+	n.failed.assign(["Promenade"])
+	n.go_to("Promenade")
+	n.do_task(n.tasks_at("Promenade")[0]["id"])
+	while n.resolved < 24:
+		n._resolve(0)
+	var got: Array = root.get_node("/root/WorldState").get_flag("landing_saved", [])
+	_check(got == ["Promenade"], "landing_saved is [Promenade] after the landing")
+	n.queue_free()
+	await process_frame
+
 	print("RESULT: " + ("PASS" if _failures == 0 else "FAIL"))
 	quit(_failures)
