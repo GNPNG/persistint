@@ -1,0 +1,8 @@
+{"head_top":[367,61],"centre_x":367,"eye_l":[293,293],"eye_r":[440,293],"brow_y":236,"chin_y":399,"neck_y":406,"shoulder_y":417,"waist_y":567,"hip_y":591,"crotch_y":622,"wrist_l":[217,540],"wrist_r":[511,540],"knee_y":673,"ankle_y":724,"sole_l":[301,758],"sole_r":[427.5,758],"elbow_y":479,"armpit_y":521,"armpit_x":[282,446],"eye_band":[236,316],"hand_l":[205,558],"hand_r":[522,558],"shoulder_l":[304,417],"shoulder_r":[424,417]}
+PASS landmark tolerances and anatomical ordering
+PASS all opaque pixels have exactly one of 19 labels; eyes in eye band
+PASS translated source moves silhouette and eye measurements
+PASS actual green-template inverse mapping IoU=0.998193 >=0.99
+{"head_top":[367,61],"centre_x":367,"eye_l":[293,293],"eye_r":[440,293],"brow_y":236,"chin_y":399,"neck_y":406,"shoulder_y":417,"waist_y":567,"hip_y":591,"crotch_y":622,"wrist_l":[217,540],"wrist_r":[511,540],"knee_y":673,"ankle_y":724,"sole_l":[301,758],"sole_r":[427.5,758],"elbow_y":479,"armpit_y":521,"armpit_x":[282,446],"eye_band":[236,316],"hand_l":[205,558],"hand_r":[522,558],"shoulder_l":[304,417],"shoulder_r":[424,417]}
+PASS deterministic outputs match checked-in artifacts; canonical body unchanged
+RESULT: PASS
