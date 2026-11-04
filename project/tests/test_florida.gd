@@ -329,8 +329,31 @@ func _leavers(ws: Node) -> void:
 		Engine.time_scale = TIME_SCALE
 		var t0 := Time.get_ticks_msec()
 		ws.set_flag(flag, true)
-		for i in 4:
+		# Tweens move after node processing; _process chooses walk art on a later
+		# frame. Four render frames do not guarantee that transition under load.
+		# Observe walk art (or the side-facing idle fallback on sheets without
+		# walk frames). Direction/flip and sheet-frame assertions remain below.
+		var rig: AnimatedSprite2D = npc.get("rig")
+		var has_walk_frames := false
+		if rig != null:
+			for animation: StringName in rig.sprite_frames.get_animation_names():
+				if String(animation).begins_with("walk_"):
+					has_walk_frames = true
+		var walking := false
+		var walk_deadline := Time.get_ticks_msec() + 5000  # real ms, not scaled game time
+		while Time.get_ticks_msec() < walk_deadline:
 			await process_frame
+			if not npc.visible:
+				break
+			if npc.is_leaving() and npc.global_position.distance_to(start) > 0.0:
+				var state := String(rig.animation) if rig else ""
+				var fallback := not has_walk_frames and state in ["idle_side", "idle_left"]
+				if rig == null or state.begins_with("walk_") or fallback:
+					walking = true
+					break
+		_check(walking,
+			"%s: walk state observed within 5 s (visible %s, leaving %s, moved %.1f px, animation %s)"
+			% [who, npc.visible, npc.is_leaving(), npc.global_position.distance_to(start), String(rig.animation) if rig else "no rig"])
 		var to_door := (door.global_position - start).normalized()
 		var went := npc.global_position - start
 		_check(npc.visible and npc.is_leaving() and went.length() > 0.0 and went.normalized().dot(to_door) > 0.9,
@@ -347,7 +370,6 @@ func _leavers(ws: Node) -> void:
 			player.set("_interact_target", null)
 			player.nav.target_position = player.global_position
 		_check(picked != npc, "%s: on the way the E key beside them passes over them (%s)" % [who, picked.name if picked else "nothing"])
-		var rig: AnimatedSprite2D = npc.get("rig")
 		var anim := String(rig.animation) if rig else ""
 		# A Florida sheet's side frames face right (flipped to go left); a rig sheet's face left.
 		var facing_ok := (rig == null or (anim.ends_with("side") and rig.flip_h == (to_door.x < 0.0))
