@@ -1,0 +1,3 @@
+{"bodyBounds":[163,61,402,698],"crownHole":[86,80,229,330],"independentOffset":[167,-10]}
+{"bodyScale":1.0001226223798239,"wigRelativeScales":{"hair_pigtails":1,"hair_crown":1,"hair_braids":1,"hair_short":1},"crownIoU":1,"truth":"/workspace/persistint-i3f2/.cache/1rjz3-canon-smoke/truth.png"}
+RESULT: PASS

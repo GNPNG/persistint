@@ -1,0 +1,508 @@
+{
+  "duration_ms": 8490,
+  "failures": 7,
+  "fingerprints": {
+    "dress_uniform": "11bb0de0422b8c1c5fcb99fccffa9a0429710be2dac72a35600b39392e970201",
+    "hair_crown": "2a32c00c7929ba984ba65db7e1e16b68f72156dcfddddb49bb5bd1a152050cf2",
+    "hair_pigtails": "d714cc8eb1a8d77aa28c8d2d18704f62480ecf1794c73d828023707f410567bf",
+    "hair_short": "0f98d35e61a28e5e6f795efdc102e1afcf66f44021b7cf699caab895909abf4d"
+  },
+  "reports": [
+    {
+      "disposition": "known",
+      "findings": [
+        "boundary_alpha_levels",
+        "fringe"
+      ],
+      "id": "body_base",
+      "metrics": {
+        "border_pixels": 0,
+        "boundary_alpha_levels": 2,
+        "failures": [
+          "boundary_alpha_levels",
+          "fringe"
+        ],
+        "fringe_ratio": 0.143538767395626,
+        "green_pixels": 0,
+        "light_ring": 361,
+        "opaque_area": 172975,
+        "outline_ring": 2515,
+        "skin_share": 0.0
+      },
+      "owner": "task 7 Canon migration (persistint-game-1rjz)",
+      "unexpected_findings": []
+    },
+    {
+      "disposition": "checked",
+      "findings": [
+        "hair:frame_border",
+        "hair:fringe",
+        "hair:forbidden:eye_band",
+        "hair:front_forbidden:neck",
+        "hair:front_forbidden:torso",
+        "hair:overlap:face",
+        "legacy_scale"
+      ],
+      "id": "hair_crown",
+      "metrics": {
+        "hair": {
+          "border_pixels": 8,
+          "boundary_alpha_levels": 256,
+          "failures": [
+            "frame_border",
+            "fringe"
+          ],
+          "fringe_ratio": 0.321010248901903,
+          "green_pixels": 0,
+          "light_ring": 877,
+          "opaque_area": 193306,
+          "outline_ring": 2732,
+          "regions": {
+            "covered_pixels": {
+              "ears": 1354,
+              "eye_band": 999,
+              "face": 664,
+              "foot_l": 0,
+              "foot_r": 0,
+              "forearm_l": 1130,
+              "forearm_r": 1125,
+              "hand_l": 596,
+              "hand_r": 717,
+              "head": 8374,
+              "hips": 2446,
+              "neck": 381,
+              "shin_l": 0,
+              "shin_r": 0,
+              "thigh_l": 172,
+              "thigh_r": 268,
+              "torso": 5637,
+              "upper_arm_l": 536,
+              "upper_arm_r": 531
+            },
+            "failures": [
+              "forbidden:eye_band",
+              "front_forbidden:neck",
+              "front_forbidden:torso",
+              "overlap:face"
+            ],
+            "overlap_pixels": {
+              "ears": 1354,
+              "eye_band": 999,
+              "face": 664,
+              "foot_l": 0,
+              "foot_r": 0,
+              "forearm_l": 1130,
+              "forearm_r": 1125,
+              "hand_l": 596,
+              "hand_r": 717,
+              "head": 8374,
+              "hips": 2446,
+              "neck": 381,
+              "shin_l": 0,
+              "shin_r": 0,
+              "thigh_l": 172,
+              "thigh_r": 268,
+              "torso": 5637,
+              "upper_arm_l": 536,
+              "upper_arm_r": 531
+            },
+            "region_pixels": {
+              "ears": 1384,
+              "eye_band": 6362,
+              "face": 5127,
+              "foot_l": 495,
+              "foot_r": 494,
+              "forearm_l": 1130,
+              "forearm_r": 1125,
+              "hand_l": 706,
+              "hand_r": 721,
+              "head": 12149,
+              "hips": 2538,
+              "neck": 381,
+              "shin_l": 928,
+              "shin_r": 922,
+              "thigh_l": 1045,
+              "thigh_r": 1037,
+              "torso": 5637,
+              "upper_arm_l": 536,
+              "upper_arm_r": 531
+            }
+          },
+          "skin_share": 0.0
+        },
+        "legacy_scale_ratio": 1.26637554585153
+      },
+      "needs_review": null,
+      "unexpected_findings": [
+        "hair:frame_border",
+        "hair:fringe",
+        "hair:forbidden:eye_band",
+        "hair:front_forbidden:neck",
+        "hair:front_forbidden:torso",
+        "hair:overlap:face",
+        "legacy_scale"
+      ]
+    },
+    {
+      "disposition": "checked",
+      "findings": [
+        "hair:fringe",
+        "hair:forbidden:eye_band",
+        "hair:front_forbidden:neck",
+        "hair:front_forbidden:torso",
+        "hair:overlap:face",
+        "legacy_scale_missing"
+      ],
+      "id": "hair_short",
+      "metrics": {
+        "hair": {
+          "border_pixels": 0,
+          "boundary_alpha_levels": 256,
+          "failures": [
+            "fringe"
+          ],
+          "fringe_ratio": 0.269307723089236,
+          "green_pixels": 0,
+          "light_ring": 673,
+          "opaque_area": 107097,
+          "outline_ring": 2499,
+          "regions": {
+            "covered_pixels": {
+              "ears": 669,
+              "eye_band": 1233,
+              "face": 576,
+              "foot_l": 0,
+              "foot_r": 0,
+              "forearm_l": 0,
+              "forearm_r": 0,
+              "hand_l": 0,
+              "hand_r": 0,
+              "head": 9667,
+              "hips": 0,
+              "neck": 381,
+              "shin_l": 0,
+              "shin_r": 0,
+              "thigh_l": 0,
+              "thigh_r": 0,
+              "torso": 1508,
+              "upper_arm_l": 308,
+              "upper_arm_r": 304
+            },
+            "failures": [
+              "forbidden:eye_band",
+              "front_forbidden:neck",
+              "front_forbidden:torso",
+              "overlap:face"
+            ],
+            "overlap_pixels": {
+              "ears": 669,
+              "eye_band": 1233,
+              "face": 576,
+              "foot_l": 0,
+              "foot_r": 0,
+              "forearm_l": 0,
+              "forearm_r": 0,
+              "hand_l": 0,
+              "hand_r": 0,
+              "head": 9667,
+              "hips": 0,
+              "neck": 381,
+              "shin_l": 0,
+              "shin_r": 0,
+              "thigh_l": 0,
+              "thigh_r": 0,
+              "torso": 1508,
+              "upper_arm_l": 308,
+              "upper_arm_r": 304
+            },
+            "region_pixels": {
+              "ears": 1384,
+              "eye_band": 6362,
+              "face": 5127,
+              "foot_l": 495,
+              "foot_r": 494,
+              "forearm_l": 1130,
+              "forearm_r": 1125,
+              "hand_l": 706,
+              "hand_r": 721,
+              "head": 12149,
+              "hips": 2538,
+              "neck": 381,
+              "shin_l": 928,
+              "shin_r": 922,
+              "thigh_l": 1045,
+              "thigh_r": 1037,
+              "torso": 5637,
+              "upper_arm_l": 536,
+              "upper_arm_r": 531
+            }
+          },
+          "skin_share": 0.0
+        },
+        "legacy_scale_ratio": 1.0
+      },
+      "needs_review": null,
+      "unexpected_findings": [
+        "hair:fringe",
+        "hair:forbidden:eye_band",
+        "hair:front_forbidden:neck",
+        "hair:front_forbidden:torso",
+        "hair:overlap:face",
+        "legacy_scale_missing"
+      ]
+    },
+    {
+      "disposition": "checked",
+      "findings": [
+        "hair:fringe",
+        "hair:forbidden:eye_band",
+        "hair:front_forbidden:neck",
+        "hair:overlap:face",
+        "legacy_scale_missing"
+      ],
+      "id": "hair_pigtails",
+      "metrics": {
+        "hair": {
+          "border_pixels": 0,
+          "boundary_alpha_levels": 256,
+          "failures": [
+            "fringe"
+          ],
+          "fringe_ratio": 0.270645385149202,
+          "green_pixels": 0,
+          "light_ring": 780,
+          "opaque_area": 104122,
+          "outline_ring": 2882,
+          "regions": {
+            "covered_pixels": {
+              "ears": 565,
+              "eye_band": 999,
+              "face": 657,
+              "foot_l": 0,
+              "foot_r": 0,
+              "forearm_l": 308,
+              "forearm_r": 207,
+              "hand_l": 0,
+              "hand_r": 0,
+              "head": 11391,
+              "hips": 0,
+              "neck": 151,
+              "shin_l": 0,
+              "shin_r": 0,
+              "thigh_l": 0,
+              "thigh_r": 0,
+              "torso": 0,
+              "upper_arm_l": 139,
+              "upper_arm_r": 69
+            },
+            "failures": [
+              "forbidden:eye_band",
+              "front_forbidden:neck",
+              "overlap:face"
+            ],
+            "overlap_pixels": {
+              "ears": 565,
+              "eye_band": 999,
+              "face": 657,
+              "foot_l": 0,
+              "foot_r": 0,
+              "forearm_l": 308,
+              "forearm_r": 207,
+              "hand_l": 0,
+              "hand_r": 0,
+              "head": 11391,
+              "hips": 0,
+              "neck": 151,
+              "shin_l": 0,
+              "shin_r": 0,
+              "thigh_l": 0,
+              "thigh_r": 0,
+              "torso": 0,
+              "upper_arm_l": 139,
+              "upper_arm_r": 69
+            },
+            "region_pixels": {
+              "ears": 1384,
+              "eye_band": 6362,
+              "face": 5127,
+              "foot_l": 495,
+              "foot_r": 494,
+              "forearm_l": 1130,
+              "forearm_r": 1125,
+              "hand_l": 706,
+              "hand_r": 721,
+              "head": 12149,
+              "hips": 2538,
+              "neck": 381,
+              "shin_l": 928,
+              "shin_r": 922,
+              "thigh_l": 1045,
+              "thigh_r": 1037,
+              "torso": 5637,
+              "upper_arm_l": 536,
+              "upper_arm_r": 531
+            }
+          },
+          "skin_share": 0.0
+        },
+        "legacy_scale_ratio": 1.0
+      },
+      "needs_review": null,
+      "unexpected_findings": [
+        "hair:fringe",
+        "hair:forbidden:eye_band",
+        "hair:front_forbidden:neck",
+        "hair:overlap:face",
+        "legacy_scale_missing"
+      ]
+    },
+    {
+      "disposition": "checked",
+      "findings": [
+        "dress:fringe",
+        "dress:skin_leak",
+        "dress:forbidden:face",
+        "dress:forbidden:hand_l",
+        "dress:forbidden:hand_r",
+        "legacy_scale_missing"
+      ],
+      "id": "dress_uniform",
+      "metrics": {
+        "dress": {
+          "border_pixels": 0,
+          "boundary_alpha_levels": 242,
+          "failures": [
+            "fringe",
+            "skin_leak"
+          ],
+          "fringe_ratio": 0.14251968503937,
+          "green_pixels": 0,
+          "light_ring": 181,
+          "opaque_area": 69718,
+          "outline_ring": 1270,
+          "regions": {
+            "covered_pixels": {
+              "ears": 0,
+              "eye_band": 0,
+              "face": 73,
+              "foot_l": 293,
+              "foot_r": 351,
+              "forearm_l": 645,
+              "forearm_r": 738,
+              "hand_l": 141,
+              "hand_r": 221,
+              "head": 0,
+              "hips": 2538,
+              "neck": 201,
+              "shin_l": 695,
+              "shin_r": 783,
+              "thigh_l": 922,
+              "thigh_r": 960,
+              "torso": 5610,
+              "upper_arm_l": 384,
+              "upper_arm_r": 443
+            },
+            "failures": [
+              "forbidden:face",
+              "forbidden:hand_l",
+              "forbidden:hand_r"
+            ],
+            "overlap_pixels": {
+              "ears": 0,
+              "eye_band": 0,
+              "face": 73,
+              "foot_l": 293,
+              "foot_r": 351,
+              "forearm_l": 645,
+              "forearm_r": 738,
+              "hand_l": 141,
+              "hand_r": 221,
+              "head": 0,
+              "hips": 2538,
+              "neck": 201,
+              "shin_l": 695,
+              "shin_r": 783,
+              "thigh_l": 922,
+              "thigh_r": 960,
+              "torso": 5610,
+              "upper_arm_l": 384,
+              "upper_arm_r": 443
+            },
+            "region_pixels": {
+              "ears": 1384,
+              "eye_band": 6362,
+              "face": 5127,
+              "foot_l": 495,
+              "foot_r": 494,
+              "forearm_l": 1130,
+              "forearm_r": 1125,
+              "hand_l": 706,
+              "hand_r": 721,
+              "head": 12149,
+              "hips": 2538,
+              "neck": 381,
+              "shin_l": 928,
+              "shin_r": 922,
+              "thigh_l": 1045,
+              "thigh_r": 1037,
+              "torso": 5637,
+              "upper_arm_l": 536,
+              "upper_arm_r": 531
+            }
+          },
+          "skin_share": 0.038053300438911
+        },
+        "legacy_scale_ratio": 1.0
+      },
+      "needs_review": null,
+      "unexpected_findings": [
+        "dress:fringe",
+        "dress:skin_leak",
+        "dress:forbidden:face",
+        "dress:forbidden:hand_l",
+        "dress:forbidden:hand_r",
+        "legacy_scale_missing"
+      ]
+    },
+    {
+      "disposition": "checked",
+      "findings": [
+        "forbidden:eye_band",
+        "combined_skin_leak"
+      ],
+      "id": "hair_crown+dress_uniform",
+      "needs_review": false,
+      "unexpected_findings": [
+        "forbidden:eye_band",
+        "combined_skin_leak"
+      ]
+    },
+    {
+      "disposition": "checked",
+      "findings": [
+        "forbidden:eye_band",
+        "combined_skin_leak"
+      ],
+      "id": "hair_short+dress_uniform",
+      "needs_review": false,
+      "unexpected_findings": [
+        "forbidden:eye_band",
+        "combined_skin_leak"
+      ]
+    },
+    {
+      "disposition": "checked",
+      "findings": [
+        "forbidden:eye_band",
+        "combined_skin_leak"
+      ],
+      "id": "hair_pigtails+dress_uniform",
+      "needs_review": false,
+      "unexpected_findings": [
+        "forbidden:eye_band",
+        "combined_skin_leak"
+      ]
+    }
+  ],
+  "scope": "changed_pairs"
+}

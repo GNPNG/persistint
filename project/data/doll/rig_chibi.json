@@ -265,5 +265,17 @@
     ],
     "sha1": "b100159f16ccaa7df4b810585624df33eafeda6d",
     "sha1_encoding": "uint32be width + uint32be height + row-major RGBA8"
+  },
+  "qa": {
+    "minimum_boundary_alpha_levels": 32,
+    "maximum_fringe_ratio": 0.02,
+    "light_threshold": 0.7,
+    "green_excess": 24,
+    "skin_rgb_distance": 24,
+    "maximum_skin_share": 0.005,
+    "minimum_component_share": 0.001,
+    "maximum_stray_gap": 8,
+    "maximum_uncovered_share": 0.005,
+    "maximum_legacy_scale_deviation": 0.02
   }
 }

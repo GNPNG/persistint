@@ -1,0 +1,12 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+KNOWN: body_base ["boundary_alpha_levels", "fringe"] owner=task 7 Canon migration (persistint-game-1rjz) metrics={ "failures": ["boundary_alpha_levels", "fringe"], "opaque_area": 172975, "border_pixels": 0, "boundary_alpha_levels": 2, "outline_ring": 2515, "light_ring": 361, "fringe_ratio": 0.14353876739563, "skin_share": 0.0, "green_pixels": 0 }
+FAIL: hair_crown: ["hair:frame_border", "hair:fringe", "hair:forbidden:eye_band", "hair:front_forbidden:neck", "hair:front_forbidden:torso", "hair:overlap:face", "legacy_scale"]
+FAIL: hair_short: ["hair:fringe", "hair:forbidden:eye_band", "hair:front_forbidden:neck", "hair:front_forbidden:torso", "hair:overlap:face", "legacy_scale_missing"]
+FAIL: hair_pigtails: ["hair:fringe", "hair:forbidden:eye_band", "hair:front_forbidden:neck", "hair:overlap:face", "legacy_scale_missing"]
+FAIL: dress_uniform: ["dress:fringe", "dress:skin_leak", "dress:forbidden:face", "dress:forbidden:hand_l", "dress:forbidden:hand_r", "legacy_scale_missing"]
+FAIL: hair_crown+dress_uniform: ["forbidden:eye_band", "combined_skin_leak"]
+FAIL: hair_short+dress_uniform: ["forbidden:eye_band", "combined_skin_leak"]
+FAIL: hair_pigtails+dress_uniform: ["forbidden:eye_band", "combined_skin_leak"]
+QA elapsed 8490ms; contact /workspace/persistint-i3f2/.cache/doll_qa/historical/.cache/doll_qa/contact.png
+RESULT: FAIL (7 failures)

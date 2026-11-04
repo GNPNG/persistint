@@ -1,0 +1,1 @@
+RESULT: PASS baseline skips unchanged pairs; full checks all; new review findings gate; historical named defects detected

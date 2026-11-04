@@ -116,3 +116,14 @@ independent crown reference is sheet scale, opening bottom at chin_y399, centre_
 
 White-sheet revision validation: all five Node files PASS through test_doll_tools
 in41seconds; asset gate1023/0. Full game suite not repeated for this slot-specific fix.
+
+## Complete canon-command synthetic smoke check
+
+While the source-art review is pending, the complete check_canon_registration command
+was exercised with four white-backed synthetic wigs in the canon crop positions.
+The crown opening is229px wide, its independently calculated reference offset is
+(167,-10), and the reference is built directly from the fixture geometry without
+calling the production anchor or warp functions. Result: body scale1.0001226224,
+all four relative wig scales1, crown IoU1, and the below-chin split check passes.
+This validates the command path, not the encrypted artwork. Reproduce from the repo
+root with node docs/reviews/1rjz.3/synthetic-canon-smoke.mjs; outputs stay in .cache/.

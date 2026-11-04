@@ -1,0 +1,2 @@
+PASS     test_doll_tools            70s  RESULT: PASS (0 failures)
+== 1/1 passed in 70s; logs in .cache/tests/

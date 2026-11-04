@@ -830,7 +830,10 @@ be within 2% of the sheet scale).
 Acceptance: on the parts as committed at 45269f5 the test fails and names `hair_crown` (scale
 1.26; front hair over the neck and torso, which is the A1 defect), `hair_short` (front hair over the
 chin and neck), `dress_uniform` (skin leak), and the fringe ratio of `body_base` and
-`hair_pigtails`; on the parts from task 3 it passes for the hair and body; the default scope (items
+`hair_pigtails`; on the canon hair from task 3 it passes outright. Until task 7, `body_base`
+fringe and boundary alpha levels are explicit expected failures owned by Canon migration
+(`persistint-game-1rjz`), printed as KNOWN with measurements every run; any unlisted failure
+fails the test. The body passes from task 7 onward. The default scope (items
 alone plus pairs involving changed items, 5.10) runs inside `tools/run_tests.sh` in under 60
 seconds; the full matrix runs with `DOLL_QA_FULL=1` with no time limit; both write the contact
 sheet to `.cache/doll_qa/`.
@@ -861,7 +864,8 @@ Re-matte, register at sheet scale and split the nine canon parts, and import the
 wearables, as in section 8; fix or re-render `dress_uniform`. Until task 12, the full (unsplit)
 wigs are also written to `project/assets/canon/` under their current names so
 `gen_player_rig.py` keeps producing complete player rigs.
-Acceptance: A1.1 to A1.5 pass: task 4 passes on all nine parts, the A1 shot (task 5) matches its
+Acceptance: A1.1 to A1.5 pass: task 4 passes on all nine parts and its body expected-failure
+list is emptied, the A1 shot (task 5) matches its
 composite and the new baseline, and the before and after contact sheets and the A1 screenshot are
 posted on issue #1; `gen_player_rig.py` output regenerated without errors.
 

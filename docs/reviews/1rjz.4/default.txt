@@ -1,0 +1,10 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+KNOWN: body_base ["boundary_alpha_levels", "fringe"] owner=task 7 Canon migration (persistint-game-1rjz) metrics={ "failures": ["boundary_alpha_levels", "fringe"], "opaque_area": 172975, "border_pixels": 0, "boundary_alpha_levels": 2, "outline_ring": 2515, "light_ring": 361, "fringe_ratio": 0.14353876739563, "skin_share": 0.0, "green_pixels": 0 }
+REVIEW: hair_daughter ["hair:green_residue", "hair:forbidden:eye_band", "hair:overlap:face", "hair_back:green_residue"]
+REVIEW: dress_daughter ["dress:green_residue", "dress:coverage:torso", "dress:forbidden:hand_l", "dress:forbidden:hand_r"]
+REVIEW: shoes_daughter_l ["shoes:frame_border", "shoes:green_residue", "shoes:skin_leak", "shoes:coverage:foot_l", "shoes:forbidden:thigh_l", "shoes:overhang"]
+REVIEW: shoes_daughter_r ["shoes:frame_border", "shoes:green_residue", "shoes:skin_leak", "shoes:coverage:foot_r", "shoes:forbidden:thigh_r", "shoes:overhang"]
+REVIEW: hair_daughter+dress_daughter ["forbidden:eye_band"]
+QA elapsed 5606ms; contact /workspace/persistint-i3f2/.cache/doll_qa/contact.png
+RESULT: PASS (0 failures)
