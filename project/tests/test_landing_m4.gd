@@ -210,6 +210,18 @@ func _run() -> void:
 	n.queue_free()
 	await process_frame
 
+	# a station that fails again and is saved again is listed once
+	n = _make()
+	await process_frame
+	n.failed.assign(["Promenade"])
+	n.go_to("Promenade")
+	n.do_task(n.tasks_at("Promenade")[0]["id"])
+	n.failed.append("Promenade")
+	n.do_task(n.tasks_at("Promenade")[1]["id"])
+	_check(n.saved == ["Promenade"] and not n.failed.has("Promenade"), "a station saved twice is listed once")
+	n.queue_free()
+	await process_frame
+
 	# landing_saved is set at the landing
 	n = _make()
 	await process_frame

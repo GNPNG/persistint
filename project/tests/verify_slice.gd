@@ -118,18 +118,20 @@ func _run() -> void:
 	landing.set_process(false)
 	root.add_child(landing)
 	landing.data["commands"] = landing_cmds
+	landing.data["commands_to_land"] = 2
 	landing.queue = landing_cmds.duplicate()
-	landing._next_command()
+	landing.slots[0]["cmd"] = {}
+	landing.fill_slots()
 	_check(landing.captain_name() == "Cap'n Kate", "landing: Cap'n Kate is the captain")
-	var first: Dictionary = landing.current
+	var first: Dictionary = landing.slots[0]["cmd"]
 	landing.go_to("_st_a" if first["station"] == "_st_b" else "_st_b")
 	landing.press(first["control"])
 	_check(landing.score == 0, "landing: a control is only in reach at its own station")
 	landing.go_to(first["station"])
 	landing.press(first["control"])
 	_check(landing.score == 1, "landing: the right control at the right station scores")
-	var second: Dictionary = landing.current
-	landing._system_fails()
+	var second: Dictionary = landing.slots[0]["cmd"]
+	landing._slot_times_out(0)
 	_check(landing.failed.has(second["station"]), "landing: a missed command is a failing system")
 	_check(ws.get_flag("landing_done") == true and ws.get_flag("landing_score") == 1
 		and ws.get_flag("landing_failed").has(second["station"]), "landing: the ship comes down; result in WorldState")

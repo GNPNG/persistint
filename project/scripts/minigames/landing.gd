@@ -198,7 +198,8 @@ func do_task(id: String) -> void:
 			tasks_done.append(id)
 			if failed.has(station):
 				failed.erase(station)
-				saved.append(station)
+				if not saved.has(station):
+					saved.append(station)
 			go_to(station)
 			return
 
