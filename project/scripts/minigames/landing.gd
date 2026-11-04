@@ -22,6 +22,8 @@ var running := false
 
 var _shouts: Array[Label] = []
 var _bars: Array[ProgressBar] = []
+var _descent: ProgressBar
+var _landed := false
 var _ship: Control
 var _tasks: VBoxContainer
 var _controls: GridContainer
@@ -114,6 +116,10 @@ func _build_ui() -> void:
 		bar.visible = false
 		head_box.add_child(bar)
 		_bars.append(bar)
+	_descent = ProgressBar.new()
+	_descent.show_percentage = false
+	_descent.custom_minimum_size = Vector2(0, 4)
+	head_box.add_child(_descent)
 	_ship = Control.new()
 	_ship.custom_minimum_size = Vector2(0, 120)
 	_ship.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -259,6 +265,7 @@ func fill_slots() -> void:
 
 
 func _show_slots() -> void:
+	_show_descent()
 	for i in _shouts.size():
 		var open: bool = i < slots.size() and not slots[i]["cmd"].is_empty()
 		_shouts[i].visible = open
@@ -297,6 +304,7 @@ func press(control: String) -> void:
 func _resolve(i: int) -> void:
 	resolved += 1
 	slots[i]["cmd"] = {}
+	_show_descent()
 	if resolved >= int(data.get("commands_to_land", 24)):
 		_finish()
 	else:
@@ -316,13 +324,36 @@ func _update_status() -> void:
 	_status.text = "%s   %s" % [station, ("systems failing: " + ", ".join(failed)) if not failed.is_empty() else ""]
 
 
-## The ship comes down on the island.
+## How the landing went, from the systems lost: "smooth", "rough" or "hard".
+func outcome() -> String:
+	if failed.is_empty():
+		return "smooth"
+	return "rough" if failed.size() <= int(data.get("rough_max_failed", 3)) else "hard"
+
+
+func _show_descent() -> void:
+	_descent.max_value = int(data.get("commands_to_land", 24))
+	_descent.value = resolved
+
+
+## The ship comes down on the island. Runs once; the end card shows only the author's text.
 func _finish() -> void:
+	if _landed:
+		return
+	_landed = true
 	running = false
+	_show_descent()
 	WorldState.set_flag("landing_done", true)
 	WorldState.set_flag("landing_score", score)
 	WorldState.set_flag("landing_failed", failed.duplicate())
 	WorldState.set_flag("landing_tasks_done", tasks_done.duplicate())
+	WorldState.set_flag("landing_outcome", outcome())
+	var card := str(data.get("end_card", {}).get(outcome(), ""))
+	if not card.is_empty():
+		var end_label := Label.new()
+		end_label.text = card
+		end_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_status.get_parent().add_child(end_label)
 	var back := Button.new()
 	back.text = "OK"
 	back.pressed.connect(go_back)

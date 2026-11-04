@@ -114,5 +114,56 @@ func _run() -> void:
 	n.queue_free()
 	await process_frame
 
+	# R4: the outcome comes from the systems lost
+	n = _make()
+	await process_frame
+	_check(n.outcome() == "smooth", "no failed stations is a smooth landing")
+	n.failed.assign(["Bridge", "Spa"])
+	_check(n.outcome() == "rough", "two failed stations is a rough landing")
+	n.failed.assign(["Bridge", "Spa", "Galley"])
+	_check(n.outcome() == "rough", "three failed stations is still rough")
+	n.failed.assign(["Bridge", "Spa", "Galley", "Atrium"])
+	_check(n.outcome() == "hard", "four failed stations is a hard landing")
+	n.queue_free()
+	await process_frame
+
+	# R3: the ship lands after 24 resolved commands; Review Focus 2: the end is final
+	n = _make()
+	await process_frame
+	var foot: Node = n._status.get_parent()
+	var labels_before := 0
+	for ch in foot.get_children():
+		if ch is Label:
+			labels_before += 1
+	n.go_to("Promenade")
+	n.slots[0]["cmd"] = _cmd(n, "Promenade Stabilizers", "Align the Promenade Stabilizers!")
+	n.press("Promenade Stabilizers")
+	_check(n._descent.max_value == 24.0 and n._descent.value == 1.0, "descent bar follows resolved after a press")
+	while n.resolved < 24:
+		n._resolve(0)
+	_check(not n.running, "the run stops at 24 resolved")
+	_check(root.get_node("/root/WorldState").get_flag("landing_done", false) == true, "landing_done is set")
+	_check(root.get_node("/root/WorldState").get_flag("landing_outcome", "") == n.outcome(), "landing_outcome matches outcome()")
+	_check(n._descent.value == 24.0, "descent bar is full at the landing")
+	var fail_before: int = n.failed.size()
+	var score_before: int = n.score
+	n._process(100.0)
+	n.press("Promenade Stabilizers")
+	_check(n.failed.size() == fail_before, "no more systems fail after landing")
+	_check(n.score == score_before, "no more score after landing")
+	n._finish()
+	var oks := 0
+	var labels_after := 0
+	for ch in n._controls.get_parent().get_children():
+		if ch is Button and ch.text == "OK":
+			oks += 1
+	for ch in foot.get_children():
+		if ch is Label:
+			labels_after += 1
+	_check(oks == 1, "_finish twice leaves exactly one OK button")
+	_check(labels_after == labels_before, "empty end_card text adds no label")
+	n.queue_free()
+	await process_frame
+
 	print("RESULT: " + ("PASS" if _failures == 0 else "FAIL"))
 	quit(_failures)
