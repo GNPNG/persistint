@@ -1,0 +1,11 @@
+PASS known-coverage green alpha mean error 0.005530024509803919
+PASS enclosed hole clear and palette interiors exact (delta E 0)
+PASS white exterior removed, enclosed white preserved
+PASS alpha-weighted resample has no transparent green bleed
+PASS delivered component count char_daughter_layers 5 intake reasons: []
+PASS delivered component count char_mother_layers 7 intake reasons: [ 'background-not-flat-or-green-content' ]
+PASS delivered component count host_oprah_garments 4 intake reasons: []
+PASS gradient, touching, edge-contact and green-leaf failures
+PASS synthetic white curved outline {"width":128,"height":128,"alphaThreshold":127,"borderOpaquePixels":0,"outlineRingPixels":277,"lightRingPixels":0,"fringeRatio":0,"alphaLevels":181,"semiTransparentInterior":0,"greenExcessPixels":0}
+PASS near-key backing noise does not become cyan alpha specks
+RESULT: PASS

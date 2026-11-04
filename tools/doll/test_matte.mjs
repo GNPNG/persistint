@@ -23,4 +23,6 @@ const circle=blank(128,128,[255,255,255,255]);
 for(let y=0;y<128;y++)for(let x=0;x<128;x++){const a=Math.max(0,Math.min(1,49.7-Math.hypot(x-63.17,y-64.33)));for(let c=0;c<3;c++)circle.data[(y*128+x)*4+c]=Math.round(a*[100,60,40][c]+(1-a)*255);}
 const circleMetrics=alphaMetrics(whiteMatte(circle));assert.ok(circleMetrics.fringeRatio<=.02);assert.ok(circleMetrics.alphaLevels>=64);
 console.log('PASS synthetic white curved outline',JSON.stringify(circleMetrics));
+const noisy=blank(20,20,[4,241,14,255]);rect(noisy,5,5,10,10,[3,240,26,255]);const cleaned=greenMatte(noisy);assert.equal(cleaned.data[(10*20+10)*4+3],0);
+console.log('PASS near-key backing noise does not become cyan alpha specks');
 console.log('RESULT: PASS');

@@ -1,0 +1,29 @@
+{
+  "sheet": "prompts/image/characters/assets/char_daughter_layers.png",
+  "bodyCrop": "484x795+38+82",
+  "items": [
+    {
+      "id": "hair_daughter",
+      "slot": "hair",
+      "crop": "681x515+512+61",
+      "component": "largest"
+    },
+    {
+      "id": "dress_daughter",
+      "slot": "dress",
+      "crop": "430x319+1179+458"
+    },
+    {
+      "id": "shoes_daughter_l",
+      "slot": "shoes",
+      "side": "l",
+      "crop": "115x109+1267+777"
+    },
+    {
+      "id": "shoes_daughter_r",
+      "slot": "shoes",
+      "side": "r",
+      "crop": "115x109+1410+777"
+    }
+  ]
+}

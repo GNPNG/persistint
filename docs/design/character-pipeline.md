@@ -515,7 +515,7 @@ first. The expected count comes from the brief; the 10% rule is gone.
 **Fallback path (legacy layered sheets, no proof).**
 
 1. Fit the sheet's body to the rig body the same way (eyes, soles, chamfer on the whole outline).
-   This gives the sheet's scale and the body's position.
+   This gives the sheet's scale and the body's position. The body residual is recorded and flagged for review above 1.5 px, not used as a fallback rejection gate. The Daughter pilot measures about 5.49 px because her drawn head, ears, hands and feet differ from the rig, which uniform registration cannot remove.
 2. Place each item from that scale by a slot anchor: the neck opening's centre on the neck
    landmark for tops and dresses, the waistband on the waist for bottoms, each shoe's sole on its
    own sole landmark, the face opening on the face region (centre and width) for hair, the head

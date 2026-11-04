@@ -9,12 +9,16 @@ export function greenMatte(image,{key=borderKey(image),outline=[100,60,40],solid
   const data=Buffer.from(image.data),ke=key[1]-Math.max(key[0],key[2]),fe=outline[1]-Math.max(outline[0],outline[2]);
   if(ke<80)throw Error('Backing is not a green chroma key');
   for(let i=0;i<data.length;i+=4){
+    // Generated green backings contain small compression/colour noise. Reject
+    // near-key pixels before unmixing, which would amplify noise into cyan specks.
+    if(Math.hypot(data[i]-key[0],data[i+1]-key[1],data[i+2]-key[2])<=12){data.fill(0,i,i+4);continue;}
     const e=data[i+1]-Math.max(data[i],data[i+2]);
     // Preserve palette interiors (including turquoise and sky blue).
     const estimated=Math.max(0,Math.min(1,(ke-e)/(ke-fe)));
     const outlineBlend=Math.hypot(...outline.map((f,c)=>data[i+c]-(estimated*f+(1-estimated)*key[c])))<=3;
     if(e<=solidExcess&&!outlineBlend)continue;
     const a=Math.max(0,Math.min(1,(ke-e)/(ke-fe)));
+    if(a<.1){data.fill(0,i,i+4);continue;}
     for(let c=0;c<3;c++)data[i+c]=a?clamp((data[i+c]-(1-a)*key[c])/a):0;
     data[i+1]=Math.min(data[i+1],Math.max(data[i],data[i+2]));
     data[i+3]=clamp(data[i+3]*a);
