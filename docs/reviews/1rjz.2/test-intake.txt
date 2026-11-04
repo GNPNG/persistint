@@ -1,0 +1,2 @@
+PASS intake provenance, expected count, small component retention, measured gap and explicit merging
+RESULT: PASS
