@@ -1,2 +1,3 @@
 PASS intake provenance, expected count, small component retention, measured gap and explicit merging
+PASS actual-frame outline rings and separate crop-edge detection
 RESULT: PASS

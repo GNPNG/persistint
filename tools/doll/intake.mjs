@@ -42,14 +42,15 @@ export function components({width:w,height:h,data},{alpha=127,mergeDistance=0}={
   return {components:found,minimumGap:minimumPixelGap,gapMetric:'Manhattan blank pixels before optional merging',bboxGapLowerBound:minimumGap};
 }
 export function alphaMetrics({width:w,height:h,data}) {
-  let ring=0,light=0,semiInterior=0,green=0;const levels=new Set();
+  let ring=0,light=0,semiInterior=0,green=0,borderOpaquePixels=0;const levels=new Set();
   for(let y=0;y<h;y++)for(let x=0;x<w;x++){const p=(y*w+x)*4,a=data[p+3];levels.add(a);if(a>25&&data[p+1]-Math.max(data[p],data[p+2])>24)green++;if(a<=127)continue;
+    if(x===0||y===0||x===w-1||y===h-1)borderOpaquePixels++;
     const neighbors=[[x-1,y],[x+1,y],[x,y-1],[x,y+1]];
     const interior=neighbors.every(([xx,yy])=>xx>=0&&yy>=0&&xx<w&&yy<h&&data[(yy*w+xx)*4+3]>127);
     if(!interior){ring++;if(.2126*data[p]+.7152*data[p+1]+.0722*data[p+2]>178.5)light++;}
     else if(a<250)semiInterior++;
   }
-  return {outlineRingPixels:ring,lightRingPixels:light,fringeRatio:ring?light/ring:0,alphaLevels:levels.size,semiTransparentInterior:semiInterior,greenExcessPixels:green};
+  return {width:w,height:h,alphaThreshold:127,borderOpaquePixels,outlineRingPixels:ring,lightRingPixels:light,fringeRatio:ring?light/ring:0,alphaLevels:levels.size,semiTransparentInterior:semiInterior,greenExcessPixels:green};
 }
 export function inspect(image,{expectedCount,mergeDistance=0,referenceBody=false}={}) {
   const {width:w,height:h,data}=image,reasons=[],key=borderKey(image);let transparent=false;
@@ -83,13 +84,15 @@ export function inspect(image,{expectedCount,mergeDistance=0,referenceBody=false
 }
 export function intake(file,provenance,options={}) {
   if(options.expectedCount!==undefined&&(!Number.isInteger(options.expectedCount)||options.expectedCount<1))throw Error('expectedCount must be a positive integer');
+  if(!fs.existsSync(file))return {file,pass:false,reasons:['missing-image']};
   const report={file,sha1:createHash('sha1').update(fs.readFileSync(file)).digest('hex')};
   if(!isPng(file))return {...report,pass:false,reasons:['not-png']};
   let valid=false;try{const p=JSON.parse(fs.readFileSync(provenance,'utf8'));valid=!!p&&typeof p==='object'&&!Array.isArray(p);}catch{}
-  Object.assign(report,inspect(readImage(file),options));if(!valid){report.pass=false;report.reasons.push('invalid-provenance-json');}
+  try{Object.assign(report,inspect(readImage(file),options));}catch(error){Object.assign(report,{pass:false,reasons:['image-decode-failed'],detail:error.message});}if(!valid){report.pass=false;report.reasons.push('invalid-provenance-json');}
   return report;
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
-  const [file,provenance,count]=process.argv.slice(2);if(!file||!provenance)throw Error('Usage: node tools/doll/intake.mjs IMAGE.png PROVENANCE.json [EXPECTED_COUNT]');
-  const report=intake(file,provenance,{expectedCount:count===undefined?undefined:Number(count)});fs.writeFileSync(`${file}.intake.json`,JSON.stringify(report,null,2)+'\n');console.log(`${report.pass?'PASS':'FAIL'} ${file}: ${report.reasons.join(', ')}`);process.exitCode=report.pass?0:1;
+  const args=process.argv.slice(2),referenceBody=args.includes('--reference-body');
+  const [file,provenance,count]=args.filter(a=>a!=='--reference-body');if(!file||!provenance)throw Error('Usage: node tools/doll/intake.mjs IMAGE.png PROVENANCE.json [EXPECTED_COUNT]');
+  const report=intake(file,provenance,{expectedCount:count===undefined?undefined:Number(count),referenceBody});fs.writeFileSync(`${file}.intake.json`,JSON.stringify(report,null,2)+'\n');console.log(`${report.pass?'PASS':'FAIL'} ${file}: ${report.reasons.join(', ')}`);process.exitCode=report.pass?0:1;
 }
