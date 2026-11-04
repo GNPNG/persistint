@@ -206,6 +206,33 @@ function main() {
     git(agent, ["pull", "--quiet", "--ff-only", "origin", "main"]);
     check(!fs.existsSync(path.join(agent, "drop/prompts/image/test/assets/one.png")), "and its drop leaves the channel");
 
+    // --- A render hold (bd mxgq): the channel's QUEUE.md is the hold notice and a render of a prompt
+    // file is refused, while a render asked for on a bead (no prompt file) still lands.
+    const queueText = "# Render queue\n\n1. one\n", holdNotice = "# Render hold\n\nRender nothing from this queue.\n";
+    fs.writeFileSync(path.join(ws, "prompts/QUEUE.md"), queueText);
+    fs.writeFileSync(path.join(ws, "prompts/RENDER_HOLD.md"), holdNotice);
+    fs.writeFileSync(path.join(ws, "prompts/image/test/three.md"), "---\nid: three\ntool: Gemini image\ndrop: prompts/image/test/assets/three.png\ngame: project/assets/test/three.png\n---\n\n## Prompt\n\nA third.\n");
+    git(agent, ["pull", "--quiet", "--ff-only", "origin", "main"]);
+    fs.mkdirSync(path.join(agent, "drop/prompts/image/test/assets"), { recursive: true });
+    fs.mkdirSync(path.join(agent, "drop/sheets"), { recursive: true });
+    fs.writeFileSync(path.join(agent, "drop/prompts/image/test/assets/three.png"), png);
+    fs.writeFileSync(path.join(agent, "done/three.json"), JSON.stringify({ id: "three", tool: "Gemini image", model: "test", rendered_at: now, agent: "grok" }));
+    fs.writeFileSync(path.join(agent, "drop/sheets/hostdoll.png"), png);
+    fs.writeFileSync(path.join(agent, "done/hostdoll.json"), JSON.stringify({ id: "hostdoll", tool: "codex", model: "test", rendered_at: now, agent: "codex" }));
+    git(agent, ["add", "-A"]); git(agent, ["commit", "--quiet", "-m", "agent: renders during the hold"]); git(agent, ["push", "--quiet", "origin", "main"]);
+    out = sync(["--beads", ws, "--channel", chan, "--remote", remote]);
+    git(agent, ["pull", "--quiet", "--ff-only", "origin", "main"]);
+    check(fs.readFileSync(path.join(agent, "prompts/QUEUE.md"), "utf8") === holdNotice, "under a render hold the channel's QUEUE.md is the hold notice");
+    const landedThree = JSON.parse(fs.readFileSync(path.join(agent, "landed/three.json"), "utf8"));
+    heads = sh("git", ["ls-remote", "--heads", wsRemote], tmp);
+    check(landedThree.status === "refused" && /^render hold/.test(landedThree.why) && !heads.includes("refs/heads/render/three"),
+      `a render of a prompt file is refused under the hold, with no branch (${landedThree.why})`);
+    check(/intake\s+hostdoll: render\/hostdoll \w+ pushed/.test(out) && heads.includes("refs/heads/render/hostdoll"), "a render asked for on a bead still lands under the hold");
+    fs.rmSync(path.join(ws, "prompts/RENDER_HOLD.md"));
+    sync(["--beads", ws, "--channel", chan, "--remote", remote]);
+    git(agent, ["pull", "--quiet", "--ff-only", "origin", "main"]);
+    check(fs.readFileSync(path.join(agent, "prompts/QUEUE.md"), "utf8") === queueText, "when the hold is lifted the queue comes back");
+
     // --- A run while another holds the channel's lock does nothing; a lock left by a dead run is taken over.
     fs.writeFileSync(`${chan}.lock`, `${process.pid}\n`);
     const held = git(chan, ["rev-parse", "HEAD"]).trim();

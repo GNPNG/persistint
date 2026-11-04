@@ -56,6 +56,9 @@ create is taken when it carries a `contractor:*` or `channel` label.
 
 ## Rendering (Grok, Codex)
 
+**If `prompts/QUEUE.md` is a render hold notice, render nothing from it.** The job refuses those
+renders while the hold stands; the notice says why and what ends it.
+
 Pick a prompt from `prompts/QUEUE.md`. Paste its text as written. Keep only a passing render: every
 listed item present, nothing cropped or touching, no text, the chroma background where the prompt
 asks for one. Save it as PNG at `drop/<Save-as path>` and write `done/<id>.json`

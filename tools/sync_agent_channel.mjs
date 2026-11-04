@@ -36,7 +36,9 @@
  *   prompts  mirror the render prompts: prompts/QUEUE.md (regenerated with
  *            tools/render_all_assets.py --export-queue when python3 is on PATH), prompts/STYLE.md,
  *            prompts/README.md and every prompt file prompts/<kind>/<group>/<id>.md (not the
- *            rendered assets beside them), so the renderer has the exact text to paste
+ *            rendered assets beside them), so the renderer has the exact text to paste. While
+ *            prompts/RENDER_HOLD.md exists in the beads workspace, the channel's prompts/QUEUE.md
+ *            is that file's text instead of the queue (bd mxgq)
  *   intake   the renders: for each <channel>/done/<id>.json with no <channel>/landed/<id>.json,
  *            the prompt <id> is looked up in prompts/**\/*.md (front matter id, tool, drop, game);
  *            the file at <channel>/drop/<drop path> is checked (present, not empty, a PNG when the
@@ -44,7 +46,8 @@
  *            render is put at its drop path and, when the game path has the same extension, at
  *            its game path too, committed on a branch render/<id> with the provenance (renderer, tool, model, time) from
  *            done/<id>.json, and the branch is pushed to origin. landed/<id>.json records the
- *            branch and commit (or the reason the render was refused), and the binary is removed
+ *            branch and commit (or the reason the render was refused; under a render hold every
+ *            render of a prompt file is refused, a render asked for on a bead is not), and the binary is removed
  *            from the channel: the branch holds it now. The land steps, the suite and the deploy
  *            run on that branch as for any contributor's branch (tools/land_wardrobe.mjs,
  *            tools/run_tests.sh); they are not run here.
@@ -210,24 +213,34 @@ function exportToChannel(a, forge) {
 
 // --- Prompts and the README.
 
+const HOLD_FILE = "prompts/RENDER_HOLD.md";
+
+/** The render hold's text when prompts/RENDER_HOLD.md exists in the workspace, else "". */
+export function holdText(beads) {
+  const p = path.join(beads, HOLD_FILE);
+  return isFile(p) ? readText(p) : "";
+}
+
 function mirrorPrompts(a) {
   const src = path.join(a.beads, "prompts");
   if (!fs.existsSync(src)) { console.log("prompts  no prompts/ in the beads workspace"); return 0; }
+  const hold = holdText(a.beads);
   const py = spawnSync("python3", ["--version"], { encoding: "utf8" }).status === 0;
   if (py && isFile(path.join(a.beads, "tools/render_all_assets.py")) && !a.dryRun) {
     const r = spawnSync("python3", ["-I", "tools/render_all_assets.py", "--export-queue"], { cwd: a.beads, encoding: "utf8" });
     if (r.status !== 0) console.log(`prompts  QUEUE.md not regenerated (${(r.stderr || "").trim().split("\n").pop()}); mirroring the committed one`);
   }
   const files = rglob(src).filter((p) => p.endsWith(".md") && !rel(p, src).split("/").includes("assets"));
+  const out = new Map(files.map((p) => [rel(p, src), readText(p)]));
+  if (hold) out.set("QUEUE.md", hold);  // the hold stands in for the queue
   let changed = 0;
-  for (const p of files) {
-    const dst = path.join(a.channel, "prompts", rel(p, src));
-    const text = readText(p);
+  for (const [name, text] of out) {
+    const dst = path.join(a.channel, "prompts", name);
     if (isFile(dst) && readText(dst) === text) continue;
     changed++;
     if (!a.dryRun) writeText(dst, text);
   }
-  console.log(`prompts  ${files.length} file(s) mirrored, ${changed} changed`);
+  console.log(`prompts  ${files.length} file(s) mirrored, ${changed} changed${hold ? "; render hold: QUEUE.md is the hold notice" : ""}`);
   return changed;
 }
 
@@ -299,6 +312,7 @@ function intake(a) {
   const doneDir = path.join(a.channel, "done");
   if (!fs.existsSync(doneDir)) return 0;
   const known = prompts(a.beads);
+  const hold = holdText(a.beads);
   let landed = 0;
   for (const f of fs.readdirSync(doneDir).filter((n) => n.endsWith(".json")).sort()) {
     const id = f.slice(0, -5);
@@ -322,7 +336,7 @@ function intake(a) {
       if (!again) continue;
       delete previous.previous;  // keep one level of history, not a chain
     }
-    const why = refuse(prompt, dropFile);
+    const why = hold && prompt && !prompt.requested ? `render hold (${HOLD_FILE})` : refuse(prompt, dropFile);
     const record = { id, received_at: new Date().toISOString(), agent: done.agent || "", tool: done.tool || "", model: done.model || "", rendered_at: done.rendered_at || "", ...(previous ? { previous } : {}) };
     if (why) {
       console.log(`intake   ${id}: refused (${why})`);
