@@ -49,9 +49,15 @@ try{
  const whiteSheet={width:1000,height:800,data:Buffer.alloc(1000*800*4,255)};
  for(let y=0;y<body.height;y++)for(let x=0;x<body.width;x++){const p=(y*body.width+x)*4,q=(y*1000+x)*4,a=body.data[p+3]/255;for(let c=0;c<3;c++)whiteSheet.data[q+c]=Math.round(body.data[p+c]*a+255*(1-a));}
  for(let y=0;y<120;y++)whiteFixture.data.copy(whiteSheet.data,((200+y)*1000+800)*4,y*100*4,(y+1)*100*4);
+ for(let y=370;y<380;y++)for(let x=950;x<960;x++)whiteSheet.data.set([100,60,40,255],(y*1000+x)*4);
  writeImage(path.join(tmp,'white-sheet.png'),whiteSheet);
- const whiteRun=buildLegacy({sheet:'white-sheet.png',bodyCrop:'721x760+0+0',items:[{id:'hair_white_fixture',slot:'hair',crop:'100x120+800+200'},{id:'dress_white_fixture',slot:'dress',crop:'100x120+800+200'}]},tmp);
+ const whiteRun=buildLegacy({sheet:'white-sheet.png',bodyCrop:'721x760+0+0',items:[{id:'hair_white_fixture',slot:'hair',crop:'100x120+800+200'},{id:'dress_white_fixture',slot:'dress',crop:'100x120+800+200'},{id:'hair_isolated_fixture',slot:'hair',crop:'200x200+800+200',component:'largest'}]},tmp);
  assert.ok(whiteRun.catalog.hair_white_fixture.layers.length===2);
+ for(const layer of whiteRun.catalog.hair_white_fixture.layers){
+  const expected=readImage(path.join(tmp,'project',layer.file.slice(6))),actualLayer=whiteRun.catalog.hair_isolated_fixture.layers.find(x=>x.layer===layer.layer),actual=readImage(path.join(tmp,'project',actualLayer.file.slice(6)));
+  for(let p=3;p<expected.data.length;p+=4)assert.equal(actual.data[p],expected.data[p],'isolated broad crop must match clean crop; no detached fragment');
+ }
+ console.log('PASS largest-component full pipeline removes remote fragment while preserving clean-crop alpha');
  const dressPanel=readImage(path.join(tmp,'project/assets/doll/dress_white_fixture.png'));let whitePixels=0;for(let i=0;i<dressPanel.data.length;i+=4)if(dressPanel.data[i+3]>250&&Math.min(...dressPanel.data.subarray(i,i+3))>=232)whitePixels++;assert.ok(whitePixels>3000,'white dress panel survives full-sheet pipeline');
  console.log('PASS white-sheet buildLegacy integration places wig and retains white dress panel');
  console.log('PASS proof CLI persists accepted catalog/layers and refuses changed-item output');

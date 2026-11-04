@@ -17,25 +17,36 @@ export function faceOpening(image){const {width:w,height:h,data}=image,seen=new 
  const hole=holes.sort((a,b)=>b.area-a.area)[0];if(!hole)throw Error('Hair requires a closed face opening; request a proof or front mask');return hole.bbox;
 }
 // White backing inside hair is an opening; the same white in a dress is content.
-// Clear the central face opening plus substantial lateral ear gaps in its lower half.
+// Clear the central opening and nearby substantial lateral ear gaps, including
+// gaps that reach the outline or overlap the opening's bounding box.
 // Small highlights and white dress content remain untouched.
 export function clearWhiteFaceOpening(image,slot,whiteBacking){
  if(slot!=='hair'||!whiteBacking)return image;
- const {width:w,height:h,data}=image,seen=new Uint8Array(w*h);const components=[];
+ const {width:w,height:h,data}=image,seen=new Uint8Array(w*h),components=[];
  const white=p=>data[p*4+3]>127&&Math.min(data[p*4],data[p*4+1],data[p*4+2])>=232&&Math.max(data[p*4],data[p*4+1],data[p*4+2])-Math.min(data[p*4],data[p*4+1],data[p*4+2])<=24;
+ const bounds=q=>{let x0=w,y0=h,x1=0,y1=0;for(const p of q){const x=p%w,y=Math.floor(p/w);x0=Math.min(x0,x);x1=Math.max(x1,x);y0=Math.min(y0,y);y1=Math.max(y1,y);}return [x0,y0,x1,y1];};
  for(let p=0;p<w*h;p++){if(seen[p]||!white(p))continue;const q=[p];seen[p]=1;let edge=false;
   for(let k=0;k<q.length;k++){const i=q[k],x=i%w,y=Math.floor(i/w);edge ||= x===0||y===0||x===w-1||y===h-1;
    for(const [xx,yy] of [[x-1,y],[x+1,y],[x,y-1],[x,y+1]]){const j=yy*w+xx;if(xx>=0&&yy>=0&&xx<w&&yy<h&&!seen[j]&&white(j)){seen[j]=1;q.push(j);}}
+  }components.push({pixels:q,box:bounds(q),edge});
+ }
+ const opening=components.filter(c=>!c.edge).sort((a,b)=>b.pixels.length-a.pixels.length)[0];
+ let face=opening?.box,area=opening?.pixels.length??0,faceComponent=opening;
+ // A sheet matte may already have cleared the face; its remaining ear patches
+ // must not be mistaken for the primary face opening.
+ try{const hole=faceOpening(image),holeArea=hole[2]*hole[3];if(holeArea>area*2){face=[hole[0],hole[1],hole[0]+hole[2]-1,hole[1]+hole[3]-1];area=holeArea;faceComponent=null;}}catch{}
+ if(!face)return image;
+ const fw=face[2]-face[0]+1,fh=face[3]-face[1]+1,cx=(face[0]+face[2])/2,seeds=faceComponent?[faceComponent.pixels[0]]:[];
+ for(const c of components){if(c===faceComponent)continue;const q=c.pixels,b=c.box;
+  if(q.length<Math.max(16,area*.003)||q.length>area*.3||b[3]>face[3]||b[3]-b[1]+1>fh*.65)continue;
+  // Test proximity to the face rim, not strict separation of bounding boxes.
+  // Ear recesses can intrude into that box or reach the crop/transparent outline.
+  let near=0;for(const p of q){const x=p%w,y=Math.floor(p/w);
+   if(y>=face[1]+fh*.2&&y<=face[3]&&Math.abs(x-cx)>=fw*.3&&Math.abs(x-cx)<=fw*.95)near++;
   }
-  if(!edge)components.push(q);
+  if(near/q.length>=.5)seeds.push(q[0]);
  }
- const opening=components.sort((a,b)=>b.length-a.length)[0];if(!opening)return image;
- const bounds=q=>{let x0=w,y0=h,x1=0,y1=0;for(const p of q){const x=p%w,y=Math.floor(p/w);x0=Math.min(x0,x);x1=Math.max(x1,x);y0=Math.min(y0,y);y1=Math.max(y1,y);}return [x0,y0,x1,y1];};
- const face=bounds(opening),seeds=[opening[0]];
- for(const q of components.slice(1)){const b=bounds(q),cy=(b[1]+b[3])/2;
-  if(q.length>=Math.max(16,opening.length*.003)&&q.length<=opening.length*.2&&(b[2]<face[0]||b[0]>face[2])&&cy>=(face[1]+face[3])/2&&b[3]<=face[3])seeds.push(q[0]);
- }
- return whiteMatte(image,{whiteThreshold:232,seeds,exterior:false});
+ return seeds.length?whiteMatte(image,{whiteThreshold:232,seeds,exterior:false}):image;
 }
 export function anchor(image,slot,rig,side){const b=bbox(image),cx=b[0]+(b[2]-1)/2,lm=rig.landmarks;
  if(slot==='hair'){const h=faceOpening(image);return {source:[h[0]+(h[2]-1)/2,h[1]+h[3]-1],target:[lm.centre_x,lm.chin_y],rule:'centred face-opening seed; fixed-scale cranium coverage search with eye/face protection'};}

@@ -13,7 +13,7 @@ const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..'),ou
 assert.notEqual(output,root,'Use a separate review output root');
 for(const file of ['project/data/doll/rig_chibi.json','project/assets/canon/body_base.png','project/assets/doll/rig/chibi_regions.png']){const dest=path.join(output,file);fs.mkdirSync(path.dirname(dest),{recursive:true});fs.copyFileSync(path.join(root,file),dest);}
 const specs={hair_pigtails:'379x419+595+89',hair_crown:'402x511+1095+81',hair_braids:'534x512+1530+99',hair_short:'423x374+2199+90'};
-const result=buildLegacy({sheet:path.resolve(sheet),bodyCrop,items:Object.entries(specs).map(([id,crop])=>({id,slot:'hair',crop}))},output);
+const result=buildLegacy({sheet:path.resolve(sheet),bodyCrop,items:Object.entries(specs).map(([id,crop])=>({id,slot:'hair',crop,...(id==='hair_braids'?{component:'largest'}:{})}))},output);
 assert.ok(Math.abs(result.bodyFit.fit.scale-1)<=.01,'canon body sheet scale must be 1 +/- .01');
 for(const id of Object.keys(specs))assert.ok(Math.abs(result.catalog[id].fit.relative_scale-1)<=.02,`${id} grew relative to sheet`);
 const front=readImage(path.join(output,'project/assets/doll/hair_crown.png')),back=readImage(path.join(output,'project/assets/doll/hair_crown__back.png')),rig=JSON.parse(fs.readFileSync(path.join(output,'project/data/doll/rig_chibi.json'),'utf8'));

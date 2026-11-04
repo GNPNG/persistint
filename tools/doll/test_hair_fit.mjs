@@ -37,5 +37,23 @@ const cleared=clearWhiteFaceOpening(white,'hair',true),alpha=(x,y)=>cleared.data
 assert.equal(alpha(60,50),0);assert.equal(alpha(20,80),0);assert.equal(alpha(99,80),0);
 assert.equal(alpha(16,16),255,'small upper highlight retained');assert.equal(alpha(20,120),255,'white below opening chin retained');
 assert.deepEqual(clearWhiteFaceOpening(white,'dress',true).data,white.data);
+// Reproduce coordinator-described topology without copying private artwork.
+function earShape(mode){
+ const image={width:120,height:140,data:Buffer.alloc(120*140*4)};
+ for(let y=5;y<135;y++)for(let x=5;x<115;x++)image.data.set([100,60,40,255],(y*120+x)*4);
+ const box=(x0,y0,w,h,a=255)=>{for(let y=y0;y<y0+h;y++)for(let x=x0;x<x0+w;x++)image.data.set([255,255,255,a],(y*120+x)*4);};
+ box(45,25,30,50);box(35,75,50,30); // tapered face: its bbox overlaps separate ear gaps
+ box(25,45,15,20);box(80,45,15,20);box(15,15,4,4);box(15,115,12,12);
+ if(mode==='outline')box(0,50,26,3); // ear gap touches crop edge via a narrow white channel
+ if(mode==='face')box(39,53,8,3); // ear gap touches the face white
+ if(mode==='clear'){box(45,25,30,50,0);box(35,75,50,30,0);}
+ return image;
+}
+for(const mode of ['separate','outline','face','clear']){
+ const shape=earShape(mode),result=clearWhiteFaceOpening(shape,'hair',true),a=(x,y)=>result.data[(y*120+x)*4+3];
+ assert.equal(a(30,55),0,mode+' left gap');assert.equal(a(90,55),0,mode+' right gap');
+ assert.equal(a(60,50),0,mode+' face');assert.equal(a(16,16),255,mode+' highlight');assert.equal(a(20,120),255,mode+' below-chin white');
+}
+console.log('PASS tapered-face bbox overlap, face-connected, outline-connected and pre-cleared-face ear gaps');
 console.log('PASS local eye regions, central face, fixed-scale centred upward fit, impossible fit diagnostics, bilateral ear gaps and retained white detail');
 console.log(JSON.stringify(fit));console.log('RESULT: PASS');

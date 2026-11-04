@@ -18,8 +18,10 @@ silently become approved: measurements are recorded in fit.hair_qa and all legac
 still requires review. An impossible shape retains measured failures.
 
 For white-backed wigs only, the largest enclosed near-white component is the face opening.
-Substantial enclosed near-white components beside its lower half and above its bottom are
-treated as ear gaps. Tiny/top highlights and below-chin white content are preserved. The
+Substantial near-white components near the lateral face rim and above its bottom are
+treated as ear gaps, including components whose boxes overlap a tapered face or reach
+the crop/transparent outline. An already-transparent face opening is used as the reference
+instead of mistaking a remaining ear patch for the face. Tiny/top highlights and below-chin white content are preserved. The
 selected gaps use the existing white unmix algorithm for their inner boundary, rather than
 leaving an opaque pale ring. Dress white is untouched. Ear identification is geometric;
 the actual canon contact sheet still needs review.
@@ -62,3 +64,27 @@ The old task 3 rectangular-ring smoke geometry is intentionally not an anatomica
 the new registration checker rejects its uncovered cranium/clipping, and the isolated
 pixel-QA helper returns exit 1 for its binary edges. This verifies that the new review
 path reports failures rather than treating the withdrawn IoU check as approval.
+
+## Coordinator revision: ear topology and braids fragment
+
+The coordinator's actual-sheet run confirmed clear eye bands on all four wigs and correct
+regions, but found remaining ear patches and a detached braids fragment. This revision
+leaves fitHair, the placement search, sheet-scale rule and all pixel gates unchanged.
+The crown/braids/short cranium deficit remains an art/scale question for the coordinator
+and author; this revision does not claim to fix it.
+
+The old ear selector required disjoint bounding boxes and a lower-half location. Synthetic
+tapered-face shapes reproduce its missed white patches. The revised selector uses lateral
+rim proximity, allows outline-connected patches, and recognizes a pre-cleared face.
+Small upper highlights, below-chin white and garment white remain protected by tests.
+The four fixture types are separate, outline-connected, face-connected, and already-clear
+face. In revision/ear-gap-contact.png each pair is old/new, in that order. Every sampled
+left/right ear changes to alpha 0; exact old/new values are in ear-gap-regression.txt.
+These are synthetic shapes based on the reported topology, not copies of the private art.
+
+The canon registration manifest selects the largest component for hair_braids before
+opening cleanup/placement, removing the neighbouring fragment while retaining fractional
+edge alpha. A full buildLegacy fixture compares a broad crop containing a detached fragment
+with the clean tight crop: every output-layer alpha byte matches. Other canon crops retain
+their existing component-selection policy. Re-run the same two coordinator commands above;
+actual ear transparency and fragment removal still require the encrypted-sheet review.

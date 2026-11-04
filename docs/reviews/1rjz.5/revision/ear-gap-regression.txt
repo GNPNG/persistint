@@ -1,0 +1,4 @@
+separate: old left/right alpha 255/255, revised 0/0
+outline: old left/right alpha 255/255, revised 0/0
+face: old left/right alpha 0/255, revised 0/0
+clear: old left/right alpha 0/255, revised 0/0
