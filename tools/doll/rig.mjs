@@ -12,6 +12,12 @@ export function readImage(file) {
   const [width,height] = magick([file,'-format','%w %h','info:']).toString().split(' ').map(Number);
   return {width,height,data:magick([file,'-depth','8','rgba:-'])};
 }
+// Stable identity: uint32 big-endian width, height, then row-major RGBA8 pixels.
+export function imageSha1({width,height,data}) {
+  const dimensions=Buffer.alloc(8);
+  dimensions.writeUInt32BE(width,0);dimensions.writeUInt32BE(height,4);
+  return createHash('sha1').update(dimensions).update(data).digest('hex');
+}
 function writeImage(file,w,h,data) {
   fs.mkdirSync(path.dirname(file),{recursive:true});
   magick(['-size',`${w}x${h}`,'-depth','8','rgba:-','-strip',`PNG32:${file}`],data);
@@ -111,7 +117,7 @@ export function build(root=ROOT){
   magick([path.join(root,body),'-virtual-pixel','transparent','-filter','Lanczos','-define','distort:viewport=1024x1536+0+0','-distort','AffineProjection','1.6,0,0,1.6,-75.2,160','-background','#00FF00','-alpha','remove','-alpha','on','-strip',`PNG32:${path.join(root,template)}`]);
   fs.copyFileSync(path.join(root,template),path.join(review,'template_chibi_front.png'));
   const slots={top:{covers:['torso'],never:['face','eye_band','hand_l','hand_r'],overhang_px:16,layers:['top']},bottom:{covers:['hips'],never:['face','torso'],overhang_px:24,layers:['bottom']},dress:{covers:['torso','hips'],never:['face','eye_band','hand_l','hand_r'],overhang_px:null,layers:['dress']},shoes:{covers:['foot_l','foot_r'],per_side:true,never:['head','face','eye_band','ears','neck','torso','upper_arm_l','upper_arm_r','forearm_l','forearm_r','hand_l','hand_r','hips','thigh_l','thigh_r'],overhang_px:12,layers:['shoes']},hair:{covers:[],never:['eye_band'],max_share:{face:.03},front_never:['neck','torso'],split:'chin_y',layers:['hair_back','hair']},hat:{covers:[],anchor:'head_top',never:['eye_band'],layers:['hat']},accessory:{covers:[],never:['eye_band'],layers:['accessory']}};
-  const rig={id:'chibi',frame:[721,760],body:'body_base',body_file:body,body_sha1:createHash('sha1').update(fs.readFileSync(path.join(root,body))).digest('hex'),coordinate_convention:'pixel centres; L/R are image left/right',layers:['hair_back','body','shoes','bottom','top','dress','hair','hat','accessory'],landmarks:m.landmarks,regions:{file:regions,encoding:'R=G=B=label id; alpha=255 on body, zero outside',labels,counts:m.counts},slots,skin:{base:[m.skin],tones:{}},template:{file:template,size:[1024,1536],frame_scale:1.6,frame_origin:[-75.2,160],sha1:createHash('sha1').update(fs.readFileSync(path.join(root,template))).digest('hex')}};
+  const rig={id:'chibi',frame:[721,760],body:'body_base',body_file:body,body_sha1:createHash('sha1').update(fs.readFileSync(path.join(root,body))).digest('hex'),coordinate_convention:'pixel centres; L/R are image left/right',layers:['hair_back','body','shoes','bottom','top','dress','hair','hat','accessory'],landmarks:m.landmarks,regions:{file:regions,encoding:'R=G=B=label id; alpha=255 on body, zero outside',labels,counts:m.counts},slots,skin:{base:[m.skin],tones:{}},template:{file:template,size:[1024,1536],frame_scale:1.6,frame_origin:[-75.2,160],sha1:imageSha1(readImage(path.join(root,template))),sha1_encoding:'uint32be width + uint32be height + row-major RGBA8'}};
   const file=path.join(root,'project/data/doll/rig_chibi.json');fs.mkdirSync(path.dirname(file),{recursive:true});fs.writeFileSync(file,JSON.stringify(rig,null,2)+'\n');console.log(JSON.stringify(m.landmarks));return rig;
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))build(process.argv.includes('--root')?path.resolve(process.argv[process.argv.indexOf('--root')+1]):ROOT);

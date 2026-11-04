@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import {createHash} from 'node:crypto';
-import {build,measure,readImage,ROOT} from './rig.mjs';
+import {build,measure,readImage,imageSha1,magick,ROOT} from './rig.mjs';
 const hash=p=>createHash('sha1').update(fs.readFileSync(p)).digest('hex');
 const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'persistint-rig-'));
 try {
@@ -38,7 +38,7 @@ try {
   near(moved.neck_y,lm.neck_y+dy,0);near(moved.chin_y,lm.chin_y+dy,0);
   for(const eye of ['eye_l','eye_r']){near(moved[eye][0],lm[eye][0]+dx,0);near(moved[eye][1],lm[eye][1]+dy,0);}
   console.log('PASS translated source moves silhouette and eye measurements');
-  const template=readImage(path.join(tmp,rig.template.file));assert.deepEqual([template.width,template.height],[1024,1536]);assert.equal(hash(path.join(tmp,rig.template.file)),rig.template.sha1);
+  const template=readImage(path.join(tmp,rig.template.file));assert.deepEqual([template.width,template.height],[1024,1536]);assert.equal(imageSha1(template),rig.template.sha1);
   let intersection=0,union=0;
   for(let y=0;y<source.height;y++)for(let x=0;x<source.width;x++){
     const tx=Math.round(x*rig.template.frame_scale+rig.template.frame_origin[0]),ty=Math.round(y*rig.template.frame_scale+rig.template.frame_origin[1]);
@@ -50,8 +50,19 @@ try {
   assert.deepEqual([...template.data.subarray(0,4)],[0,255,0,255]);
   console.log(`PASS actual green-template inverse mapping IoU=${iou.toFixed(6)} >=0.99`);
   const outputs=['project/data/doll/rig_chibi.json',rig.regions.file,rig.template.file,'docs/reviews/1rjz.1/regions_overlay.png'];
-  const hashes=outputs.map(p=>hash(path.join(tmp,p)));build(tmp);assert.deepEqual(outputs.map(p=>hash(path.join(tmp,p))),hashes);
-  for(let i=0;i<outputs.length;i++)assert.equal(hash(path.join(ROOT,outputs[i])),hashes[i],`checked-in ${outputs[i]} differs from generated output`);
+  // Re-encode with different compression and metadata; file bytes must differ,
+  // while decoded identity remains equal. Pixel and dimension changes must not.
+  const reencoded=path.join(tmp,'reencoded.png');
+  magick([path.join(tmp,rig.template.file),'-set','comment','encoder independence fixture','-define','png:compression-level=0',reencoded]);
+  assert.notEqual(hash(reencoded),hash(path.join(tmp,rig.template.file)));
+  assert.equal(imageSha1(readImage(reencoded)),rig.template.sha1);
+  const changed=Buffer.from(template.data);changed[0]^=1;
+  assert.notEqual(imageSha1({...template,data:changed}),rig.template.sha1);
+  assert.notEqual(imageSha1({...template,width:template.height,height:template.width}),rig.template.sha1);
+  console.log('PASS decoded RGBA identity ignores PNG encoding, detects pixel and dimension changes');
+  const outputHash=p=>p.endsWith('.png')?imageSha1(readImage(p)):hash(p);
+  const hashes=outputs.map(p=>outputHash(path.join(tmp,p)));build(tmp);assert.deepEqual(outputs.map(p=>outputHash(path.join(tmp,p))),hashes);
+  for(let i=0;i<outputs.length;i++)assert.equal(outputHash(path.join(ROOT,outputs[i])),hashes[i],`checked-in ${outputs[i]} differs from generated output`);
   assert.equal(hash(path.join(ROOT,body)),before);
   console.log('PASS deterministic outputs match checked-in artifacts; canonical body unchanged');
   console.log('RESULT: PASS');

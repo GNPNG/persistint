@@ -11,7 +11,7 @@ migration. It does not alter or relocate either source.
 ![1024×1536 front template](template_chibi_front.png)
 
 The template is the existing body resampled once with Lanczos onto pure #00FF00,
-with frame scale 1.6 and origin (-75.2,160). Its SHA-1 is recorded in
+with frame scale 1.6 and origin (-75.2,160). Its decoded-image SHA-1 is recorded in
 `project/data/doll/rig_chibi.json`, together with the body's path and hash. The copy
 here is byte-identical to `prompts/image/doll/template_chibi_front.png`.
 
@@ -60,3 +60,15 @@ and `test_quotes_vv` cannot read the encrypted private design text here. The rec
 provenance fix and regeneration pass the asset gate (1018 assets, zero failures), leaving
 66/67 checks passing. The encrypted-design failure is the coordinator-acknowledged
 local limitation. [Direct Node acceptance output](test-output.txt) is included.
+
+## Encoder-independent identity revision
+
+`template.sha1` hashes two unsigned 32-bit big-endian integers (width, height),
+followed by row-major 8-bit RGBA bytes. No template file-byte hash is stored.
+PNG regeneration comparisons use this decoded identity; JSON comparisons remain exact.
+The regression test re-encodes the template with uncompressed PNG and extra metadata,
+proves its file bytes differ but identity is unchanged, and proves a one-byte pixel
+change or changed dimensions changes identity. All direct acceptance checks pass.
+This addresses encoder differences, not differences in actual resampling pixels
+between ImageMagick builds; the coordinator machine still needs to rerun acceptance.
+The full game suite was not repeated for this hash-only revision.

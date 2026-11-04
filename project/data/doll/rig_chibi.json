@@ -263,6 +263,7 @@
       -75.2,
       160
     ],
-    "sha1": "7c28558afbfc0a94de5745e65590bee6a42ddcf9"
+    "sha1": "b100159f16ccaa7df4b810585624df33eafeda6d",
+    "sha1_encoding": "uint32be width + uint32be height + row-major RGBA8"
   }
 }
