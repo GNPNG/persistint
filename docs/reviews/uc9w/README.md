@@ -1,5 +1,8 @@
 # Temple atlas integration — uc9w
 
+Latest: [coordinator revisions and three-scene comparisons](revision/README.md).
+The images and initial validation below describe the first delivery.
+
 Run `python3 -I tools/gen_island_tiles.py` with Pillow, NumPy and ImageMagick available.
 The existing atlas generator now reads the eight interior rectangles from the native
 1672×941 landed temple sheet, keys green at 12% fuzz with despill, excludes the brown

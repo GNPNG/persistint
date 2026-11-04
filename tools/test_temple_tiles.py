@@ -43,6 +43,24 @@ class TempleTiles(unittest.TestCase):
                 combined.paste(self.changed[f'rug_{x}_{y}'],(x*128,y*128))
         self.assertEqual(combined.tobytes(),self.sources[2].resize((256,256),Image.Resampling.LANCZOS).tobytes())
 
+    def test_blush_lightened_without_recoloring_gold(self):
+        import numpy as np
+        original = np.array(self.sources[1])
+        pale = np.array(self.changed['floor_b'])
+        gold = original[:,:,1] >= original[:,:,2]
+        self.assertTrue(np.array_equal(pale[gold], original[gold]))
+        centre = np.median(pale[48:80,48:80,:3], axis=(0,1))
+        self.assertTrue(np.all(np.abs(centre - [255,239,245]) <= 5), centre)
+        self.assertTrue(np.array_equal(original[:,:,3], pale[:,:,3]))
+
+    def test_original_dais_emblem_is_present(self):
+        for x, y in ((256,108), (202,112), (310,112)):
+            name = f'dais_{x//128}_{y//128}'
+            actual = self.changed[name].getpixel((x%128,y%128))
+            previous = self.original[name].getpixel((x%128,y%128))
+            # Antialiasing now blends over the landed panel, not flat old pink.
+            self.assertLessEqual(max(abs(a-b) for a,b in zip(actual,previous)), 3)
+
     def test_dais_steps_stay_unchanged(self):
         for x in range(4):
             name=f'dais_{x}_2'

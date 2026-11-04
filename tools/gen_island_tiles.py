@@ -574,11 +574,26 @@ def temple_sources(path=None):
     return tiles
 
 
+def pale_blush(tile):
+    """Lift only the pink marble toward its old pale value; preserve gold inlays.
+
+    Blue exceeds green in blush paint but not in the warm gold decoration. A
+    four-level transition keeps the mask smooth at antialiased inlay edges.
+    """
+    import numpy as np
+    pixels = np.array(tile, dtype=np.float32)
+    rgb = pixels[:, :, :3]
+    mask = np.clip((rgb[:, :, 2] - rgb[:, :, 1]) / 4, 0, 1)
+    rgb += (255 - rgb) * mask[:, :, None] * np.array([.85, .68, .75])
+    return Image.fromarray(np.rint(pixels).astype(np.uint8))
+
+
 def landed_temple(drawn):
     tiles = temple_sources()
     if tiles is None:
         return {}
     cream, blush, runner, fringe, brick, cap, base, dais = tiles
+    blush = pale_blush(blush)
     out = {"floor": cream, "floor_alt": cream.copy(), "floor_b": blush,
            "wall": brick, "wall_cap": cap, "wall_base": base}
     for name, tile in (("floor_n", cream), ("floor_nb", blush)):
@@ -602,6 +617,13 @@ def landed_temple(drawn):
         for x in range(4):
             big.paste(drawn[f"dais_{x}_{y}"], (x*C, y*C))
     big.paste(dais.resize((120*O, 50*O), Image.Resampling.LANCZOS), (4*O, 2*O))
+    # Restore the original emblem at its original centre and supersampling.
+    emblem, ed = canvas(4, 3)
+    W = 4*S
+    ed.ellipse(P(W/2-14, 12, W/2+14, 44), outline=GOLD_LO, width=K*2)
+    ed.ellipse(P(W/2-12.5, 13.5, W/2+12.5, 42.5), outline=GOLD, width=K)
+    heart(ed, W/2, 27, 5.5, "#ffb3c8", RUG_LO)
+    big = Image.alpha_composite(big, emblem.resize(big.size, Image.Resampling.LANCZOS))
     for y in range(3):
         for x in range(4):
             out[f"dais_{x}_{y}"] = big.crop((x*C, y*C, (x+1)*C, (y+1)*C))
