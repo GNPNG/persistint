@@ -20,7 +20,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { merge, RELAY_FILE } from "./sync_agent_channel.mjs";
+import { merge, RELAY_FILE, run } from "./sync_agent_channel.mjs";
 
 const TOOLS = path.dirname(fileURLToPath(import.meta.url));
 const SYNC = path.join(TOOLS, "sync_agent_channel.mjs");
@@ -40,6 +40,9 @@ const exportMap = (ws) => new Map(bd(ws, ["export"]).split("\n").filter((l) => l
 const byTitle = (ws, title) => [...exportMap(ws).values()].find((r) => r.title === title);
 
 function checkMerge() {
+  // bd fmxh: a command that prints more than spawnSync's 1 MiB default (a whole-tracker bd export) still runs.
+  const big = run(process.execPath, ["-e", "process.stdout.write('x'.repeat(3 * 1024 * 1024))"]);
+  check(big.stdout.length === 3 * 1024 * 1024, "run: 3 MiB of output (larger than spawnSync's 1 MiB default) is read whole");
   const edited = { id: "x-2", title: "T", status: "open", labels: ["contractor:kiro"], comments: [{ id: "c1", author: "cc", text: "moved to the dev log" }] };
   const stale = merge(edited, { ...edited, comments: [{ id: "c1", author: "cc", text: "the old text" }] }, "now");
   check(stale.record === null, "merge: a comment whose id the Gitea record already has is known, even if its text was edited there");

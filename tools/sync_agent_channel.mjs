@@ -91,8 +91,12 @@ function parse(argv) {
 
 // --- Running things.
 
-function run(cmd, args, opts = {}) {
-  const r = spawnSync(cmd, args, { encoding: "utf8", ...opts });
+// `bd export` of the whole tracker outgrew spawnSync's 1 MiB default output buffer on 2026-11-04 and the
+// run died with ENOBUFS (bd fmxh); 256 MiB, as tools/agent_comments_since.mjs uses.
+const MAX_BUFFER = 256 * 1024 * 1024;
+
+export function run(cmd, args, opts = {}) {
+  const r = spawnSync(cmd, args, { encoding: "utf8", maxBuffer: MAX_BUFFER, ...opts });
   if (r.error) throw new Error(`${cmd}: ${r.error.message}`);
   if (r.status !== 0 && !opts.okToFail) {
     // The Authorization header git gets as -c is never written to a log.
