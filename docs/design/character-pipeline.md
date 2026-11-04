@@ -521,7 +521,9 @@ first. The expected count comes from the brief; the 10% rule is gone.
    own sole landmark, the face opening on the face region (centre and width) for hair, the head
    top for hats.
 3. Refine translation within a small window (and scale within 8%) by maximizing the slot's coverage
-   score against the rig regions (5.10).
+   score against the rig regions (5.10). Hair is the exception: it keeps its face-opening anchor,
+   because on the canon sheet the search moved `hair_crown` 4 px off the body's centre and its IoU
+   with the sheet-scale ground truth fell from 0.99 to 0.94 (bd mgv6).
 4. Show the result in the Doll Bench; a person accepts, nudges, or sends it back for a proof
    render. The nudge is recorded in the item record.
 
