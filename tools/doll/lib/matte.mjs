@@ -25,13 +25,15 @@ export function greenMatte(image,{key=borderKey(image),outline=[100,60,40],solid
   }
   return {...image,data};
 }
-// White removal is limited to exterior-connected white and its boundary band.
+// White removal follows exterior-connected white, or explicitly supplied opening seeds,
+// and their boundary bands. By default enclosed content is preserved.
 // Foreground estimates come from nearby dark outline pixels, not white interiors.
-export function whiteMatte(image,{band=4,whiteThreshold=235}={}) {
+export function whiteMatte(image,{band=4,whiteThreshold=235,seeds=[],exterior=true}={}) {
   const {width:w,height:h}=image,n=w*h,data=Buffer.from(image.data),outside=new Uint8Array(n),queue=new Int32Array(n);let head=0,tail=0;
   const light=p=>Math.min(...image.data.subarray(p*4,p*4+3))>=whiteThreshold;
   const add=p=>{if(!outside[p]&&light(p)){outside[p]=1;queue[tail++]=p;}};
-  for(let x=0;x<w;x++){add(x);add((h-1)*w+x);}for(let y=0;y<h;y++){add(y*w);add(y*w+w-1);}
+  if(exterior){for(let x=0;x<w;x++){add(x);add((h-1)*w+x);}for(let y=0;y<h;y++){add(y*w);add(y*w+w-1);}}
+  for(const p of seeds)if(p>=0&&p<n)add(p);
   while(head<tail){const p=queue[head++],x=p%w,y=Math.floor(p/w);if(x)add(p-1);if(x+1<w)add(p+1);if(y)add(p-w);if(y+1<h)add(p+w);}
   // Grow inward from the exterior only until the opaque dark outline is reached.
   // Never cross that outline into enclosed white content.

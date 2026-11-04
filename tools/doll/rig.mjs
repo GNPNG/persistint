@@ -49,7 +49,7 @@ export function measure({width:w,height:h,data:b}) {
     const i=y*w+x;if(seen[i]||!dark(x,y))continue;const q=[i];seen[i]=1;let sx=0,sy=0,x0=x,x1=x,y0=y,y1=y;
     for(let k=0;k<q.length;k++){const j=q[k],xx=j%w,yy=Math.floor(j/w);sx+=xx;sy+=yy;x0=Math.min(x0,xx);x1=Math.max(x1,xx);y0=Math.min(y0,yy);y1=Math.max(y1,yy);
       for(const [nx,ny] of [[xx-1,yy],[xx+1,yy],[xx,yy-1],[xx,yy+1]]){const n=ny*w+nx;if(dark(nx,ny)&&!seen[n]){seen[n]=1;q.push(n);}}}
-    if(q.length>15)blobs.push({area:q.length,centre:[sx/q.length,sy/q.length],box:[x0,y0,x1,y1]});
+    if(q.length>15)blobs.push({area:q.length,centre:[sx/q.length,sy/q.length],box:[x0,y0,x1,y1],pixels:q});
   }
   const eyes=blobs.filter(p=>(p.box[3]-p.box[1])>(p.box[2]-p.box[0])*.9).sort((a,b)=>b.area-a.area).slice(0,2).sort((a,b)=>a.centre[0]-b.centre[0]);
   if(eyes.length!==2)throw Error('Expected two measurable eye blobs');
@@ -73,6 +73,20 @@ export function measure({width:w,height:h,data:b}) {
   const ankle=legRows.reduce((a,y)=>legWidth(y)<legWidth(a)?y:a),knee=Math.round((crotch+ankle)/2);
   const wristSpans=rows[wrist],soles=[0,1].map(side=>{const ys=range(ankle,sole).filter(y=>rows[y].some(s=>side===0?midpoint(s)<cx:midpoint(s)>cx));const y=ys.at(-1);return [midpoint(rows[y].find(s=>side===0?midpoint(s)<cx:midpoint(s)>cx)),y];});
   const landmarks={head_top:[cx,top],centre_x:cx,eye_l:eyes[0].centre.map(Math.round),eye_r:eyes[1].centre.map(Math.round),brow_y:brow,chin_y:chin,neck_y:neck,shoulder_y:shoulder,waist_y:waist,hip_y:hip,crotch_y:crotch,wrist_l:[Math.round(midpoint(wristSpans[0])),wrist],wrist_r:[Math.round(midpoint(wristSpans.at(-1))),wrist],knee_y:knee,ankle_y:ankle,sole_l:soles[0],sole_r:soles[1],elbow_y:elbow,armpit_y:branch,armpit_x:armpits,eye_band:[brow,eyeBottom]};
+  // Visible face is an inset ellipse between the ears, below the hairline.
+  // Eye protection follows the measured eye silhouettes, not a full-width row.
+  const eyeHeight=Math.max(...eyes.map(e=>e.box[3]-e.box[1]+1));
+  const faceTop=Math.round(brow-eyeHeight*.4),faceCy=(faceTop+chin)/2,faceRy=(chin-faceTop)/2;
+  const faceRx=Math.min(headWidth*.38,(eyes[1].centre[0]-eyes[0].centre[0])*.82);
+  const inFace=(x,y)=>((x-cx)/faceRx)**2+((y-faceCy)/faceRy)**2<=1;
+  const eyeDilation=Math.max(3,Math.round(eyeHeight*.25)),eyeMask=new Uint8Array(w*h);
+  for(const eye of eyes)for(const p of eye.pixels){const x=p%w,y=Math.floor(p/w);
+    for(let dy=-eyeDilation;dy<=eyeDilation;dy++)for(let dx=-eyeDilation;dx<=eyeDilation;dx++){
+      const xx=x+dx,yy=y+dy;if(dx*dx+dy*dy<=eyeDilation*eyeDilation&&xx>=0&&yy>=0&&xx<w&&yy<h&&inFace(xx,yy))eyeMask[yy*w+xx]=1;
+    }
+  }
+  landmarks.face_outline={shape:'ellipse',centre:[cx,faceCy],radii:[faceRx,faceRy],hairline_y:faceTop};
+  landmarks.eye_dilation_px=eyeDilation;
   const region=Buffer.alloc(w*h*4),overlay=Buffer.from(b),counts=Object.fromEntries(Object.keys(labels).map(k=>[k,0]));
   const palette=Object.values(labels).map(n=>[70+(n*83)%180,70+(n*137)%180,70+(n*53)%180]);
   const earRows=range(brow,chin).filter(y=>extent(y)>headWidth*1.03),earTop=earRows[0]-3,earBottom=earRows.at(-1)+3;
@@ -82,7 +96,7 @@ export function measure({width:w,height:h,data:b}) {
     const skullRadius=headWidth/2*Math.sqrt(Math.max(0,1-((y-headCy)/headRy)**2));
     if(y<=chin){
       if(y>=earTop&&y<=earBottom&&Math.abs(x-cx)>skullRadius)name='ears';
-      else if(y<brow)name='head';else if(y<=eyeBottom)name='eye_band';else name='face';
+      else if(eyeMask[y*w+x])name='eye_band';else if(inFace(x,y))name='face';else name='head';
     }else if(y<shoulder)name='neck';
     else if(y<crotch){
       const f=Math.min(1,(y-shoulder)/(branch-shoulder));

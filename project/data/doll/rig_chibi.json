@@ -68,6 +68,19 @@
       236,
       316
     ],
+    "face_outline": {
+      "shape": "ellipse",
+      "centre": [
+        367,
+        309.5
+      ],
+      "radii": [
+        120.6942244011833,
+        89.5
+      ],
+      "hairline_y": 220
+    },
+    "eye_dilation_px": 10,
     "hand_l": [
       205,
       558
@@ -110,9 +123,9 @@
       "foot_r": 19
     },
     "counts": {
-      "head": 48407,
-      "face": 20364,
-      "eye_band": 25759,
+      "head": 60630,
+      "face": 29040,
+      "eye_band": 4860,
       "ears": 5485,
       "neck": 1649,
       "torso": 22574,

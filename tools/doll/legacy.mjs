@@ -5,7 +5,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
 import {readImage,writeImage} from './lib/image.mjs';
-import {borderKey} from './lib/matte.mjs';
+import {borderKey,whiteMatte} from './lib/matte.mjs';
 import {crop,isolateLargest} from './lib/registration.mjs';
 import {bodyPreflight,matte,warp,splitHair} from './register.mjs';
 export function parseCrop(text){if(Array.isArray(text))return text;const m=/^(\d+)x(\d+)\+(\d+)\+(\d+)$/.exec(text);if(!m)throw Error('Expected WxH+X+Y crop');return [+m[3],+m[4],+m[1],+m[2]];}
@@ -17,36 +17,62 @@ export function faceOpening(image){const {width:w,height:h,data}=image,seen=new 
  const hole=holes.sort((a,b)=>b.area-a.area)[0];if(!hole)throw Error('Hair requires a closed face opening; request a proof or front mask');return hole.bbox;
 }
 // White backing inside hair is an opening; the same white in a dress is content.
-// Select only the largest opaque near-white component enclosed within the crop.
+// Clear the central face opening plus substantial lateral ear gaps in its lower half.
+// Small highlights and white dress content remain untouched.
 export function clearWhiteFaceOpening(image,slot,whiteBacking){
  if(slot!=='hair'||!whiteBacking)return image;
- const {width:w,height:h,data}=image,seen=new Uint8Array(w*h);let opening=[];
+ const {width:w,height:h,data}=image,seen=new Uint8Array(w*h);const components=[];
  const white=p=>data[p*4+3]>127&&Math.min(data[p*4],data[p*4+1],data[p*4+2])>=232&&Math.max(data[p*4],data[p*4+1],data[p*4+2])-Math.min(data[p*4],data[p*4+1],data[p*4+2])<=24;
  for(let p=0;p<w*h;p++){if(seen[p]||!white(p))continue;const q=[p];seen[p]=1;let edge=false;
   for(let k=0;k<q.length;k++){const i=q[k],x=i%w,y=Math.floor(i/w);edge ||= x===0||y===0||x===w-1||y===h-1;
    for(const [xx,yy] of [[x-1,y],[x+1,y],[x,y-1],[x,y+1]]){const j=yy*w+xx;if(xx>=0&&yy>=0&&xx<w&&yy<h&&!seen[j]&&white(j)){seen[j]=1;q.push(j);}}
   }
-  if(!edge&&q.length>opening.length)opening=q;
+  if(!edge)components.push(q);
  }
- if(!opening.length)return image;
- const out=Buffer.from(data);for(const p of opening)out.fill(0,p*4,p*4+4);
- return {...image,data:out};
+ const opening=components.sort((a,b)=>b.length-a.length)[0];if(!opening)return image;
+ const bounds=q=>{let x0=w,y0=h,x1=0,y1=0;for(const p of q){const x=p%w,y=Math.floor(p/w);x0=Math.min(x0,x);x1=Math.max(x1,x);y0=Math.min(y0,y);y1=Math.max(y1,y);}return [x0,y0,x1,y1];};
+ const face=bounds(opening),seeds=[opening[0]];
+ for(const q of components.slice(1)){const b=bounds(q),cy=(b[1]+b[3])/2;
+  if(q.length>=Math.max(16,opening.length*.003)&&q.length<=opening.length*.2&&(b[2]<face[0]||b[0]>face[2])&&cy>=(face[1]+face[3])/2&&b[3]<=face[3])seeds.push(q[0]);
+ }
+ return whiteMatte(image,{whiteThreshold:232,seeds,exterior:false});
 }
 export function anchor(image,slot,rig,side){const b=bbox(image),cx=b[0]+(b[2]-1)/2,lm=rig.landmarks;
- if(slot==='hair'){const h=faceOpening(image);return {source:[h[0]+(h[2]-1)/2,h[1]+h[3]-1],target:[lm.centre_x,lm.chin_y],rule:'face-opening centre x and chin; preserve sheet scale'};}
+ if(slot==='hair'){const h=faceOpening(image);return {source:[h[0]+(h[2]-1)/2,h[1]+h[3]-1],target:[lm.centre_x,lm.chin_y],rule:'centred face-opening seed; fixed-scale cranium coverage search with eye/face protection'};}
  if(slot==='shoes'){if(!['l','r'].includes(side))throw Error('Each shoe must specify image-side l or r');return {source:[cx,b[1]+b[3]-1],target:lm[`sole_${side}`],rule:'individual sole centre'};}
  if(slot==='hat')return {source:[cx,b[1]+b[3]-1],target:lm.head_top,rule:'hat lower centre on head top'};
  if(slot==='bottom')return {source:[cx,b[1]],target:[lm.centre_x,lm.waist_y],rule:'waistband centre'};
  if(slot==='top'||slot==='dress'){let y=b[1];for(;y<b[1]+b[3]*.5;y++)if(image.data[(y*image.width+Math.round(cx))*4+3]>127)break;return {source:[cx,b[1]],target:[lm.centre_x,lm.neck_y],rule:'neck opening upper plane, centred horizontally'};}
  throw Error(`Unsupported legacy slot ${slot}; use a proof or explicit Bench nudge`);
 }
-function refine(image,initial,slot,rig,regions){const labels=rig.regions.labels,rule=rig.slots[slot]??{},covers=(rule.covers??[]).map(n=>labels[n]),forbidden=(rule.never??[]).map(n=>labels[n]);
+export function fitHair(image,initial,rig,regions){
+ const labels=rig.regions.labels,samples=[],totals={head:0,eye:0,face:0},top=rig.landmarks.face_outline?.hairline_y??rig.landmarks.brow_y;
+ for(let y=0;y<regions.height;y+=2)for(let x=0;x<regions.width;x+=2){const id=regions.data[(y*regions.width+x)*4];let kind;
+  if(id===labels.eye_band)kind='eye';else if(id===labels.face)kind='face';else if(id===labels.head&&y<top)kind='head';
+  if(kind){samples.push([x,y,kind]);totals[kind]++;}
+ }
+ const bounds=bbox(image),limit=rig.slots.hair.max_share.face;
+ let best=null;
+ // x is fixed on centre_x: no asymmetric drift and no scale compensation.
+ for(let dy=-80;dy<=20;dy++){
+  const offset=[initial.offset[0],initial.offset[1]+dy],hit={head:0,eye:0,face:0};
+  for(const [x,y,k] of samples){const xx=Math.round((x-offset[0])/initial.scale),yy=Math.round((y-offset[1])/initial.scale);if(xx>=0&&yy>=0&&xx<image.width&&yy<image.height&&image.data[(yy*image.width+xx)*4+3]>127)hit[k]++;}
+  const eye=hit.eye/Math.max(1,totals.eye),face=hit.face/Math.max(1,totals.face),uncovered=1-hit.head/Math.max(1,totals.head);
+  const clipped=bounds[0]*initial.scale+offset[0]<=0||bounds[1]*initial.scale+offset[1]<=0||(bounds[0]+bounds[2]-1)*initial.scale+offset[0]>=rig.frame[0]-1||(bounds[1]+bounds[3]-1)*initial.scale+offset[1]>=rig.frame[1]-1;
+  const cost=(hit.eye>0?1e6+hit.eye:0)+(face>limit?1e4+(face-limit)*1e3:0)+(clipped?1e5:0)+uncovered;
+  if(!best||cost<best.cost-1e-9||(Math.abs(cost-best.cost)<1e-9&&Math.abs(dy)<Math.abs(best.search_dy)))best={scale:initial.scale,offset,cost,search_dy:dy,coverage_score:1-uncovered,hair_qa:{eye_pixels:hit.eye,face_share:face,cranium_uncovered_share:uncovered,clipped}};
+ }
+ best.hair_qa.failures=[];
+ if(best.hair_qa.eye_pixels>0)best.hair_qa.failures.push('eye_band');
+ if(best.hair_qa.face_share>limit)best.hair_qa.failures.push('face_overlap');
+ if(best.hair_qa.cranium_uncovered_share>(rig.qa?.maximum_uncovered_share??.005))best.hair_qa.failures.push('cranium_coverage');
+ if(best.hair_qa.clipped)best.hair_qa.failures.push('frame_clip');
+ return best;
+}
+function refine(image,initial,slot,rig,regions){if(slot==='hair')return fitHair(image,initial,rig,regions);const labels=rig.regions.labels,rule=rig.slots[slot]??{},covers=(rule.covers??[]).map(n=>labels[n]),forbidden=(rule.never??[]).map(n=>labels[n]);
  const samples=[];for(let y=0;y<regions.height;y+=4)for(let x=0;x<regions.width;x+=4){const id=regions.data[(y*regions.width+x)*4];if(covers.includes(id)||forbidden.includes(id))samples.push([x,y,covers.includes(id)?1:-1]);}
  const score=t=>{let value=0;for(const [x,y,kind] of samples){const xx=Math.round((x-t.offset[0])/t.scale),yy=Math.round((y-t.offset[1])/t.scale),on=xx>=0&&yy>=0&&xx<image.width&&yy<image.height&&image.data[(yy*image.width+xx)*4+3]>127;value+=on?kind:0;}return value-Math.hypot(t.offset[0]-initial.offset[0],t.offset[1]-initial.offset[1])*2-Math.abs(t.scale/initial.scale-1)*1000;};
- // Hair keeps its face-opening anchor: on the canon sheet the coverage search moved hair_crown 4 px
- // right and up, off the body's centre, and its IoU with the sheet-scale truth fell from 0.99 to 0.94
- // (bd mgv6). Other slots still search the window.
- const steps=slot==='hair'?[0]:[-4,0,4];
+ const steps=[-4,0,4];
  let best=initial,value=score(best);for(const factor of slot==='hair'?[1]:[.98,1,1.02])for(const dx of steps)for(const dy of steps){const t={scale:initial.scale*factor,offset:[initial.offset[0]+dx,initial.offset[1]+dy]},v=score(t);if(v>value){best=t;value=v;}}return {...best,coverage_score:value};
 }
 export function placeLegacy(image,item,sheetFit,rig,regions){const a=anchor(image,item.slot,rig,item.side),scale=sheetFit.scale,initial={scale,offset:a.target.map((v,k)=>v-a.source[k]*scale)},fit=refine(image,initial,item.slot,rig,regions),nudge=item.nudge??[0,0];if(item.slot==='shoes')fit.offset[1]=a.target[1]-a.source[1]*fit.scale;
@@ -61,7 +87,7 @@ export function buildLegacy(manifest,root){const rig=JSON.parse(fs.readFileSync(
  for(const item of manifest.items){if(!/^[a-z][a-z0-9_]*$/.test(item.id))throw Error('Unsafe item id');const cut=crop(sheetMatte,parseCrop(item.crop)),selected=item.component==='largest'?isolateLargest(cut):cut,image=clearWhiteFaceOpening(selected,item.slot,whiteBacking),placed=placeLegacy(image,item,preflight.report.fit,rig,regions),layers=[];
  for(const [kind,pixels] of Object.entries(placed.layers)){const layer=kind==='front'?'hair':kind==='back'?'hair_back':kind,name=`${item.id}${kind==='back'?'__back':''}.png`;writeImage(path.join(directory,name),pixels);layers.push({layer,file:`res://assets/doll/${name}`,bbox:bbox(pixels)});rendered.push({layer,pixels});}
  const needsReview=preflight.report.fit.residual_px>1.5?`body differs from the rig, residual ${preflight.report.fit.residual_px.toFixed(3)} px`:'legacy placement requires Doll Bench review';
- catalog[item.id]={slot:item.slot,rig:rig.id,layers,covers:rig.slots[item.slot]?.covers??[],side:item.side??null,source:{component:item.component??'all',method:'legacy-sheet',sheet:manifest.sheet,crop:item.crop,sha1:{sheet:sha1}},fit:placed.fit,anchor:placed.anchor,needs_review:needsReview,qa:{status:'needs_review',failures:[]}};
+ catalog[item.id]={slot:item.slot,rig:rig.id,layers,covers:rig.slots[item.slot]?.covers??[],side:item.side??null,source:{component:item.component??'all',method:'legacy-sheet',sheet:manifest.sheet,crop:item.crop,sha1:{sheet:sha1}},fit:placed.fit,anchor:placed.anchor,needs_review:needsReview,qa:{status:'needs_review',failures:placed.fit.hair_qa?.failures??[]}};
  if(item.slot==='hair')catalog[item.id].split={rule:'chin_y',front_mask:item.frontMask??null};}
  fs.mkdirSync(path.dirname(catalogPath),{recursive:true});fs.writeFileSync(catalogPath,JSON.stringify(catalog,null,2)+'\n');rendered.push({layer:'body',pixels:body});rendered.sort((a,b)=>rig.layers.indexOf(a.layer)-rig.layers.indexOf(b.layer));return {catalog,bodyFit:{...preflight.report,pass:true,failures:[],needs_review:preflight.report.fit.residual_px>1.5?'body differs from the rig':null},composite:compose(rendered.map(r=>r.pixels),...rig.frame)};
 }
