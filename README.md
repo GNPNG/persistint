@@ -197,6 +197,12 @@ ART_PYTHON=/path/to/python tools/run_tests.sh                                  #
 PERSISTINT_SKIP_ART_TESTS=1 tools/run_tests.sh                                 # no art Python: skip those checks
 ```
 
+`tests/test_temple_tools.gd` uses the same interpreter order for
+`tools/test_temple_strips.py` and `tools/test_temple_tiles.py`. These require Pillow and NumPy,
+plus ImageMagick's `magick` executable on PATH. Missing dependencies fail unless
+`PERSISTINT_SKIP_ART_TESTS=1`; that switch never hides failures in tests that actually run.
+Both temple scripts run even if the first fails.
+
 Each script prints `RESULT: PASS` or lists its failures. Most tests back up your real
 `user://save.json` and restore it afterwards; `test_landing_crew.gd` does not yet, so back up your
 save before running it. There is no single runner script or CI yet.
