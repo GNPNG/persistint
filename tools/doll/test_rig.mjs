@@ -62,8 +62,29 @@ try {
   console.log('PASS decoded RGBA identity ignores PNG encoding, detects pixel and dimension changes');
   const outputHash=p=>p.endsWith('.png')?imageSha1(readImage(p)):hash(p);
   const hashes=outputs.map(p=>outputHash(path.join(tmp,p)));build(tmp);assert.deepEqual(outputs.map(p=>outputHash(path.join(tmp,p))),hashes);
-  for(let i=0;i<outputs.length;i++)assert.equal(outputHash(path.join(ROOT,outputs[i])),hashes[i],`checked-in ${outputs[i]} differs from generated output`);
+  // Against the checked-in artifacts (bd y8s7): the label map and the overlay are exact on any
+  // machine, but the template is resampled, and ImageMagick builds round its antialiased edges
+  // differently (7.1.2-31 vs Codex's build: 8577 pixels differ, by at most 29 levels, 4700 of them
+  // by more than 8). So no template channel may differ by more than 48 levels and at most 1% of its
+  // pixels by more than 8; the checked-in rig's template.sha1 must be the checked-in template's
+  // identity, and the rest of the rig must match exactly.
+  for(const p of [rig.regions.file,'docs/reviews/1rjz.1/regions_overlay.png'])
+    assert.equal(outputHash(path.join(ROOT,p)),outputHash(path.join(tmp,p)),`checked-in ${p} differs from generated output`);
+  const keptRig=JSON.parse(fs.readFileSync(path.join(ROOT,'project/data/doll/rig_chibi.json'),'utf8'));
+  const freshRig=JSON.parse(fs.readFileSync(path.join(tmp,'project/data/doll/rig_chibi.json'),'utf8'));
+  const keptTemplate=readImage(path.join(ROOT,rig.template.file)),freshTemplate=readImage(path.join(tmp,rig.template.file));
+  assert.equal(imageSha1(keptTemplate),keptRig.template.sha1,'checked-in rig template.sha1 is not the checked-in template');
+  assert.deepEqual({...keptRig,template:{...keptRig.template,sha1:null}},{...freshRig,template:{...freshRig.template,sha1:null}},'checked-in rig_chibi.json differs from generated output beyond the template identity');
+  assert.deepEqual([keptTemplate.width,keptTemplate.height],[freshTemplate.width,freshTemplate.height]);
+  let differing=0,worst=0;
+  for(let i=0;i<keptTemplate.data.length;i+=4){
+    let d=0;for(let c=0;c<4;c++)d=Math.max(d,Math.abs(keptTemplate.data[i+c]-freshTemplate.data[i+c]));
+    worst=Math.max(worst,d);if(d>8)differing++;
+  }
+  const share=differing/(keptTemplate.width*keptTemplate.height);
+  assert.ok(worst<=48,`regenerated template differs from the checked-in one by up to ${worst} levels (> 48)`);
+  assert.ok(share<=0.01,`regenerated template differs from the checked-in one by more than 8 levels in ${differing} pixels (${(share*100).toFixed(2)}% > 1%)`);
   assert.equal(hash(path.join(ROOT,body)),before);
-  console.log('PASS deterministic outputs match checked-in artifacts; canonical body unchanged');
+  console.log(`PASS outputs match checked-in artifacts (template: ${differing} pixels differ by more than 8 levels, worst ${worst}); canonical body unchanged`);
   console.log('RESULT: PASS');
 } finally {fs.rmSync(tmp,{recursive:true,force:true});}
