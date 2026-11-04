@@ -99,3 +99,20 @@ Review caveat: the sandals have no opaque pixels on the frame border, but Lanczo
 leaves fractional alpha in the last row (left26 pixels, maximum55/255; right10,
 maximum12/255). The stricter any-alpha frame-border QA in task4 will flag these;
 no pixels were silently cleared to hide that result. Both items remain needs_review.
+
+## White-sheet wig revision
+
+For opaque white-backed legacy sheets only, the hair path now clears the largest
+opaque near-white component that does not touch the crop edge, after white matting
+and before detecting the face opening. Near-white means all RGB channels >=232 with
+channel spread <=24. Other enclosed white components (small highlights), edge-touching
+white, and every non-hair slot retain their pixels. The generic white matte is unchanged.
+
+Regression fixtures include an enclosed near-white wig opening, a white dress panel,
+a smaller white highlight, edge-connected white, and non-white-backed hair. An isolated
+full-sheet build also places the white-backed wig and preserves the dress panel.
+The canonical opening measurement/IoU still runs on the team's decrypted sheet; the
+independent crown reference is sheet scale, opening bottom at chin_y399, centre_x367.
+
+White-sheet revision validation: all five Node files PASS through test_doll_tools
+in41seconds; asset gate1023/0. Full game suite not repeated for this slot-specific fix.

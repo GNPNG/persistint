@@ -5,6 +5,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
 import {readImage,writeImage} from './lib/image.mjs';
+import {borderKey} from './lib/matte.mjs';
 import {crop,isolateLargest} from './lib/registration.mjs';
 import {bodyPreflight,matte,warp,splitHair} from './register.mjs';
 export function parseCrop(text){if(Array.isArray(text))return text;const m=/^(\d+)x(\d+)\+(\d+)\+(\d+)$/.exec(text);if(!m)throw Error('Expected WxH+X+Y crop');return [+m[3],+m[4],+m[1],+m[2]];}
@@ -14,6 +15,22 @@ export function faceOpening(image){const {width:w,height:h,data}=image,seen=new 
  for(let k=0;k<q.length;k++){const i=q[k],x=i%w,y=Math.floor(i/w);edge ||= x===0||y===0||x===w-1||y===h-1;x0=Math.min(x0,x);y0=Math.min(y0,y);x1=Math.max(x1,x);y1=Math.max(y1,y);for(const [xx,yy] of [[x-1,y],[x+1,y],[x,y-1],[x,y+1]]){const j=yy*w+xx;if(xx>=0&&yy>=0&&xx<w&&yy<h&&!seen[j]&&data[j*4+3]<=127){seen[j]=1;q.push(j);}}}
  if(!edge)holes.push({area:q.length,bbox:[x0,y0,x1-x0+1,y1-y0+1]});}
  const hole=holes.sort((a,b)=>b.area-a.area)[0];if(!hole)throw Error('Hair requires a closed face opening; request a proof or front mask');return hole.bbox;
+}
+// White backing inside hair is an opening; the same white in a dress is content.
+// Select only the largest opaque near-white component enclosed within the crop.
+export function clearWhiteFaceOpening(image,slot,whiteBacking){
+ if(slot!=='hair'||!whiteBacking)return image;
+ const {width:w,height:h,data}=image,seen=new Uint8Array(w*h);let opening=[];
+ const white=p=>data[p*4+3]>127&&Math.min(data[p*4],data[p*4+1],data[p*4+2])>=232&&Math.max(data[p*4],data[p*4+1],data[p*4+2])-Math.min(data[p*4],data[p*4+1],data[p*4+2])<=24;
+ for(let p=0;p<w*h;p++){if(seen[p]||!white(p))continue;const q=[p];seen[p]=1;let edge=false;
+  for(let k=0;k<q.length;k++){const i=q[k],x=i%w,y=Math.floor(i/w);edge ||= x===0||y===0||x===w-1||y===h-1;
+   for(const [xx,yy] of [[x-1,y],[x+1,y],[x,y-1],[x,y+1]]){const j=yy*w+xx;if(xx>=0&&yy>=0&&xx<w&&yy<h&&!seen[j]&&white(j)){seen[j]=1;q.push(j);}}
+  }
+  if(!edge&&q.length>opening.length)opening=q;
+ }
+ if(!opening.length)return image;
+ const out=Buffer.from(data);for(const p of opening)out.fill(0,p*4,p*4+4);
+ return {...image,data:out};
 }
 export function anchor(image,slot,rig,side){const b=bbox(image),cx=b[0]+(b[2]-1)/2,lm=rig.landmarks;
  if(slot==='hair'){const h=faceOpening(image);return {source:[h[0]+(h[2]-1)/2,h[1]+h[3]-1],target:[lm.centre_x,lm.chin_y],rule:'face-opening centre x and chin; preserve sheet scale'};}
@@ -35,9 +52,9 @@ export function placeLegacy(image,item,sheetFit,rig,regions){const a=anchor(imag
 }
 export function compose(layers,width,height){const data=Buffer.alloc(width*height*4);for(const layer of layers)for(let p=0;p<data.length;p+=4){const a=layer.data[p+3]/255,b=data[p+3]/255,out=a+b*(1-a);for(let c=0;c<3;c++)data[p+c]=out?Math.round((layer.data[p+c]*a+data[p+c]*b*(1-a))/out):0;data[p+3]=Math.round(out*255);}return {width,height,data};}
 export function buildLegacy(manifest,root){const rig=JSON.parse(fs.readFileSync(path.join(root,'project/data/doll/rig_chibi.json'),'utf8')),body=readImage(path.join(root,rig.body_file)),regions=readImage(path.join(root,rig.regions.file)),sheet=readImage(path.resolve(root,manifest.sheet)),preflight=bodyPreflight(sheet,parseCrop(manifest.bodyCrop),body),catalogPath=path.join(root,'project/data/doll/items.json'),catalog=fs.existsSync(catalogPath)?JSON.parse(fs.readFileSync(catalogPath,'utf8')):{},rendered=[];
- const sheetMatte=matte(sheet);
+ const sheetMatte=matte(sheet),whiteBacking=borderKey(sheet).every(c=>c>230)&&sheet.data.every((v,i)=>i%4!==3||v===255);
  const directory=path.join(root,'project/assets/doll');fs.mkdirSync(directory,{recursive:true});const sha1=createHash('sha1').update(fs.readFileSync(path.resolve(root,manifest.sheet))).digest('hex');
- for(const item of manifest.items){if(!/^[a-z][a-z0-9_]*$/.test(item.id))throw Error('Unsafe item id');const cut=crop(sheetMatte,parseCrop(item.crop)),image=item.component==='largest'?isolateLargest(cut):cut,placed=placeLegacy(image,item,preflight.report.fit,rig,regions),layers=[];
+ for(const item of manifest.items){if(!/^[a-z][a-z0-9_]*$/.test(item.id))throw Error('Unsafe item id');const cut=crop(sheetMatte,parseCrop(item.crop)),selected=item.component==='largest'?isolateLargest(cut):cut,image=clearWhiteFaceOpening(selected,item.slot,whiteBacking),placed=placeLegacy(image,item,preflight.report.fit,rig,regions),layers=[];
  for(const [kind,pixels] of Object.entries(placed.layers)){const layer=kind==='front'?'hair':kind==='back'?'hair_back':kind,name=`${item.id}${kind==='back'?'__back':''}.png`;writeImage(path.join(directory,name),pixels);layers.push({layer,file:`res://assets/doll/${name}`,bbox:bbox(pixels)});rendered.push({layer,pixels});}
  const needsReview=preflight.report.fit.residual_px>1.5?`body differs from the rig, residual ${preflight.report.fit.residual_px.toFixed(3)} px`:'legacy placement requires Doll Bench review';
  catalog[item.id]={slot:item.slot,rig:rig.id,layers,covers:rig.slots[item.slot]?.covers??[],side:item.side??null,source:{component:item.component??'all',method:'legacy-sheet',sheet:manifest.sheet,crop:item.crop,sha1:{sheet:sha1}},fit:placed.fit,anchor:placed.anchor,needs_review:needsReview,qa:{status:'needs_review',failures:[]}};
