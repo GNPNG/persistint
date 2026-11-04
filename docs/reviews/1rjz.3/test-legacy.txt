@@ -1,0 +1,3 @@
+PASS proof CLI persists accepted catalog/layers and refuses changed-item output
+PASS sheet-scale wig, exact chin split, separate feet, full frames and legacy residual review flags
+RESULT: PASS

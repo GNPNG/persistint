@@ -1,0 +1,257 @@
+{
+  "hair_daughter": {
+    "slot": "hair",
+    "rig": "chibi",
+    "layers": [
+      {
+        "layer": "hair",
+        "file": "res://assets/doll/hair_daughter.png",
+        "bbox": [
+          74,
+          39,
+          583,
+          361
+        ]
+      },
+      {
+        "layer": "hair_back",
+        "file": "res://assets/doll/hair_daughter__back.png",
+        "bbox": [
+          73,
+          400,
+          585,
+          81
+        ]
+      }
+    ],
+    "covers": [],
+    "side": null,
+    "source": {
+      "component": "largest",
+      "method": "legacy-sheet",
+      "sheet": "prompts/image/characters/assets/char_daughter_layers.png",
+      "crop": "681x515+512+61",
+      "sha1": {
+        "sheet": "ac667966b947a0794eb1ed156a3a2bc12f982078"
+      }
+    },
+    "fit": {
+      "scale": 0.8654065029404323,
+      "offset": [
+        70.59827274290194,
+        37.587114285601444
+      ],
+      "coverage_score": -204,
+      "residual_px": 5.493790045838708,
+      "sheet_scale": 0.8654065029404323,
+      "relative_scale": 1,
+      "nudge": [
+        0,
+        0
+      ]
+    },
+    "anchor": {
+      "source": [
+        342.5,
+        413
+      ],
+      "target": [
+        367,
+        399
+      ],
+      "rule": "face-opening centre x and chin; preserve sheet scale"
+    },
+    "needs_review": "body differs from the rig, residual 5.494 px",
+    "qa": {
+      "status": "needs_review",
+      "failures": []
+    },
+    "split": {
+      "rule": "chin_y",
+      "front_mask": null
+    }
+  },
+  "dress_daughter": {
+    "slot": "dress",
+    "rig": "chibi",
+    "layers": [
+      {
+        "layer": "dress",
+        "file": "res://assets/doll/dress_daughter.png",
+        "bbox": [
+          182,
+          406,
+          370,
+          274
+        ]
+      }
+    ],
+    "covers": [
+      "torso",
+      "hips"
+    ],
+    "side": null,
+    "source": {
+      "component": "all",
+      "method": "legacy-sheet",
+      "sheet": "prompts/image/characters/assets/char_daughter_layers.png",
+      "crop": "430x319+1179+458",
+      "sha1": {
+        "sheet": "ac667966b947a0794eb1ed156a3a2bc12f982078"
+      }
+    },
+    "fit": {
+      "scale": 0.8654065029404323,
+      "offset": [
+        182.2357116222177,
+        406
+      ],
+      "coverage_score": 1779,
+      "residual_px": 5.493790045838708,
+      "sheet_scale": 0.8654065029404323,
+      "relative_scale": 1,
+      "nudge": [
+        0,
+        0
+      ]
+    },
+    "anchor": {
+      "source": [
+        213.5,
+        0
+      ],
+      "target": [
+        367,
+        406
+      ],
+      "rule": "neck opening upper plane, centred horizontally"
+    },
+    "needs_review": "body differs from the rig, residual 5.494 px",
+    "qa": {
+      "status": "needs_review",
+      "failures": []
+    }
+  },
+  "shoes_daughter_l": {
+    "slot": "shoes",
+    "rig": "chibi",
+    "layers": [
+      {
+        "layer": "shoes",
+        "file": "res://assets/doll/shoes_daughter_l.png",
+        "bbox": [
+          254,
+          670,
+          95,
+          89
+        ]
+      }
+    ],
+    "covers": [
+      "foot_l",
+      "foot_r"
+    ],
+    "side": "l",
+    "source": {
+      "component": "all",
+      "method": "legacy-sheet",
+      "sheet": "prompts/image/characters/assets/char_daughter_layers.png",
+      "crop": "115x109+1267+777",
+      "sha1": {
+        "sheet": "ac667966b947a0794eb1ed156a3a2bc12f982078"
+      }
+    },
+    "fit": {
+      "scale": 0.8654065029404323,
+      "offset": [
+        252.5372358353358,
+        667.9977236941951
+      ],
+      "coverage_score": 118,
+      "residual_px": 5.493790045838708,
+      "sheet_scale": 0.8654065029404323,
+      "relative_scale": 1,
+      "nudge": [
+        0,
+        0
+      ]
+    },
+    "anchor": {
+      "source": [
+        56,
+        104
+      ],
+      "target": [
+        301,
+        758
+      ],
+      "rule": "individual sole centre"
+    },
+    "needs_review": "body differs from the rig, residual 5.494 px",
+    "qa": {
+      "status": "needs_review",
+      "failures": []
+    }
+  },
+  "shoes_daughter_r": {
+    "slot": "shoes",
+    "rig": "chibi",
+    "layers": [
+      {
+        "layer": "shoes",
+        "file": "res://assets/doll/shoes_daughter_r.png",
+        "bbox": [
+          381,
+          669,
+          94,
+          90
+        ]
+      }
+    ],
+    "covers": [
+      "foot_l",
+      "foot_r"
+    ],
+    "side": "r",
+    "source": {
+      "component": "all",
+      "method": "legacy-sheet",
+      "sheet": "prompts/image/characters/assets/char_daughter_layers.png",
+      "crop": "115x109+1410+777",
+      "sha1": {
+        "sheet": "ac667966b947a0794eb1ed156a3a2bc12f982078"
+      }
+    },
+    "fit": {
+      "scale": 0.8654065029404323,
+      "offset": [
+        378.6045325838656,
+        667.9977236941951
+      ],
+      "coverage_score": 116,
+      "residual_px": 5.493790045838708,
+      "sheet_scale": 0.8654065029404323,
+      "relative_scale": 1,
+      "nudge": [
+        0,
+        0
+      ]
+    },
+    "anchor": {
+      "source": [
+        56.5,
+        104
+      ],
+      "target": [
+        427.5,
+        758
+      ],
+      "rule": "individual sole centre"
+    },
+    "needs_review": "body differs from the rig, residual 5.494 px",
+    "qa": {
+      "status": "needs_review",
+      "failures": []
+    }
+  }
+}

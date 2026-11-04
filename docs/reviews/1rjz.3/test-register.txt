@@ -4,4 +4,5 @@ PASS known body transform {"input":[0.98,-3,4],"fit":{"scale":1.0205880476614266
 PASS known body transform {"input":[1.06,0,-40],"fit":{"scale":0.9435623309652467,"offset":[-0.08557558480890748,37.67265013794304],"residual_px":0.28367326886184235,"metric":"symmetric mean outline chamfer, Euclidean frame pixels","source_outline":2676,"target_outline":2515,"seed":{"scale":0.9425474459855443,"offset":[0.22692441519109252,37.92265013794304],"rotationDegrees":0.06910933225962189,"sourceEyes":[[310.67772925764194,270.32663755458515],[466.55859030837007,270.23259911894274]],"targetEyes":[[293.0049019607843,292.6441176470588],[440.1100196463654,292.73280943025543]]}}}
 PASS same-frame proof identity, changed-item rejection and exact chin split
 PASS shifted/scaled proof and item composition 0.9992213859330392
-RESULT: PASS (proof/core checks; legacy wearable placement pending)
+PASS synthetic proof visibility across all seven wearable slots
+RESULT: PASS

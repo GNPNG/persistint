@@ -15,7 +15,16 @@ export function splitHair(image,chinY,frontMask){const front={...image,data:Buff
 export function differenceMask(a,b,threshold=40){if(a.width!==b.width||a.height!==b.height)throw Error('Comparison dimensions differ');const data=Buffer.alloc(a.data.length);for(let i=0;i<data.length;i+=4){let d=0;for(let c=0;c<3;c++)d=Math.max(d,Math.abs(a.data[i+c]*a.data[i+3]/255-b.data[i+c]*b.data[i+3]/255));d=Math.max(d,Math.abs(a.data[i+3]-b.data[i+3]));if(d>threshold)data[i+3]=255;}return {...a,data};}
 export function maskIoU(a,b){let intersection=0,union=0;for(let i=3;i<a.data.length;i+=4){const aa=a.data[i]>127,bb=b.data[i]>127;intersection+=aa&&bb;union+=aa||bb;}return union?intersection/union:0;}
 export function registerProof(proof,item,body,{slot='top',rig,expectedScale=1,expectedOffset=[0,0]}={}){
- const lm=rig.landmarks,visible=slot==='top'?((x,y)=>y<lm.chin_y-10||y>lm.crotch_y+10):slot==='hat'?((x,y)=>y>lm.neck_y+10):(()=>true);
+ const lm=rig.landmarks,visibility={
+ top:(x,y)=>y<lm.chin_y-10||y>lm.crotch_y+10,
+ bottom:(x,y)=>y<lm.waist_y-10||y>lm.ankle_y+5,
+ dress:(x,y)=>y<lm.chin_y-10||y>lm.ankle_y+5,
+ shoes:(x,y)=>y<lm.ankle_y-10,
+ hat:(x,y)=>y>lm.neck_y+10,
+ hair:(x,y)=>y>lm.shoulder_y+10,
+ accessory:()=>true
+ },visible=visibility[slot];
+ if(!visible)throw Error('Unknown proof slot');
  const seed=landmarkSeed(proof,body),fit=fitBody(proof,body,{seed,visible});
  const correction={...fit,offset:fit.offset.map((x,i)=>x-expectedOffset[i])};
  const verdict=gates(correction,{expectedScale,maxShift:.02*Math.max(body.width,body.height),rotationDegrees:seed.rotationDegrees});

@@ -73,6 +73,7 @@ function toolMentions() {
   for (const t of tools) {
     if (t === "tools/gen_sources.py") continue;
     const text = fs.readFileSync(path.join(ROOT, t)).toString("utf8").replace(/\r\n?/g, "\n");
+    if (text.includes("// provenance: diagnostic-only")) continue;
     const frags = new Set((text.match(/project\/(?:assets|audio)\/[A-Za-z0-9_./-]+/g) || []).map((f) => f.replace(/\.+$/, "")));
     if (frags.size) out.set(t, [frags, text]);
   }

@@ -1,55 +1,101 @@
-# Registration preflight — task 3 draft
+# Registration and legacy Daughter layers — task 3
 
-This is an incomplete task 3 implementation, provided for coordinator review of a
-measured acceptance mismatch before producing wearable layers. No production items,
-body images, item catalog or game runtime are changed.
+Branch codex/1rjz.3; bead persistint-game-1rjz.3. All legacy items remain marked
+needs_review for the Doll Bench. Existing canon assets and game runtime are unchanged.
 
-Implemented: exact Euclidean distance fields; uniform scale/translation outline
-matching; eye/sole landmark initialization; body component isolation; proof/item
-cross-check; correction gates; single-resample item mapping; chin-based front/back
-split. The proof fixture covers the top slot, same-frame and shifted/scaled inputs.
-The reference body is sampled through the same grids for the proof difference check,
-avoiding false garment differences from Lanczos changes at the body's own edges.
+## Daughter fallback
 
-## Daughter preflight needs coordinator direction
+![Daughter over the canon body](daughter-composite.png)
 
-Run from the repository root:
+Generate the hair front/back, dress, and two separate sandals with:
 
 ```sh
-node tools/doll/register.mjs \
-  prompts/image/characters/assets/char_daughter_layers.png \
-  484x795+38+82 project/assets/canon/body_base.png .cache/1rjz3-daughter
+node tools/doll/legacy.mjs tools/doll/manifests/daughter.json . docs/reviews/1rjz.3/daughter-composite.png
 ```
 
-This returns exit 1 with `outline-residual`. Two independent seeds (eye/sole landmarks
-and silhouette bounds) converge to about **5.494 frame pixels**, against the required
-**1.5**. Scale is approximately **0.86541**; offset is relative to the supplied crop.
-The residual is the mean of both directed mean Euclidean outline distances at alpha>127,
-computed in frame pixels. Local optimization is not a proof of a global optimum.
-Neighbouring hair pixels inside the body's bounding box are explicitly excluded.
+Outputs are 721x760 RGBA under project/assets/doll/, with records in
+project/data/doll/items.json. The manifest identifies sheet crops and explicitly
+selects the hair component, excluding the neighbouring body's pixels in its crop.
+Hair uses its face-opening centre and chin at sheet scale, then splits below chin.
+The dress uses the upper neck-opening plane; each sandal uses its own sole landmark.
+Coverage refinement is bounded to four pixels and two percent scale (inside the
+spec's eight-percent search limit); wigs retain sheet scale. Sole height remains
+anchored after refinement. User nudges and front-mask paths can be recorded explicitly.
 
-![Daughter fit differences](daughter-fit-difference.png)
+The Daughter body residual is about5.494 frame pixels, scale0.86541. Per the
+coordinator's November4 decision, a legacy residual above1.5 is a review flag, not a
+rejection: every item records needs_review: body differs from the rig, residual X px.
+The proof gate stays1.5. Section5.7 documents that distinction in two added sentences.
+The earlier whole-outline comparison remains in daughter-fit-difference.png (grey
+intersection, blue canon-only, pink Daughter-only), with both fit seeds in its JSON.
 
-Grey is overlapping silhouettes; blue is canon only; pink is Daughter only.
-The comparison shows differences at head proportions, ears, hands and feet.
-The rendered binary mask IoU is approximately **0.91356**. The residual limit has not
-been relaxed, and the rejected fit has not been put into production.
+Visual review: separate sandals, clean face opening and no front hair below the chin.
+The default body's white undershirt is visible at the neckline; wardrobe pixel QA and
+Bench approval remain separate steps. Low-opacity cyan source-backing noise was found
+while compositing: green matting now clears near-key noise and coverage below0.1 before
+unmixing amplifies it. Synthetic mean alpha error is0.005530, within2/255; opaque palette
+colours remain exact. Matting is performed on the whole sheet before cropping so an
+item touching its crop border cannot corrupt the measured backing colour.
 
-Question for the coordinator: is the intended <=1.5 metric the whole-outline mean
-specified here, or a different explicitly defined subset/metric? If whole-outline
-is intended, should this sheet be returned for a canon-matched proof render? No
-rerender assignment has been chosen independently.
+## Proof path
 
-## Validation and remaining work
+Core registerProof measures eyes/soles, refines uniform scale/translation using visible
+outline regions, tests rotation and scale/translation/residual corrections, cross-checks
+the proof/item difference at IoU>=0.9, and maps the item to the frame once. The bare-body
+comparison reference is sampled through the same grids to account for Lanczos edge
+changes. Different-sized item canvases align to the proof difference silhouette.
 
-Known transforms of the canon body recover scale within0.3% and translation within
-0.5px;6% scale correction rejects. Shifted/scaled proof and item pass the IoU gate;
-a changed item rejects. Chin split preserves every source pixel in exactly one layer
-and leaves no unmasked front pixels below the chin. Tests are in test_register.mjs
-and discovered by the existing Godot runner.
+```sh
+node tools/doll/proof.mjs MANIFEST.json [ROOT]
+```
 
-Pending: complete legacy slot-anchor/coverage refinement; Daughter wearable layers
-and composite accepted at the specified body residual; canonical wig scale/ground-truth
-checks (team-run encrypted source); item-catalog writes and front-mask workflow.
-The current CLI is body preflight only. Arbitrary slot/proof combinations and unequal
-B canvases still need broader fixtures; this is not a complete registration delivery.
+Manifest fields: id, slot, proof, item, optional brief/provenance, expectedScale,
+expectedOffset and frontMask. Rejections write a report and no layers/catalog entry.
+Accepted registration writes full-frame layers and catalog entries marked for subsequent
+pixel QA/review. A proof drawn in the1024x1536 template uses expectedScale0.625 and
+expectedOffset[47,-100] to express the template-to-frame transform.
+
+## Encrypted canon acceptance — team command
+
+The source remains encrypted here. The coordinator runs:
+
+```sh
+node tools/doll/check_canon_registration.mjs \
+  /path/to/decrypted-sheet.jpg 482x778+57+250 \
+  /tmp/canon-registration-review /path/to/independent-crown-frame.png
+```
+
+The last image must be an independently prepared721x760 crown ground truth at sheet
+scale, not this tool's generated output. The command copies rig inputs into the isolated
+output root, places all four canon wigs, enforces body scale1+/-0.01 and relative wig
+scale1+/-0.02, checks crown IoU>=0.97 against that reference, and checks every front alpha
+below chin is zero. It saves report JSON, registered crown, layers and catalog for review.
+Neither the encrypted source nor its ground truth was fabricated or decrypted here.
+Actual canon wig measurements remain team-run acceptance; no local pass is claimed.
+
+## Validation and limits
+
+Tests cover known transforms within0.5px/0.3%, rejection of6% correction and changed
+items, shifted/scaled proof agreement, exact chin split, synthetic closed-face wig at
+sheet scale, independent shoe anchors, full-frame output, body-residual review flags,
+zero opaque frame-edge contact on Daughter layers, proof CLI persistence and refusal to
+write rejected items. Every tools/doll/test_*.mjs runs in test_doll_tools.
+
+The whole-outline solver is local optimization, not a proof of a global optimum.
+Arbitrary heavily occluded proofs may fail eye detection and should be returned for a
+clearer proof, not silently accepted. Skin recolouring is outside this task. General
+outfit combinations and runtime integration belong to subsequent tasks; this delivery
+is reviewable source layers/catalog, not a switch of the live outfit definitions.
+
+Final validation: test_doll_tools passes all five Node files in20seconds, including
+synthetic visibility checks for all seven slots and accepted/rejected proof CLI runs.
+The full run initially returned65/68 (provenance, the new legacy path test, and the
+known encrypted-design quote failure). Corrected provenance and legacy tests pass
+on targeted reruns: asset gate1023 assets/0 failures and the complete doll wrapper
+passes. This leaves67/68 checks passing; the full suite was not repeated after those
+localized fixes. Canon source/ground-truth acceptance remains the coordinator's run.
+
+Review caveat: the sandals have no opaque pixels on the frame border, but Lanczos
+leaves fractional alpha in the last row (left26 pixels, maximum55/255; right10,
+maximum12/255). The stricter any-alpha frame-border QA in task4 will flag these;
+no pixels were silently cleared to hide that result. Both items remain needs_review.

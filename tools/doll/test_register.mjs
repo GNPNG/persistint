@@ -27,4 +27,10 @@ console.log('PASS same-frame proof identity, changed-item rejection and exact ch
 const shiftedProof=warp(proof,{scale:1.02,offset:[4,-3]},850,850),shiftedItem=warp(item,{scale:1.02,offset:[4,-3]},850,850);
 const shifted=registerProof(shiftedProof,shiftedItem,base,{rig});assert.ok(shifted.pass,JSON.stringify({failures:shifted.failures,iou:shifted.proofItemIoU}));
 console.log('PASS shifted/scaled proof and item composition',shifted.proofItemIoU);
-console.log('RESULT: PASS (proof/core checks; legacy wearable placement pending)');
+for(const [slot,box] of Object.entries({hat:[300,30,130,30],hair:[300,90,130,30],bottom:[330,590,70,25],dress:[330,450,70,160],shoes:[285,730,30,20],accessory:[340,450,20,20]})){
+ const pp={...base,data:Buffer.from(base.data)},ii={...base,data:Buffer.alloc(base.data.length)},[xx,yy,w,h]=box;
+ for(let y=yy;y<yy+h;y++)for(let x=xx;x<xx+w;x++){const p=(y*base.width+x)*4;pp.data.set([100,110,220,255],p);ii.data.set([100,110,220,255],p);}
+ const r=registerProof(pp,ii,base,{rig,slot});assert.ok(r.pass,slot+': '+JSON.stringify(r.failures));
+}
+console.log('PASS synthetic proof visibility across all seven wearable slots');
+console.log('RESULT: PASS');
