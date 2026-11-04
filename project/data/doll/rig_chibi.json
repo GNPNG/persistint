@@ -1,0 +1,269 @@
+{
+  "id": "chibi",
+  "frame": [
+    721,
+    760
+  ],
+  "body": "body_base",
+  "body_file": "project/assets/canon/body_base.png",
+  "body_sha1": "dfed31d6f9a94a16af8269cb8e9aebb003e89e61",
+  "coordinate_convention": "pixel centres; L/R are image left/right",
+  "layers": [
+    "hair_back",
+    "body",
+    "shoes",
+    "bottom",
+    "top",
+    "dress",
+    "hair",
+    "hat",
+    "accessory"
+  ],
+  "landmarks": {
+    "head_top": [
+      367,
+      61
+    ],
+    "centre_x": 367,
+    "eye_l": [
+      293,
+      293
+    ],
+    "eye_r": [
+      440,
+      293
+    ],
+    "brow_y": 236,
+    "chin_y": 399,
+    "neck_y": 406,
+    "shoulder_y": 417,
+    "waist_y": 567,
+    "hip_y": 591,
+    "crotch_y": 622,
+    "wrist_l": [
+      217,
+      540
+    ],
+    "wrist_r": [
+      511,
+      540
+    ],
+    "knee_y": 673,
+    "ankle_y": 724,
+    "sole_l": [
+      301,
+      758
+    ],
+    "sole_r": [
+      427.5,
+      758
+    ],
+    "elbow_y": 479,
+    "armpit_y": 521,
+    "armpit_x": [
+      282,
+      446
+    ],
+    "eye_band": [
+      236,
+      316
+    ],
+    "hand_l": [
+      205,
+      558
+    ],
+    "hand_r": [
+      522,
+      558
+    ],
+    "shoulder_l": [
+      304,
+      417
+    ],
+    "shoulder_r": [
+      424,
+      417
+    ]
+  },
+  "regions": {
+    "file": "project/assets/doll/rig/chibi_regions.png",
+    "encoding": "R=G=B=label id; alpha=255 on body, zero outside",
+    "labels": {
+      "head": 1,
+      "face": 2,
+      "eye_band": 3,
+      "ears": 4,
+      "neck": 5,
+      "torso": 6,
+      "upper_arm_l": 7,
+      "upper_arm_r": 8,
+      "forearm_l": 9,
+      "forearm_r": 10,
+      "hand_l": 11,
+      "hand_r": 12,
+      "hips": 13,
+      "thigh_l": 14,
+      "thigh_r": 15,
+      "shin_l": 16,
+      "shin_r": 17,
+      "foot_l": 18,
+      "foot_r": 19
+    },
+    "counts": {
+      "head": 48407,
+      "face": 20364,
+      "eye_band": 25759,
+      "ears": 5485,
+      "neck": 1649,
+      "torso": 22574,
+      "upper_arm_l": 2172,
+      "upper_arm_r": 2146,
+      "forearm_l": 4453,
+      "forearm_r": 4421,
+      "hand_l": 2858,
+      "hand_r": 2917,
+      "hips": 9992,
+      "thigh_l": 4264,
+      "thigh_r": 4233,
+      "shin_l": 3635,
+      "shin_r": 3619,
+      "foot_l": 2013,
+      "foot_r": 2014
+    }
+  },
+  "slots": {
+    "top": {
+      "covers": [
+        "torso"
+      ],
+      "never": [
+        "face",
+        "eye_band",
+        "hand_l",
+        "hand_r"
+      ],
+      "overhang_px": 16,
+      "layers": [
+        "top"
+      ]
+    },
+    "bottom": {
+      "covers": [
+        "hips"
+      ],
+      "never": [
+        "face",
+        "torso"
+      ],
+      "overhang_px": 24,
+      "layers": [
+        "bottom"
+      ]
+    },
+    "dress": {
+      "covers": [
+        "torso",
+        "hips"
+      ],
+      "never": [
+        "face",
+        "eye_band",
+        "hand_l",
+        "hand_r"
+      ],
+      "overhang_px": null,
+      "layers": [
+        "dress"
+      ]
+    },
+    "shoes": {
+      "covers": [
+        "foot_l",
+        "foot_r"
+      ],
+      "per_side": true,
+      "never": [
+        "head",
+        "face",
+        "eye_band",
+        "ears",
+        "neck",
+        "torso",
+        "upper_arm_l",
+        "upper_arm_r",
+        "forearm_l",
+        "forearm_r",
+        "hand_l",
+        "hand_r",
+        "hips",
+        "thigh_l",
+        "thigh_r"
+      ],
+      "overhang_px": 12,
+      "layers": [
+        "shoes"
+      ]
+    },
+    "hair": {
+      "covers": [],
+      "never": [
+        "eye_band"
+      ],
+      "max_share": {
+        "face": 0.03
+      },
+      "front_never": [
+        "neck",
+        "torso"
+      ],
+      "split": "chin_y",
+      "layers": [
+        "hair_back",
+        "hair"
+      ]
+    },
+    "hat": {
+      "covers": [],
+      "anchor": "head_top",
+      "never": [
+        "eye_band"
+      ],
+      "layers": [
+        "hat"
+      ]
+    },
+    "accessory": {
+      "covers": [],
+      "never": [
+        "eye_band"
+      ],
+      "layers": [
+        "accessory"
+      ]
+    }
+  },
+  "skin": {
+    "base": [
+      [
+        252,
+        206,
+        183
+      ]
+    ],
+    "tones": {}
+  },
+  "template": {
+    "file": "prompts/image/doll/template_chibi_front.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "frame_scale": 1.6,
+    "frame_origin": [
+      -75.2,
+      160
+    ],
+    "sha1": "b100159f16ccaa7df4b810585624df33eafeda6d",
+    "sha1_encoding": "uint32be width + uint32be height + row-major RGBA8"
+  }
+}

@@ -9,7 +9,7 @@
  *      the prompt file;
  *   2. a voice clip: audio/voice/manifest.json (speaker and line) spoken by Coqui XTTS v2 with
  *      tools/generate_voice_clips.py; voice/clones/ copies are baked by tools/bake_clone_voices.py;
- *   3. a tool under tools/ (*.py, *.sh, as the Python tool reads them) that names the asset's path
+ *   3. a tool under tools/, including subdirectories (*.py, *.sh, *.mjs) that names the asset's path
  *      (exactly, by a file-name prefix, or, least specific, its folder; ties are all listed);
  *   4. otherwise "not traced", so the gap shows.
  * "Added" is the date of the commit that first added the file. A SOURCES.md without the generated
@@ -68,8 +68,8 @@ function prompts() {
 
 function toolMentions() {
   const out = new Map();
-  const tools = fs.readdirSync(path.join(ROOT, "tools")).filter((n) => /\.(py|sh|mjs)$/.test(n) && !/^test_/.test(n) && isFile(path.join(ROOT, "tools", n)))
-    .map((n) => `tools/${n}`).sort(cmpParts);
+  const tools = rglob(path.join(ROOT, "tools")).filter((f) => /\.(py|sh|mjs)$/.test(f) && !/^test_/.test(path.basename(f)) && isFile(f))
+    .map((f) => rel(f)).sort(cmpParts);
   for (const t of tools) {
     if (t === "tools/gen_sources.py") continue;
     const text = fs.readFileSync(path.join(ROOT, t)).toString("utf8").replace(/\r\n?/g, "\n");
