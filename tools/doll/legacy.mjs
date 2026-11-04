@@ -43,7 +43,11 @@ export function anchor(image,slot,rig,side){const b=bbox(image),cx=b[0]+(b[2]-1)
 function refine(image,initial,slot,rig,regions){const labels=rig.regions.labels,rule=rig.slots[slot]??{},covers=(rule.covers??[]).map(n=>labels[n]),forbidden=(rule.never??[]).map(n=>labels[n]);
  const samples=[];for(let y=0;y<regions.height;y+=4)for(let x=0;x<regions.width;x+=4){const id=regions.data[(y*regions.width+x)*4];if(covers.includes(id)||forbidden.includes(id))samples.push([x,y,covers.includes(id)?1:-1]);}
  const score=t=>{let value=0;for(const [x,y,kind] of samples){const xx=Math.round((x-t.offset[0])/t.scale),yy=Math.round((y-t.offset[1])/t.scale),on=xx>=0&&yy>=0&&xx<image.width&&yy<image.height&&image.data[(yy*image.width+xx)*4+3]>127;value+=on?kind:0;}return value-Math.hypot(t.offset[0]-initial.offset[0],t.offset[1]-initial.offset[1])*2-Math.abs(t.scale/initial.scale-1)*1000;};
- let best=initial,value=score(best);for(const factor of slot==='hair'?[1]:[.98,1,1.02])for(const dx of [-4,0,4])for(const dy of [-4,0,4]){const t={scale:initial.scale*factor,offset:[initial.offset[0]+dx,initial.offset[1]+dy]},v=score(t);if(v>value){best=t;value=v;}}return {...best,coverage_score:value};
+ // Hair keeps its face-opening anchor: on the canon sheet the coverage search moved hair_crown 4 px
+ // right and up, off the body's centre, and its IoU with the sheet-scale truth fell from 0.99 to 0.94
+ // (bd mgv6). Other slots still search the window.
+ const steps=slot==='hair'?[0]:[-4,0,4];
+ let best=initial,value=score(best);for(const factor of slot==='hair'?[1]:[.98,1,1.02])for(const dx of steps)for(const dy of steps){const t={scale:initial.scale*factor,offset:[initial.offset[0]+dx,initial.offset[1]+dy]},v=score(t);if(v>value){best=t;value=v;}}return {...best,coverage_score:value};
 }
 export function placeLegacy(image,item,sheetFit,rig,regions){const a=anchor(image,item.slot,rig,item.side),scale=sheetFit.scale,initial={scale,offset:a.target.map((v,k)=>v-a.source[k]*scale)},fit=refine(image,initial,item.slot,rig,regions),nudge=item.nudge??[0,0];if(item.slot==='shoes')fit.offset[1]=a.target[1]-a.source[1]*fit.scale;
  fit.offset=fit.offset.map((v,k)=>v+nudge[k]);
