@@ -1,0 +1,56 @@
+{
+  "_note": "Shot list for the visual pass (bd wso): Florida, the temple, the ruins and bunker, the UI, dialogue and the interview. Render with tools/shot_walk.sh tools/shots/wso.json <out_dir>; the format is in project/scripts/test/shot_walk.gd. Names are <area>-<scene>-<state>. The seed is the state every shot opens with (island chapter, day 4 morning, two pieces of Forbidden Knowledge recovered and one tactic in the journal); a shot's flags go over it. Overviews frame the whole map; the other map shots are the game's own view (zoom 2, the camera on the player).",
+  "settle": 60,
+  "seed": {
+    "chapter": "island",
+    "_clock": {
+      "day": 4,
+      "phase_index": 0
+    },
+    "forbidden_knowledge": [
+      "fk_wreck_2",
+      "fk_corridor_1"
+    ],
+    "journal": {
+      "negging": [
+        "The Covenant loves an easy girl."
+      ]
+    }
+  },
+  "shots": [
+    {
+      "name": "temple-temple-overview",
+      "scene": "res://scenes/maps/temple.tscn",
+      "steps": [
+        {
+          "do": "camera",
+          "zoom": "fit"
+        }
+      ]
+    },
+    {
+      "name": "hall-great_hall-overview",
+      "scene": "res://scenes/maps/great_hall.tscn",
+      "steps": [
+        {
+          "do": "camera",
+          "zoom": "fit"
+        }
+      ]
+    },
+    {
+      "name": "village-plaza-runner",
+      "scene": "res://scenes/maps/village.tscn",
+      "steps": [
+        {
+          "do": "camera",
+          "zoom": 2,
+          "center": [
+            736,
+            224
+          ]
+        }
+      ]
+    }
+  ]
+}

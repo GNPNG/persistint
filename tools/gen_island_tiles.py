@@ -1,8 +1,9 @@
 """Draw the island tile atlas (32 px map cells, stored at 128 px): village ground, coast, and the temple interior.
 
 Usage: python3 -I tools/gen_island_tiles.py
-Inputs: none (palette hexes from dev/STYLE.md 4.3-4.4; every tile seeds its RNG with the
-crc32 of its name, so the output is the same on every run).
+Inputs: optional project/assets/sheets/temple/temple_tiles_sheet.png; fallback
+palette hexes from dev/STYLE.md 4.3-4.4. Each drawn tile seeds its RNG with the
+crc32 of its name, so the output is the same on every run.
 Outputs:
   project/assets/tiles/island_tiles.png   the atlas
   project/assets/tiles/island_tiles.json  {name: [col, row]} read by tools/build_island_maps.gd
@@ -28,17 +29,22 @@ All cell positions are written to the index ([col, row]); nothing else hard-code
 Multi-cell pieces (rug, dais, doorway, stairs) are drawn whole at supersample and sliced into
 cells named <piece>_<col>_<row>; their cells only line up when placed together.
 
-The canon sheets carry no tiles, so these are drawn in the canon sticker look: flat pastel
+The landed temple sheet supplies the floor, runner, north wall and dais top.
+Other cells, and the fallback when the sheet is absent, use the canon sticker look: flat pastel
 fills, one light highlight edge, soft warm-brown outline #8a5a5a, candy shapes (hearts,
 four-point sparkles). Drawn at 16x (K) and downscaled with LANCZOS to the 4x atlas (O); the
 map builder scales the tile layers by 0.25, so every size in the drawing code is world px.
 """
+import sys
 import json
 import random
 import zlib
 from pathlib import Path
 
 from PIL import Image, ImageDraw
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from build_temple_strips import keyed
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "project/assets/tiles/island_tiles.png"
@@ -545,6 +551,85 @@ def edge(name, mask):
     return Image.fromarray(out, "RGBA").resize((C, C), Image.LANCZOS)
 
 
+TEMPLE_SHEET = ROOT / "project/assets/sheets/temple/temple_tiles_sheet.png"
+# Measured interior rectangles on the native 1672x941 sheet. Exclude the brown
+# perimeter (including its rounded corners); retain the decorative gold edges.
+TEMPLE_CROPS = ((101, 115, 382, 396), (501, 115, 782, 396),
+                (893, 115, 1174, 396), (1290, 115, 1571, 396),
+                (101, 545, 382, 826), (500, 545, 781, 826),
+                (893, 545, 1174, 826), (1290, 545, 1571, 826))
+
+
+def temple_sources(path=None):
+    path = TEMPLE_SHEET if path is None else Path(path)
+    if not path.exists():
+        return None  # original procedural atlas remains a complete fallback
+    sheet = keyed(path)
+    if sheet.size != (1672, 941):
+        raise ValueError("Temple tile sheet changed size; remeasure TEMPLE_CROPS")
+    tiles = [sheet.crop(box).resize((C, C), Image.Resampling.LANCZOS)
+             for box in TEMPLE_CROPS]
+    if any(tile.getchannel("A").getextrema() != (255, 255) for tile in tiles):
+        raise ValueError("Temple interior crop contains keyed background")
+    return tiles
+
+
+def pale_blush(tile):
+    """Lift only the pink marble toward its old pale value; preserve gold inlays.
+
+    Blue exceeds green in blush paint but not in the warm gold decoration. A
+    four-level transition keeps the mask smooth at antialiased inlay edges.
+    """
+    import numpy as np
+    pixels = np.array(tile, dtype=np.float32)
+    rgb = pixels[:, :, :3]
+    mask = np.clip((rgb[:, :, 2] - rgb[:, :, 1]) / 4, 0, 1)
+    rgb += (255 - rgb) * mask[:, :, None] * np.array([.85, .68, .75])
+    return Image.fromarray(np.rint(pixels).astype(np.uint8))
+
+
+def landed_temple(drawn):
+    tiles = temple_sources()
+    if tiles is None:
+        return {}
+    cream, blush, runner, fringe, brick, cap, base, dais = tiles
+    blush = pale_blush(blush)
+    out = {"floor": cream, "floor_alt": cream.copy(), "floor_b": blush,
+           "wall": brick, "wall_cap": cap, "wall_base": base}
+    for name, tile in (("floor_n", cream), ("floor_nb", blush)):
+        shadow = Image.new("RGBA", (C, C))
+        d = ImageDraw.Draw(shadow)
+        for y in range(32):
+            d.line((0, y, C, y), fill=(138, 90, 90, round(60*(1-y/32))))
+        out[name] = Image.alpha_composite(tile, shadow)
+    # A runner spans two map columns. Split the complete strip, rather than
+    # repeating its gold borders at the internal cell boundary.
+    for name, source in (("rug", runner), ("rug_bot", fringe),
+                         ("rug_top", fringe.transpose(Image.Transpose.FLIP_TOP_BOTTOM))):
+        big = source.resize((2*C, PIECES[name][1]*C), Image.Resampling.LANCZOS)
+        for y in range(PIECES[name][1]):
+            for x in range(2):
+                out[f"{name}_{x}_{y}"] = big.crop((x*C, y*C, (x+1)*C, (y+1)*C))
+    # Replace the dais top as a continuous panel, preserving its existing
+    # silhouette and two cream steps. The map still uses the same 4x3 cells.
+    big = Image.new("RGBA", (4*C, 3*C))
+    for y in range(3):
+        for x in range(4):
+            big.paste(drawn[f"dais_{x}_{y}"], (x*C, y*C))
+    big.paste(dais.resize((120*O, 50*O), Image.Resampling.LANCZOS), (4*O, 2*O))
+    # Restore the original emblem at its original centre and supersampling.
+    emblem, ed = canvas(4, 3)
+    W = 4*S
+    ed.ellipse(P(W/2-14, 12, W/2+14, 44), outline=GOLD_LO, width=K*2)
+    ed.ellipse(P(W/2-12.5, 13.5, W/2+12.5, 42.5), outline=GOLD, width=K)
+    heart(ed, W/2, 27, 5.5, "#ffb3c8", RUG_LO)
+    big = Image.alpha_composite(big, emblem.resize(big.size, Image.Resampling.LANCZOS))
+    for y in range(3):
+        for x in range(4):
+            out[f"dais_{x}_{y}"] = big.crop((x*C, y*C, (x+1)*C, (y+1)*C))
+    return out
+
+
 def cells():
     """name -> 32x32 image, for every single tile and every piece cell."""
     out = {}
@@ -556,6 +641,7 @@ def cells():
     for n in WALK + SOLID:
         if n not in out:
             out[n] = draw(n)
+    out.update(landed_temple(out))
     return out
 
 
