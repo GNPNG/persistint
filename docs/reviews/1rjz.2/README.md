@@ -54,3 +54,8 @@ pixels in its 277-pixel outline ring. White unmix stops at the opaque outline so
 does not cross into enclosed white content; boundary foreground estimation prefers
 nearby dark outline samples over partially blended pixels. These are synthetic
 results, not the missing JPEG acceptance.
+
+Validation run: full `tools/run_tests.sh` reports **67/68** in 281 seconds; only
+`test_quotes_vv` fails on the known encrypted private design file. Final targeted
+`tools/run_tests.sh test_doll_tools` passes all three Node regression files (7 seconds)
+after the boundary/segmentation refinements. No production art was regenerated.
