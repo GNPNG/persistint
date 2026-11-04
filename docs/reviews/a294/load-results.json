@@ -1,0 +1,385 @@
+{
+  "before": {
+    "phase": "before",
+    "runs": 20,
+    "passes": 20,
+    "cpu_workers": 2,
+    "godot_concurrency": 2,
+    "results": [
+      {
+        "run": 1,
+        "exit": 0,
+        "pass": true,
+        "seconds": 16.04,
+        "failures": []
+      },
+      {
+        "run": 2,
+        "exit": 0,
+        "pass": true,
+        "seconds": 16.13,
+        "failures": []
+      },
+      {
+        "run": 3,
+        "exit": 0,
+        "pass": true,
+        "seconds": 15.53,
+        "failures": []
+      },
+      {
+        "run": 4,
+        "exit": 0,
+        "pass": true,
+        "seconds": 15.46,
+        "failures": []
+      },
+      {
+        "run": 5,
+        "exit": 0,
+        "pass": true,
+        "seconds": 19.6,
+        "failures": []
+      },
+      {
+        "run": 6,
+        "exit": 0,
+        "pass": true,
+        "seconds": 19.57,
+        "failures": []
+      },
+      {
+        "run": 7,
+        "exit": 0,
+        "pass": true,
+        "seconds": 19.57,
+        "failures": []
+      },
+      {
+        "run": 8,
+        "exit": 0,
+        "pass": true,
+        "seconds": 19.28,
+        "failures": []
+      },
+      {
+        "run": 9,
+        "exit": 0,
+        "pass": true,
+        "seconds": 17.23,
+        "failures": []
+      },
+      {
+        "run": 10,
+        "exit": 0,
+        "pass": true,
+        "seconds": 17.08,
+        "failures": []
+      },
+      {
+        "run": 11,
+        "exit": 0,
+        "pass": true,
+        "seconds": 17.84,
+        "failures": []
+      },
+      {
+        "run": 12,
+        "exit": 0,
+        "pass": true,
+        "seconds": 17.8,
+        "failures": []
+      },
+      {
+        "run": 13,
+        "exit": 0,
+        "pass": true,
+        "seconds": 19.92,
+        "failures": []
+      },
+      {
+        "run": 14,
+        "exit": 0,
+        "pass": true,
+        "seconds": 19.77,
+        "failures": []
+      },
+      {
+        "run": 15,
+        "exit": 0,
+        "pass": true,
+        "seconds": 16.36,
+        "failures": []
+      },
+      {
+        "run": 16,
+        "exit": 0,
+        "pass": true,
+        "seconds": 16.12,
+        "failures": []
+      },
+      {
+        "run": 17,
+        "exit": 0,
+        "pass": true,
+        "seconds": 13.41,
+        "failures": []
+      },
+      {
+        "run": 18,
+        "exit": 0,
+        "pass": true,
+        "seconds": 13.71,
+        "failures": []
+      },
+      {
+        "run": 19,
+        "exit": 0,
+        "pass": true,
+        "seconds": 13.54,
+        "failures": []
+      },
+      {
+        "run": 20,
+        "exit": 0,
+        "pass": true,
+        "seconds": 13.2,
+        "failures": []
+      }
+    ],
+    "available_cpus": 5
+  },
+  "final": {
+    "phase": "final",
+    "runs": 20,
+    "passes": 20,
+    "cpu_workers": 2,
+    "godot_concurrency": 2,
+    "results": [
+      {
+        "run": 1,
+        "exit": 0,
+        "pass": true,
+        "seconds": 15.4,
+        "failures": [],
+        "walk_states": [
+          "PASS Daughter: walk state observed within 5 s (visible true, leaving true, moved 10.1 px, animation idle_side)",
+          "PASS Father: walk state observed within 5 s (visible true, leaving true, moved 10.7 px, animation idle_side)"
+        ]
+      },
+      {
+        "run": 2,
+        "exit": 0,
+        "pass": true,
+        "seconds": 15.5,
+        "failures": [],
+        "walk_states": [
+          "PASS Daughter: walk state observed within 5 s (visible true, leaving true, moved 10.1 px, animation idle_side)",
+          "PASS Father: walk state observed within 5 s (visible true, leaving true, moved 14.0 px, animation idle_side)"
+        ]
+      },
+      {
+        "run": 3,
+        "exit": 0,
+        "pass": true,
+        "seconds": 13.7,
+        "failures": [],
+        "walk_states": [
+          "PASS Daughter: walk state observed within 5 s (visible true, leaving true, moved 10.4 px, animation idle_side)",
+          "PASS Father: walk state observed within 5 s (visible true, leaving true, moved 12.5 px, animation idle_side)"
+        ]
+      },
+      {
+        "run": 4,
+        "exit": 0,
+        "pass": true,
+        "seconds": 15.62,
+        "failures": [],
+        "walk_states": [
+          "PASS Daughter: walk state observed within 5 s (visible true, leaving true, moved 10.2 px, animation idle_side)",
+          "PASS Father: walk state observed within 5 s (visible true, leaving true, moved 13.7 px, animation idle_side)"
+        ]
+      },
+      {
+        "run": 5,
+        "exit": 0,
+        "pass": true,
+        "seconds": 15.49,
+        "failures": [],
+        "walk_states": [
+          "PASS Daughter: walk state observed within 5 s (visible true, leaving true, moved 10.5 px, animation idle_side)",
+          "PASS Father: walk state observed within 5 s (visible true, leaving true, moved 11.6 px, animation idle_side)"
+        ]
+      },
+      {
+        "run": 6,
+        "exit": 0,
+        "pass": true,
+        "seconds": 15.38,
+        "failures": [],
+        "walk_states": [
+          "PASS Daughter: walk state observed within 5 s (visible true, leaving true, moved 9.8 px, animation idle_side)",
+          "PASS Father: walk state observed within 5 s (visible true, leaving true, moved 13.0 px, animation idle_side)"
+        ]
+      },
+      {
+        "run": 7,
+        "exit": 0,
+        "pass": true,
+        "seconds": 15.18,
+        "failures": [],
+        "walk_states": [
+          "PASS Daughter: walk state observed within 5 s (visible true, leaving true, moved 10.2 px, animation idle_side)",
+          "PASS Father: walk state observed within 5 s (visible true, leaving true, moved 11.4 px, animation idle_side)"
+        ]
+      },
+      {
+        "run": 8,
+        "exit": 0,
+        "pass": true,
+        "seconds": 15.0,
+        "failures": [],
+        "walk_states": [
+          "PASS Daughter: walk state observed within 5 s (visible true, leaving true, moved 10.4 px, animation idle_side)",
+          "PASS Father: walk state observed within 5 s (visible true, leaving true, moved 12.5 px, animation idle_side)"
+        ]
+      },
+      {
+        "run": 9,
+        "exit": 0,
+        "pass": true,
+        "seconds": 17.52,
+        "failures": [],
+        "walk_states": [
+          "PASS Daughter: walk state observed within 5 s (visible true, leaving true, moved 10.3 px, animation idle_side)",
+          "PASS Father: walk state observed within 5 s (visible true, leaving true, moved 13.9 px, animation idle_side)"
+        ]
+      },
+      {
+        "run": 10,
+        "exit": 0,
+        "pass": true,
+        "seconds": 16.35,
+        "failures": [],
+        "walk_states": [
+          "PASS Daughter: walk state observed within 5 s (visible true, leaving true, moved 9.6 px, animation idle_side)",
+          "PASS Father: walk state observed within 5 s (visible true, leaving true, moved 11.5 px, animation idle_side)"
+        ]
+      },
+      {
+        "run": 11,
+        "exit": 0,
+        "pass": true,
+        "seconds": 15.21,
+        "failures": [],
+        "walk_states": [
+          "PASS Daughter: walk state observed within 5 s (visible true, leaving true, moved 10.2 px, animation idle_side)",
+          "PASS Father: walk state observed within 5 s (visible true, leaving true, moved 11.3 px, animation idle_side)"
+        ]
+      },
+      {
+        "run": 12,
+        "exit": 0,
+        "pass": true,
+        "seconds": 14.81,
+        "failures": [],
+        "walk_states": [
+          "PASS Daughter: walk state observed within 5 s (visible true, leaving true, moved 10.3 px, animation idle_side)",
+          "PASS Father: walk state observed within 5 s (visible true, leaving true, moved 12.0 px, animation idle_side)"
+        ]
+      },
+      {
+        "run": 13,
+        "exit": 0,
+        "pass": true,
+        "seconds": 13.78,
+        "failures": [],
+        "walk_states": [
+          "PASS Daughter: walk state observed within 5 s (visible true, leaving true, moved 10.0 px, animation idle_side)",
+          "PASS Father: walk state observed within 5 s (visible true, leaving true, moved 18.7 px, animation idle_side)"
+        ]
+      },
+      {
+        "run": 14,
+        "exit": 0,
+        "pass": true,
+        "seconds": 14.74,
+        "failures": [],
+        "walk_states": [
+          "PASS Daughter: walk state observed within 5 s (visible true, leaving true, moved 9.9 px, animation idle_side)",
+          "PASS Father: walk state observed within 5 s (visible true, leaving true, moved 11.2 px, animation idle_side)"
+        ]
+      },
+      {
+        "run": 15,
+        "exit": 0,
+        "pass": true,
+        "seconds": 17.32,
+        "failures": [],
+        "walk_states": [
+          "PASS Daughter: walk state observed within 5 s (visible true, leaving true, moved 10.3 px, animation idle_side)",
+          "PASS Father: walk state observed within 5 s (visible true, leaving true, moved 12.2 px, animation idle_side)"
+        ]
+      },
+      {
+        "run": 16,
+        "exit": 0,
+        "pass": true,
+        "seconds": 16.27,
+        "failures": [],
+        "walk_states": [
+          "PASS Daughter: walk state observed within 5 s (visible true, leaving true, moved 10.2 px, animation idle_side)",
+          "PASS Father: walk state observed within 5 s (visible true, leaving true, moved 11.0 px, animation idle_side)"
+        ]
+      },
+      {
+        "run": 17,
+        "exit": 0,
+        "pass": true,
+        "seconds": 14.99,
+        "failures": [],
+        "walk_states": [
+          "PASS Daughter: walk state observed within 5 s (visible true, leaving true, moved 10.0 px, animation idle_side)",
+          "PASS Father: walk state observed within 5 s (visible true, leaving true, moved 19.4 px, animation idle_side)"
+        ]
+      },
+      {
+        "run": 18,
+        "exit": 0,
+        "pass": true,
+        "seconds": 14.81,
+        "failures": [],
+        "walk_states": [
+          "PASS Daughter: walk state observed within 5 s (visible true, leaving true, moved 10.4 px, animation idle_side)",
+          "PASS Father: walk state observed within 5 s (visible true, leaving true, moved 11.7 px, animation idle_side)"
+        ]
+      },
+      {
+        "run": 19,
+        "exit": 0,
+        "pass": true,
+        "seconds": 13.6,
+        "failures": [],
+        "walk_states": [
+          "PASS Daughter: walk state observed within 5 s (visible true, leaving true, moved 9.9 px, animation idle_side)",
+          "PASS Father: walk state observed within 5 s (visible true, leaving true, moved 11.1 px, animation idle_side)"
+        ]
+      },
+      {
+        "run": 20,
+        "exit": 0,
+        "pass": true,
+        "seconds": 15.01,
+        "failures": [],
+        "walk_states": [
+          "PASS Daughter: walk state observed within 5 s (visible true, leaving true, moved 10.3 px, animation idle_side)",
+          "PASS Father: walk state observed within 5 s (visible true, leaving true, moved 12.8 px, animation idle_side)"
+        ]
+      }
+    ],
+    "available_cpus": 5
+  },
+  "base_commit": "9a6dbf8",
+  "baseline_test_sha256": "fb2c63435e219b1e47df8f71edbfbc1bd22d932f15ef41676f12f723e23efda4",
+  "revised_test_sha256": "a0c7b6b21622d466be93f27f59d79dd28c19ea64649c27861b48e8881f34563a"
+}
