@@ -2,7 +2,7 @@
 # Provision the development-tier Gitea on srv: one LXD container, the Gitea binary under systemd,
 # PostgreSQL on an existing server, HTTP on the LAN. Run ON srv as a user in the lxd group.
 #
-#   DB_HOST=pg.example DB_PASS=... DOMAIN=forge.example.com ./provision.sh
+#   DB_HOST=pg.example DB_PASS=... NAS_HOST=<nas-ip> DOMAIN=forge.example.com ./provision.sh
 #
 # Idempotent where it matters: re-running updates the binary and app.ini but keeps data.
 # Everything the author decides is an environment variable with a default below.
@@ -18,7 +18,7 @@ DOMAIN="${DOMAIN:-forge.gnomatix.com}"        # the LAN DNS name the author adds
 HTTP_PORT="${HTTP_PORT:-3000}"
 SSH_PORT="${SSH_PORT:-2222}"                  # Gitea's built-in SSH server (remotes stay HTTPS by rule)
 ROOT_URL="${ROOT_URL:-https://$DOMAIN/}"       # what browsers see: HTTPS terminated by the NAS nginx, plain HTTP on the LAN
-PROXY_IP="${PROXY_IP:-192.168.1.83}"          # the reverse proxy (NAS), trusted for X-Forwarded-For
+NAS_HOST="${NAS_HOST:?set NAS_HOST to the NAS (reverse proxy) address, trusted for X-Forwarded-For}"
 LAN_SSH_HOST="${LAN_SSH_HOST:-srv.gnomatix.com}" # built-in SSH is LAN-only (remotes are HTTPS by rule)
 DB_TYPE="${DB_TYPE:-postgres}"
 DB_HOST="${DB_HOST:?set DB_HOST to the PostgreSQL host[:port] (the Atlassian tools server)}"
@@ -130,7 +130,7 @@ SECRET_KEY = $SECRET_KEY
 INTERNAL_TOKEN = $INTERNAL_TOKEN
 PASSWORD_HASH_ALGO = pbkdf2
 ; the NAS nginx terminates TLS; trust its forwarded headers so logs and rate limits see real clients
-REVERSE_PROXY_TRUSTED_PROXIES = 127.0.0.1,::1,$PROXY_IP
+REVERSE_PROXY_TRUSTED_PROXIES = 127.0.0.1,::1,$NAS_HOST
 REVERSE_PROXY_LIMIT = 1
 
 [migrations]
