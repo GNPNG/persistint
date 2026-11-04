@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {greenMatte,whiteMatte} from './lib/matte.mjs';
 import {resample,readImage} from './lib/image.mjs';
-import {inspect} from './intake.mjs';
+import {inspect,alphaMetrics} from './intake.mjs';
 function blank(w,h,color=[0,255,0,255]){return {width:w,height:h,data:Buffer.from(Array.from({length:w*h},()=>color).flat())};}
 function rect(im,x,y,w,h,color){for(let yy=y;yy<y+h;yy++)for(let xx=x;xx<x+w;xx++)im.data.set(color,(yy*im.width+xx)*4);}
 const edge=blank(258,3);for(let x=1;x<=256;x++){const a=(x-1)/255;edge.data.set([Math.round(a*100),Math.round(a*60+(1-a)*255),Math.round(a*40),255],(258+x)*4);}
@@ -17,4 +17,10 @@ const border=blank(50,50);rect(border,0,10,20,20,[100,60,40,255]);assert.ok(insp
 const gradient=blank(50,50);for(let y=0;y<50;y++)for(let x=0;x<50;x++)gradient.data[(y*50+x)*4+1]=155+x*2;assert.ok(!inspect(gradient).pass);
 const leaf=blank(50,50);rect(leaf,10,10,30,30,[20,170,30,255]);assert.ok(inspect(leaf).reasons.includes('green-interior-content'));
 console.log('PASS gradient, touching, edge-contact and green-leaf failures');
+
+// Synthetic white-backed curved outline: genuine partial coverage, not a binary mask.
+const circle=blank(128,128,[255,255,255,255]);
+for(let y=0;y<128;y++)for(let x=0;x<128;x++){const a=Math.max(0,Math.min(1,49.7-Math.hypot(x-63.17,y-64.33)));for(let c=0;c<3;c++)circle.data[(y*128+x)*4+c]=Math.round(a*[100,60,40][c]+(1-a)*255);}
+const circleMetrics=alphaMetrics(whiteMatte(circle));assert.ok(circleMetrics.fringeRatio<=.02);assert.ok(circleMetrics.alphaLevels>=64);
+console.log('PASS synthetic white curved outline',JSON.stringify(circleMetrics));
 console.log('RESULT: PASS');

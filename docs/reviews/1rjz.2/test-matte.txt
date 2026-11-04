@@ -6,4 +6,5 @@ PASS delivered component count char_daughter_layers 5 intake reasons: []
 PASS delivered component count char_mother_layers 7 intake reasons: [ 'background-not-flat-or-green-content' ]
 PASS delivered component count host_oprah_garments 4 intake reasons: []
 PASS gradient, touching, edge-contact and green-leaf failures
+PASS synthetic white curved outline {"outlineRingPixels":277,"lightRingPixels":0,"fringeRatio":0,"alphaLevels":181,"semiTransparentInterior":0,"greenExcessPixels":0}
 RESULT: PASS

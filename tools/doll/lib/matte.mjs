@@ -39,11 +39,12 @@ export function whiteMatte(image,{band=4,whiteThreshold=235}={}) {
   }
   for(let p=0;p<n;p++){
     if(!boundary[p])continue;
-    const x=p%w,y=Math.floor(p/w);let best=null,bestDistance=Infinity;
+    const x=p%w,y=Math.floor(p/w);let best=null,bestScore=Infinity;
     for(let dy=-band;dy<=band;dy++)for(let dx=-band;dx<=band;dx++){
       if(x+dx<0||x+dx>=w||y+dy<0||y+dy>=h)continue;const q=(y+dy)*w+x+dx;
       const rgb=image.data.subarray(q*4,q*4+3),d=dx*dx+dy*dy;
-      if(Math.max(...rgb)<175&&d<bestDistance){best=[...rgb];bestDistance=d;}
+      const score=(rgb[0]+rgb[1]+rgb[2])*1000+d;
+      if(Math.max(...rgb)<175&&score<bestScore){best=[...rgb];bestScore=score;}
     }
     if(!best){if(outside[p])data[p*4+3]=0;continue;}
     const c=[...image.data.subarray(p*4,p*4+3)],v=best.map(f=>255-f);

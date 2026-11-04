@@ -48,3 +48,9 @@ The wrapper was fault-tested with a temporary newly discovered test that exits 7
 it reports that file and exits 1. The fixture is removed and not committed. The clean
 wrapper rerun passes. Native alpha identity and exact palette preservation are tested;
 resampled RGB tolerances are two channel values.
+
+A synthetic white-backed curved outline produces 181 alpha levels and zero light
+pixels in its 277-pixel outline ring. White unmix stops at the opaque outline so it
+does not cross into enclosed white content; boundary foreground estimation prefers
+nearby dark outline samples over partially blended pixels. These are synthetic
+results, not the missing JPEG acceptance.
