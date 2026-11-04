@@ -4,7 +4,7 @@ Status: active
 Owner: Brett Whitty
 Applies to: game projects (any project that renders images, video or music with generative models)
 Last reviewed: 2026-10-23
-Related SOPs: SOP-02 (02-content-from-sources.md: names and vocabulary come from the same sources and rules); SOP-04 (04-generative-render-pipeline.md: rendering, tracking, retries, sync)
+Related SOPs: SOP-02 (02-content-from-sources.md: names and vocabulary come from the same sources and rules); SOP-04 (04-generative-render-pipeline.md: rendering, tracking, retries, sync); SOP-17 (17-asset-generation-methods.md: the style bible and prompts feed each method's skill)
 
 ## 1. Purpose
 

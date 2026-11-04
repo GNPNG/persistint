@@ -4,7 +4,7 @@ Status: draft
 Owner: Brett Whitty
 Applies to: game projects (any project with scripted spoken lines and a runtime that can play audio files)
 Last reviewed: 2026-10-23
-Related SOPs: SOP-04 (04-generative-render-pipeline.md: background rendering, tracking and retries); SOP-06 (06-quote-sourcing-vv.md: sources and verifies the real-person quotes that clips speak)
+Related SOPs: SOP-04 (04-generative-render-pipeline.md: background rendering, tracking and retries); SOP-06 (06-quote-sourcing-vv.md: sources and verifies the real-person quotes that clips speak); SOP-17 (17-asset-generation-methods.md: voice methods are verified and approved like any asset method)
 
 ## 1. Purpose
 

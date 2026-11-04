@@ -4,7 +4,7 @@ Status: draft
 Owner: Brett Whitty
 Applies to: any project that renders images, video or music from a set of prompt files
 Last reviewed: 2026-10-24
-Related SOPs: SOP-03 (03-asset-style-bible-and-prompts.md: its compiled leaf prompts and pre-flight checker feed this one); SOP-05 (05-voice-cloning-pipeline.md: voice clips use the same background rendering, tracking and retry approach); SOP-08 (08-session-hygiene-tracking.md: generation-gap tickets and their report at each standup); SOP-12 (12-team-roles-and-dispatch.md: who sends prompts in which browser, who harvests, the wait between them)
+Related SOPs: SOP-03 (03-asset-style-bible-and-prompts.md: its compiled leaf prompts and pre-flight checker feed this one); SOP-05 (05-voice-cloning-pipeline.md: voice clips use the same background rendering, tracking and retry approach); SOP-08 (08-session-hygiene-tracking.md: generation-gap tickets and their report at each standup); SOP-12 (12-team-roles-and-dispatch.md: who sends prompts in which browser, who harvests, the wait between them); SOP-17 (17-asset-generation-methods.md: a method is verified and approved before this pipeline runs a batch)
 
 ## 1. Purpose
 
