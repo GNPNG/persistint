@@ -12,16 +12,16 @@ const Flashbacks := preload("res://scripts/chapters/flashbacks.gd")
 
 var data: Dictionary = {}
 var queue: Array = []
-var current: Dictionary = {}
+var slots: Array[Dictionary] = []
+var resolved := 0
 var station := ""
 var failed: Array[String] = []
 var tasks_done: Array[String] = []
 var score := 0
-var time_left := 0.0
 var running := false
 
-var _shout: Label
-var _timer_bar: ProgressBar
+var _shouts: Array[Label] = []
+var _bars: Array[ProgressBar] = []
 var _ship: Control
 var _tasks: VBoxContainer
 var _controls: GridContainer
@@ -37,7 +37,7 @@ func _ready() -> void:
 	_build_ui()
 	var names := station_names()
 	go_to(names[0] if not names.is_empty() else "")
-	_next_command()
+	fill_slots()
 
 
 func captain_name() -> String:
@@ -101,14 +101,19 @@ func _build_ui() -> void:
 	captain.text = captain_name()
 	captain.theme_type_variation = &"SubtleLabel"
 	head_box.add_child(captain)
-	_shout = Label.new()
-	_shout.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_shout.add_theme_font_size_override("font_size", 11)
-	head_box.add_child(_shout)
-	_timer_bar = ProgressBar.new()
-	_timer_bar.show_percentage = false
-	_timer_bar.custom_minimum_size = Vector2(0, 8)
-	head_box.add_child(_timer_bar)
+	for i in 2:     # one shout line and timer per command slot; slot 1 is hidden until it opens
+		var shout := Label.new()
+		shout.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		shout.add_theme_font_size_override("font_size", 11)
+		shout.visible = false
+		head_box.add_child(shout)
+		_shouts.append(shout)
+		var bar := ProgressBar.new()
+		bar.show_percentage = false
+		bar.custom_minimum_size = Vector2(0, 8)
+		bar.visible = false
+		head_box.add_child(bar)
+		_bars.append(bar)
 	_ship = Control.new()
 	_ship.custom_minimum_size = Vector2(0, 120)
 	_ship.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -187,43 +192,124 @@ func do_task(id: String) -> void:
 			return
 
 
-func _next_command() -> void:
-	if queue.is_empty():
-		_finish()
-		return
-	current = queue.pop_back()
-	time_left = float(data.get("seconds_per_command", 6.0))
-	_timer_bar.max_value = time_left
-	_shout.text = "%s: %s" % [data.get("first_mate", ""), current["text"]]
-	Voice.speak(current["text"], 1.0, data.get("first_mate", ""))
-	running = true
+## Command time after n resolved commands: falls linearly from seconds_per_command to
+## seconds_min over commands_to_land, never below seconds_min.
+func seconds_for(n: int) -> float:
+	var start := float(data.get("seconds_per_command", 8.0))
+	var low := float(data.get("seconds_min", 4.0))
+	var span := maxf(1.0, float(data.get("commands_to_land", 24)))
+	return lerpf(start, low, clampf(float(n) / span, 0.0, 1.0))
+
+
+## How many commands run at once after n are resolved.
+func active_slot_count(n: int) -> int:
+	return 2 if n >= int(data.get("two_at_once_after", 8)) else 1
+
+
+## Slot 0 is the first mate's voice, slot 1 the captain's.
+func _speaker(i: int) -> String:
+	return str(data.get("first_mate", "")) if i == 0 else captain_name()
+
+
+## The next command from the queue (reshuffled from all commands when it runs dry), skipping
+## any whose control another slot already holds.
+func _pick(taken: Array[String]) -> Dictionary:
+	var held: Array = []
+	var picked: Dictionary = {}
+	var tries: int = 2 * data.get("commands", []).size() + 2
+	while picked.is_empty() and tries > 0:
+		tries -= 1
+		if queue.is_empty():
+			queue = data.get("commands", []).duplicate()
+			queue.shuffle()
+			if queue.is_empty():
+				break
+		var c: Dictionary = queue.pop_back()
+		if taken.has(c["control"]):
+			held.append(c)
+		else:
+			picked = c
+	queue.append_array(held)
+	return picked
+
+
+## Open slots up to active_slot_count(resolved) and give every empty slot a command.
+func fill_slots() -> void:
+	var want := active_slot_count(resolved)
+	while slots.size() < want:
+		slots.append({"who": _speaker(slots.size()), "cmd": {}, "time_left": 0.0, "max": 0.0})
+	for i in slots.size():
+		if not slots[i]["cmd"].is_empty():
+			continue
+		var taken: Array[String] = []
+		for j in slots.size():
+			if j != i and not slots[j]["cmd"].is_empty():
+				taken.append(slots[j]["cmd"]["control"])
+		var cmd := _pick(taken)
+		if cmd.is_empty():
+			continue
+		var secs := seconds_for(resolved)
+		slots[i]["cmd"] = cmd
+		slots[i]["time_left"] = secs
+		slots[i]["max"] = secs
+		Voice.speak(cmd["text"], 1.0, slots[i]["who"])
+	running = not slots.is_empty()
+	_show_slots()
 	_update_status()
+
+
+func _show_slots() -> void:
+	for i in _shouts.size():
+		var open: bool = i < slots.size() and not slots[i]["cmd"].is_empty()
+		_shouts[i].visible = open
+		_bars[i].visible = open
+		if open:
+			_shouts[i].text = "%s: %s" % [slots[i]["who"], slots[i]["cmd"]["text"]]
+			_bars[i].max_value = slots[i]["max"]
+			_bars[i].value = slots[i]["time_left"]
 
 
 func _process(delta: float) -> void:
 	if not running:
 		return
-	time_left -= delta
-	_timer_bar.value = time_left
-	if time_left <= 0.0:
-		_system_fails()
+	for i in slots.size():
+		if not running:
+			return
+		slots[i]["time_left"] -= delta
+		_bars[i].value = slots[i]["time_left"]
+		if slots[i]["time_left"] <= 0.0:
+			_slot_times_out(i)
 
 
-## Press a control at the current station.
+## Press a control at the current station; it resolves the first slot that asks for it.
 func press(control: String) -> void:
 	if not running or failed.has(station):
 		return
-	if station == current.get("station", "") and control == current.get("control", ""):
-		score += 1
-		_next_command()
+	for i in slots.size():
+		var cmd: Dictionary = slots[i]["cmd"]
+		if station == cmd.get("station", "") and control == cmd.get("control", ""):
+			score += 1
+			_resolve(i)
+			return
 
 
-func _system_fails() -> void:
-	var where: String = current.get("station", "")
+## A command resolved, pressed or timed out: the next one fills its slot, or the ship lands.
+func _resolve(i: int) -> void:
+	resolved += 1
+	slots[i]["cmd"] = {}
+	if resolved >= int(data.get("commands_to_land", 24)):
+		_finish()
+	else:
+		fill_slots()
+
+
+## A slot's time ran out: its station's system fails.
+func _slot_times_out(i: int) -> void:
+	var where: String = slots[i]["cmd"].get("station", "")
 	if not failed.has(where):
 		failed.append(where)
 	go_to(station)
-	_next_command()
+	_resolve(i)
 
 
 func _update_status() -> void:

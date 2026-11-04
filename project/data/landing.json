@@ -3,6 +3,15 @@
   "captain": "kate",
   "first_mate": "First Mate",
   "seconds_per_command": 8.0,
+  "seconds_min": 4.0,
+  "commands_to_land": 24,
+  "two_at_once_after": 8,
+  "rough_max_failed": 3,
+  "end_card": {
+    "smooth": "",
+    "rough": "",
+    "hard": ""
+  },
   "return_map": "res://scenes/maps/village.tscn",
   "commands": [
     {
