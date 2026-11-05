@@ -83,6 +83,7 @@ WORKER_NAME="$(cfg '.worker_name | select(. != "")')"
 TITLE="$(cfg '.title | select(. != "")')"
 BUILD_BUCKET="$(jq -r '.build_bucket // ""' "$CONFIG")"
 THREAD_SUPPORT="$(jq -r '.thread_support // false' "$CONFIG")"
+ITCH_URL="$(jq -r '.itch_url // ""' "$CONFIG")"
 mapfile -t OVERSIZED < <(jq -r '.oversized_files // [] | .[]' "$CONFIG")
 # oversized_mode: "r2" uploads oversized files to R2 (build_bucket); "gzip" ships each as a
 # static <file>.gz (which must fit the 25 MiB limit) and the worker serves it with
@@ -308,10 +309,28 @@ if [[ -n "$BUILD_ID" ]]; then
     <p class="fineprint" id="stage-note">Loads about 10 MB. Click inside the game once to turn on sound.
       <a href="'"$GAME_URL"'">Open the game in its own window</a> &middot;
       <button class="linkish" id="fullscreen" type="button">Full screen</button></p>'
+  # PW-14: no WebGL 2, or a phone/tablet (the web build targets desktop browsers), gets a
+  # "can't run this" message instead of the start button; downloads link to itch_url when set.
+  if [[ -n "$ITCH_URL" ]]; then
+    DOWNLOADS=' Downloads for Windows, macOS and Linux are on <a href=\"'"$ITCH_URL"'\">itch.io</a>.'
+  else
+    DOWNLOADS=' Downloads for Windows, macOS and Linux are coming.'
+  fi
   SCRIPT='<script>
 (function () {
   var stage = document.getElementById("stage");
   var frame = null;
+  var gl2 = false;
+  try { gl2 = !!document.createElement("canvas").getContext("webgl2"); } catch (e) {}
+  var mobile = (navigator.userAgentData && navigator.userAgentData.mobile) ||
+    /Android|iPhone|iPad|iPod|Mobi/i.test(navigator.userAgent) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  if (!gl2 || mobile) {
+    stage.className = "stage stage-empty";
+    stage.innerHTML = "<p>Your browser can&rsquo;t run this game. It needs a desktop browser with WebGL 2 " +
+      "(current Chrome, Edge, Firefox or Safari on a computer).'"$DOWNLOADS"'</p>";
+    return;
+  }
   function start() {
     frame = document.createElement("iframe");
     frame.src = "'"$GAME_URL"'";
