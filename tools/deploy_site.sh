@@ -300,13 +300,17 @@ fi
 log "Writing site/public/play/index.html and site/public/_redirects"
 if [[ -n "$BUILD_ID" ]]; then
   GAME_URL="/play/$BUILD_ID/index.html"
+  # PW-04 download-size warning, measured from the build folder (what the browser fetches;
+  # the engine is served gzipped) instead of a fixed figure.
+  LOAD_MB="$(du -sm "$PLAY/$BUILD_ID" | cut -f1)"
   STAGE='    <div class="stage" id="stage">
       <button class="stage-start" id="start" type="button" aria-describedby="stage-note">
         <img src="/img/banner-adventure-in-paradise-1600.png" width="1600" height="791" alt="">
         <span class="btn btn-play btn-big"><svg aria-hidden="true" viewBox="0 0 24 24" width="22" height="22"><path d="M7 4.5v15l12-7.5z" fill="currentColor"/></svg> Start the game</span>
       </button>
     </div>
-    <p class="fineprint" id="stage-note">Loads about 10 MB. Click inside the game once to turn on sound.
+    <p class="fineprint" id="stage-note">Loads about '"$LOAD_MB"' MB. Works in desktop Chrome, Edge, Firefox and Safari
+      (WebGL 2); not on phones or tablets yet. Click inside the game once to turn on sound.
       <a href="'"$GAME_URL"'">Open the game in its own window</a> &middot;
       <button class="linkish" id="fullscreen" type="button">Full screen</button></p>'
   # PW-14: no WebGL 2, or a phone/tablet (the web build targets desktop browsers), gets a
