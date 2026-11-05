@@ -11,7 +11,7 @@ game: project/audio/stingers/name_it_sting.mp3
 
 ## Prompt
 
-Instrumental video-game music for a kawaii game: one short, bright revelation phrase, a soft-attack acoustic celesta and glockenspiel duet, pure, innocent, heartwarming major-key joy. Two tender celesta notes open a quick rising celesta-and-glockenspiel arpeggio with delicate high overtones that resolves on a single clear, warm major chord and rings out naturally. Sparse and gentle, no drums, no bass, no pad, no vocals. Instrumental only.
+Instrumental only, no vocals. Instrumental video-game music for a kawaii game: one short, bright revelation phrase, a soft-attack acoustic celesta and glockenspiel duet, pure, innocent, heartwarming major-key joy. Two tender celesta notes open a quick rising celesta-and-glockenspiel arpeggio with delicate high overtones that resolves on a single clear, warm major chord and rings out naturally. Sparse and gentle, no drums, no bass, no pad, no vocals. Instrumental only.
 
 Spec: instrumental only; a short non-looping cue of 4 seconds with a clean ending, soft attack in the first 50 ms; about -14 LUFS integrated; MP3 320 kbps.
 
