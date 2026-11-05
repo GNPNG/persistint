@@ -15,13 +15,18 @@ echo "GC-11 is done when every row is replaced or its Decision reads \"kept on p
 echo
 echo "## Placeholder art with no canon replacement"
 echo
-echo "| File | Used in data | Decision |"
+echo "| File | Referenced by (game, then tests) | Decision |"
 echo "|---|---|---|"
 for p in project/assets/placeholder/*.png; do
   f=$(basename "$p"); n=${f%.png}
   [ -f "project/assets/canon/$f" ] && continue
-  used=$(grep -rl "\"$n\"" project/data 2>/dev/null | sed 's|project/data/||' | tr '\n' ' ')
-  echo "| \`$f\` | ${used:-none found} | open |"
+  refs=$(grep -rlw "$n" project --include=*.gd --include=*.tscn --include=*.json --include=*.tres 2>/dev/null | sed 's|^project/||')
+  game=$(printf '%s\n' "$refs" | grep -v '^tests/' | grep . | tr '\n' ' ')
+  tests=$(printf '%s\n' "$refs" | grep '^tests/' | grep -c . || true)
+  if [ -n "$game" ]; then used="$game"
+  elif [ "$tests" -gt 0 ]; then used="tests only ($tests)"
+  else used="nothing: not shown in the game"; fi
+  echo "| \`$f\` | $used | open |"
 done
 echo
 echo "## Props showing fallback art (drop not landed)"
