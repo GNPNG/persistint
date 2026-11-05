@@ -5,7 +5,7 @@
 ***a lovely little island. everyone contributes. everyone.***
 
 **PERSISTINT is a companion game to *Persistint*, an in-development novel by Brett Whitty, coming
-soon from [GNPNG](https://gnpng.org), an independent Canadian press.**
+soon from [GNPNG](https://www.gnpng.org/), an independent Canadian press.**
 
 [![Persistint book trailer](https://img.youtube.com/vi/8GxFjrDAJf4/maxresdefault.jpg)](https://www.youtube.com/watch?v=8GxFjrDAJf4)
 
@@ -284,7 +284,7 @@ dehumanization, shown in a deliberately cute style.
 
 | What | Source | Licence |
 |---|---|---|
-| Engine | [Godot Engine](https://godotengine.org) | MIT ([godotengine.org/license](https://godotengine.org/license)) |
+| Engine | [Godot Engine](https://godotengine.org) | MIT ([godotengine.org/license](https://godotengine.org/license/)) |
 | Dialogue system | [Dialogue Manager](https://github.com/nathanhoad/godot_dialogue_manager) 3.10.4 by Nathan Hoad and contributors, in `project/addons/dialogue_manager/` | MIT (see its `LICENSE`) |
 | Island map data | OpenStreetMap via the Overpass API; see [art/reference/little_st_james/SOURCES.md](art/reference/little_st_james/SOURCES.md) | ODbL 1.0, © OpenStreetMap contributors |
 | Island reference photos | Wikimedia Commons, U.S. Virgin Islands government (visual reference only); same `SOURCES.md` | Public domain |
@@ -311,13 +311,13 @@ XTTS v2.
 
 Every work cited in the game and its documentation (quote sources, books, television and games
 named in the design) is listed on the
-[Citations & Further Reading](https://persistint.dataglut.org/citations.html) page
+[Citations & Further Reading](https://persistint.dataglut.org/citations) page
 (`site/public/citations.html`), with further peer-reviewed reading on social aggression,
 cyberbullying, body-shaming and coercive control by girls and women.
 
 ## Support
 
-The [Need support?](https://persistint.dataglut.org/support.html) page (`site/public/support.html`)
+The [Need support?](https://persistint.dataglut.org/support) page (`site/public/support.html`)
 lists crisis lines by country, support services for girls and women hurt by other girls and
 women, and validated screening tools with their validation studies. The game's main menu links to
 it with the **Help & Support** button.
@@ -327,7 +327,7 @@ it with the **Help & Support** button.
 ![GNPNG x PERSISTINT: the studio team](docs/images/web/gnpng-persistint-banner-studio-team.png)
 
 PERSISTINT is written and designed by Brett Whitty as a companion to his novel *Persistint*,
-coming soon from [GNPNG](https://gnpng.org), an independent Canadian press. The book trailer is
+coming soon from [GNPNG](https://www.gnpng.org/), an independent Canadian press. The book trailer is
 [on YouTube](https://www.youtube.com/watch?v=8GxFjrDAJf4).
 
 © 2026 Brett Whitty. Based on characters and themes from the book ‘Persistint’.

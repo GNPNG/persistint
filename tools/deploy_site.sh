@@ -676,6 +676,14 @@ ext=()
 ((CHECK_EXTERNAL)) && ext=(--check-external)
 python3 -I tools/check_site_links.py "$PUBLIC" --host "$SITE_HOST" "${allow[@]}" "${ext[@]}" \
   || die "link check failed; nothing was uploaded or deployed"
+# README links, with redirects counted as failures (PW-13: "fails ... on a redirect to a moved
+# page"). The private forge is skipped: it redirects anonymous readers to its login page.
+# lychee comes from mise (aqua:lycheeverse/lychee); external fetches, so only with --check-external.
+if ((CHECK_EXTERNAL)); then
+  mise x aqua:lycheeverse/lychee@0.24.2 -- lychee --no-progress --max-redirects 0 \
+    --accept 200..=299 --timeout 20 --exclude '^https://gitea\.gnomatix\.com/' README.md \
+    || die "README link check failed (broken link or redirect); nothing was uploaded or deployed"
+fi
 
 # ---------------------------------------------------------------- R2 and deploy
 cd "$SITE"
