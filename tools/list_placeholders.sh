@@ -6,6 +6,7 @@
 #   2. PlaceholderProp nodes in project/scenes whose drop res://assets/island/prop_<art_path>.png
 #      has not landed, so the prop shows its fallback art.
 # Usage: sh tools/list_placeholders.sh > dev/PLACEHOLDERS.md
+# Reads assets and makes none (// provenance: diagnostic-only), so gen_sources.mjs skips it.
 set -eu
 cd "$(dirname "$0")/.."
 echo "# Placeholders still shown (GC-11)"

@@ -76,7 +76,7 @@ func _run() -> void:
 	_check(Florida.wear("flower_crown") and ws.get_flag("outfit_accessory") == "acc_flower_crown", "wear writes the outfit flag")
 	var doll: Control = PaperDoll.new()
 	root.add_child(doll)
-	doll.set_outfit({"body": "body_base", "dress": "dress_teal", "hair": "hair_rose", "accessory": "acc_flower_crown"})
+	doll.set_outfit({"body": "body_base", "dress": "dress_teal", "hair": "hair_braids", "accessory": "acc_flower_crown"})
 	_check(doll.get_node("Accessory").texture != null, "paper doll shows the crafted crown")
 	doll.queue_free()
 	for r: String in Florida.data()["recipes"]:

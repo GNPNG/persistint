@@ -43,7 +43,7 @@ func _run() -> void:
 	_check(chapters.current() == "island", "a fresh game is in the island chapter")
 
 	# The card and the jump.
-	ws.set_flag("outfit_hair", "hair_rose")
+	ws.set_flag("outfit_hair", "hair_braids")
 	ws.set_flag("outfit_dress", "dress_teal")
 	ws.set_flag("questioned_ritual", true)
 	var card: Control = load(CHAPTER_END).instantiate()
@@ -60,7 +60,7 @@ func _run() -> void:
 			"a dark scrim lies between the card art and the text")
 	_check(ws.get_flag("chapter") == "cruise", "jump sets chapter to cruise")
 	var archive: Variant = ws.get_flag("chapter_archive_island")
-	_check(archive is Dictionary and archive.get("outfit_hair") == "hair_rose" and archive.get("outfit_dress") == "dress_teal",
+	_check(archive is Dictionary and archive.get("outfit_hair") == "hair_braids" and archive.get("outfit_dress") == "dress_teal",
 		"island outfit archived under chapter_archive_island")
 	_check(not ws.flags.has("outfit_hair") and not ws.flags.has("outfit_dress"), "active outfit cleared for a fresh character")
 	_check(not archive.has("questioned_ritual"), "story flags are not player flags")

@@ -109,7 +109,7 @@ func _run() -> void:
 	journal.free()
 
 	# Enter: the island character doesn't carry over.
-	ws.set_flag("outfit_hair", "hair_rose")
+	ws.set_flag("outfit_hair", "hair_braids")
 	ws.set_flag("player_name", "island self")
 	ws.set_flag("questioned_ritual", true)
 	ws.set_flag("hottest_prep_outfit", {"hair": "island"})
@@ -119,7 +119,7 @@ func _run() -> void:
 	_check(entry.get("scene") == LANDING, "Landing enters its mini-game")
 	_check(chapters.current() == "cruise", "flashback plays in the cruise chapter")
 	_check(not ws.flags.has("outfit_hair") and not ws.flags.has("player_name"), "island character cleared")
-	_check(ws.get_flag("flashback_archive", {}).get("outfit_hair") == "hair_rose", "island character archived")
+	_check(ws.get_flag("flashback_archive", {}).get("outfit_hair") == "hair_braids", "island character archived")
 	_check(not ws.flags.has("hottest_prep_outfit") and ws.get_flag("flashback_archive", {}).has("hottest_prep_outfit"),
 		"episode-owned character flags archived too")
 	_check(ws.has_flag("questioned_ritual"), "story flags stay")
@@ -159,7 +159,7 @@ func _run() -> void:
 	var wreck: Node = await _scene_now(WRECK)
 	_check(wreck != null, "Landing's OK goes back to the origin")
 	_check(chapters.current() == "island", "chapter restored")
-	_check(ws.get_flag("outfit_hair") == "hair_rose" and ws.get_flag("player_name") == "island self", "island character restored")
+	_check(ws.get_flag("outfit_hair") == "hair_braids" and ws.get_flag("player_name") == "island self", "island character restored")
 	_check(ws.get_flag("hottest_prep_outfit") == {"hair": "island"}, "the passenger's makeover doesn't leak onto the island character")
 	_check(fb.active().is_empty() and not ws.flags.has("flashback_archive"), "flashback cleared")
 	_check(fb.seen("landing"), "flashback marked remembered")
@@ -197,7 +197,7 @@ func _run() -> void:
 	root.add_child(comic)
 	await process_frame
 	comic._on_dialogue_ended(null)
-	_check(fb.active().is_empty() and ws.get_flag("outfit_hair") == "hair_rose", "the end of the set leaves the flashback and restores the character")
+	_check(fb.active().is_empty() and ws.get_flag("outfit_hair") == "hair_braids", "the end of the set leaves the flashback and restores the character")
 	_check(chapters.current() == "island" and ws.get_flag("_location", {}).get("scene") == VILLAGE, "the set goes back where it started")
 	comic.queue_free()
 	await _scene_now(VILLAGE)

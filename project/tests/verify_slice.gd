@@ -139,7 +139,7 @@ func _run() -> void:
 	ws.reset()
 	var doll: Control = preload("res://scripts/systems/paper_doll.gd").new()
 	root.add_child(doll)
-	doll.set_outfit({"body": "body_base", "dress": "dress_teal", "hair": "hair_rose", "accessory": "none"})
+	doll.set_outfit({"body": "body_base", "dress": "dress_teal", "hair": "hair_braids", "accessory": "none"})
 	_check(doll.get_node("Dress").texture != null and doll.get_node("Accessory").texture == null,
 		"paper doll layers follow the outfit")
 	_check(doll.get_node("Body").texture.resource_path.begins_with("res://assets/placeholder/"),
