@@ -122,7 +122,11 @@ def eyes(base, view):
     objs = ndimage.find_objects(lab)
     boxes = sorted(((o[1].start, o[0].start, o[1].stop, o[0].stop) for o in objs
                     if (o[0].stop - o[0].start) > 14), key=lambda b: -(b[2] - b[0]) * (b[3] - b[1]))
-    return boxes[:2 if view == "front" else 1]
+    if view == "side":
+        # The side head faces right: the eye is the frontmost dark blob. The largest one is the
+        # ear's outline, which the blink used to paint over, so the ear winked (bd g0va).
+        return sorted(boxes, key=lambda b: -b[2])[:1]
+    return boxes[:2]
 
 
 class Person:
