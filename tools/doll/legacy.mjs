@@ -44,7 +44,12 @@ export function clearWhiteFaceOpening(image,slot,whiteBacking){
   let near=0;for(const p of q){const x=p%w,y=Math.floor(p/w);
    if(y>=face[1]+fh*.2&&y<=face[3]&&Math.abs(x-cx)>=fw*.3&&Math.abs(x-cx)<=fw*.95)near++;
   }
-  if(near/q.length>=.5)seeds.push(q[0]);
+  // A circlet can enclose backing just above the central face opening.
+  // Require a substantial, wide, enclosed central patch close to that opening;
+  // small highlights, side ornaments and distant crown whites are content.
+  const upper=!c.edge&&b[3]<face[1]&&b[1]>=face[1]-fh*.3&&b[3]>=face[1]-fh*.15
+   &&b[0]>=face[0]&&b[2]<=face[2]&&b[2]-b[0]+1>=fw*.25;
+  if(near/q.length>=.5||upper)seeds.push(q[0]);
  }
  return seeds.length?whiteMatte(image,{whiteThreshold:232,seeds,exterior:false}):image;
 }

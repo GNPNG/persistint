@@ -57,3 +57,22 @@ for(const mode of ['separate','outline','face','clear']){
 console.log('PASS tapered-face bbox overlap, face-connected, outline-connected and pre-cleared-face ear gaps');
 console.log('PASS local eye regions, central face, fixed-scale centred upward fit, impossible fit diagnostics, bilateral ear gaps and retained white detail');
 console.log(JSON.stringify(fit));console.log('RESULT: PASS');
+
+// Circlet notch encloses backing above the face; nearby decoration survives.
+for(const precleared of [false,true]){
+ const img={width:120,height:160,data:Buffer.alloc(120*160*4)};
+ for(let y=5;y<155;y++)for(let x=5;x<115;x++)img.data.set([90,60,35,255],(y*120+x)*4);
+ const fill=(x0,y0,w,h,rgba)=>{for(let y=y0;y<y0+h;y++)for(let x=x0;x<x0+w;x++)img.data.set(rgba,(y*120+x)*4);};
+ fill(35,55,50,80,[255,255,255,precleared?0:255]);
+ fill(48,42,24,9,[255,255,255,255]);
+ fill(56,20,8,8,[255,255,255,255]); // distant crown jewel
+ fill(15,43,10,8,[255,255,255,255]); // side ornament
+ fill(44,40,32,2,[230,180,40,255]); // gold circlet boundary
+ const out=clearWhiteFaceOpening(img,'hair',true),a=(x,y)=>out.data[(y*120+x)*4+3];
+ assert.equal(a(60,46),0,'enclosed upper backing');
+ assert.equal(a(60,23),255,'crown jewel retained');assert.equal(a(18,46),255,'side ornament retained');
+ assert.equal(a(60,40),255,'accessory boundary retained');
+ assert.deepEqual(clearWhiteFaceOpening(img,'dress',true).data,img.data);
+ assert.deepEqual(clearWhiteFaceOpening(img,'hair',false).data,img.data);
+}
+console.log('PASS enclosed circlet gap with opaque/precleared face; retained ornament, gold boundary and non-white-backed art');

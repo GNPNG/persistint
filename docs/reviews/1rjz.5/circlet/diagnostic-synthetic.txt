@@ -1,0 +1,3 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+{"above_brow_overlap":372,"above_brow_region_capacity":372,"at_or_below_brow_overlap":118,"brow_y":236,"face_total":7253,"item":"hair_pigtails","overlap":490,"rows_by_source_y":{"221":{"count":18,"half_x_max":192,"half_x_min":175},"223":{"count":30,"half_x_max":198,"half_x_min":169},"225":{"count":40,"half_x_max":203,"half_x_min":164},"227":{"count":46,"half_x_max":206,"half_x_min":161},"229":{"count":52,"half_x_max":209,"half_x_min":158},"231":{"count":58,"half_x_max":212,"half_x_min":155},"233":{"count":62,"half_x_max":214,"half_x_min":153},"235":{"count":66,"half_x_max":216,"half_x_min":151},"331":{"count":118,"half_x_max":242,"half_x_min":125}},"sampling":"task4 Godot nearest half resolution"}
