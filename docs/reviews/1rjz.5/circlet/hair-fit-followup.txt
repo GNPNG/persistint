@@ -1,0 +1,6 @@
+PASS tapered-face bbox overlap, face-connected, outline-connected and pre-cleared-face ear gaps
+PASS local eye regions, central face, fixed-scale centred upward fit, impossible fit diagnostics, bilateral ear gaps and retained white detail
+{"scale":1,"offset":[0,12],"cost":0,"search_dy":-23,"coverage_score":1,"hair_qa":{"eye_pixels":0,"face_share":0.02923331494760066,"cranium_uncovered_share":0,"clipped":false,"failures":[]}}
+RESULT: PASS
+PASS enclosed circlet gap with opaque/precleared face; retained ornament, gold boundary and non-white-backed art
+PASS reported circlet bbox, overlap with face bbox, and edge-connected backing

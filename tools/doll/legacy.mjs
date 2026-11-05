@@ -20,7 +20,7 @@ export function faceOpening(image){const {width:w,height:h,data}=image,seen=new 
 // Clear the central opening and nearby substantial lateral ear gaps, including
 // gaps that reach the outline or overlap the opening's bounding box.
 // Small highlights and white dress content remain untouched.
-export function clearWhiteFaceOpening(image,slot,whiteBacking){
+export function clearWhiteFaceOpening(image,slot,whiteBacking,audit=null){
  if(slot!=='hair'||!whiteBacking)return image;
  const {width:w,height:h,data}=image,seen=new Uint8Array(w*h),components=[];
  const white=p=>data[p*4+3]>127&&Math.min(data[p*4],data[p*4+1],data[p*4+2])>=232&&Math.max(data[p*4],data[p*4+1],data[p*4+2])-Math.min(data[p*4],data[p*4+1],data[p*4+2])<=24;
@@ -35,9 +35,11 @@ export function clearWhiteFaceOpening(image,slot,whiteBacking){
  // A sheet matte may already have cleared the face; its remaining ear patches
  // must not be mistaken for the primary face opening.
  try{const hole=faceOpening(image),holeArea=hole[2]*hole[3];if(holeArea>area*2){face=[hole[0],hole[1],hole[0]+hole[2]-1,hole[1]+hole[3]-1];area=holeArea;faceComponent=null;}}catch{}
+ if(audit)Object.assign(audit,{white_backing:whiteBacking,face_bbox:face??null,face_area:area,components:[]});
  if(!face)return image;
  const fw=face[2]-face[0]+1,fh=face[3]-face[1]+1,cx=(face[0]+face[2])/2,seeds=faceComponent?[faceComponent.pixels[0]]:[];
  for(const c of components){if(c===faceComponent)continue;const q=c.pixels,b=c.box;
+  const entry={bbox:b,area:q.length,edge:c.edge,selected:false};if(audit)audit.components.push(entry);
   if(q.length<Math.max(16,area*.003)||q.length>area*.3||b[3]>face[3]||b[3]-b[1]+1>fh*.65)continue;
   // Test proximity to the face rim, not strict separation of bounding boxes.
   // Ear recesses can intrude into that box or reach the crop/transparent outline.
@@ -45,11 +47,16 @@ export function clearWhiteFaceOpening(image,slot,whiteBacking){
    if(y>=face[1]+fh*.2&&y<=face[3]&&Math.abs(x-cx)>=fw*.3&&Math.abs(x-cx)<=fw*.95)near++;
   }
   // A circlet can enclose backing just above the central face opening.
-  // Require a substantial, wide, enclosed central patch close to that opening;
-  // small highlights, side ornaments and distant crown whites are content.
-  const upper=!c.edge&&b[3]<face[1]&&b[1]>=face[1]-fh*.3&&b[3]>=face[1]-fh*.15
-   &&b[0]>=face[0]&&b[2]<=face[2]&&b[2]-b[0]+1>=fw*.25;
-  if(near/q.length>=.5||upper)seeds.push(q[0]);
+  // Require a substantial central patch close to the top of that opening;
+  // the patch can overlap its bbox or connect to the outline. Small highlights,
+  // side ornaments and distant crown whites are content.
+  const upperPixels=q.filter(p=>{const x=p%w,y=Math.floor(p/w);return y>=face[1]-fh*.5&&y<=face[1]+fh*.2&&Math.abs(x-cx)<=fw*.35;});
+  const ub=upperPixels.length?bounds(upperPixels):[0,0,0,0];
+  const upper=upperPixels.length>=Math.max(32,area*.01)&&upperPixels.length/q.length>=.6
+   &&ub[3]>=face[1]-fh*.3&&ub[2]-ub[0]+1>=fw*.12;
+
+  entry.ear_share=near/q.length;entry.upper_share=upperPixels.length/q.length;entry.selected=near/q.length>=.5||upper;
+  if(entry.selected)seeds.push(q[0]);
  }
  return seeds.length?whiteMatte(image,{whiteThreshold:232,seeds,exterior:false}):image;
 }
@@ -100,10 +107,10 @@ export function compose(layers,width,height){const data=Buffer.alloc(width*heigh
 export function buildLegacy(manifest,root){const rig=JSON.parse(fs.readFileSync(path.join(root,'project/data/doll/rig_chibi.json'),'utf8')),body=readImage(path.join(root,rig.body_file)),regions=readImage(path.join(root,rig.regions.file)),sheet=readImage(path.resolve(root,manifest.sheet)),preflight=bodyPreflight(sheet,parseCrop(manifest.bodyCrop),body),catalogPath=path.join(root,'project/data/doll/items.json'),catalog=fs.existsSync(catalogPath)?JSON.parse(fs.readFileSync(catalogPath,'utf8')):{},rendered=[];
  const sheetMatte=matte(sheet),whiteBacking=borderKey(sheet).every(c=>c>230)&&sheet.data.every((v,i)=>i%4!==3||v===255);
  const directory=path.join(root,'project/assets/doll');fs.mkdirSync(directory,{recursive:true});const sha1=createHash('sha1').update(fs.readFileSync(path.resolve(root,manifest.sheet))).digest('hex');
- for(const item of manifest.items){if(!/^[a-z][a-z0-9_]*$/.test(item.id))throw Error('Unsafe item id');const cut=crop(sheetMatte,parseCrop(item.crop)),selected=item.component==='largest'?isolateLargest(cut):cut,image=clearWhiteFaceOpening(selected,item.slot,whiteBacking),placed=placeLegacy(image,item,preflight.report.fit,rig,regions),layers=[];
+ for(const item of manifest.items){if(!/^[a-z][a-z0-9_]*$/.test(item.id))throw Error('Unsafe item id');const cut=crop(sheetMatte,parseCrop(item.crop)),selected=item.component==='largest'?isolateLargest(cut):cut,matteReview={},image=clearWhiteFaceOpening(selected,item.slot,whiteBacking,matteReview),placed=placeLegacy(image,item,preflight.report.fit,rig,regions),layers=[];
  for(const [kind,pixels] of Object.entries(placed.layers)){const layer=kind==='front'?'hair':kind==='back'?'hair_back':kind,name=`${item.id}${kind==='back'?'__back':''}.png`;writeImage(path.join(directory,name),pixels);layers.push({layer,file:`res://assets/doll/${name}`,bbox:bbox(pixels)});rendered.push({layer,pixels});}
  const needsReview=preflight.report.fit.residual_px>1.5?`body differs from the rig, residual ${preflight.report.fit.residual_px.toFixed(3)} px`:'legacy placement requires Doll Bench review';
- catalog[item.id]={slot:item.slot,rig:rig.id,layers,covers:rig.slots[item.slot]?.covers??[],side:item.side??null,source:{component:item.component??'all',method:'legacy-sheet',sheet:manifest.sheet,crop:item.crop,sha1:{sheet:sha1}},fit:placed.fit,anchor:placed.anchor,needs_review:needsReview,qa:{status:'needs_review',failures:placed.fit.hair_qa?.failures??[]}};
+ catalog[item.id]={matte_review:matteReview,slot:item.slot,rig:rig.id,layers,covers:rig.slots[item.slot]?.covers??[],side:item.side??null,source:{component:item.component??'all',method:'legacy-sheet',sheet:manifest.sheet,crop:item.crop,sha1:{sheet:sha1}},fit:placed.fit,anchor:placed.anchor,needs_review:needsReview,qa:{status:'needs_review',failures:placed.fit.hair_qa?.failures??[]}};
  if(item.slot==='hair')catalog[item.id].split={rule:'chin_y',front_mask:item.frontMask??null};}
  fs.mkdirSync(path.dirname(catalogPath),{recursive:true});fs.writeFileSync(catalogPath,JSON.stringify(catalog,null,2)+'\n');rendered.push({layer:'body',pixels:body});rendered.sort((a,b)=>rig.layers.indexOf(a.layer)-rig.layers.indexOf(b.layer));return {catalog,bodyFit:{...preflight.report,pass:true,failures:[],needs_review:preflight.report.fit.residual_px>1.5?'body differs from the rig':null},composite:compose(rendered.map(r=>r.pixels),...rig.frame)};
 }

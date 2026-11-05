@@ -76,3 +76,23 @@ for(const precleared of [false,true]){
  assert.deepEqual(clearWhiteFaceOpening(img,'hair',false).data,img.data);
 }
 console.log('PASS enclosed circlet gap with opaque/precleared face; retained ornament, gold boundary and non-white-backed art');
+
+// Reported circlet geometry: 63x33 near the upper opening, narrower than .25
+// of its width. Its bbox can overlap the primary face opening at the sides.
+for(const openEdge of [false,true]){
+ const img={width:721,height:760,data:Buffer.alloc(721*760*4)};
+ const fill=(x0,y0,w,h,a=255)=>{for(let y=y0;y<y0+h;y++)for(let x=x0;x<x0+w;x++)img.data.set([255,255,255,a],(y*721+x)*4);};
+ for(let y=90;y<450;y++)for(let x=210;x<520;x++)img.data.set([100,60,40,255],(y*721+x)*4);
+ fill(240,210,80,170,0);fill(415,210,80,170,0);fill(240,225,255,155,0);
+ // Tapered top gap: same bbox as the coordinator's component.
+ let n=0;for(let y=185;y<218;y++){const width=y===185?63:y===217?1:Math.min(63,Math.round(63*(218-y)/33));for(let x=335+Math.floor((63-width)/2);x<335+Math.floor((63-width)/2)+width;x++){img.data.set([255,255,255,255],(y*721+x)*4);n++;}}
+ // Substantial lower/side whites and small upper highlights remain content.
+ fill(250,170,5,5);fill(350,400,25,20);
+ if(openEdge)fill(0,185,336,1); // one-pixel white connection to crop edge
+ const audit={},out=clearWhiteFaceOpening(img,'hair',true,audit);
+ assert.ok(audit.components.some(c=>c.selected&&c.bbox[1]===185),'reported gap selection recorded');
+ assert.equal(out.data[(198*721+366)*4+3],0,'narrow circlet gap '+openEdge);
+ assert.equal(out.data[(172*721+252)*4+3],255,'upper highlight');
+ assert.equal(out.data[(410*721+360)*4+3],255,'below-chin white');
+}
+console.log('PASS reported circlet bbox, overlap with face bbox, and edge-connected backing');
