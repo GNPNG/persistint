@@ -154,7 +154,7 @@ function render(folder, files, added, promptMap, mentions, voices) {
   const note = untraced ? `\n${untraced} file(s) not traced to a prompt, a voice line or a tool.\n` : "";
   return `${HEADER}\n# Sources: ${rel(folder)}\n\nWhat made each file here (release checklist LP-04, sops/09). ` +
     "Prompt files carry the generator in their front matter; tools carry their inputs in their " +
-    `docstrings. Regenerate with \`python3 -I tools/gen_sources.py\`.\n${note}\n` +
+    `docstrings. Regenerate with \`node tools/gen_sources.mjs\`.\n${note}\n` +
     "| File | Made by | From | Added |\n|---|---|---|---|\n" + rows.join("\n") + "\n";
 }
 

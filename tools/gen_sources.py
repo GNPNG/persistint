@@ -157,7 +157,7 @@ def render(folder: Path, files: list, added, prompt_map, mentions, voices) -> st
     note = f"\n{untraced} file(s) not traced to a prompt, a voice line or a tool.\n" if untraced else ""
     return (f"{HEADER}\n# Sources: {title}\n\nWhat made each file here (release checklist LP-04, sops/09). "
             f"Prompt files carry the generator in their front matter; tools carry their inputs in their "
-            f"docstrings. Regenerate with `python3 -I tools/gen_sources.py`.\n{note}\n"
+            f"docstrings. Regenerate with `node tools/gen_sources.mjs`.\n{note}\n"
             "| File | Made by | From | Added |\n|---|---|---|---|\n" + "\n".join(rows) + "\n")
 
 
