@@ -54,7 +54,15 @@ def parse_prompt_file(md_path: Path) -> dict | None:
             meta[k.strip()] = v.strip()
     if "drop" not in meta or "tool" not in meta:
         return None
-    meta["prompt"] = " ".join(pr.group(1).strip().splitlines())
+    # Only the first paragraph goes to the generator (parity with web-render 565c361); the whole
+    # section stays in prompt_section, and a "Spec:" paragraph (music loudness, bitrate, durations)
+    # is kept as spec for the sync/mastering step (bd 50k).
+    section = pr.group(1).strip()
+    paras = [p.strip() for p in re.split(r"\n\s*\n", section) if p.strip()]
+    meta["prompt"] = " ".join(paras[0].splitlines()) if paras else ""
+    meta["prompt_section"] = section
+    spec = next((p for p in paras[1:] if p.startswith("Spec:")), "")
+    meta["spec"] = " ".join(spec[len("Spec:"):].strip().splitlines())
     # The aspect: front matter, else the first ratio the prompt itself states (what the renderer
     # pastes; bd e8e8: temple_twinkle says 1:1 only there), else the first in Notes, else 16:9.
     notes = NOTES_RE.search(text)

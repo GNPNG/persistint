@@ -50,6 +50,13 @@ with tempfile.TemporaryDirectory() as tmp:
     for i, (name, front, prompt, notes, want) in enumerate(cases):
         parsed = raa.parse_prompt_file(prompt_file(d, f"case{i}", front, prompt, notes))
         check(name, parsed and parsed["aspect"], want)
+    # Only the first paragraph is sent; a Spec: paragraph is kept for mastering (bd 50k).
+    parsed = raa.parse_prompt_file(prompt_file(d, "spec", "", "Warm pads,\nslow tempo.\n\nSpec: -14 LUFS,\n30 s", None))
+    check("first paragraph only", parsed and parsed["prompt"], "Warm pads, slow tempo.")
+    check("Spec paragraph kept", parsed and parsed["spec"], "-14 LUFS, 30 s")
+    check("whole section kept", parsed and parsed["prompt_section"].endswith("30 s"), True)
+    parsed = raa.parse_prompt_file(prompt_file(d, "nospec", "", "One paragraph.", None))
+    check("no Spec paragraph", parsed and parsed["spec"], "")
     raa.ROOT = ROOT
 
 # The real prompts that showed the bug and one that was already right.
