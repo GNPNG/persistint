@@ -271,8 +271,8 @@ static func clips_of(entry: Dictionary) -> int:
 
 ## The art a character is shown with, first match wins: a clone sheet, the cub sheet, a pony, a
 ## Florida critter rig, a caste rig, a canon/Florida sheet or still, a cruise-show stand-in; anyone
-## else gets the generic stand-in figure (dev/STYLE.md 7.5: real people are named, never drawn as
-## themselves), marked so the gap shows.
+## else gets the generic stand-in figure (real people are named, never drawn as themselves), marked
+## so the gap shows.
 static func art_for(id: String) -> Dictionary:
 	if id in CLONE_IDS and ResourceLoader.exists("res://assets/ruins/clone_%s.png" % id):
 		return {"kind": "clone", "path": "res://assets/ruins/clone_%s.png" % id}

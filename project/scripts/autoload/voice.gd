@@ -18,8 +18,7 @@ extends Node
 ## shows its bubble and stays silent.
 ## While a clip or vocalization of the cast plays, Music ducks the loop (Music.duck_voice, a volume
 ## move, no audio effect) so speech sits above it.
-## Two kinds of player (the author, 2026-10-27, on the clone hall: one zombie noise "starts playing
-## and the other one stops playing"):
+## Two kinds of player, so clone noises overlap instead of cutting each other off:
 ## - speak(): the cast's one channel, a plain AudioStreamPlayer; a new line replaces the one before
 ##   it (dialogue lines follow each other), and only these lines duck the music.
 ## - speak_at(): a line from a node in the world (the clone children, the polar bear cubs) on that

@@ -1,6 +1,5 @@
 extends SceneTree
-## The clone hall's sounds play side by side (the author, 2026-10-27: the zombie noises "cut off,
-## like one starts playing and the other one stops playing"). Each clone speaks from its own
+## The clone hall's sounds play side by side, none cutting another off. Each clone speaks from its own
 ## positional player (Voice.speak_at, an AudioStreamPlayer2D on the Clones bus): two clones
 ## vocalizing at once both keep playing; a cast line through Voice.speak plays while the clones
 ## vocalize and neither stops the other; a clone mid-line doesn't restart itself; ambient barks
