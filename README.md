@@ -13,6 +13,8 @@ soon from [GNPNG](https://www.gnpng.org/), an independent Canadian press.**
 
 **Status: v0.5.0 — zeroth release (playable vertical slice, placeholder art in places).**
 
+**[Play it in your browser](https://persistint.dataglut.org/play/)** (desktop Chrome, Edge, Firefox or Safari).
+
 PERSISTINT is a free companion game: a small 2D game
 made in Godot 4. It wraps social control in the cutest possible packaging, so
 that players, and girls and women above all, can recognize it, name it and feel comfortable
