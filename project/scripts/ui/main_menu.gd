@@ -3,13 +3,15 @@ extends Control
 ## screen, scenes/ui/name_entry.tscn, over the menu; bd 1ce), then starts with fresh flags and the
 ## name stored; Back on that screen returns to the menu with the save untouched. Continue only
 ## when there is a save to continue.
-## Help & Support opens the support page on the site in the system browser. Settings opens the
+## Help & Support opens the support page on the site in the system browser, Report a Bug the public
+## bug-report page (LA-04). Settings opens the
 ## volume sliders (AudioSettings). At the bottom, the copyright lines and Credits & Licences, which
 ## opens the credits screen (scenes/ui/credits.tscn, data/credits.json) over the menu.
 ## Quit (desktop builds) quits once Voice has shut down (quit_game).
 
 const FIRST_MAP := "res://scenes/maps/village.tscn"
-const SUPPORT_URL := "https://persistint.dataglut.org/support.html"
+const SUPPORT_URL := "https://persistint.dataglut.org/support"
+const BUG_REPORT_URL := "https://github.com/GNPNG/persistint/issues"
 
 ## What quit_game() calls last: the tree's quit. A var so a headless test can stand in for it and
 ## keep running.
@@ -26,6 +28,7 @@ func _ready() -> void:
 	%BeginButton.visible = WorldState.get_flag("_location") is Dictionary
 	# A pad starts on Continue when there is a game to continue, else New Game (QA-13, PadFocus).
 	(%BeginButton if %BeginButton.visible else %NewButton).add_to_group(PadFocus.DEFAULT)
+	_add_report_bug_button()
 	_add_fullscreen_button()
 	_add_quit_button()
 	_add_version_label()
@@ -34,6 +37,19 @@ func _ready() -> void:
 	$NameEntry.cancelled.connect(_on_name_cancelled)
 	move_child($NameEntry, -1)  # over the version label too
 	move_child($Credits, -1)  # and the credits over everything
+
+
+## Report a Bug under Help & Support: opens the public bug-report page, the same one the site
+## footer links (LA-04).
+func _add_report_bug_button() -> void:
+	var b := Button.new()
+	b.name = "ReportBugButton"
+	b.text = "Report a Bug"
+	b.tooltip_text = "Opens the PERSISTINT bug reports page in your web browser"
+	b.pressed.connect(func() -> void: OS.shell_open(BUG_REPORT_URL))
+	var box: VBoxContainer = $Center/Panel/VBox
+	box.add_child(b)
+	box.move_child(b, %SupportButton.get_index() + 1)
 
 
 ## A Fullscreen button under the others (touch-first: no key needed); F toggles it too. On the
