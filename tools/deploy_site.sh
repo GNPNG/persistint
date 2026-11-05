@@ -294,15 +294,18 @@ PY2
     mkdir -p "$PLAY/$BUILD_ID/$(dirname "$f")"
     cp "$p" "$PLAY/$BUILD_ID/$f"
   done < <(find "$EXPORT" -type f -print0)
+  # Build-time size record for the play page's download warning (PW-04).
+  tools/web_build_stats.sh "$PLAY/$BUILD_ID" "$BUILD_ID"
 fi
 
 # ---------------------------------------------------------------- play page and _redirects
 log "Writing site/public/play/index.html and site/public/_redirects"
 if [[ -n "$BUILD_ID" ]]; then
   GAME_URL="/play/$BUILD_ID/index.html"
-  # PW-04 download-size warning, measured from the build folder (what the browser fetches;
-  # the engine is served gzipped) instead of a fixed figure.
-  LOAD_MB="$(du -sm "$PLAY/$BUILD_ID" | cut -f1)"
+  # PW-04 download-size warning from the build's build-stats.json (tools/web_build_stats.sh,
+  # written at build time); a --site-only deploy of an older build without one writes it now.
+  [[ -f "$PLAY/$BUILD_ID/build-stats.json" ]] || tools/web_build_stats.sh "$PLAY/$BUILD_ID" "$BUILD_ID"
+  LOAD_MB="$(jq -r '.load_mb' "$PLAY/$BUILD_ID/build-stats.json")"
   STAGE='    <div class="stage" id="stage">
       <button class="stage-start" id="start" type="button" aria-describedby="stage-note">
         <img src="/img/banner-adventure-in-paradise-1600.png" width="1600" height="791" alt="">

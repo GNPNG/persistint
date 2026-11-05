@@ -72,6 +72,8 @@ for entry in "${PRESETS[@]}"; do
   fi
   [[ -s "$dir/$file" ]] || { tail -n 40 "$log"; die "preset $name wrote no $file"; }
   grep -E '^(ERROR|SCRIPT ERROR)' "$log" | head -n 10 || true
+  # Web exports carry their download size for the play page (PW-04).
+  [[ "$name" == Web ]] && tools/web_build_stats.sh "$dir" "$BUILD_ID" >/dev/null
   printf '  %-12s %4d files  %s\n' "$name" "$(find "$dir" -type f | wc -l)" "$(du -sh "$dir" | cut -f1)"
 done
 echo "== done: $OUT/"
