@@ -1,0 +1,64 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+== test_face_outline.mjs
+{"thickness":4,"removed_pixels":1834,"brow_y":236,"max_thickness":8,"status":"applied","removed_y":[236,376]}
+{"thickness":6,"removed_pixels":1800,"brow_y":236,"max_thickness":8,"status":"applied","removed_y":[246,376]}
+PASS 4/6px curved rims, fractional alpha, unchanged locks/ties/bangs, thick fill and open-face refusal
+PASS legacy placement integration: identical fit and anchor, opt-in cleanup only
+
+== test_hair_fit.mjs
+PASS tapered-face bbox overlap, face-connected, outline-connected and pre-cleared-face ear gaps
+PASS local eye regions, central face, fixed-scale centred upward fit, impossible fit diagnostics, bilateral ear gaps and retained white detail
+{"scale":1,"offset":[0,12],"cost":0,"search_dy":-23,"coverage_score":1,"hair_qa":{"eye_pixels":0,"face_share":0.02923331494760066,"cranium_uncovered_share":0,"clipped":false,"failures":[]}}
+RESULT: PASS
+PASS enclosed circlet gap with opaque/precleared face; retained ornament, gold boundary and non-white-backed art
+PASS reported circlet bbox, overlap with face bbox, and edge-connected backing
+
+== test_intake.mjs
+PASS intake provenance, expected count, small component retention, measured gap and explicit merging
+PASS actual-frame outline rings and separate crop-edge detection
+RESULT: PASS
+
+== test_legacy.mjs
+PASS enclosed white wig opening clears; dress panel, highlights and edge-connected white stay opaque
+PASS largest-component full pipeline removes remote fragment while preserving clean-crop alpha
+PASS white-sheet buildLegacy integration places wig and retains white dress panel
+PASS proof CLI persists accepted catalog/layers and refuses changed-item output
+PASS sheet-scale wig, exact chin split, separate feet, full frames and legacy residual review flags
+RESULT: PASS
+
+== test_matte.mjs
+PASS known-coverage green alpha mean error 0.005530024509803919
+PASS enclosed hole clear and palette interiors exact (delta E 0)
+PASS white exterior removed, enclosed white preserved
+PASS alpha-weighted resample has no transparent green bleed
+PASS delivered component count char_daughter_layers 5 intake reasons: []
+PASS delivered component count char_mother_layers 7 intake reasons: [ 'background-not-flat-or-green-content' ]
+PASS delivered component count host_oprah_garments 4 intake reasons: []
+PASS gradient, touching, edge-contact and green-leaf failures
+PASS synthetic white curved outline {"width":128,"height":128,"alphaThreshold":127,"borderOpaquePixels":0,"outlineRingPixels":277,"lightRingPixels":0,"fringeRatio":0,"alphaLevels":181,"semiTransparentInterior":0,"greenExcessPixels":0}
+PASS near-key backing noise does not become cyan alpha specks
+RESULT: PASS
+
+== test_register.mjs
+PASS known body transform {"input":[1,7,-4],"fit":{"scale":0.9999965321009977,"offset":[-7.0007487630052765,4.001714348193843],"residual_px":0.0019520734376691153,"metric":"symmetric mean outline chamfer, Euclidean frame pixels","source_outline":2515,"target_outline":2515,"seed":{"scale":0.9999965321009977,"offset":[-7.0007487630052765,4.001714348193843],"rotationDegrees":0.0002062866662667654,"sourceEyes":[[300.0049019607843,288.6441176470588],[447.11614173228344,288.73228346456693]],"targetEyes":[[293.0049019607843,292.6441176470588],[440.1100196463654,292.73280943025543]]}}}
+PASS known body transform {"input":[1.02,4,-3],"fit":{"scale":0.9802389370431374,"offset":[-3.8512744962661714,3.0502941444249814],"residual_px":0.2965559955408984,"metric":"symmetric mean outline chamfer, Euclidean frame pixels","source_outline":2577,"target_outline":2515,"seed":{"scale":0.9806784588434185,"offset":[-3.9762744962661714,2.8627941444249814],"rotationDegrees":0.023424365752754483,"sourceEyes":[[302.89782403027436,295.52885525070957],[452.98669201520914,295.5579847908745]],"targetEyes":[[293.0049019607843,292.6441176470588],[440.1100196463654,292.73280943025543]]}}}
+PASS known body transform {"input":[0.98,-3,4],"fit":{"scale":1.0205880476614266,"offset":[2.9793455720139264,-4.215145054049117],"residual_px":0.30694535779908455,"metric":"symmetric mean outline chamfer, Euclidean frame pixels","source_outline":2469,"target_outline":2515,"seed":{"scale":1.0199474912924662,"offset":[3.1043455720139264,-3.902645054049117],"rotationDegrees":0.036613993340168224,"sourceEyes":[[284.1457696228338,290.7940876656473],[428.3913491246138,290.78887744593203]],"targetEyes":[[293.0049019607843,292.6441176470588],[440.1100196463654,292.73280943025543]]}}}
+PASS known body transform {"input":[1.06,0,-40],"fit":{"scale":0.9435623309652467,"offset":[-0.08557558480890748,37.67265013794304],"residual_px":0.28367326886184235,"metric":"symmetric mean outline chamfer, Euclidean frame pixels","source_outline":2676,"target_outline":2515,"seed":{"scale":0.9425474459855443,"offset":[0.22692441519109252,37.92265013794304],"rotationDegrees":0.06910933225962189,"sourceEyes":[[310.67772925764194,270.32663755458515],[466.55859030837007,270.23259911894274]],"targetEyes":[[293.0049019607843,292.6441176470588],[440.1100196463654,292.73280943025543]]}}}
+PASS same-frame proof identity, changed-item rejection and exact chin split
+PASS shifted/scaled proof and item composition 0.9992213859330392
+PASS synthetic proof visibility across all seven wearable slots
+RESULT: PASS
+
+== test_rig.mjs
+{"head_top":[367,61],"centre_x":367,"eye_l":[293,293],"eye_r":[440,293],"brow_y":236,"chin_y":399,"neck_y":406,"shoulder_y":417,"waist_y":567,"hip_y":591,"crotch_y":622,"wrist_l":[217,540],"wrist_r":[511,540],"knee_y":673,"ankle_y":724,"sole_l":[301,758],"sole_r":[427.5,758],"elbow_y":479,"armpit_y":521,"armpit_x":[282,446],"eye_band":[236,316],"face_outline":{"shape":"ellipse","centre":[367,309.5],"radii":[120.6942244011833,89.5],"hairline_y":220},"eye_dilation_px":10,"hand_l":[205,558],"hand_r":[522,558],"shoulder_l":[304,417],"shoulder_r":[424,417]}
+PASS landmark tolerances and anatomical ordering
+PASS all opaque pixels have exactly one of 19 labels; eyes in eye band
+PASS translated source moves silhouette and eye measurements
+PASS actual green-template inverse mapping IoU=0.998193 >=0.99
+PASS decoded RGBA identity ignores PNG encoding, detects pixel and dimension changes
+{"head_top":[367,61],"centre_x":367,"eye_l":[293,293],"eye_r":[440,293],"brow_y":236,"chin_y":399,"neck_y":406,"shoulder_y":417,"waist_y":567,"hip_y":591,"crotch_y":622,"wrist_l":[217,540],"wrist_r":[511,540],"knee_y":673,"ankle_y":724,"sole_l":[301,758],"sole_r":[427.5,758],"elbow_y":479,"armpit_y":521,"armpit_x":[282,446],"eye_band":[236,316],"face_outline":{"shape":"ellipse","centre":[367,309.5],"radii":[120.6942244011833,89.5],"hairline_y":220},"eye_dilation_px":10,"hand_l":[205,558],"hand_r":[522,558],"shoulder_l":[304,417],"shoulder_r":[424,417]}
+PASS outputs match checked-in artifacts (template: 0 pixels differ by more than 8 levels, worst 0); canonical body unchanged
+RESULT: PASS
+
+RESULT: PASS (0 failures)

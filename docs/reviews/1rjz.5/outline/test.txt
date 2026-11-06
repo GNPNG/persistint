@@ -1,0 +1,4 @@
+{"thickness":4,"removed_pixels":1834,"brow_y":236,"max_thickness":8,"status":"applied","removed_y":[236,376]}
+{"thickness":6,"removed_pixels":1800,"brow_y":236,"max_thickness":8,"status":"applied","removed_y":[246,376]}
+PASS 4/6px curved rims, fractional alpha, unchanged locks/ties/bangs, thick fill and open-face refusal
+PASS legacy placement integration: identical fit and anchor, opt-in cleanup only

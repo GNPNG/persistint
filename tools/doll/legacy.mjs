@@ -5,6 +5,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
 import {readImage,writeImage} from './lib/image.mjs';
+import {stripFaceOutline} from './lib/face_outline.mjs';
 import {borderKey,whiteMatte} from './lib/matte.mjs';
 import {crop,isolateLargest} from './lib/registration.mjs';
 import {bodyPreflight,matte,warp,splitHair} from './register.mjs';
@@ -100,8 +101,8 @@ function refine(image,initial,slot,rig,regions){if(slot==='hair')return fitHair(
 }
 export function placeLegacy(image,item,sheetFit,rig,regions){const a=anchor(image,item.slot,rig,item.side),scale=sheetFit.scale,initial={scale,offset:a.target.map((v,k)=>v-a.source[k]*scale)},fit=refine(image,initial,item.slot,rig,regions),nudge=item.nudge??[0,0];if(item.slot==='shoes')fit.offset[1]=a.target[1]-a.source[1]*fit.scale;
  fit.offset=fit.offset.map((v,k)=>v+nudge[k]);
- const layer=warp(image,fit,...rig.frame),mask=item.frontMask?readImage(item.frontMask):undefined,layers=item.slot==='hair'?splitHair(layer,rig.landmarks.chin_y,mask):{[item.slot]:layer};
- return {fit:{...fit,residual_px:sheetFit.residual_px,sheet_scale:scale,relative_scale:fit.scale/scale,nudge},anchor:a,layers};
+ const warped=warp(image,fit,...rig.frame),cleaned=item.stripFaceOutline&&item.slot==='hair'?stripFaceOutline(warped,rig):{image:warped,report:null},layer=cleaned.image,mask=item.frontMask?readImage(item.frontMask):undefined,layers=item.slot==='hair'?splitHair(layer,rig.landmarks.chin_y,mask):{[item.slot]:layer};
+ return {outline_cleanup:cleaned.report,fit:{...fit,residual_px:sheetFit.residual_px,sheet_scale:scale,relative_scale:fit.scale/scale,nudge},anchor:a,layers};
 }
 export function compose(layers,width,height){const data=Buffer.alloc(width*height*4);for(const layer of layers)for(let p=0;p<data.length;p+=4){const a=layer.data[p+3]/255,b=data[p+3]/255,out=a+b*(1-a);for(let c=0;c<3;c++)data[p+c]=out?Math.round((layer.data[p+c]*a+data[p+c]*b*(1-a))/out):0;data[p+3]=Math.round(out*255);}return {width,height,data};}
 export function buildLegacy(manifest,root){const rig=JSON.parse(fs.readFileSync(path.join(root,'project/data/doll/rig_chibi.json'),'utf8')),body=readImage(path.join(root,rig.body_file)),regions=readImage(path.join(root,rig.regions.file)),sheet=readImage(path.resolve(root,manifest.sheet)),preflight=bodyPreflight(sheet,parseCrop(manifest.bodyCrop),body),catalogPath=path.join(root,'project/data/doll/items.json'),catalog=fs.existsSync(catalogPath)?JSON.parse(fs.readFileSync(catalogPath,'utf8')):{},rendered=[];
@@ -110,7 +111,7 @@ export function buildLegacy(manifest,root){const rig=JSON.parse(fs.readFileSync(
  for(const item of manifest.items){if(!/^[a-z][a-z0-9_]*$/.test(item.id))throw Error('Unsafe item id');const cut=crop(sheetMatte,parseCrop(item.crop)),selected=item.component==='largest'?isolateLargest(cut):cut,matteReview={},image=clearWhiteFaceOpening(selected,item.slot,whiteBacking,matteReview),placed=placeLegacy(image,item,preflight.report.fit,rig,regions),layers=[];
  for(const [kind,pixels] of Object.entries(placed.layers)){const layer=kind==='front'?'hair':kind==='back'?'hair_back':kind,name=`${item.id}${kind==='back'?'__back':''}.png`;writeImage(path.join(directory,name),pixels);layers.push({layer,file:`res://assets/doll/${name}`,bbox:bbox(pixels)});rendered.push({layer,pixels});}
  const needsReview=preflight.report.fit.residual_px>1.5?`body differs from the rig, residual ${preflight.report.fit.residual_px.toFixed(3)} px`:'legacy placement requires Doll Bench review';
- catalog[item.id]={matte_review:matteReview,slot:item.slot,rig:rig.id,layers,covers:rig.slots[item.slot]?.covers??[],side:item.side??null,source:{component:item.component??'all',method:'legacy-sheet',sheet:manifest.sheet,crop:item.crop,sha1:{sheet:sha1}},fit:placed.fit,anchor:placed.anchor,needs_review:needsReview,qa:{status:'needs_review',failures:placed.fit.hair_qa?.failures??[]}};
+ catalog[item.id]={outline_cleanup:placed.outline_cleanup,matte_review:matteReview,slot:item.slot,rig:rig.id,layers,covers:rig.slots[item.slot]?.covers??[],side:item.side??null,source:{component:item.component??'all',method:'legacy-sheet',sheet:manifest.sheet,crop:item.crop,sha1:{sheet:sha1}},fit:placed.fit,anchor:placed.anchor,needs_review:needsReview,qa:{status:'needs_review',failures:placed.fit.hair_qa?.failures??[]}};
  if(item.slot==='hair')catalog[item.id].split={rule:'chin_y',front_mask:item.frontMask??null};}
  fs.mkdirSync(path.dirname(catalogPath),{recursive:true});fs.writeFileSync(catalogPath,JSON.stringify(catalog,null,2)+'\n');rendered.push({layer:'body',pixels:body});rendered.sort((a,b)=>rig.layers.indexOf(a.layer)-rig.layers.indexOf(b.layer));return {catalog,bodyFit:{...preflight.report,pass:true,failures:[],needs_review:preflight.report.fit.residual_px>1.5?'body differs from the rig':null},composite:compose(rendered.map(r=>r.pixels),...rig.frame)};
 }
