@@ -1,0 +1,506 @@
+diff --git a/project/scenes/ui/studio_intro.tscn b/project/scenes/ui/studio_intro.tscn
+index eb4dc77..af4949e 100644
+--- a/project/scenes/ui/studio_intro.tscn
++++ b/project/scenes/ui/studio_intro.tscn
+@@ -1,7 +1,6 @@
+-[gd_scene load_steps=3 format=3]
++[gd_scene load_steps=2 format=3]
+ 
+ [ext_resource type="Script" path="res://scripts/ui/studio_intro.gd" id="1"]
+-[ext_resource type="Texture2D" uid="uid://bqomtcjrk7b7" path="res://assets/ui/brand/boot_splash.png" id="2_splash"]
+ 
+ [node name="StudioIntro" type="Control"]
+ layout_mode = 3
+@@ -32,24 +31,6 @@ anchor_right = 1.0
+ anchor_bottom = 1.0
+ mouse_filter = 2
+ 
+-[node name="Bg" type="ColorRect" parent="Gate"]
+-layout_mode = 1
+-anchors_preset = 15
+-anchor_right = 1.0
+-anchor_bottom = 1.0
+-mouse_filter = 2
+-color = Color(0.992157, 0.964706, 0.890196, 1)
+-
+-[node name="Splash" type="TextureRect" parent="Gate"]
+-layout_mode = 1
+-anchors_preset = 15
+-anchor_right = 1.0
+-anchor_bottom = 1.0
+-mouse_filter = 2
+-texture = ExtResource("2_splash")
+-expand_mode = 1
+-stretch_mode = 5
+-
+ [node name="Prompt" type="Label" parent="Gate"]
+ layout_mode = 1
+ anchors_preset = 12
+@@ -59,6 +40,6 @@ anchor_bottom = 0.92
+ grow_horizontal = 2
+ mouse_filter = 2
+ theme_type_variation = &"TitleLabel"
+-text = "tap to start"
++text = "tap or press any key for sound"
+ horizontal_alignment = 1
+ vertical_alignment = 1
+diff --git a/project/scripts/ui/studio_intro.gd b/project/scripts/ui/studio_intro.gd
+index 8d6e193..26ec415 100644
+--- a/project/scripts/ui/studio_intro.gd
++++ b/project/scripts/ui/studio_intro.gd
+@@ -6,14 +6,15 @@ extends Control
+ ## intro also ends on its own max_seconds after it starts (the clip's length plus END_MARGIN), and
+ ## if the player stops by itself. Input is read in _input, before the GUI: the full-screen Bg and
+ ## Video controls would otherwise take a click or tap and only keys would get through (bd b4m).
+-## On the web build a "tap to start" gate (the boot splash with a prompt under it) comes first.
+-## Browsers, iOS Safari above all, keep the page's AudioContext suspended until a click, tap or
+-## key; Godot's web platform resumes it inside its own key, mouse and touch handlers
+-## (DisplayServerWeb::_key_callback/_mouse_button_callback/_touch_callback call
+-## OS_Web::resume_audio), so the first input on the gate unlocks the sound and only then does the
+-## sting play, with its sound, and the title theme after it. Without the gate the sting could
+-## play out and end with no input at all, and the page stayed silent (the logo's sound and the
+-## title theme never started on an iPad). Desktop builds have no such lock and skip the gate.
++## On the web build the sting starts at once, muted, with a "tap or press any key for sound"
++## prompt over it (the gate). Browsers, iOS Safari above all, keep the page's AudioContext
++## suspended until a click, tap or key; Godot's web platform resumes it inside its own key, mouse
++## and touch handlers (DisplayServerWeb::_key_callback/_mouse_button_callback/_touch_callback call
++## OS_Web::resume_audio), so the first input unlocks the sound: it unmutes the sting where it is
++## and hides the prompt, and does not skip it; input after that skips as on desktop. With no input
++## the sting plays out silently and the main menu opens, so the page never waits on the intro
++## (bd hdg: the gate used to hold the boot splash until a key). Desktop builds have no such lock
++## and skip the gate.
+ 
+ const MAIN_MENU := "res://scenes/ui/main_menu.tscn"
+ const VIDEO := "res://assets/video/studio_intro.ogv"
+@@ -21,23 +22,28 @@ const VIDEO := "res://assets/video/studio_intro.ogv"
+ const CLIP_SECONDS := 7.1
+ const END_MARGIN := 1.0
+ ## Input in the first moments of the sting doesn't skip it: on touch screens one tap arrives as a
+-## touch and an emulated click, and the second must not skip the sting the first one started.
++## touch and an emulated click, and the second must not skip the sting the first one started (or,
++## behind the gate, the sting the first one unmuted).
+ const SKIP_GRACE := 0.35
++## The sting's volume while the gate is up.
++const MUTED_DB := -80.0
+ 
+ ## Whether the gate shows: -1 on the web build only, 0 never, 1 always (tests set it).
+ static var gate_mode := -1
+ 
+ ## Seconds after which the intro ends whatever the player reports; tests shorten it.
+ var max_seconds := CLIP_SECONDS + END_MARGIN
+-## True while the gate waits for the first input; the sting has not started.
++## True while the gate waits for the first input; the sting plays muted.
+ var gated := false
+ var _done := false
+ var _elapsed := 0.0
++## When input may skip the sting: its start, or the input that opened the gate.
++var _skip_from := 0.0
+ var _pulse: Tween
+ 
+ 
+ func _ready() -> void:
+-	for c: Control in [self, $Bg, $Video, $Gate, $Gate/Bg, $Gate/Splash, $Gate/Prompt]:
++	for c: Control in [self, $Bg, $Video, $Gate, $Gate/Prompt]:
+ 		c.mouse_filter = Control.MOUSE_FILTER_IGNORE
+ 	gated = gate_mode == 1 or (gate_mode == -1 and OS.has_feature("web"))
+ 	$Gate.visible = gated
+@@ -46,22 +52,19 @@ func _ready() -> void:
+ 		_pulse = create_tween().set_loops()
+ 		_pulse.tween_property(prompt, "modulate:a", 0.45, 0.9).set_trans(Tween.TRANS_SINE)
+ 		_pulse.tween_property(prompt, "modulate:a", 1.0, 0.9).set_trans(Tween.TRANS_SINE)
+-		return
+ 	_start()
+ 
+ 
+-## Starts the sting (the gate's first input, or at once without a gate).
++## Starts the sting, muted while the gate is up.
+ func _start() -> void:
+-	gated = false
+-	$Gate.visible = false
+-	if _pulse:
+-		_pulse.kill()
+ 	_elapsed = 0.0
++	_skip_from = 0.0
+ 	var player: VideoStreamPlayer = $Video
+ 	if not ResourceLoader.exists(VIDEO):
+ 		_finish()
+ 		return
+ 	player.stream = load(VIDEO)
++	player.volume_db = MUTED_DB if gated else 0.0
+ 	player.finished.connect(_finish)
+ 	player.play()
+ 	var length := player.get_stream_length()
+@@ -69,8 +72,18 @@ func _start() -> void:
+ 		max_seconds = length + END_MARGIN
+ 
+ 
++## The gate's first input: the sound comes on where the sting is and the prompt goes.
++func _open_gate() -> void:
++	gated = false
++	$Gate.visible = false
++	if _pulse:
++		_pulse.kill()
++	$Video.volume_db = 0.0
++	_skip_from = _elapsed
++
++
+ func _process(delta: float) -> void:
+-	if _done or gated:
++	if _done:
+ 		return
+ 	_elapsed += delta
+ 	var player: VideoStreamPlayer = $Video
+@@ -85,8 +98,8 @@ func _input(event: InputEvent) -> void:
+ 	if _done:
+ 		return
+ 	if gated:
+-		_start()
+-	elif _elapsed >= SKIP_GRACE:
++		_open_gate()
++	elif _elapsed - _skip_from >= SKIP_GRACE:
+ 		_finish()
+ 
+ 
+diff --git a/project/tests/test_studio_intro.gd b/project/tests/test_studio_intro.gd
+index 3b77296..e485edc 100644
+--- a/project/tests/test_studio_intro.gd
++++ b/project/tests/test_studio_intro.gd
+@@ -1,162 +1,176 @@
+-extends SceneTree
+-## Studio intro: it is the main scene; the G|P|G video loads with sound and plays; a key press, a click
+-## or a tap skips to the main menu; so does the video's end, and the intro ends on its own soon after
+-## the clip even when the player never reports the end (bd b4m). On the web build a "tap to start"
+-## gate comes first and waits for input (the browser keeps the page silent until then); the first
+-## input starts the sting, the same tap does not also skip it, and after it the intro still ends
+-## on its own and still skips on a tap.
+-## Run: godot --headless --path project -s tests/test_studio_intro.gd
+-
+-const INTRO := "res://scenes/ui/studio_intro.tscn"
+-const MAIN_MENU := "res://scenes/ui/main_menu.tscn"
+-const Intro := preload("res://scripts/ui/studio_intro.gd")
+-## Input in the sting's first moments is ignored (one tap is a touch and an emulated click).
+-const GRACE := 0.45
+-
+-var fails := 0
+-
+-
+-func _check(ok: bool, what: String) -> void:
+-	if not ok:
+-		fails += 1
+-		print("FAIL: ", what)
+-
+-
+-func _initialize() -> void:
+-	_run.call_deferred()
+-
+-
+-func _frames(n: int) -> void:
+-	for i in n:
+-		await process_frame
+-
+-
+-func _on_menu() -> bool:
+-	return current_scene != null and current_scene.scene_file_path == MAIN_MENU
+-
+-
+-func _tap() -> void:
+-	var tap := InputEventScreenTouch.new()
+-	tap.pressed = true
+-	tap.position = root.get_visible_rect().size / 2.0
+-	root.push_input(tap)
+-
+-
+-func _click() -> void:
+-	var click := InputEventMouseButton.new()
+-	click.button_index = MOUSE_BUTTON_LEFT
+-	click.pressed = true
+-	click.position = root.get_visible_rect().size / 2.0
+-	click.global_position = click.position
+-	root.push_input(click)
+-
+-
+-func _run() -> void:
+-	_check(ProjectSettings.get_setting("application/run/main_scene") == INTRO, "the intro is the main scene")
+-	var stream: Variant = load("res://assets/video/studio_intro.ogv")
+-	_check(stream is VideoStreamTheora, "studio_intro.ogv loads as Theora")
+-	_check(Intro.gate_mode == -1, "the gate is on for the web build only by default")
+-
+-	# A key press skips to the main menu.
+-	change_scene_to_file(INTRO)
+-	await _frames(3)
+-	var video: VideoStreamPlayer = current_scene.get_node("Video")
+-	_check(video.stream != null and video.is_playing(), "the video plays")
+-	_check(not current_scene.gated and not current_scene.get_node("Gate").visible, "no tap-to-start gate off the web build")
+-	await create_timer(GRACE).timeout
+-	var key := InputEventKey.new()
+-	key.keycode = KEY_SPACE
+-	key.pressed = true
+-	root.push_input(key)
+-	await _frames(4)
+-	_check(_on_menu(), "a key press goes to the main menu")
+-
+-	# The video's end goes to the main menu too.
+-	change_scene_to_file(INTRO)
+-	await _frames(3)
+-	current_scene.get_node("Video").finished.emit()
+-	await _frames(4)
+-	_check(_on_menu(), "the end of the video goes to the main menu")
+-
+-	# A click on the picture skips it (bd b4m: the full-screen controls took clicks, only keys worked).
+-	# Headless, a pushed click skips GUI picking and would reach the intro anyway, so also check that
+-	# nothing in the intro can take a pointer event and that the intro reads input before the GUI.
+-	change_scene_to_file(INTRO)
+-	await _frames(3)
+-	var takers: Array[String] = []
+-	for c: Node in [current_scene] + current_scene.find_children("*", "Control", true, false):
+-		if c is Control and c.mouse_filter != Control.MOUSE_FILTER_IGNORE:
+-			takers.append(String(c.name))
+-	_check(takers.is_empty(), "no control in the intro takes clicks or taps (%s)" % ", ".join(takers))
+-	_check(current_scene.has_method("_input") and not current_scene.has_method("_unhandled_input"), "the intro reads input before the GUI (_input)")
+-	await create_timer(GRACE).timeout
+-	_click()
+-	await _frames(4)
+-	_check(_on_menu(), "a click on the picture goes to the main menu")
+-
+-	# So does a tap.
+-	change_scene_to_file(INTRO)
+-	await _frames(3)
+-	await create_timer(GRACE).timeout
+-	_tap()
+-	await _frames(4)
+-	_check(_on_menu(), "a tap goes to the main menu")
+-
+-	# The intro ends on its own even when the player never reports the end (the web build).
+-	change_scene_to_file(INTRO)
+-	await _frames(3)
+-	var intro: Node = current_scene
+-	_check(intro.max_seconds > 7.0 and intro.max_seconds < 10.0, "it ends on its own about a second after the 7 s clip (max_seconds %.1f)" % intro.max_seconds)
+-	intro.get_node("Video").finished.disconnect(intro._finish)
+-	intro.max_seconds = 0.3
+-	await create_timer(0.8).timeout
+-	await _frames(2)
+-	_check(_on_menu(), "with no finished signal it still goes to the main menu")
+-
+-	# --- The web build's tap-to-start gate (forced on here; headless is not the web build) ---
+-	Intro.gate_mode = 1
+-	change_scene_to_file(INTRO)
+-	await _frames(3)
+-	intro = current_scene
+-	var gate: Control = intro.get_node("Gate")
+-	_check(intro.gated and gate.visible, "the gate shows")
+-	_check(gate.get_index() > intro.get_node("Video").get_index(), "the gate draws over the video")
+-	_check(String(intro.get_node("Gate/Prompt").text).contains("tap"), "the gate says tap to start")
+-	_check(intro.get_node("Gate/Splash").texture != null, "the gate shows the boot splash")
+-	video = intro.get_node("Video")
+-	_check(not video.is_playing() and video.stream == null, "the sting (and its sound) has not started behind the gate")
+-	# The gate waits: well past the sting's length it is still there.
+-	intro.max_seconds = 0.3
+-	await create_timer(1.0).timeout
+-	_check(current_scene == intro and intro.gated, "the gate waits for input, it does not time out")
+-	# The first tap (a touch plus the click the touch screen emulates) starts the sting, not the menu.
+-	_tap()
+-	_click()
+-	await _frames(4)
+-	_check(current_scene == intro and not intro.gated and not gate.visible, "the first tap opens the gate")
+-	_check(video.stream != null and video.is_playing(), "after the gate the sting plays")
+-	_check(intro.max_seconds > 7.0, "the sting gets its full length after the gate (%.1f)" % intro.max_seconds)
+-	# After the gate, a tap still skips it...
+-	await create_timer(GRACE).timeout
+-	_tap()
+-	await _frames(4)
+-	_check(_on_menu(), "after the gate a tap skips to the main menu")
+-	# ...and it still ends on its own.
+-	change_scene_to_file(INTRO)
+-	await _frames(3)
+-	intro = current_scene
+-	var key2 := InputEventKey.new()
+-	key2.keycode = KEY_ENTER
+-	key2.pressed = true
+-	root.push_input(key2)
+-	await _frames(3)
+-	_check(not intro.gated and intro.get_node("Video").is_playing(), "a key opens the gate too")
+-	intro.get_node("Video").finished.disconnect(intro._finish)
+-	intro.max_seconds = 0.3
+-	await create_timer(0.8).timeout
+-	await _frames(2)
+-	_check(_on_menu(), "after the gate the sting ends on its own")
+-	Intro.gate_mode = -1
+-
+-	print("RESULT: %s (%d failures)" % ["PASS" if fails == 0 else "FAIL", fails])
+-	quit(1 if fails else 0)
++extends SceneTree
++## Studio intro: it is the main scene; the G|P|G video loads with sound and plays; a key press, a click
++## or a tap skips to the main menu; so does the video's end, and the intro ends on its own soon after
++## the clip even when the player never reports the end (bd b4m). On the web build the sting starts
++## at once, muted, under a "tap or press any key for sound" prompt (the browser keeps the page silent
++## until an input); with no input it plays out and the main menu opens (bd hdg); the first input
++## unmutes it and hides the prompt, the same tap does not also skip it, and after it the intro still
++## ends on its own and still skips on a tap.
++## Run: godot --headless --path project -s tests/test_studio_intro.gd
++
++const INTRO := "res://scenes/ui/studio_intro.tscn"
++const MAIN_MENU := "res://scenes/ui/main_menu.tscn"
++const Intro := preload("res://scripts/ui/studio_intro.gd")
++## Input in the sting's first moments is ignored (one tap is a touch and an emulated click).
++const GRACE := 0.45
++
++var fails := 0
++
++
++func _check(ok: bool, what: String) -> void:
++	if not ok:
++		fails += 1
++		print("FAIL: ", what)
++
++
++func _initialize() -> void:
++	_run.call_deferred()
++
++
++func _frames(n: int) -> void:
++	for i in n:
++		await process_frame
++
++
++func _on_menu() -> bool:
++	return current_scene != null and current_scene.scene_file_path == MAIN_MENU
++
++
++func _tap() -> void:
++	var tap := InputEventScreenTouch.new()
++	tap.pressed = true
++	tap.position = root.get_visible_rect().size / 2.0
++	root.push_input(tap)
++
++
++func _click() -> void:
++	var click := InputEventMouseButton.new()
++	click.button_index = MOUSE_BUTTON_LEFT
++	click.pressed = true
++	click.position = root.get_visible_rect().size / 2.0
++	click.global_position = click.position
++	root.push_input(click)
++
++
++func _run() -> void:
++	_check(ProjectSettings.get_setting("application/run/main_scene") == INTRO, "the intro is the main scene")
++	var stream: Variant = load("res://assets/video/studio_intro.ogv")
++	_check(stream is VideoStreamTheora, "studio_intro.ogv loads as Theora")
++	_check(Intro.gate_mode == -1, "the gate is on for the web build only by default")
++
++	# A key press skips to the main menu.
++	change_scene_to_file(INTRO)
++	await _frames(3)
++	var video: VideoStreamPlayer = current_scene.get_node("Video")
++	_check(video.stream != null and video.is_playing(), "the video plays")
++	_check(not current_scene.gated and not current_scene.get_node("Gate").visible, "no tap-to-start gate off the web build")
++	await create_timer(GRACE).timeout
++	var key := InputEventKey.new()
++	key.keycode = KEY_SPACE
++	key.pressed = true
++	root.push_input(key)
++	await _frames(4)
++	_check(_on_menu(), "a key press goes to the main menu")
++
++	# The video's end goes to the main menu too.
++	change_scene_to_file(INTRO)
++	await _frames(3)
++	current_scene.get_node("Video").finished.emit()
++	await _frames(4)
++	_check(_on_menu(), "the end of the video goes to the main menu")
++
++	# A click on the picture skips it (bd b4m: the full-screen controls took clicks, only keys worked).
++	# Headless, a pushed click skips GUI picking and would reach the intro anyway, so also check that
++	# nothing in the intro can take a pointer event and that the intro reads input before the GUI.
++	change_scene_to_file(INTRO)
++	await _frames(3)
++	var takers: Array[String] = []
++	for c: Node in [current_scene] + current_scene.find_children("*", "Control", true, false):
++		if c is Control and c.mouse_filter != Control.MOUSE_FILTER_IGNORE:
++			takers.append(String(c.name))
++	_check(takers.is_empty(), "no control in the intro takes clicks or taps (%s)" % ", ".join(takers))
++	_check(current_scene.has_method("_input") and not current_scene.has_method("_unhandled_input"), "the intro reads input before the GUI (_input)")
++	await create_timer(GRACE).timeout
++	_click()
++	await _frames(4)
++	_check(_on_menu(), "a click on the picture goes to the main menu")
++
++	# So does a tap.
++	change_scene_to_file(INTRO)
++	await _frames(3)
++	await create_timer(GRACE).timeout
++	_tap()
++	await _frames(4)
++	_check(_on_menu(), "a tap goes to the main menu")
++
++	# The intro ends on its own even when the player never reports the end (the web build).
++	change_scene_to_file(INTRO)
++	await _frames(3)
++	var intro: Node = current_scene
++	_check(intro.max_seconds > 7.0 and intro.max_seconds < 10.0, "it ends on its own about a second after the 7 s clip (max_seconds %.1f)" % intro.max_seconds)
++	intro.get_node("Video").finished.disconnect(intro._finish)
++	intro.max_seconds = 0.3
++	await create_timer(0.8).timeout
++	await _frames(2)
++	_check(_on_menu(), "with no finished signal it still goes to the main menu")
++
++	# --- The web build's sound gate (forced on here; headless is not the web build) ---
++	Intro.gate_mode = 1
++	change_scene_to_file(INTRO)
++	await _frames(3)
++	intro = current_scene
++	var gate: Control = intro.get_node("Gate")
++	_check(intro.gated and gate.visible, "the gate shows")
++	_check(gate.get_index() > intro.get_node("Video").get_index(), "the gate's prompt draws over the video")
++	_check(String(intro.get_node("Gate/Prompt").text).contains("tap") and String(intro.get_node("Gate/Prompt").text).contains("key"), "the gate says tap or press any key")
++	var covers: Array[String] = []
++	for c: Node in gate.find_children("*", "Control", true, false):
++		if c is ColorRect or c is TextureRect:
++			covers.append(String(c.name))
++	_check(covers.is_empty(), "nothing in the gate hides the video (%s)" % ", ".join(covers))
++	video = intro.get_node("Video")
++	_check(video.stream != null and video.is_playing(), "behind the gate the sting plays at once")
++	_check(video.volume_db <= -60.0, "behind the gate the sting is muted (%.0f dB)" % video.volume_db)
++	_check(intro.max_seconds > 7.0 and intro.max_seconds < 10.0, "the muted sting gets its full length (%.1f)" % intro.max_seconds)
++	# With no input the muted sting ends on its own and the main menu opens (bd hdg: no stall).
++	intro.get_node("Video").finished.disconnect(intro._finish)
++	intro.max_seconds = 0.3
++	await create_timer(0.8).timeout
++	await _frames(2)
++	_check(_on_menu(), "with no input the muted sting ends and goes to the main menu")
++	# The first tap (a touch plus the click the touch screen emulates) unmutes it, it does not skip.
++	change_scene_to_file(INTRO)
++	await _frames(3)
++	intro = current_scene
++	gate = intro.get_node("Gate")
++	video = intro.get_node("Video")
++	await create_timer(GRACE).timeout
++	_tap()
++	_click()
++	await _frames(4)
++	_check(current_scene == intro and not intro.gated and not gate.visible, "the first tap opens the gate, not the menu")
++	_check(video.is_playing() and is_equal_approx(video.volume_db, 0.0), "after the gate the sting plays on with its sound")
++	# After the gate, a tap still skips it...
++	await create_timer(GRACE).timeout
++	_tap()
++	await _frames(4)
++	_check(_on_menu(), "after the gate a tap skips to the main menu")
++	# ...and it still ends on its own.
++	change_scene_to_file(INTRO)
++	await _frames(3)
++	intro = current_scene
++	var key2 := InputEventKey.new()
++	key2.keycode = KEY_ENTER
++	key2.pressed = true
++	root.push_input(key2)
++	await _frames(3)
++	_check(not intro.gated and intro.get_node("Video").is_playing() and is_equal_approx(intro.get_node("Video").volume_db, 0.0), "a key opens the gate too (unmutes, does not skip)")
++	intro.get_node("Video").finished.disconnect(intro._finish)
++	intro.max_seconds = 0.3
++	await create_timer(0.8).timeout
++	await _frames(2)
++	_check(_on_menu(), "after the gate the sting ends on its own")
++	Intro.gate_mode = -1
++
++	print("RESULT: %s (%d failures)" % ["PASS" if fails == 0 else "FAIL", fails])
++	quit(1 if fails else 0)
